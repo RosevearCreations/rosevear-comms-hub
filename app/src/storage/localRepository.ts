@@ -1,5 +1,15 @@
 import { seedDb } from '../data/seedData';
-import type { BrandId, ConversationStatus, FollowUpTask, HubDatabase, ManualLeadInput, Message } from '../types';
+import type {
+  BrandId,
+  Contact,
+  Conversation,
+  ConversationStatus,
+  FollowUpTask,
+  HubDatabase,
+  IntakeRequest,
+  ManualLeadInput,
+  Message
+} from '../types';
 
 const STORAGE_KEY = import.meta.env.VITE_STORAGE_KEY ?? 'rosevear-comms-hub:v1';
 
@@ -19,7 +29,14 @@ function makeId(prefix: string): string {
 function isHubDatabase(value: unknown): value is HubDatabase {
   if (!value || typeof value !== 'object') return false;
   const db = value as Partial<HubDatabase>;
-  return Array.isArray(db.contacts) && Array.isArray(db.conversations) && Array.isArray(db.messages) && Array.isArray(db.followUpTasks) && Array.isArray(db.intakeRequests);
+  return (
+    Array.isArray(db.contacts) &&
+    Array.isArray(db.conversations) &&
+    Array.isArray(db.messages) &&
+    Array.isArray(db.followUpTasks) &&
+    Array.isArray(db.intakeRequests) &&
+    Array.isArray(db.auditEvents)
+  );
 }
 
 export function loadHubDb(): HubDatabase {
@@ -51,6 +68,23 @@ export function saveHubDb(db: HubDatabase): HubDatabase {
 export function resetHubDb(): HubDatabase {
   const next = clone(seedDb);
   return saveHubDb(next);
+}
+
+export function exportHubDb(db: HubDatabase): string {
+  return JSON.stringify(db, null, 2);
+}
+
+export function importHubDb(rawJson: string): { ok: true; db: HubDatabase } | { ok: false; error: string } {
+  try {
+    const parsed = JSON.parse(rawJson) as unknown;
+    if (!isHubDatabase(parsed)) {
+      return { ok: false, error: 'Import failed: file does not match the QL-004 database shape.' };
+    }
+
+    return { ok: true, db: saveHubDb(parsed) };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : 'Import failed: invalid JSON.' };
+  }
 }
 
 export function createManualLead(db: HubDatabase, input: ManualLeadInput): { db: HubDatabase; conversationId: string } {
@@ -88,7 +122,7 @@ export function createManualLead(db: HubDatabase, input: ManualLeadInput): { db:
     status,
     priority: input.flags.includes('missed_call') ? 'high' : 'normal',
     subject: input.subject || 'Manual lead',
-    summary: input.body || 'Manual lead created in QL-003 local repository.',
+    summary: input.body || 'Manual lead created in QL-004 local repository.',
     tags: input.flags,
     lastActivityAt: createdAt,
     createdAt,
@@ -131,7 +165,7 @@ export function createManualLead(db: HubDatabase, input: ManualLeadInput): { db:
     title: input.flags.includes('needs_photos') || input.flags.includes('needs_reference_photos') ? 'Request photos/details before quote' : 'Review new lead',
     status: 'open',
     priority: input.flags.includes('missed_call') ? 'high' : 'normal',
-    notes: 'Created automatically by the local QL-003 repository.',
+    notes: 'Created automatically by the local QL-004 repository.',
     createdAt,
     updatedAt: createdAt
   });
@@ -205,6 +239,7 @@ export function addInternalNote(db: HubDatabase, conversationId: string, body: s
 }
 
 export function createFollowUpTask(db: HubDatabase, input: Pick<FollowUpTask, 'brandId' | 'contactId' | 'conversationId' | 'title' | 'priority' | 'notes'>): HubDatabase {
+  if (!input.title.trim()) return db;
   const next = clone(db);
   const createdAt = nowIso();
   next.followUpTasks.push({
@@ -212,12 +247,21 @@ export function createFollowUpTask(db: HubDatabase, input: Pick<FollowUpTask, 'b
     brandId: input.brandId,
     contactId: input.contactId,
     conversationId: input.conversationId,
-    title: input.title,
+    title: input.title.trim(),
     priority: input.priority,
     notes: input.notes,
     status: 'open',
     createdAt,
     updatedAt: createdAt
+  });
+  next.auditEvents.push({
+    id: makeId('audit'),
+    brandId: input.brandId,
+    entityType: 'task',
+    entityId: input.conversationId ?? 'general',
+    eventType: 'task_created',
+    details: input.title.trim(),
+    createdAt
   });
   return saveHubDb(next);
 }
@@ -228,11 +272,24 @@ export function completeTask(db: HubDatabase, taskId: string): HubDatabase {
   if (!task) return db;
   task.status = 'done';
   task.updatedAt = nowIso();
+  next.auditEvents.push({
+    id: makeId('audit'),
+    brandId: task.brandId,
+    entityType: 'task',
+    entityId: task.id,
+    eventType: 'task_completed',
+    details: task.title,
+    createdAt: task.updatedAt
+  });
   return saveHubDb(next);
 }
 
+export function getContact(db: HubDatabase, contactId: string): Contact | undefined {
+  return db.contacts.find((contact) => contact.id === contactId);
+}
+
 export function getContactName(db: HubDatabase, contactId: string): string {
-  return db.contacts.find((contact) => contact.id === contactId)?.name ?? 'Unknown contact';
+  return getContact(db, contactId)?.name ?? 'Unknown contact';
 }
 
 export function getConversationMessages(db: HubDatabase, conversationId: string): Message[] {
@@ -240,5 +297,22 @@ export function getConversationMessages(db: HubDatabase, conversationId: string)
 }
 
 export function getOpenTasksForBrand(db: HubDatabase, brandId: BrandId): FollowUpTask[] {
-  return db.followUpTasks.filter((task) => task.brandId === brandId && task.status === 'open');
+  return db.followUpTasks.filter((task) => task.brandId === brandId && task.status === 'open').sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+export function getTasksForConversation(db: HubDatabase, conversationId: string): FollowUpTask[] {
+  return db.followUpTasks.filter((task) => task.conversationId === conversationId).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+export function getIntakeForConversation(db: HubDatabase, conversationId: string): IntakeRequest | undefined {
+  return db.intakeRequests.find((intake) => intake.conversationId === conversationId);
+}
+
+export function getContactsForBrand(db: HubDatabase, brandId: BrandId): Contact[] {
+  const contactIds = new Set(db.conversations.filter((conversation) => conversation.brandId === brandId).map((conversation) => conversation.contactId));
+  return db.contacts.filter((contact) => contact.primaryBrand === brandId || contactIds.has(contact.id)).sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export function getIntakesForBrand(db: HubDatabase, brandId: BrandId): IntakeRequest[] {
+  return db.intakeRequests.filter((intake) => intake.brandId === brandId).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
