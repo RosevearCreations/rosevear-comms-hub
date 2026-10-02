@@ -1,0 +1,20 @@
+openapi: 3.1.0
+info:
+  title: Rosevear Comms Hub API
+  version: 0.0.1
+  description: Placeholder API contract for QL-001. Endpoints are not live yet.
+paths:
+  /api/intakes:
+    post:
+      summary: Create a brand-aware intake request
+      description: Draft endpoint for future RosieDazzlers and DevilnDove website integrations.
+      responses:
+        '200':
+          description: Intake accepted
+  /api/phone-calls:
+    post:
+      summary: Create a phone call record
+      description: Draft endpoint for future telephony provider events.
+      responses:
+        '200':
+          description: Phone call accepted

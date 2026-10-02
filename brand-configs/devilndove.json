@@ -1,0 +1,57 @@
+{
+  "brand": "devilndove",
+  "displayName": "DevilnDove",
+  "businessType": "artisan_custom_products",
+  "priority": 2,
+  "initialWorkflow": "custom_order_and_product_question_intake",
+  "status": "planned",
+  "notes": "DevilnDove should use the same shared hub but keep custom order/product workflows separate from RosieDazzlers detailing workflows.",
+  "conversationStatuses": [
+    "new",
+    "needs_reply",
+    "waiting_on_customer",
+    "needs_reference_photos",
+    "quote_needed",
+    "quote_sent",
+    "approved",
+    "in_progress",
+    "completed",
+    "archived"
+  ],
+  "defaultTags": [
+    "new_lead",
+    "existing_customer",
+    "custom_order",
+    "product_question",
+    "needs_reference_photos",
+    "jewelry",
+    "candle",
+    "engraving",
+    "sublimation",
+    "3d_print",
+    "cnc_laser",
+    "resin",
+    "paracord",
+    "repair_alteration",
+    "gift_deadline",
+    "shipping_pickup",
+    "human_review"
+  ],
+  "intakeTypes": [
+    "custom_order",
+    "product_question",
+    "personalization_request",
+    "maker_story_candidate"
+  ],
+  "aiPolicy": {
+    "draftOnly": true,
+    "autoSendAllowed": false,
+    "customerVisibleLeadQuality": false
+  },
+  "phonePolicy": {
+    "portExistingPersonalDualUseNumberInPhaseOne": false,
+    "testNumberFirst": true,
+    "recordingEnabled": false,
+    "smsEnabled": false
+  }
+}

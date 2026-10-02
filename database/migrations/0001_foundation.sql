@@ -1,0 +1,3 @@
+-- QL-001 foundation migration placeholder
+-- Copy/review database/schema.sql before applying to a live database.
+-- QL-002/QL-003 will convert this into the chosen migration format.

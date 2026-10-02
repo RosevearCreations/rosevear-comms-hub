@@ -1,0 +1,56 @@
+{
+  "brand": "rosiedazzlers",
+  "displayName": "RosieDazzlers",
+  "businessType": "mobile_auto_detailing",
+  "priority": 1,
+  "initialWorkflow": "detailing_quote_intake",
+  "status": "planned",
+  "serviceAreaNotes": "Oxford County, Norfolk County, Tillsonburg, Woodstock/Ingersoll, Simcoe/Delhi, Port Dover, Norwich/Otterville, Waterford/Vittoria, Zorra/Thamesford/Embro, Port Rowan/Turkey Point, and nearby Southern Ontario areas as approved.",
+  "conversationStatuses": [
+    "new",
+    "needs_reply",
+    "waiting_on_customer",
+    "needs_photos",
+    "quote_needed",
+    "quote_sent",
+    "booked",
+    "completed",
+    "archived"
+  ],
+  "defaultTags": [
+    "new_lead",
+    "existing_customer",
+    "quote_request",
+    "booking_request",
+    "missed_call",
+    "needs_photos",
+    "pet_hair",
+    "odor",
+    "salt_stains",
+    "heavy_stains",
+    "ceramic_coating",
+    "paint_correction",
+    "engine_bay",
+    "headlight_restoration",
+    "fleet_commercial",
+    "outside_service_area",
+    "human_review"
+  ],
+  "intakeTypes": [
+    "detailing_quote",
+    "booking_request",
+    "missed_call_follow_up",
+    "fleet_commercial_inquiry"
+  ],
+  "aiPolicy": {
+    "draftOnly": true,
+    "autoSendAllowed": false,
+    "customerVisibleLeadQuality": false
+  },
+  "phonePolicy": {
+    "portExistingNumberInPhaseOne": false,
+    "testNumberFirst": true,
+    "recordingEnabled": false,
+    "smsEnabled": false
+  }
+}
