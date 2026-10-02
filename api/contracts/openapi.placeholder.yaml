@@ -1,27 +1,23 @@
 openapi: 3.1.0
 info:
   title: Rosevear Comms Hub API
-  version: 0.0.2
-  description: Placeholder contract for the shared brand-aware communications API. QL-002 does not implement a live API.
-servers:
-  - url: http://localhost:8787
-    description: Future local API worker
+  version: 0.0.3
+  description: Draft API contract for QL-003. Endpoints are not live yet; the app currently uses a local repository facade.
 paths:
-  /health:
+  /api/contacts:
     get:
-      summary: Future API health check
+      summary: List contacts
       responses:
         '200':
-          description: Healthy
-  /brands:
-    get:
-      summary: List enabled brand workspaces
+          description: Contacts returned
+    post:
+      summary: Create a contact
       responses:
-        '200':
-          description: Brand list
-  /conversations:
+        '201':
+          description: Contact created
+  /api/conversations:
     get:
-      summary: List conversations filtered by brand and status
+      summary: List brand-aware conversations
       parameters:
         - name: brand
           in: query
@@ -31,16 +27,58 @@ paths:
             enum: [rosiedazzlers, devilndove]
       responses:
         '200':
-          description: Conversation list
-  /conversations/{conversationId}:
-    get:
-      summary: Get one conversation
+          description: Conversations returned
+    post:
+      summary: Create a manual conversation
+      responses:
+        '201':
+          description: Conversation created
+  /api/conversations/{conversation_id}/messages:
+    post:
+      summary: Create a message or internal note
       parameters:
-        - name: conversationId
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Message created
+  /api/conversations/{conversation_id}/status:
+    patch:
+      summary: Update conversation status
+      parameters:
+        - name: conversation_id
           in: path
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: Conversation detail
+          description: Status updated
+  /api/intakes:
+    post:
+      summary: Create a brand-aware intake request
+      description: Draft endpoint for future RosieDazzlers and DevilnDove website integrations.
+      responses:
+        '201':
+          description: Intake accepted
+  /api/tasks:
+    get:
+      summary: List follow-up tasks
+      responses:
+        '200':
+          description: Tasks returned
+    post:
+      summary: Create a follow-up task
+      responses:
+        '201':
+          description: Task created
+  /api/phone-calls:
+    post:
+      summary: Create a phone call record
+      description: Draft endpoint for future telephony provider events. Not active in QL-003.
+      responses:
+        '201':
+          description: Phone call accepted

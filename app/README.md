@@ -1,30 +1,48 @@
-# App — QL-002 Scaffold
+# App
 
-This folder contains the first runnable admin shell for Rosevear Comms Hub.
+QL-003 provides the first interactive admin shell for Rosevear Comms Hub.
 
-## Framework decision
+## Framework
 
-QL-002 uses Vite + React + TypeScript, plain CSS, and local static sample data. This keeps the project small and deployable later without choosing Vercel, Cloudflare Pages, or a VPS during the scaffold stage.
+- Vite
+- React
+- TypeScript
 
-## Commands
+## Local run
 
 ```bash
 npm install
 npm run dev
+```
+
+## Checks
+
+```bash
 npm run check
 npm run build
 ```
 
-## What exists now
+## Current data mode
 
-- Admin shell layout
-- Brand switcher
-- Placeholder inbox
-- Conversation detail placeholder
-- No live API
-- No live phone/SMS
-- No AI sending
+The app uses browser `localStorage` through `src/storage/localRepository.ts`.
 
-## Next
+This is intentional. It allows us to test the contact, conversation, message, intake, and follow-up workflow before setting up Supabase, a VPS, phone/SMS provider, or shared authentication.
 
-QL-003 should add the database/API foundation before real integrations are connected.
+## What works in QL-003
+
+- Switch between RosieDazzlers and DevilnDove.
+- Create a manual lead.
+- Automatically create contact + conversation + first message + intake request + follow-up task.
+- Change conversation status.
+- Add internal notes.
+- Create and complete follow-up tasks.
+- Reset local demo data.
+
+## What is not live yet
+
+- No production database.
+- No auth.
+- No phone/SMS provider.
+- No AI provider.
+- No call recording.
+- No external integrations.

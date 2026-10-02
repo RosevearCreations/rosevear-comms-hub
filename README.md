@@ -6,9 +6,9 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-002 — Application Scaffold**
+**QL-003 — Database and API Foundation**
 
-QL-002 chooses a lightweight, static-first **Vite + React + TypeScript** admin shell. This keeps hosting flexible while Cloudflare/Vercel capacity decisions stay open.
+QL-003 adds a local persistence layer, repository/service boundary, draft API contract, and interactive admin shell actions. The app still uses browser `localStorage` only; no production database or external phone/SMS/AI provider is connected.
 
 No live phone, SMS, AI sending, call recording, number forwarding, or number porting is active in this stage.
 
@@ -20,6 +20,7 @@ Start here:
 - [`docs/01_DECISION_RECORD.md`](docs/01_DECISION_RECORD.md)
 - [`docs/08_BUILD_SEQUENCE.md`](docs/08_BUILD_SEQUENCE.md)
 - [`docs/14_APPLICATION_SCAFFOLD.md`](docs/14_APPLICATION_SCAFFOLD.md)
+- [`docs/15_DATABASE_API_FOUNDATION.md`](docs/15_DATABASE_API_FOUNDATION.md)
 
 ## Run locally
 
@@ -49,7 +50,7 @@ RosieDazzlers is the first operational workflow because phone/quote handling is 
 ## Repository structure
 
 ```text
-app/                    Vite React admin shell
+app/                    Vite React admin shell with local persistence
 api/contracts/           API contract drafts
 brand-configs/           Brand-specific settings and workflows
 database/                Schema, migrations, and seeds
@@ -59,10 +60,14 @@ scripts/                 Local helper scripts later
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-002 non-goals
+## QL-003 non-goals
 
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
 - Do not port any number yet.
 - Do not auto-send AI replies.
 - Do not record calls until consent language and storage rules are implemented.
-- Do not create production hosting until the scaffold is useful locally.
+- Do not create production hosting until the local data flow is useful.
+
+## When setup is needed
+
+No outside app/system setup is needed for QL-003. The first setup decision comes later when we need shared multi-device data, authentication, or a test phone/SMS number.

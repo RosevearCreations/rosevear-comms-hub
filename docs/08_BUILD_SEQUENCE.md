@@ -14,14 +14,6 @@ Goal:
 - Add compliance notes.
 - Add first implementation sequence.
 
-Green criteria:
-
-- Docs exist and are organized.
-- Brand configs exist for RosieDazzlers and DevilnDove.
-- Database schema draft exists.
-- Telephony options are documented.
-- No live phone/SMS connected.
-
 ## QL-002 — Application Scaffold
 
 Status: complete.
@@ -31,56 +23,78 @@ Goal:
 - Choose initial app framework.
 - Create local development app shell.
 - Add admin layout placeholder.
-- Add brand switcher placeholder.
-- Add placeholder inbox with brand-aware sample conversations.
-- Add environment example file.
+- Add brand switcher.
+- Add placeholder inbox.
 - Add basic typecheck/build commands.
 
-Framework decision:
+Decision:
 
-- Use Vite + React + TypeScript.
-- Keep the app static-first and provider-neutral.
-- Defer production hosting and backend runtime decisions.
-
-Green criteria:
-
-- App runs locally with `npm run dev` from `app/`.
-- Typecheck command exists with `npm run check`.
-- Build command exists with `npm run build`.
-- Admin shell loads.
-- Brand switcher exists.
-- Placeholder inbox exists.
-- No production deployment required yet.
-- No live phone/SMS connected.
+- Use Vite + React + TypeScript for the first local admin shell.
 
 ## QL-003 — Database and API Foundation
 
+Status: complete.
+
 Goal:
 
-- Implement local/shared data access pattern.
-- Prepare API routes or worker contract.
-- Implement contacts, conversations, messages, tasks, intake requests, tags, and audit events.
-- Decide whether the first backend target is Supabase direct access, Cloudflare Worker, Vercel function, or small VPS API.
+- Replace static-only screen data with a local repository layer.
+- Add browser localStorage persistence for safe local workflow testing.
+- Add contact, conversation, message, intake, task, and audit event TypeScript types.
+- Add a local API facade so the UI does not depend directly on storage details.
+- Add interactive create/status/note/task actions.
+- Expand API contract drafts.
+- Add SQL index/constraint draft for the future hosted database.
 
 Green criteria:
 
-- Migrations apply cleanly in a documented environment.
-- Seed data creates both brands.
-- App can load conversation data from a real local/API source, not only static sample files.
-- No live phone/SMS connected.
+- App still runs locally.
+- Admin can create a local lead.
+- Local lead creates contact + conversation + message + intake + task.
+- Admin can change conversation status.
+- Admin can add an internal note.
+- Admin can create and complete local follow-up tasks.
+- Reset local demo data works.
+- No live phone/SMS/AI/database provider is connected.
 
 ## QL-004 — Admin Inbox MVP
 
 Goal:
 
-- Build inbox list.
-- Build conversation detail.
-- Build contact detail.
-- Build task list.
-- Allow manual conversation creation and status/tag changes.
+- Improve inbox filtering and search.
+- Add contact detail view.
+- Add intake request detail view.
+- Add task dashboard.
+- Add status/tag filters.
+- Add local export/import for backup during pre-hosted development.
 
 Green criteria:
 
 - Admin can manage test conversations for both brands.
-- Status/tag/task workflow works.
-- All AI/customer-send actions remain human-approved or disabled.
+- Status/tag/task workflow is usable from one screen.
+- No external setup required yet.
+
+## QL-005 — Hosted Database Decision Gate
+
+Goal:
+
+- Decide whether to use Supabase/Postgres now or continue local-only.
+- Decide auth path.
+- Decide attachment/photo storage path.
+
+Setup may be needed here if we want shared data across devices.
+
+## QL-006 — Website Intake Integration Draft
+
+Goal:
+
+- Prepare RosieDazzlers and DevilnDove server-to-server intake payloads.
+- Do not expose unauthenticated public write endpoints.
+
+## QL-007 — Phone/SMS Provider Test Decision
+
+Goal:
+
+- Choose a test number approach.
+- Compare VoIP.ms, Telnyx, Twilio, FreePBX/Asterisk, and 3CX again with real workflow needs.
+
+Setup will be needed here for a test number or phone provider account.
