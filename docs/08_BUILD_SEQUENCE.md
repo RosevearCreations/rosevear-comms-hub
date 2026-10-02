@@ -2,7 +2,7 @@
 
 ## QL-001 — Structure and Documentation Foundation
 
-Status: in progress.
+Status: complete.
 
 Goal:
 
@@ -24,44 +24,50 @@ Green criteria:
 
 ## QL-002 — Application Scaffold
 
+Status: complete.
+
 Goal:
 
 - Choose initial app framework.
 - Create local development app shell.
 - Add admin layout placeholder.
+- Add brand switcher placeholder.
+- Add placeholder inbox with brand-aware sample conversations.
 - Add environment example file.
-- Add basic test/lint commands.
+- Add basic typecheck/build commands.
 
-Decision needed before QL-002:
+Framework decision:
 
-- framework: likely Next.js, Remix, or lightweight Vite/React plus API backend
-- database: likely Supabase/Postgres
-- hosting direction: deferred but considered
+- Use Vite + React + TypeScript.
+- Keep the app static-first and provider-neutral.
+- Defer production hosting and backend runtime decisions.
 
 Green criteria:
 
-- App runs locally.
+- App runs locally with `npm run dev` from `app/`.
+- Typecheck command exists with `npm run check`.
+- Build command exists with `npm run build`.
 - Admin shell loads.
-- Brand switcher placeholder exists.
+- Brand switcher exists.
+- Placeholder inbox exists.
 - No production deployment required yet.
+- No live phone/SMS connected.
 
-## QL-003 — Database Foundation
+## QL-003 — Database and API Foundation
 
 Goal:
 
-- Implement contacts.
-- Implement conversations.
-- Implement messages.
-- Implement tasks.
-- Implement intake requests.
-- Implement tags.
-- Implement audit events.
+- Implement local/shared data access pattern.
+- Prepare API routes or worker contract.
+- Implement contacts, conversations, messages, tasks, intake requests, tags, and audit events.
+- Decide whether the first backend target is Supabase direct access, Cloudflare Worker, Vercel function, or small VPS API.
 
 Green criteria:
 
-- Migrations apply cleanly.
+- Migrations apply cleanly in a documented environment.
 - Seed data creates both brands.
-- CRUD works locally or through test scripts.
+- App can load conversation data from a real local/API source, not only static sample files.
+- No live phone/SMS connected.
 
 ## QL-004 — Admin Inbox MVP
 
@@ -71,87 +77,10 @@ Goal:
 - Build conversation detail.
 - Build contact detail.
 - Build task list.
-- Allow manual conversation creation.
+- Allow manual conversation creation and status/tag changes.
 
 Green criteria:
 
 - Admin can manage test conversations for both brands.
 - Status/tag/task workflow works.
-
-## QL-005 — RosieDazzlers Intake MVP
-
-Goal:
-
-- Add detailing quote intake payload.
-- Store customer, conversation, message, intake, task.
-- Add service/condition flags.
-
-Green criteria:
-
-- A RosieDazzlers quote request creates the correct records.
-- Admin can follow up from the hub.
-
-## QL-006 — DevilnDove Intake MVP
-
-Goal:
-
-- Add custom order/product question intake payload.
-- Store customer, conversation, message, intake, task.
-- Add project categories and quote state.
-
-Green criteria:
-
-- A DevilnDove request creates the correct records.
-
-## QL-007 — Phone-Ready Records
-
-Goal:
-
-- Add phone call manual entry.
-- Add missed-call workflow.
-- Add voicemail metadata fields.
-- Add SMS-ready records without live provider.
-
-Green criteria:
-
-- Admin can manually log a missed call and create a follow-up.
-
-## QL-008 — Test Number Integration
-
-Goal:
-
-- Connect one test phone provider or PBX path.
-- No porting.
-- No existing number risk.
-
-Green criteria:
-
-- Test call creates a phone call record.
-- Missed test call creates a follow-up task.
-
-## QL-009 — SMS Inbox Test
-
-Goal:
-
-- Test SMS on a non-critical number.
-- Add opt-out and template rules.
-
-Green criteria:
-
-- Test inbound/outbound texts are stored correctly.
-- Human approval remains required for AI drafts.
-
-## QL-010 — AI Summaries and Drafts
-
-Goal:
-
-- Add summarization.
-- Add missing-info checklist.
-- Add draft replies.
-- Add suggested tags.
-
-Green criteria:
-
-- AI drafts are clearly marked.
-- Human approval is required.
-- No auto-send exists.
+- All AI/customer-send actions remain human-approved or disabled.

@@ -1,20 +1,46 @@
 openapi: 3.1.0
 info:
   title: Rosevear Comms Hub API
-  version: 0.0.1
-  description: Placeholder API contract for QL-001. Endpoints are not live yet.
+  version: 0.0.2
+  description: Placeholder contract for the shared brand-aware communications API. QL-002 does not implement a live API.
+servers:
+  - url: http://localhost:8787
+    description: Future local API worker
 paths:
-  /api/intakes:
-    post:
-      summary: Create a brand-aware intake request
-      description: Draft endpoint for future RosieDazzlers and DevilnDove website integrations.
+  /health:
+    get:
+      summary: Future API health check
       responses:
         '200':
-          description: Intake accepted
-  /api/phone-calls:
-    post:
-      summary: Create a phone call record
-      description: Draft endpoint for future telephony provider events.
+          description: Healthy
+  /brands:
+    get:
+      summary: List enabled brand workspaces
       responses:
         '200':
-          description: Phone call accepted
+          description: Brand list
+  /conversations:
+    get:
+      summary: List conversations filtered by brand and status
+      parameters:
+        - name: brand
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [rosiedazzlers, devilndove]
+      responses:
+        '200':
+          description: Conversation list
+  /conversations/{conversationId}:
+    get:
+      summary: Get one conversation
+      parameters:
+        - name: conversationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Conversation detail
