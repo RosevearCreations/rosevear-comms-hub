@@ -14,6 +14,14 @@ Goal:
 - Add compliance notes.
 - Add first implementation sequence.
 
+Green criteria:
+
+- Docs exist and are organized.
+- Brand configs exist for RosieDazzlers and DevilnDove.
+- Database schema draft exists.
+- Telephony options are documented.
+- No live phone/SMS connected.
+
 ## QL-002 — Application Scaffold
 
 Status: complete.
@@ -25,11 +33,18 @@ Goal:
 - Add admin layout placeholder.
 - Add brand switcher.
 - Add placeholder inbox.
-- Add basic typecheck/build commands.
+- Add basic test/build commands.
 
 Decision:
 
-- Use Vite + React + TypeScript for the first local admin shell.
+- Vite + React + TypeScript.
+
+Green criteria:
+
+- App shell exists.
+- Admin shell loads locally when dependencies are installed.
+- Brand switcher placeholder exists.
+- No production deployment required.
 
 ## QL-003 — Database and API Foundation
 
@@ -37,64 +52,62 @@ Status: complete.
 
 Goal:
 
-- Replace static-only screen data with a local repository layer.
-- Add browser localStorage persistence for safe local workflow testing.
-- Add contact, conversation, message, intake, task, and audit event TypeScript types.
-- Add a local API facade so the UI does not depend directly on storage details.
-- Add interactive create/status/note/task actions.
-- Expand API contract drafts.
-- Add SQL index/constraint draft for the future hosted database.
+- Add local persistence.
+- Add local repository/API boundary.
+- Add manual lead creation.
+- Create contact + conversation + message + intake + follow-up task locally.
+- Keep phone/SMS/AI disconnected.
 
 Green criteria:
 
-- App still runs locally.
-- Admin can create a local lead.
-- Local lead creates contact + conversation + message + intake + task.
-- Admin can change conversation status.
-- Admin can add an internal note.
-- Admin can create and complete local follow-up tasks.
-- Reset local demo data works.
-- No live phone/SMS/AI/database provider is connected.
+- Local data persists in browser storage.
+- Manual lead creates the expected linked records.
+- Status/note/task actions work locally.
+- No external setup required.
 
 ## QL-004 — Admin Inbox MVP
 
+Status: complete.
+
 Goal:
 
-- Improve inbox filtering and search.
-- Add contact detail view.
-- Add intake request detail view.
+- Improve the admin inbox into a usable local operator workflow.
+- Add filters/search.
+- Add contact detail.
+- Add intake detail.
 - Add task dashboard.
-- Add status/tag filters.
-- Add local export/import for backup during pre-hosted development.
+- Add local export/import.
 
 Green criteria:
 
-- Admin can manage test conversations for both brands.
-- Status/tag/task workflow is usable from one screen.
-- No external setup required yet.
+- Operator can filter conversations by status, tag, channel, and search query.
+- Operator can view conversation, contact, intake, messages, and tasks.
+- Operator can complete tasks.
+- Operator can export/import local demo data.
+- No real customer data or live provider is required.
 
-## QL-005 — Hosted Database Decision Gate
+## QL-005 — Shared Backend Decision and Foundation
 
-Goal:
-
-- Decide whether to use Supabase/Postgres now or continue local-only.
-- Decide auth path.
-- Decide attachment/photo storage path.
-
-Setup may be needed here if we want shared data across devices.
-
-## QL-006 — Website Intake Integration Draft
+Status: next.
 
 Goal:
 
-- Prepare RosieDazzlers and DevilnDove server-to-server intake payloads.
-- Do not expose unauthenticated public write endpoints.
+- Decide first shared backend path.
+- Prepare hosted database/auth foundation.
+- Keep the current local app usable while adding a backend seam.
+- Do not connect live telephony yet.
 
-## QL-007 — Phone/SMS Provider Test Decision
+Decision needed before QL-005:
 
-Goal:
+- Use Supabase/Postgres now, or defer again?
+- Should authentication be Supabase Auth, app-only admin gate, or another provider?
+- Where will attachments/photos eventually live?
+- Does this app need to be deployed immediately, or can it remain GitHub-only until backend is ready?
 
-- Choose a test number approach.
-- Compare VoIP.ms, Telnyx, Twilio, FreePBX/Asterisk, and 3CX again with real workflow needs.
+Likely green criteria:
 
-Setup will be needed here for a test number or phone provider account.
+- Backend decision recorded in ADR.
+- Environment variables documented.
+- Database migration updated for production-readiness.
+- Local repository boundary can be swapped for backend API later.
+- No phone/SMS provider connected yet.
