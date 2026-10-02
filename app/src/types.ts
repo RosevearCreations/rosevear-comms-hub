@@ -138,3 +138,10 @@ export interface ManualLeadInput {
   flags: string[];
   recommendedService?: string;
 }
+
+export interface InboxFilterState {
+  status: ConversationStatus | 'all';
+  query: string;
+  tag: string;
+  sourceChannel: SourceChannel | 'all';
+}
