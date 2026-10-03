@@ -1,6 +1,7 @@
 import { FormEvent, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { getSupabaseClient, getSupabaseClientConfigStatus } from '../supabase/client';
+import { createLocalFallbackReadModel, loadSupabaseReadModel, type SupabaseReadModel } from '../supabase/readModel';
 import type { AppAdminRow } from '../supabase/appAdmin.types';
 
 type AuthGateStatus = 'local_only' | 'checking' | 'signed_out' | 'allowed' | 'blocked' | 'error';
@@ -36,18 +37,30 @@ const bannerStyle = {
   background: '#111827',
   color: '#e5e7eb',
   borderBottom: '1px solid rgba(148, 163, 184, 0.25)',
-  fontSize: '0.92rem'
+  fontSize: '0.92rem',
+  flexWrap: 'wrap' as const
 };
 
 function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
-function StatusBanner({ admin, onSignOut }: { admin: AppAdminRow; onSignOut: () => Promise<void> }) {
+function describeReadModel(readModel: SupabaseReadModel | null): string {
+  if (!readModel) return 'Reference reads pending. Customer data remains local-only.';
+  if (readModel.mode === 'supabase_reference') {
+    return `Supabase reference read verified: ${readModel.brands.length} brand workspace${readModel.brands.length === 1 ? '' : 's'} loaded. Customer data remains local-only.`;
+  }
+  if (readModel.mode === 'error') {
+    return `Supabase reference read warning: ${readModel.message}`;
+  }
+  return readModel.message;
+}
+
+function StatusBanner({ admin, readModel, onSignOut }: { admin: AppAdminRow; readModel: SupabaseReadModel | null; onSignOut: () => Promise<void> }) {
   return (
     <div style={bannerStyle}>
       <span>
-        Supabase session verified: <strong>{admin.role}</strong> access for {admin.email}. Live customer writes remain disabled.
+        Supabase session verified: <strong>{admin.role}</strong> access for {admin.email}. {describeReadModel(readModel)}
       </span>
       <button type="button" onClick={onSignOut}>
         Sign out
@@ -60,7 +73,7 @@ function LocalOnlyBanner({ reasons }: { reasons: string[] }) {
   return (
     <div style={bannerStyle}>
       <span>
-        Local-only mode. Supabase login is not enabled yet{reasons.length ? `: ${reasons.join(' ')}` : '.'}
+        Local-only mode. Supabase login/reference reads are not enabled yet{reasons.length ? `: ${reasons.join(' ')}` : '.'}
       </span>
     </div>
   );
@@ -72,11 +85,15 @@ export function AdminSessionGate({ children }: AdminSessionGateProps) {
   const [status, setStatus] = useState<AuthGateStatus>(configStatus.ready && supabase ? 'checking' : 'local_only');
   const [session, setSession] = useState<Session | null>(null);
   const [admin, setAdmin] = useState<AppAdminRow | null>(null);
+  const [readModel, setReadModel] = useState<SupabaseReadModel | null>(
+    configStatus.ready && supabase ? null : createLocalFallbackReadModel(configStatus.reasons.join(' '))
+  );
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
   const verifySession = useCallback(async () => {
     if (!supabase) {
+      setReadModel(createLocalFallbackReadModel(configStatus.reasons.join(' ')));
       setStatus('local_only');
       return;
     }
@@ -90,6 +107,7 @@ export function AdminSessionGate({ children }: AdminSessionGateProps) {
 
     if (!userEmail) {
       setAdmin(null);
+      setReadModel(null);
       setStatus('signed_out');
       return;
     }
@@ -110,13 +128,16 @@ export function AdminSessionGate({ children }: AdminSessionGateProps) {
     if (!data) {
       setMessage('This signed-in email is not active in public.app_admins.');
       setAdmin(null);
+      setReadModel(null);
       setStatus('blocked');
       return;
     }
 
-    setAdmin(data as AppAdminRow);
+    const nextAdmin = data as AppAdminRow;
+    setAdmin(nextAdmin);
+    setReadModel(await loadSupabaseReadModel(supabase, userEmail));
     setStatus('allowed');
-  }, [supabase]);
+  }, [supabase, configStatus.reasons]);
 
   useEffect(() => {
     if (!supabase) return;
@@ -159,6 +180,7 @@ export function AdminSessionGate({ children }: AdminSessionGateProps) {
     if (!supabase) return;
     await supabase.auth.signOut();
     setAdmin(null);
+    setReadModel(null);
     setSession(null);
     setStatus('signed_out');
   }
@@ -175,7 +197,7 @@ export function AdminSessionGate({ children }: AdminSessionGateProps) {
   if (status === 'allowed' && admin) {
     return (
       <>
-        <StatusBanner admin={admin} onSignOut={handleSignOut} />
+        <StatusBanner admin={admin} readModel={readModel} onSignOut={handleSignOut} />
         {children}
       </>
     );
@@ -187,7 +209,7 @@ export function AdminSessionGate({ children }: AdminSessionGateProps) {
         <p className="eyebrow">Rosevear Comms Hub</p>
         <h1>Admin login</h1>
         <p>
-          QL-010 verifies a Supabase Auth session and checks the signed-in email against the app admin allowlist before live Supabase data access is allowed.
+          QL-011 verifies a Supabase Auth session, checks the signed-in email against the app admin allowlist, and loads safe reference data only.
         </p>
 
         {status === 'checking' && <p>Checking Supabase session…</p>}
@@ -217,7 +239,7 @@ export function AdminSessionGate({ children }: AdminSessionGateProps) {
         {message && <p>{message}</p>}
 
         <p>
-          Real customer data, live writes, phone/SMS, and AI auto-send remain disabled until the next data-access build.
+          Real customer data, live writes, phone/SMS, and AI auto-send remain disabled. Only brand/reference reads are allowed after admin verification.
         </p>
       </section>
     </div>
