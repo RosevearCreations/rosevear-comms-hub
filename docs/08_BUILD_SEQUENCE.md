@@ -79,13 +79,6 @@ Decision:
 
 Status: complete.
 
-Goal:
-
-- Record the Supabase project supplied by the owner.
-- Prepare a Supabase-ready schema migration.
-- Document connector permission gap.
-- Keep app local-only until migration/auth/secrets are ready.
-
 Project:
 
 ```text
@@ -98,14 +91,6 @@ https://gxujcwpktaickcgzyvnu.supabase.co
 
 Status: complete after connector reauthorization.
 
-Goal:
-
-- Apply `database/migrations/0004_supabase_dev_schema.sql` when connector permissions are available.
-- Verify table creation.
-- Verify RLS is enabled.
-- Generate TypeScript types if connector access is available.
-- Keep the frontend local-only until auth/RLS policies are intentionally added.
-
 Result:
 
 - Supabase connector can now access project `gxujcwpktaickcgzyvnu`.
@@ -116,56 +101,62 @@ Result:
 
 Status: complete.
 
-Goal:
-
-- Store generated Supabase TypeScript database types in the repo.
-- Run Supabase advisors.
-- Apply non-policy security/performance advisor fixes.
-- Keep frontend local-only until auth policies are ready.
-
 Result:
 
 - Generated types stored at `app/src/supabase/database.types.ts`.
 - Follow-up migration stored at `database/migrations/0005_supabase_security_performance_indexes.sql`.
 - Advisor follow-up migration `ql_007_security_performance_indexes` applied successfully.
-- Remaining RLS-no-policy advisory is expected because QL-008B/QL-009 must define auth/RLS policies first.
 
 ## QL-008B — Auth and Safe Admin Access Decision
 
-Status: repo-ready; live migration not applied in this turn because current Supabase connector context returned a permission error for project `gxujcwpktaickcgzyvnu`.
-
-Goal:
-
-- Decide owner/admin-only auth route.
-- Use Supabase Auth plus an app-owned `app_admins` allowlist.
-- Design authenticated-admin RLS policies before adding live app access.
-- Keep public anonymous access disabled for app tables.
+Status: complete.
 
 Result:
 
 - Decision documented in `docs/21_AUTH_SAFE_ADMIN_ACCESS_DECISION.md`.
 - Migration prepared at `database/migrations/0006_auth_admin_access_policies.sql`.
-- Remote operator checklist added at `scripts/remote-operator-auth-checklist.md`.
+- Migration `ql_008b_auth_admin_access_policies` applied successfully to Supabase during QL-009.
+- Owner allowlist row seeded privately in Supabase for the ChatGPT account email.
 - No secrets committed.
-- Frontend remains local-first.
 
 ## QL-009 — Auth Boundary and Supabase Client Wiring
+
+Status: complete.
 
 Goal:
 
 - Add Supabase client wiring behind feature flags.
-- Add admin login UI shell.
-- Keep live writes disabled until auth policies and owner row are verified.
+- Add auth boundary helper.
+- Keep live reads/writes disabled until login/session verification.
 - Do not expose anonymous table access.
 
-## QL-010 — Website Intake Integration Draft
+Result:
+
+- Added `app/src/supabase/client.ts`.
+- Added `app/src/auth/authBoundary.ts`.
+- Added `@supabase/supabase-js` dependency.
+- Added `database/migrations/0007_move_rls_helpers_private_schema.sql`.
+- Applied `ql_009_move_rls_helpers_private_schema` to Supabase.
+- Supabase security advisors returned no security lints after the private-helper migration.
+
+## QL-010 — Admin Login UI and Session Verification
+
+Goal:
+
+- Add login/logout UI.
+- Read Supabase auth session.
+- Verify the signed-in user is allowlisted in `app_admins`.
+- Keep local-only data as fallback.
+- Do not import real customer data yet.
+
+## QL-011 — Website Intake Integration Draft
 
 Goal:
 
 - Prepare RosieDazzlers and DevilnDove server-to-server intake payloads.
 - Do not expose unauthenticated public write endpoints.
 
-## QL-011 — Phone/SMS Provider Test Decision
+## QL-012 — Phone/SMS Provider Test Decision
 
 Goal:
 
