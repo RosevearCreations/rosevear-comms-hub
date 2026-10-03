@@ -6,19 +6,15 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-008B — Auth and Safe Admin Access Decision**
+**QL-009 — Auth Boundary and Supabase Client Wiring**
 
-QL-008B defines the safe admin access model before the frontend reads or writes live Supabase data. The decision is **Supabase Auth + an app-owned admin allowlist** in `public.app_admins`, with authenticated-admin-only RLS policies.
+QL-009 adds a guarded Supabase browser client and frontend auth boundary while keeping the admin app local-first by default. Supabase live data access is now prepared, but it is still feature-gated behind `VITE_ENABLE_SUPABASE_CLIENT` and `VITE_ENABLE_HOSTED_DATABASE`.
 
-The policy migration is prepared here:
+The QL-008B admin access migration was applied to Supabase, the owner allowlist row was seeded privately, RLS policies exist for authenticated allowlisted admins, and the RLS helper functions were moved to the private `app_private` schema.
 
-```text
-database/migrations/0006_auth_admin_access_policies.sql
-```
+Supabase security advisors returned no security lints after the QL-009 private-helper migration.
 
-In this turn, the available Supabase connector context returned a permission error for project `gxujcwpktaickcgzyvnu`, so the live QL-008B migration was not applied automatically. The migration is repo-ready and can be applied through the correct Supabase connection or manually in SQL Editor.
-
-The application frontend still runs local-first and does **not** read/write live Supabase customer data yet. Auth and RLS policies must be verified before live app data access.
+The application frontend still does **not** read/write live Supabase customer data by default. QL-010 must add login/session verification before the inbox uses live data.
 
 No live phone, SMS, AI sending, call recording, number forwarding, or number porting is active in this stage.
 
@@ -37,6 +33,7 @@ Start here:
 - [`docs/19_SUPABASE_MIGRATION_VERIFICATION.md`](docs/19_SUPABASE_MIGRATION_VERIFICATION.md)
 - [`docs/20_SUPABASE_MIGRATION_VERIFIED.md`](docs/20_SUPABASE_MIGRATION_VERIFIED.md)
 - [`docs/21_AUTH_SAFE_ADMIN_ACCESS_DECISION.md`](docs/21_AUTH_SAFE_ADMIN_ACCESS_DECISION.md)
+- [`docs/22_AUTH_BOUNDARY_SUPABASE_CLIENT_WIRING.md`](docs/22_AUTH_BOUNDARY_SUPABASE_CLIENT_WIRING.md)
 
 ## Run locally
 
@@ -60,7 +57,7 @@ The repository also has GitHub Actions configured to run the app check/build rem
 
 Use **Supabase/Postgres** as the first shared backend candidate for Rosevear Comms Hub.
 
-The schema exists in Supabase, but the frontend must stay local-only until login and RLS policy verification are complete.
+The schema and admin policies now exist in Supabase, but the frontend must stay local-only until login and session verification are complete.
 
 ## Core decision
 
@@ -74,7 +71,7 @@ RosieDazzlers is the first operational workflow because phone/quote handling is 
 ## Repository structure
 
 ```text
-app/                    Vite React admin shell with local persistence and generated DB types
+app/                    Vite React admin shell with local persistence, auth boundary, and generated DB types
 api/contracts/           API contract drafts
 brand-configs/           Brand-specific settings and workflows
 database/                Schema, migrations, seeds, and hosted-backend notes
@@ -84,7 +81,7 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-008B non-goals
+## QL-009 non-goals
 
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
 - Do not port any number yet.
@@ -92,4 +89,4 @@ telephony/               Phone/SMS provider-neutral integration notes
 - Do not record calls until consent language and storage rules are implemented.
 - Do not enter real production customer data yet.
 - Do not commit Supabase service-role keys, database passwords, JWT secrets, or connection strings.
-- Do not connect the frontend to live Supabase data until auth/RLS policies are verified.
+- Do not switch the inbox from local data to live Supabase data until QL-010 verifies login/session handling.
