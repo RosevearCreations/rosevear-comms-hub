@@ -6,9 +6,17 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-005 — Shared Backend Decision and Foundation**
+**QL-006 — Supabase Project Setup Gate**
 
-QL-005 makes the backend direction explicit: use a Postgres-compatible shared database path when we are ready to move beyond local browser storage. The app still runs locally and still stores data in browser `localStorage`; the shared backend is documented and schema-ready, not connected live.
+QL-006 records the new Supabase project details supplied by the owner and prepares a Supabase-ready schema migration. The application still runs locally and still stores demo data in browser `localStorage`; the Supabase project is **not connected live** from the app yet.
+
+Supabase project noted for future setup:
+
+```text
+Project account/name: rosevearcreations
+Project ref: gxujcwpktaickcgzyvnu
+Project URL: https://gxujcwpktaickcgzyvnu.supabase.co
+```
 
 No live phone, SMS, AI sending, call recording, number forwarding, or number porting is active in this stage.
 
@@ -23,6 +31,7 @@ Start here:
 - [`docs/15_DATABASE_API_FOUNDATION.md`](docs/15_DATABASE_API_FOUNDATION.md)
 - [`docs/16_ADMIN_INBOX_MVP.md`](docs/16_ADMIN_INBOX_MVP.md)
 - [`docs/17_SHARED_BACKEND_DECISION.md`](docs/17_SHARED_BACKEND_DECISION.md)
+- [`docs/18_SUPABASE_PROJECT_SETUP_GATE.md`](docs/18_SUPABASE_PROJECT_SETUP_GATE.md)
 
 ## Run locally
 
@@ -40,13 +49,13 @@ npm run check
 npm run build
 ```
 
-The repository also has GitHub Actions configured to run the app check/build remotely on push and pull request. This is important because the current operator may not be running local Bash.
+The repository also has GitHub Actions configured to run the app check/build remotely on push and pull request. This matters because the current operator may not be running local Bash.
 
-## Backend decision
+## Backend direction
 
-Use **Postgres first** for the shared backend, with Supabase/Postgres as the likely first managed option because it matches the SQL design and can later provide auth, storage, row-level security, and API support.
+Use **Supabase/Postgres** as the first shared backend candidate for Rosevear Comms Hub.
 
-QL-005 does not require a database connection string yet. The next setup gate is when we choose a hosted Postgres provider and create the first development database.
+QL-006 is a setup gate, not a live data cutover. The next implementation step is to connect Supabase safely after permissions/secrets are in place.
 
 ## Core decision
 
@@ -66,16 +75,15 @@ brand-configs/           Brand-specific settings and workflows
 database/                Schema, migrations, seeds, and hosted-backend notes
 docs/                    Source-of-truth documentation
 integrations/            RosieDazzlers, DevilnDove, and future connectors
-scripts/                 Local/helper scripts and remote-operator checklists later
+scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-005 non-goals
+## QL-006 non-goals
 
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
 - Do not port any number yet.
 - Do not auto-send AI replies.
 - Do not record calls until consent language and storage rules are implemented.
 - Do not enter real production customer data yet.
-- Do not require local Bash from the operator.
-- Do not require a hosted database until QL-006/QL-007 confirms the provider and access path.
+- Do not commit Supabase service-role keys, database passwords, JWT secrets, or connection strings.
