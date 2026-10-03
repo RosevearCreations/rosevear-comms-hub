@@ -105,6 +105,8 @@ Green criteria:
 
 ## QL-007 — Supabase Migration Application and Verification
 
+Status: blocked for automatic application; manual route documented.
+
 Goal:
 
 - Apply `database/migrations/0004_supabase_dev_schema.sql` if connector permissions are available.
@@ -114,17 +116,43 @@ Goal:
 - Generate TypeScript types if connector access is available.
 - Keep the frontend local-only until auth/RLS policies are intentionally added.
 
-Setup needed here:
+Result:
 
-- Supabase connector permission for project `gxujcwpktaickcgzyvnu`, or manual SQL Editor access by owner.
+- Supabase connector still cannot access project `gxujcwpktaickcgzyvnu`.
+- Automatic migration was not applied.
+- Manual migration and verification instructions were added in `docs/19_SUPABASE_MIGRATION_VERIFICATION.md`.
+- Remote operator checklist was added in `scripts/remote-operator-supabase-verification.md`.
 
-## QL-008 — Auth and Safe Admin Access Decision
+Setup needed to unblock automatic route:
+
+- Supabase connector permission for project `gxujcwpktaickcgzyvnu`.
+
+Manual route:
+
+- Owner applies `database/migrations/0004_supabase_dev_schema.sql` in Supabase SQL Editor.
+- Owner runs the verification queries in `docs/19_SUPABASE_MIGRATION_VERIFICATION.md`.
+- Owner pastes only non-secret verification results back into chat.
+
+## QL-008A — Supabase Migration Verified and Types Generated
+
+Use this path if QL-007 migration is applied and verified.
+
+Goal:
+
+- Generate TypeScript database types.
+- Store generated types in the repo.
+- Run Supabase advisors if connector access is available.
+- Keep frontend local-only until auth policies are ready.
+
+## QL-008B — Auth and Safe Admin Access Decision
+
+Use this path if QL-007 is still blocked.
 
 Goal:
 
 - Decide owner/admin-only auth route.
 - Decide if we use Supabase Auth.
-- Add RLS policies only after access model is explicit.
+- Design RLS policies before adding live app access.
 
 ## QL-009 — Website Intake Integration Draft
 
