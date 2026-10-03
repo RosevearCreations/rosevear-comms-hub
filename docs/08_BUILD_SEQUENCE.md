@@ -4,76 +4,29 @@
 
 Status: complete.
 
-Goal:
-
-- Create repository structure.
-- Add source-of-truth docs.
-- Add brand config files.
-- Add data model draft.
-- Add provider-neutral telephony notes.
-- Add compliance notes.
-- Add first implementation sequence.
-
 ## QL-002 — Application Scaffold
 
 Status: complete.
 
-Goal:
-
-- Choose initial app framework.
-- Create local development app shell.
-- Add admin layout placeholder.
-- Add brand switcher.
-- Add placeholder inbox.
-- Add basic typecheck/build commands.
-
-Decision:
-
-- Use Vite + React + TypeScript for the first local admin shell.
+Decision: use Vite + React + TypeScript for the first local admin shell.
 
 ## QL-003 — Database and API Foundation
 
 Status: complete.
 
-Goal:
-
-- Replace static-only screen data with a local repository layer.
-- Add browser localStorage persistence for safe local workflow testing.
-- Add contact, conversation, message, intake, task, and audit event TypeScript types.
-- Add a local API facade so the UI does not depend directly on storage details.
-- Add interactive create/status/note/task actions.
-- Expand API contract drafts.
-- Add SQL index/constraint draft for the future hosted database.
+Result: local repository layer, localStorage persistence, interactive lead/status/note/task actions, and draft API contracts.
 
 ## QL-004 — Admin Inbox MVP
 
 Status: complete.
 
-Goal:
-
-- Improve inbox filtering and search.
-- Add contact detail view.
-- Add intake request detail view.
-- Add task dashboard.
-- Add status/tag filters.
-- Add local export/import for backup during pre-hosted development.
+Result: inbox search/filters, contact and intake details, task dashboard, and local import/export.
 
 ## QL-005 — Shared Backend Decision and Foundation
 
 Status: complete.
 
-Goal:
-
-- Decide the first shared backend direction.
-- Document the difference between PostgreSQL software/community accounts and hosted database accounts.
-- Keep the app local-only while preparing for a Postgres-compatible hosted backend.
-- Add a hosted-backend readiness migration.
-- Add environment placeholders without real secrets.
-
-Decision:
-
-- Use a Postgres-compatible backend first.
-- Supabase/Postgres remains the likely first managed option.
+Decision: use a Postgres-compatible backend first, with Supabase/Postgres as the first managed provider path.
 
 ## QL-006 — Supabase Project Setup Gate
 
@@ -91,11 +44,7 @@ https://gxujcwpktaickcgzyvnu.supabase.co
 
 Status: complete after connector reauthorization.
 
-Result:
-
-- Supabase connector can now access project `gxujcwpktaickcgzyvnu`.
-- Migration `ql_007_supabase_dev_schema` was applied successfully.
-- Tables, RLS, and seed brands were verified.
+Result: development schema applied, expected tables verified, RLS verified, seed brands verified.
 
 ## QL-008A — Supabase Migration Verified and Types Generated
 
@@ -116,19 +65,12 @@ Result:
 - Decision documented in `docs/21_AUTH_SAFE_ADMIN_ACCESS_DECISION.md`.
 - Migration prepared at `database/migrations/0006_auth_admin_access_policies.sql`.
 - Migration `ql_008b_auth_admin_access_policies` applied successfully to Supabase during QL-009.
-- Owner allowlist row seeded privately in Supabase for the ChatGPT account email.
+- Owner allowlist row seeded privately in Supabase.
 - No secrets committed.
 
 ## QL-009 — Auth Boundary and Supabase Client Wiring
 
 Status: complete.
-
-Goal:
-
-- Add Supabase client wiring behind feature flags.
-- Add auth boundary helper.
-- Keep live reads/writes disabled until login/session verification.
-- Do not expose anonymous table access.
 
 Result:
 
@@ -141,13 +83,16 @@ Result:
 
 ## QL-010 — Admin Login UI and Session Verification
 
-Goal:
+Status: complete.
 
-- Add login/logout UI.
-- Read Supabase auth session.
-- Verify the signed-in user is allowlisted in `app_admins`.
-- Keep local-only data as fallback.
-- Do not import real customer data yet.
+Result:
+
+- Added guarded admin login/session UI in `app/src/auth/AdminSessionGate.tsx`.
+- Wrapped the app with the session gate in `app/src/main.tsx`.
+- Kept the default runtime local-only unless browser-safe Supabase feature flags are enabled.
+- Verified the live Supabase owner allowlist row exists without exposing the email in repo docs.
+- Verified RLS policies exist for all application tables.
+- Kept live customer-data reads and writes disabled.
 
 ## QL-011 — Website Intake Integration Draft
 

@@ -6,17 +6,22 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-009 — Auth Boundary and Supabase Client Wiring**
+**QL-010 — Admin Login UI and Session Verification**
 
-QL-009 adds a guarded Supabase browser client and frontend auth boundary while keeping the admin app local-first by default. Supabase live data access is now prepared, but it is still feature-gated behind `VITE_ENABLE_SUPABASE_CLIENT` and `VITE_ENABLE_HOSTED_DATABASE`.
+QL-010 adds the first admin login/session boundary. The app still defaults to local browser storage, but when the Supabase feature flags and publishable key are supplied it can show a Supabase magic-link login screen, read the auth session, and verify that the signed-in email is active in the `public.app_admins` allowlist.
 
-The QL-008B admin access migration was applied to Supabase, the owner allowlist row was seeded privately, RLS policies exist for authenticated allowlisted admins, and the RLS helper functions were moved to the private `app_private` schema.
-
-Supabase security advisors returned no security lints after the QL-009 private-helper migration.
-
-The application frontend still does **not** read/write live Supabase customer data by default. QL-010 must add login/session verification before the inbox uses live data.
+The application frontend still does **not** perform live customer-data reads or writes. Live Supabase data access waits for the next data-access build after login is verified.
 
 No live phone, SMS, AI sending, call recording, number forwarding, or number porting is active in this stage.
+
+## Supabase project
+
+```text
+Project name: rosevearcreations Project
+Project ref: gxujcwpktaickcgzyvnu
+Project URL: https://gxujcwpktaickcgzyvnu.supabase.co
+Status: ACTIVE_HEALTHY
+```
 
 ## Source of truth
 
@@ -26,14 +31,10 @@ Start here:
 - [`docs/01_DECISION_RECORD.md`](docs/01_DECISION_RECORD.md)
 - [`docs/08_BUILD_SEQUENCE.md`](docs/08_BUILD_SEQUENCE.md)
 - [`docs/14_APPLICATION_SCAFFOLD.md`](docs/14_APPLICATION_SCAFFOLD.md)
-- [`docs/15_DATABASE_API_FOUNDATION.md`](docs/15_DATABASE_API_FOUNDATION.md)
-- [`docs/16_ADMIN_INBOX_MVP.md`](docs/16_ADMIN_INBOX_MVP.md)
-- [`docs/17_SHARED_BACKEND_DECISION.md`](docs/17_SHARED_BACKEND_DECISION.md)
-- [`docs/18_SUPABASE_PROJECT_SETUP_GATE.md`](docs/18_SUPABASE_PROJECT_SETUP_GATE.md)
-- [`docs/19_SUPABASE_MIGRATION_VERIFICATION.md`](docs/19_SUPABASE_MIGRATION_VERIFICATION.md)
 - [`docs/20_SUPABASE_MIGRATION_VERIFIED.md`](docs/20_SUPABASE_MIGRATION_VERIFIED.md)
 - [`docs/21_AUTH_SAFE_ADMIN_ACCESS_DECISION.md`](docs/21_AUTH_SAFE_ADMIN_ACCESS_DECISION.md)
 - [`docs/22_AUTH_BOUNDARY_SUPABASE_CLIENT_WIRING.md`](docs/22_AUTH_BOUNDARY_SUPABASE_CLIENT_WIRING.md)
+- [`docs/23_ADMIN_LOGIN_SESSION_VERIFICATION.md`](docs/23_ADMIN_LOGIN_SESSION_VERIFICATION.md)
 
 ## Run locally
 
@@ -53,11 +54,18 @@ npm run build
 
 The repository also has GitHub Actions configured to run the app check/build remotely on push and pull request. This matters because the current operator may not be running local Bash.
 
-## Backend direction
+## Login feature gates
 
-Use **Supabase/Postgres** as the first shared backend candidate for Rosevear Comms Hub.
+QL-010 keeps Supabase login disabled unless all required browser-safe values are configured:
 
-The schema and admin policies now exist in Supabase, but the frontend must stay local-only until login and session verification are complete.
+```text
+VITE_ENABLE_HOSTED_DATABASE=true
+VITE_ENABLE_SUPABASE_CLIENT=true
+VITE_SUPABASE_URL=https://gxujcwpktaickcgzyvnu.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=<publishable key from Supabase>
+```
+
+Do not commit service-role keys, database passwords, JWT secrets, or connection strings.
 
 ## Core decision
 
@@ -71,7 +79,7 @@ RosieDazzlers is the first operational workflow because phone/quote handling is 
 ## Repository structure
 
 ```text
-app/                    Vite React admin shell with local persistence, auth boundary, and generated DB types
+app/                    Vite React admin shell with local persistence and guarded Supabase auth wiring
 api/contracts/           API contract drafts
 brand-configs/           Brand-specific settings and workflows
 database/                Schema, migrations, seeds, and hosted-backend notes
@@ -81,7 +89,7 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-009 non-goals
+## QL-010 non-goals
 
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
 - Do not port any number yet.
@@ -89,4 +97,4 @@ telephony/               Phone/SMS provider-neutral integration notes
 - Do not record calls until consent language and storage rules are implemented.
 - Do not enter real production customer data yet.
 - Do not commit Supabase service-role keys, database passwords, JWT secrets, or connection strings.
-- Do not switch the inbox from local data to live Supabase data until QL-010 verifies login/session handling.
+- Do not perform live customer-data reads/writes until the next data-access build.
