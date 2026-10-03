@@ -94,23 +94,13 @@ gxujcwpktaickcgzyvnu
 https://gxujcwpktaickcgzyvnu.supabase.co
 ```
 
-Green criteria:
-
-- Project details recorded without secrets.
-- Supabase-ready migration exists.
-- Environment template exists.
-- No live app connection yet.
-- No real customer data used.
-- No phone/SMS/AI connected.
-
 ## QL-007 — Supabase Migration Application and Verification
 
-Status: blocked for automatic application; manual route documented.
+Status: complete after connector reauthorization.
 
 Goal:
 
-- Apply `database/migrations/0004_supabase_dev_schema.sql` if connector permissions are available.
-- Otherwise provide exact manual SQL Editor steps.
+- Apply `database/migrations/0004_supabase_dev_schema.sql` when connector permissions are available.
 - Verify table creation.
 - Verify RLS is enabled.
 - Generate TypeScript types if connector access is available.
@@ -118,41 +108,36 @@ Goal:
 
 Result:
 
-- Supabase connector still cannot access project `gxujcwpktaickcgzyvnu`.
-- Automatic migration was not applied.
-- Manual migration and verification instructions were added in `docs/19_SUPABASE_MIGRATION_VERIFICATION.md`.
-- Remote operator checklist was added in `scripts/remote-operator-supabase-verification.md`.
-
-Setup needed to unblock automatic route:
-
-- Supabase connector permission for project `gxujcwpktaickcgzyvnu`.
-
-Manual route:
-
-- Owner applies `database/migrations/0004_supabase_dev_schema.sql` in Supabase SQL Editor.
-- Owner runs the verification queries in `docs/19_SUPABASE_MIGRATION_VERIFICATION.md`.
-- Owner pastes only non-secret verification results back into chat.
+- Supabase connector can now access project `gxujcwpktaickcgzyvnu`.
+- Migration `ql_007_supabase_dev_schema` was applied successfully.
+- Tables, RLS, and seed brands were verified.
 
 ## QL-008A — Supabase Migration Verified and Types Generated
 
-Use this path if QL-007 migration is applied and verified.
+Status: complete.
 
 Goal:
 
-- Generate TypeScript database types.
-- Store generated types in the repo.
-- Run Supabase advisors if connector access is available.
+- Store generated Supabase TypeScript database types in the repo.
+- Run Supabase advisors.
+- Apply non-policy security/performance advisor fixes.
 - Keep frontend local-only until auth policies are ready.
 
-## QL-008B — Auth and Safe Admin Access Decision
+Result:
 
-Use this path if QL-007 is still blocked.
+- Generated types stored at `app/src/supabase/database.types.ts`.
+- Follow-up migration stored at `database/migrations/0005_supabase_security_performance_indexes.sql`.
+- Advisor follow-up migration `ql_007_security_performance_indexes` applied successfully.
+- Remaining RLS-no-policy advisory is expected because QL-008B/QL-009 must define auth/RLS policies first.
+
+## QL-008B — Auth and Safe Admin Access Decision
 
 Goal:
 
 - Decide owner/admin-only auth route.
 - Decide if we use Supabase Auth.
 - Design RLS policies before adding live app access.
+- Keep public anonymous access disabled for app tables.
 
 ## QL-009 — Website Intake Integration Draft
 
