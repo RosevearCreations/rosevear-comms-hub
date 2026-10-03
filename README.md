@@ -6,19 +6,20 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-007 — Supabase Migration Application and Verification**
+**QL-008A — Supabase Migration Verified and Types Generated**
 
-QL-007 attempted to move from setup gate to migration application for the owner-supplied Supabase project. The automatic migration could not be applied because the connected Supabase tool does not currently have permission to manage project `gxujcwpktaickcgzyvnu`.
+QL-008A confirms the Rosevear Comms Hub Supabase project is connected through the Supabase tool, applies the development schema, verifies tables/RLS/brand seed rows, applies safety/performance advisor follow-ups, and stores generated Supabase TypeScript database types in the repo.
 
-The app still runs locally and still stores demo data in browser `localStorage`; the Supabase project is **not connected live** from the app yet.
-
-Supabase project target:
+Supabase project:
 
 ```text
-Project account/name: rosevearcreations
+Project name: rosevearcreations Project
 Project ref: gxujcwpktaickcgzyvnu
 Project URL: https://gxujcwpktaickcgzyvnu.supabase.co
+Status: ACTIVE_HEALTHY
 ```
+
+The application frontend still runs local-first and does **not** read/write live Supabase customer data yet. Auth and RLS policies must be completed before live app data access.
 
 No live phone, SMS, AI sending, call recording, number forwarding, or number porting is active in this stage.
 
@@ -35,6 +36,7 @@ Start here:
 - [`docs/17_SHARED_BACKEND_DECISION.md`](docs/17_SHARED_BACKEND_DECISION.md)
 - [`docs/18_SUPABASE_PROJECT_SETUP_GATE.md`](docs/18_SUPABASE_PROJECT_SETUP_GATE.md)
 - [`docs/19_SUPABASE_MIGRATION_VERIFICATION.md`](docs/19_SUPABASE_MIGRATION_VERIFICATION.md)
+- [`docs/20_SUPABASE_MIGRATION_VERIFIED.md`](docs/20_SUPABASE_MIGRATION_VERIFIED.md)
 
 ## Run locally
 
@@ -58,13 +60,7 @@ The repository also has GitHub Actions configured to run the app check/build rem
 
 Use **Supabase/Postgres** as the first shared backend candidate for Rosevear Comms Hub.
 
-QL-007 is a migration verification gate, not a live data cutover. The migration file is ready at:
-
-```text
-database/migrations/0004_supabase_dev_schema.sql
-```
-
-Automatic application requires Supabase connector access to project `gxujcwpktaickcgzyvnu`; otherwise the owner can use the manual SQL Editor steps in `docs/19_SUPABASE_MIGRATION_VERIFICATION.md`.
+The schema now exists in Supabase, but the frontend must stay local-only until QL-008B/QL-009 defines admin authentication and safe RLS policies.
 
 ## Core decision
 
@@ -78,7 +74,7 @@ RosieDazzlers is the first operational workflow because phone/quote handling is 
 ## Repository structure
 
 ```text
-app/                    Vite React admin shell with local persistence
+app/                    Vite React admin shell with local persistence and generated DB types
 api/contracts/           API contract drafts
 brand-configs/           Brand-specific settings and workflows
 database/                Schema, migrations, seeds, and hosted-backend notes
@@ -88,7 +84,7 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-007 non-goals
+## QL-008A non-goals
 
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
 - Do not port any number yet.
@@ -96,4 +92,4 @@ telephony/               Phone/SMS provider-neutral integration notes
 - Do not record calls until consent language and storage rules are implemented.
 - Do not enter real production customer data yet.
 - Do not commit Supabase service-role keys, database passwords, JWT secrets, or connection strings.
-- Do not add anonymous public table policies before owner/admin auth is designed.
+- Do not connect the frontend to live Supabase data until auth/RLS policies are intentionally added.
