@@ -94,14 +94,27 @@ Result:
 - Verified RLS policies exist for all application tables.
 - Kept live customer-data reads and writes disabled.
 
-## QL-011 — Website Intake Integration Draft
+## QL-011 — Supabase Read Model and Local Fallback
+
+Status: complete.
+
+Result:
+
+- Added `app/src/supabase/readModel.ts`.
+- Updated `AdminSessionGate` to load safe reference data after verified admin login.
+- Limited live frontend reads to `brands` and the signed-in admin allowlist profile.
+- Kept customer-data reads and writes disabled.
+- Confirmed live Supabase brand seed rows exist for `devilndove` and `rosiedazzlers`.
+- Documented exact repo, Supabase URL, publishable-key, and auth redirect setup steps.
+
+## QL-012 — Website Intake Integration Draft
 
 Goal:
 
 - Prepare RosieDazzlers and DevilnDove server-to-server intake payloads.
 - Do not expose unauthenticated public write endpoints.
 
-## QL-012 — Phone/SMS Provider Test Decision
+## QL-013 — Phone/SMS Provider Test Decision
 
 Goal:
 
