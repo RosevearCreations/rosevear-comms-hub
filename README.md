@@ -6,11 +6,13 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-006 — Supabase Project Setup Gate**
+**QL-007 — Supabase Migration Application and Verification**
 
-QL-006 records the new Supabase project details supplied by the owner and prepares a Supabase-ready schema migration. The application still runs locally and still stores demo data in browser `localStorage`; the Supabase project is **not connected live** from the app yet.
+QL-007 attempted to move from setup gate to migration application for the owner-supplied Supabase project. The automatic migration could not be applied because the connected Supabase tool does not currently have permission to manage project `gxujcwpktaickcgzyvnu`.
 
-Supabase project noted for future setup:
+The app still runs locally and still stores demo data in browser `localStorage`; the Supabase project is **not connected live** from the app yet.
+
+Supabase project target:
 
 ```text
 Project account/name: rosevearcreations
@@ -32,6 +34,7 @@ Start here:
 - [`docs/16_ADMIN_INBOX_MVP.md`](docs/16_ADMIN_INBOX_MVP.md)
 - [`docs/17_SHARED_BACKEND_DECISION.md`](docs/17_SHARED_BACKEND_DECISION.md)
 - [`docs/18_SUPABASE_PROJECT_SETUP_GATE.md`](docs/18_SUPABASE_PROJECT_SETUP_GATE.md)
+- [`docs/19_SUPABASE_MIGRATION_VERIFICATION.md`](docs/19_SUPABASE_MIGRATION_VERIFICATION.md)
 
 ## Run locally
 
@@ -55,7 +58,13 @@ The repository also has GitHub Actions configured to run the app check/build rem
 
 Use **Supabase/Postgres** as the first shared backend candidate for Rosevear Comms Hub.
 
-QL-006 is a setup gate, not a live data cutover. The next implementation step is to connect Supabase safely after permissions/secrets are in place.
+QL-007 is a migration verification gate, not a live data cutover. The migration file is ready at:
+
+```text
+database/migrations/0004_supabase_dev_schema.sql
+```
+
+Automatic application requires Supabase connector access to project `gxujcwpktaickcgzyvnu`; otherwise the owner can use the manual SQL Editor steps in `docs/19_SUPABASE_MIGRATION_VERIFICATION.md`.
 
 ## Core decision
 
@@ -79,7 +88,7 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-006 non-goals
+## QL-007 non-goals
 
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
 - Do not port any number yet.
@@ -87,3 +96,4 @@ telephony/               Phone/SMS provider-neutral integration notes
 - Do not record calls until consent language and storage rules are implemented.
 - Do not enter real production customer data yet.
 - Do not commit Supabase service-role keys, database passwords, JWT secrets, or connection strings.
+- Do not add anonymous public table policies before owner/admin auth is designed.
