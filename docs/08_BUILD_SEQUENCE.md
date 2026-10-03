@@ -132,21 +132,40 @@ Result:
 
 ## QL-008B — Auth and Safe Admin Access Decision
 
+Status: repo-ready; live migration not applied in this turn because current Supabase connector context returned a permission error for project `gxujcwpktaickcgzyvnu`.
+
 Goal:
 
 - Decide owner/admin-only auth route.
-- Decide if we use Supabase Auth.
-- Design RLS policies before adding live app access.
+- Use Supabase Auth plus an app-owned `app_admins` allowlist.
+- Design authenticated-admin RLS policies before adding live app access.
 - Keep public anonymous access disabled for app tables.
 
-## QL-009 — Website Intake Integration Draft
+Result:
+
+- Decision documented in `docs/21_AUTH_SAFE_ADMIN_ACCESS_DECISION.md`.
+- Migration prepared at `database/migrations/0006_auth_admin_access_policies.sql`.
+- Remote operator checklist added at `scripts/remote-operator-auth-checklist.md`.
+- No secrets committed.
+- Frontend remains local-first.
+
+## QL-009 — Auth Boundary and Supabase Client Wiring
+
+Goal:
+
+- Add Supabase client wiring behind feature flags.
+- Add admin login UI shell.
+- Keep live writes disabled until auth policies and owner row are verified.
+- Do not expose anonymous table access.
+
+## QL-010 — Website Intake Integration Draft
 
 Goal:
 
 - Prepare RosieDazzlers and DevilnDove server-to-server intake payloads.
 - Do not expose unauthenticated public write endpoints.
 
-## QL-010 — Phone/SMS Provider Test Decision
+## QL-011 — Phone/SMS Provider Test Decision
 
 Goal:
 
