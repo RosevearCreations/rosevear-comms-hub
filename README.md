@@ -6,13 +6,30 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-010 — Admin Login UI and Session Verification**
+**QL-011 — Supabase Read Model and Local Fallback**
 
-QL-010 adds the first admin login/session boundary. The app still defaults to local browser storage, but when the Supabase feature flags and publishable key are supplied it can show a Supabase magic-link login screen, read the auth session, and verify that the signed-in email is active in the `public.app_admins` allowlist.
+QL-011 adds a safe Supabase read model after owner/admin login. The app still defaults to local browser storage, but when Supabase feature flags and the publishable key are supplied it can verify the admin session and read only safe reference data from Supabase.
 
-The application frontend still does **not** perform live customer-data reads or writes. Live Supabase data access waits for the next data-access build after login is verified.
+The only live Supabase reads introduced in this stage are:
+
+- `public.brands`
+- the signed-in admin's allowlist profile from `public.app_admins`
+
+The application frontend still does **not** perform live customer-data reads or writes. Customer records, conversations, messages, intakes, tasks, phone calls, and SMS remain local-only until a later build.
 
 No live phone, SMS, AI sending, call recording, number forwarding, or number porting is active in this stage.
+
+## Repository
+
+```text
+RosevearCreations/rosevear-comms-hub
+```
+
+GitHub repository page:
+
+```text
+https://github.com/RosevearCreations/rosevear-comms-hub
+```
 
 ## Supabase project
 
@@ -23,6 +40,24 @@ Project URL: https://gxujcwpktaickcgzyvnu.supabase.co
 Status: ACTIVE_HEALTHY
 ```
 
+Use this value for `VITE_SUPABASE_URL`:
+
+```text
+https://gxujcwpktaickcgzyvnu.supabase.co
+```
+
+Use the **Publishable key** from Supabase API Keys for `VITE_SUPABASE_PUBLISHABLE_KEY`. Do not use the secret/service-role key in the browser.
+
+## Auth redirect URLs
+
+For local testing, add this Supabase Auth redirect URL:
+
+```text
+http://localhost:5173
+```
+
+For a hosted preview or production deployment, add the deployed app URL after it exists. Do not use the GitHub repo URL as the Supabase Auth redirect URL; the redirect URL must be the running app URL.
+
 ## Source of truth
 
 Start here:
@@ -30,11 +65,11 @@ Start here:
 - [`docs/00_MASTER_SOURCE_OF_TRUTH.md`](docs/00_MASTER_SOURCE_OF_TRUTH.md)
 - [`docs/01_DECISION_RECORD.md`](docs/01_DECISION_RECORD.md)
 - [`docs/08_BUILD_SEQUENCE.md`](docs/08_BUILD_SEQUENCE.md)
-- [`docs/14_APPLICATION_SCAFFOLD.md`](docs/14_APPLICATION_SCAFFOLD.md)
 - [`docs/20_SUPABASE_MIGRATION_VERIFIED.md`](docs/20_SUPABASE_MIGRATION_VERIFIED.md)
 - [`docs/21_AUTH_SAFE_ADMIN_ACCESS_DECISION.md`](docs/21_AUTH_SAFE_ADMIN_ACCESS_DECISION.md)
 - [`docs/22_AUTH_BOUNDARY_SUPABASE_CLIENT_WIRING.md`](docs/22_AUTH_BOUNDARY_SUPABASE_CLIENT_WIRING.md)
 - [`docs/23_ADMIN_LOGIN_SESSION_VERIFICATION.md`](docs/23_ADMIN_LOGIN_SESSION_VERIFICATION.md)
+- [`docs/24_SUPABASE_READ_MODEL_LOCAL_FALLBACK.md`](docs/24_SUPABASE_READ_MODEL_LOCAL_FALLBACK.md)
 
 ## Run locally
 
@@ -56,7 +91,7 @@ The repository also has GitHub Actions configured to run the app check/build rem
 
 ## Login feature gates
 
-QL-010 keeps Supabase login disabled unless all required browser-safe values are configured:
+Supabase login and reference reads stay disabled unless all required browser-safe values are configured:
 
 ```text
 VITE_ENABLE_HOSTED_DATABASE=true
@@ -65,7 +100,7 @@ VITE_SUPABASE_URL=https://gxujcwpktaickcgzyvnu.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=<publishable key from Supabase>
 ```
 
-Do not commit service-role keys, database passwords, JWT secrets, or connection strings.
+Do not commit service-role keys, secret keys, database passwords, JWT secrets, or connection strings.
 
 ## Core decision
 
@@ -79,7 +114,7 @@ RosieDazzlers is the first operational workflow because phone/quote handling is 
 ## Repository structure
 
 ```text
-app/                    Vite React admin shell with local persistence and guarded Supabase auth wiring
+app/                    Vite React admin shell with local persistence and guarded Supabase auth/reference-read wiring
 api/contracts/           API contract drafts
 brand-configs/           Brand-specific settings and workflows
 database/                Schema, migrations, seeds, and hosted-backend notes
@@ -89,12 +124,12 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-010 non-goals
+## QL-011 non-goals
 
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
 - Do not port any number yet.
 - Do not auto-send AI replies.
 - Do not record calls until consent language and storage rules are implemented.
 - Do not enter real production customer data yet.
-- Do not commit Supabase service-role keys, database passwords, JWT secrets, or connection strings.
-- Do not perform live customer-data reads/writes until the next data-access build.
+- Do not commit Supabase service-role keys, secret keys, database passwords, JWT secrets, or connection strings.
+- Do not perform live customer-data reads/writes yet.
