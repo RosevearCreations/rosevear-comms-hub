@@ -122,14 +122,29 @@ Result:
 
 ## QL-013 — Protected Intake Endpoint Skeleton
 
+Status: complete.
+
+Result:
+
+- Added provider-neutral endpoint skeleton at `api/endpoints/protectedIntakeEndpoint.ts`.
+- Added response schema and example request in `api/contracts/`.
+- Added source-of-truth doc at `docs/26_PROTECTED_INTAKE_ENDPOINT_SKELETON.md`.
+- Added remote operator checklist at `scripts/remote-operator-protected-intake-endpoint-checklist.md`.
+- Endpoint is disabled by default.
+- Requires server-side origin and shared-secret checks when enabled.
+- Returns dry-run success until persistence is wired.
+- Does not add anonymous Supabase policies.
+- Does not write live customer data yet.
+
+## QL-014 — Intake Persistence Adapter Draft
+
 Goal:
 
-- Add first server-side intake endpoint skeleton.
-- Keep it disabled by default.
-- Require server-side validation and secret/signature verification.
+- Draft the server-side persistence adapter that turns a validated intake payload into contact, conversation, message, intake, task, and audit records.
+- Keep the live endpoint disabled until persistence and deployment are reviewed.
 - Do not expose direct browser writes to Supabase app tables.
 
-## QL-014 — Phone/SMS Provider Test Decision
+## QL-015 — Phone/SMS Provider Test Decision
 
 Goal:
 
