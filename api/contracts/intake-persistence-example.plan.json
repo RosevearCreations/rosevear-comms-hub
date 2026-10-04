@@ -1,0 +1,51 @@
+{
+  "mode": "dry_run",
+  "warnings": [
+    "Draft mapping only. No live database write occurs unless a server-side repository adapter is supplied and enabled."
+  ],
+  "records": {
+    "contact": {
+      "primary_brand": "rosiedazzlers",
+      "name": "Test Customer",
+      "email": "test@example.com",
+      "phone": "+15555550123",
+      "town": "Tillsonburg",
+      "customer_type": "lead",
+      "source": "rosiedazzlers.ca:detailing_quote"
+    },
+    "contactBrandProfile": {
+      "brand": "rosiedazzlers",
+      "status": "active",
+      "lead_quality": "unknown"
+    },
+    "conversation": {
+      "brand": "rosiedazzlers",
+      "source_channel": "website",
+      "status": "needs_reply",
+      "priority": "normal",
+      "subject": "Interior detail quote"
+    },
+    "message": {
+      "direction": "inbound",
+      "channel": "website",
+      "body": "Customer supplied intake message."
+    },
+    "intakeRequest": {
+      "brand": "rosiedazzlers",
+      "intake_type": "detailing_quote",
+      "flags": ["needs_photos"],
+      "status": "needs_review"
+    },
+    "followUpTask": {
+      "brand": "rosiedazzlers",
+      "title": "Review detailing intake: Interior detail quote",
+      "status": "open",
+      "priority": "normal"
+    },
+    "auditEvent": {
+      "brand": "rosiedazzlers",
+      "entity_type": "intake_request",
+      "event_type": "website_intake_mapped"
+    }
+  }
+}
