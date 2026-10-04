@@ -1,19 +1,21 @@
 # API Folder
 
-Future home for API route source, endpoint skeletons, persistence adapters, and contracts.
+Future home for API route source and contracts.
 
 Current contract drafts live in `api/contracts/` and `docs/10_API_CONTRACTS.md`.
 
-Current server-side drafts:
+Provider-neutral endpoint and persistence drafts live in:
 
 ```text
-api/endpoints/protectedIntakeEndpoint.ts
-api/persistence/intakePersistenceAdapter.ts
+api/endpoints/
+api/persistence/
+api/deployment/
 ```
 
-Safety boundary:
+Runtime-specific wrapper templates are intentionally stored outside the live API route path under:
 
-- protected intake endpoint disabled by default;
-- intake persistence disabled by default;
-- no public anonymous Supabase table writes;
-- no live customer-data writes yet.
+```text
+runtimes/
+```
+
+Do not move a runtime wrapper into a live deployed API route until the relevant deployment readiness build says it is safe.

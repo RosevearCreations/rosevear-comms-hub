@@ -6,9 +6,9 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-015 — Protected Intake Deployment Readiness Gate**
+**QL-016 — Deployment Runtime Wrapper Selection**
 
-QL-015 defines the deployment readiness gate before the protected website intake endpoint can be deployed or enabled for real RosieDazzlers or DevilnDove submissions.
+QL-016 selects the first protected-intake runtime wrapper path for the hub. The selected first implementation target is a **Vercel serverless function wrapper template**, stored under `runtimes/vercel/` so it cannot accidentally become live before deployment is reviewed.
 
 The protected intake endpoint and intake persistence both remain disabled by default. No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
 
@@ -77,7 +77,8 @@ ENABLE_PROTECTED_INTAKE_ENDPOINT=false
 ENABLE_INTAKE_PERSISTENCE=false
 ENABLE_RATE_LIMITING=false
 ENABLE_INTAKE_IDEMPOTENCY=false
-DEPLOYMENT_TARGET=
+DEPLOYMENT_TARGET=vercel
+DEPLOYMENT_RUNTIME_WRAPPER=vercel_serverless_function
 ALLOWED_INTAKE_ORIGINS=https://rosiedazzlers.ca,https://devilndove.com,https://devilndove.online
 ```
 
@@ -115,8 +116,15 @@ Start here:
 - [`docs/26_PROTECTED_INTAKE_ENDPOINT_SKELETON.md`](docs/26_PROTECTED_INTAKE_ENDPOINT_SKELETON.md)
 - [`docs/27_INTAKE_PERSISTENCE_ADAPTER_DRAFT.md`](docs/27_INTAKE_PERSISTENCE_ADAPTER_DRAFT.md)
 - [`docs/28_PROTECTED_INTAKE_DEPLOYMENT_READINESS_GATE.md`](docs/28_PROTECTED_INTAKE_DEPLOYMENT_READINESS_GATE.md)
+- [`docs/29_DEPLOYMENT_RUNTIME_WRAPPER_SELECTION.md`](docs/29_DEPLOYMENT_RUNTIME_WRAPPER_SELECTION.md)
 
 ## Website intake path
+
+The selected first wrapper path is:
+
+```text
+runtimes/vercel/api/intake.ts
+```
 
 The safe future path remains:
 
@@ -141,11 +149,12 @@ database/                Schema, migrations, seeds, and hosted-backend notes
 docs/                    Source-of-truth documentation
 integrations/            RosieDazzlers, DevilnDove, and future connectors
 ops/                     Deployment and release-gate checklists
+runtimes/                Runtime-specific wrapper templates that are not live by default
 scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-015 non-goals
+## QL-016 non-goals
 
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
 - Do not port any number yet.
@@ -155,7 +164,8 @@ telephony/               Phone/SMS provider-neutral integration notes
 - Do not commit Supabase service-role keys, secret keys, database passwords, JWT secrets, connection strings, or intake shared secrets.
 - Do not perform live customer-data reads/writes yet.
 - Do not expose anonymous public Supabase table access.
+- Do not move the wrapper template into a live deployed API route until QL-017.
 
 ## Next build
 
-QL-016 — Deployment Runtime Wrapper Selection.
+QL-017 — Protected Intake Dry-Run Runtime Verification.

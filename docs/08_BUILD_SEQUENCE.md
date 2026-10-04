@@ -166,13 +166,29 @@ Result:
 
 ## QL-016 — Deployment Runtime Wrapper Selection
 
+Status: complete.
+
+Result:
+
+- Selected a Vercel serverless function wrapper template as the first protected-intake runtime path.
+- Added wrapper template at `runtimes/vercel/api/intake.ts`.
+- Added runtime decision helper at `api/deployment/runtimeWrapperSelection.ts`.
+- Added runtime source-of-truth doc at `docs/29_DEPLOYMENT_RUNTIME_WRAPPER_SELECTION.md`.
+- Added Vercel runtime notes at `runtimes/vercel/README.md` and `ops/deployment/vercel-runtime-wrapper-selection.md`.
+- Kept the wrapper outside the live root API path so it cannot become active accidentally.
+- Kept protected intake, persistence, rate limiting, and idempotency disabled by default.
+- Did not add a Supabase migration.
+- Did not connect live website forms.
+
+## QL-017 — Protected Intake Dry-Run Runtime Verification
+
 Goal:
 
-- Choose the actual runtime wrapper for the protected intake endpoint.
-- Add the wrapper for Vercel or Cloudflare only after the deployment target is confirmed.
-- Keep live intake disabled until dry-run tests and persistence review are complete.
+- Verify the selected wrapper in a preview deployment.
+- Keep `ENABLE_PROTECTED_INTAKE_ENDPOINT=false` until the preview target, secret placement, origin allowlist, and dry-run test plan are confirmed.
+- Do not enable persistence until idempotency and abuse controls are ready.
 
-## QL-017 — Phone/SMS Provider Test Decision
+## QL-018 — Phone/SMS Provider Test Decision
 
 Goal:
 
