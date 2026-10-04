@@ -6,9 +6,9 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-021 — Phone/SMS Provider Test Decision**
+**QL-022 — Phone/SMS Test Number Setup Gate**
 
-QL-021 chooses the first phone/SMS experiment path: **one new test number first**. It does **not** connect a provider, does **not** buy a number, does **not** port or forward existing numbers, and does **not** enable phone webhooks, SMS, call recording, or AI auto-send.
+QL-022 turns the QL-021 provider decision into a blocked setup gate for **one new disposable test number first**. It does **not** connect a provider, does **not** buy a number, does **not** port or forward existing numbers, and does **not** enable phone webhooks, SMS, call recording, or AI auto-send.
 
 The protected intake endpoint and intake persistence both remain disabled by default. No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
 
@@ -77,12 +77,17 @@ PROTECTED_INTAKE_ENABLEMENT_GATE_STATUS=hold
 PROTECTED_INTAKE_ENABLEMENT_ALLOWED=false
 ```
 
-Phone/SMS test decision values:
+Phone/SMS test-number setup values:
 
 ```text
 PHONE_SMS_TEST_DECISION_STATUS=new_test_number_first
+PHONE_SMS_TEST_NUMBER_SETUP_GATE_STATUS=blocked_pending_manual_setup
 PHONE_SMS_TEST_PROVIDER=undecided
 PHONE_SMS_TEST_NUMBER_REQUIRED=true
+PHONE_SMS_TEST_NUMBER_TARGET_USE=undecided
+PHONE_SMS_TEST_BUDGET_CAD_MONTHLY=
+PHONE_SMS_TEST_ACCOUNT_CREATED=false
+PHONE_SMS_TEST_NUMBER_PURCHASED=false
 PHONE_SMS_EXISTING_NUMBERS_PROTECTED=true
 ENABLE_PHONE_WEBHOOKS=false
 ENABLE_SMS=false
@@ -115,6 +120,7 @@ Start here:
 - [`docs/32_PROTECTED_INTAKE_PREVIEW_DISABLED_MODE_CHECK.md`](docs/32_PROTECTED_INTAKE_PREVIEW_DISABLED_MODE_CHECK.md)
 - [`docs/33_PROTECTED_INTAKE_PREVIEW_ENABLEMENT_GATE.md`](docs/33_PROTECTED_INTAKE_PREVIEW_ENABLEMENT_GATE.md)
 - [`docs/34_PHONE_SMS_PROVIDER_TEST_DECISION.md`](docs/34_PHONE_SMS_PROVIDER_TEST_DECISION.md)
+- [`docs/35_PHONE_SMS_TEST_NUMBER_SETUP_GATE.md`](docs/35_PHONE_SMS_TEST_NUMBER_SETUP_GATE.md)
 
 ## Phone/SMS path
 
@@ -161,12 +167,12 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-021 non-goals
+## QL-022 non-goals
 
 - Do not port any number.
 - Do not forward any existing number.
-- Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
-- Do not buy a number yet.
+- Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms automatically.
+- Do not buy a number through repository code.
 - Do not enable phone/SMS webhooks.
 - Do not enable call recording.
 - Do not auto-send AI replies.
@@ -175,4 +181,4 @@ telephony/               Phone/SMS provider-neutral integration notes
 
 ## Next build
 
-QL-022 — Phone/SMS Test Number Setup Gate.
+QL-023 — Phone/SMS Test Number Manual Setup Evidence Intake.
