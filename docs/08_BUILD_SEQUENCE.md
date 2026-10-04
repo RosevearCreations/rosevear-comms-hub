@@ -198,13 +198,30 @@ Result:
 
 ## QL-018 — Protected Intake Preview Deployment Wiring
 
+Status: complete.
+
+Result:
+
+- Added preview-capable route at `api/intake.ts`.
+- Added preview wiring helper at `api/deployment/protectedIntakePreviewWiring.ts`.
+- Added preview wiring example at `api/contracts/protected-intake-preview-wiring.example.json`.
+- Added source-of-truth doc at `docs/31_PROTECTED_INTAKE_PREVIEW_DEPLOYMENT_WIRING.md`.
+- Added build record and operator checklist.
+- Added Vercel preview wiring notes under `ops/deployment/` and `runtimes/vercel/`.
+- Kept the endpoint disabled by default.
+- Kept persistence disabled.
+- Did not add a Supabase migration.
+- Did not connect live website forms.
+
+## QL-019 — Protected Intake Preview Disabled-Mode Check
+
 Goal:
 
-- Decide whether to move the Vercel wrapper template into a real preview route.
-- Confirm preview URL, server-side secret placement, allowed origins, rate limiting, and idempotency gate.
-- Keep persistence disabled until dry-run preview results are reviewed.
+- Confirm the preview route returns disabled mode in the deployed preview environment.
+- Keep persistence disabled.
+- Keep public website forms disconnected.
 
-## QL-019 — Phone/SMS Provider Test Decision
+## QL-020 — Phone/SMS Provider Test Decision
 
 Goal:
 
