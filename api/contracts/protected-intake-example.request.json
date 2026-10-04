@@ -1,0 +1,33 @@
+{
+  "brand": "rosiedazzlers",
+  "intakeType": "detailing_quote",
+  "source": {
+    "site": "rosiedazzlers.ca",
+    "formName": "quote-request",
+    "pageUrl": "https://rosiedazzlers.ca/quote",
+    "submittedAt": "2026-10-04T00:00:00.000Z",
+    "utm": {
+      "source": "website"
+    }
+  },
+  "contact": {
+    "name": "Test Customer",
+    "email": "test@example.com",
+    "phone": "+15195550123",
+    "town": "Tillsonburg",
+    "preferredReplyChannel": "email"
+  },
+  "request": {
+    "subject": "Quote request for SUV interior detail",
+    "message": "This is fake test data for endpoint validation only.",
+    "flags": ["needs_photos"],
+    "recommendedService": "Interior Detail"
+  },
+  "consent": {
+    "canContact": true,
+    "canText": false,
+    "marketingOptIn": false,
+    "consentText": "I agree to be contacted about this request."
+  },
+  "attachments": []
+}
