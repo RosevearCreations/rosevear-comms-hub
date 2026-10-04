@@ -142,24 +142,37 @@ Status: complete.
 
 Result:
 
-- Added provider-neutral adapter at `api/persistence/intakePersistenceAdapter.ts`.
-- Added dry-run persistence plan schema and example under `api/contracts/`.
-- Added source-of-truth doc at `docs/27_INTAKE_PERSISTENCE_ADAPTER_DRAFT.md`.
-- Added remote operator checklist at `scripts/remote-operator-intake-persistence-checklist.md`.
-- Draft maps validated website intake into contact, profile, conversation, message, intake, follow-up task, and audit records.
-- Kept `ENABLE_PROTECTED_INTAKE_ENDPOINT=false` and `ENABLE_INTAKE_PERSISTENCE=false` as the safe default.
-- Did not connect live websites or write live customer data.
+- Added provider-neutral persistence adapter at `api/persistence/intakePersistenceAdapter.ts`.
+- Added draft mapping from website intake to contact, brand profile, conversation, message, intake, follow-up task, and audit event records.
+- Added persistence plan schema and example plan.
+- Kept persistence disabled by default.
+- Did not add a Supabase migration.
+- Did not enable live customer-data writes.
 
 ## QL-015 — Protected Intake Deployment Readiness Gate
 
+Status: complete.
+
+Result:
+
+- Added deployment readiness source-of-truth doc at `docs/28_PROTECTED_INTAKE_DEPLOYMENT_READINESS_GATE.md`.
+- Added readiness helper at `api/deployment/protectedIntakeDeploymentReadiness.ts`.
+- Added deployment gate and release checklists under `ops/deployment/`.
+- Added remote operator checklist.
+- Documented safe production green state for main.
+- Kept protected intake and persistence disabled by default.
+- Did not add a Supabase migration.
+- Did not connect live website forms.
+
+## QL-016 — Deployment Runtime Wrapper Selection
+
 Goal:
 
-- Decide where the protected endpoint will run.
-- Confirm environment variables and secret placement.
-- Add deployment-specific wrapper only after target is selected.
-- Keep live intake disabled until reviewed.
+- Choose the actual runtime wrapper for the protected intake endpoint.
+- Add the wrapper for Vercel or Cloudflare only after the deployment target is confirmed.
+- Keep live intake disabled until dry-run tests and persistence review are complete.
 
-## QL-016 — Phone/SMS Provider Test Decision
+## QL-017 — Phone/SMS Provider Test Decision
 
 Goal:
 
