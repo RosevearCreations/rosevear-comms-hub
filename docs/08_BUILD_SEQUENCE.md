@@ -182,13 +182,29 @@ Result:
 
 ## QL-017 — Protected Intake Dry-Run Runtime Verification
 
+Status: complete.
+
+Result:
+
+- Added dry-run verification helper at `api/deployment/protectedIntakeDryRunVerification.ts`.
+- Added expected response fixture at `api/contracts/protected-intake-dry-run-verification.example.json`.
+- Added source-of-truth doc at `docs/30_PROTECTED_INTAKE_DRY_RUN_RUNTIME_VERIFICATION.md`.
+- Added build record and operator checklist.
+- Added Vercel dry-run verification notes under `ops/deployment/` and `runtimes/vercel/`.
+- Verified the expected disabled, rejected, and dry-run response modes at the contract level.
+- Kept protected intake and persistence disabled by default.
+- Did not add a Supabase migration.
+- Did not connect live website forms.
+
+## QL-018 — Protected Intake Preview Deployment Wiring
+
 Goal:
 
-- Verify the selected wrapper in a preview deployment.
-- Keep `ENABLE_PROTECTED_INTAKE_ENDPOINT=false` until the preview target, secret placement, origin allowlist, and dry-run test plan are confirmed.
-- Do not enable persistence until idempotency and abuse controls are ready.
+- Decide whether to move the Vercel wrapper template into a real preview route.
+- Confirm preview URL, server-side secret placement, allowed origins, rate limiting, and idempotency gate.
+- Keep persistence disabled until dry-run preview results are reviewed.
 
-## QL-018 — Phone/SMS Provider Test Decision
+## QL-019 — Phone/SMS Provider Test Decision
 
 Goal:
 

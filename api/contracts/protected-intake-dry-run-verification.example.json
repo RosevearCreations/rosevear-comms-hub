@@ -1,0 +1,39 @@
+{
+  "build": "QL-017",
+  "title": "Protected Intake Dry-Run Runtime Verification",
+  "expectedCases": [
+    {
+      "caseId": "disabled_gate",
+      "description": "Endpoint gate remains off by default.",
+      "expectedStatus": 503,
+      "expectedMode": "disabled",
+      "expectedAccepted": false
+    },
+    {
+      "caseId": "invalid_secret",
+      "description": "Enabled endpoint rejects a bad shared secret.",
+      "expectedStatus": 401,
+      "expectedMode": "rejected",
+      "expectedAccepted": false
+    },
+    {
+      "caseId": "valid_dry_run",
+      "description": "Enabled endpoint accepts a valid payload but returns dry_run without persistence.",
+      "expectedStatus": 202,
+      "expectedMode": "dry_run",
+      "expectedAccepted": true
+    }
+  ],
+  "safeDefaults": {
+    "ENABLE_PROTECTED_INTAKE_ENDPOINT": "false",
+    "ENABLE_INTAKE_PERSISTENCE": "false",
+    "ENABLE_RATE_LIMITING": "false",
+    "ENABLE_INTAKE_IDEMPOTENCY": "false"
+  },
+  "nonGoals": [
+    "No live customer-data writes",
+    "No public anonymous Supabase policies",
+    "No connected RosieDazzlers or DevilnDove public form",
+    "No service-role key in the browser"
+  ]
+}
