@@ -1,0 +1,25 @@
+{
+  "build": "QL-019",
+  "title": "Protected Intake Preview Disabled-Mode Check",
+  "route": "/api/intake",
+  "expected": {
+    "status": 503,
+    "mode": "disabled",
+    "accepted": false
+  },
+  "safeDefaults": {
+    "ENABLE_PROTECTED_INTAKE_ENDPOINT": "false",
+    "ENABLE_INTAKE_PERSISTENCE": "false",
+    "ENABLE_RATE_LIMITING": "false",
+    "ENABLE_INTAKE_IDEMPOTENCY": "false"
+  },
+  "manualPreviewUrlRequired": false,
+  "previewUrlRequiredForLiveCheck": true,
+  "nonGoals": [
+    "No endpoint enablement",
+    "No customer-data writes",
+    "No public form connection",
+    "No anonymous Supabase write policies",
+    "No browser-exposed shared secret"
+  ]
+}
