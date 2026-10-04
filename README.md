@@ -6,11 +6,11 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-014 — Intake Persistence Adapter Draft**
+**QL-015 — Protected Intake Deployment Readiness Gate**
 
-QL-014 drafts the server-side persistence adapter that will eventually turn a validated website intake payload into hub records: contact, contact-brand profile, conversation, inbound message, intake request, follow-up task, and audit event.
+QL-015 defines the deployment readiness gate before the protected website intake endpoint can be deployed or enabled for real RosieDazzlers or DevilnDove submissions.
 
-This is still a draft-only build. The protected intake endpoint remains disabled by default. Intake persistence remains disabled by default. No live website form is connected, and no live customer data is written.
+The protected intake endpoint and intake persistence both remain disabled by default. No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
 
 No live phone, SMS, AI sending, call recording, number forwarding, or number porting is active in this stage.
 
@@ -70,11 +70,14 @@ VITE_SUPABASE_URL=https://gxujcwpktaickcgzyvnu.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=<publishable key from Supabase>
 ```
 
-Protected intake endpoint and persistence values for a future server-side deployment:
+Protected intake endpoint values stay disabled until deployment review:
 
 ```text
 ENABLE_PROTECTED_INTAKE_ENDPOINT=false
 ENABLE_INTAKE_PERSISTENCE=false
+ENABLE_RATE_LIMITING=false
+ENABLE_INTAKE_IDEMPOTENCY=false
+DEPLOYMENT_TARGET=
 ALLOWED_INTAKE_ORIGINS=https://rosiedazzlers.ca,https://devilndove.com,https://devilndove.online
 ```
 
@@ -111,34 +114,18 @@ Start here:
 - [`docs/25_WEBSITE_INTAKE_INTEGRATION_DRAFT.md`](docs/25_WEBSITE_INTAKE_INTEGRATION_DRAFT.md)
 - [`docs/26_PROTECTED_INTAKE_ENDPOINT_SKELETON.md`](docs/26_PROTECTED_INTAKE_ENDPOINT_SKELETON.md)
 - [`docs/27_INTAKE_PERSISTENCE_ADAPTER_DRAFT.md`](docs/27_INTAKE_PERSISTENCE_ADAPTER_DRAFT.md)
+- [`docs/28_PROTECTED_INTAKE_DEPLOYMENT_READINESS_GATE.md`](docs/28_PROTECTED_INTAKE_DEPLOYMENT_READINESS_GATE.md)
 
 ## Website intake path
 
-QL-014 adds:
-
-```text
-api/persistence/intakePersistenceAdapter.ts
-api/persistence/README.md
-api/contracts/intake-persistence-plan.schema.json
-api/contracts/intake-persistence-example.plan.json
-```
-
-The safe future path is:
+The safe future path remains:
 
 ```text
 Public website form
 → protected server-side endpoint
 → validation + origin check + shared secret
-→ server-side persistence adapter
-→ contact/conversation/message/intake/task/audit records
+→ dry run now / server-side write after readiness gates
 → admin review before reply
-```
-
-Current safe state:
-
-```text
-ENABLE_PROTECTED_INTAKE_ENDPOINT=false
-ENABLE_INTAKE_PERSISTENCE=false
 ```
 
 ## Repository structure
@@ -146,17 +133,19 @@ ENABLE_INTAKE_PERSISTENCE=false
 ```text
 app/                    Vite React admin shell with local persistence and guarded Supabase auth/reference-read wiring
 api/contracts/           API contract drafts and schemas
+api/deployment/          Deployment readiness helpers
 api/endpoints/           Provider-neutral server-side endpoint skeletons
 api/persistence/         Provider-neutral persistence adapter drafts
 brand-configs/           Brand-specific settings and workflows
 database/                Schema, migrations, seeds, and hosted-backend notes
 docs/                    Source-of-truth documentation
 integrations/            RosieDazzlers, DevilnDove, and future connectors
+ops/                     Deployment and release-gate checklists
 scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-014 non-goals
+## QL-015 non-goals
 
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
 - Do not port any number yet.
@@ -169,4 +158,4 @@ telephony/               Phone/SMS provider-neutral integration notes
 
 ## Next build
 
-QL-015 — Protected Intake Deployment Readiness Gate.
+QL-016 — Deployment Runtime Wrapper Selection.
