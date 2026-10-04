@@ -150,10 +150,25 @@ Result:
 
 ## QL-022 — Phone/SMS Test Number Setup Gate
 
+Status: complete.
+
+Result:
+
+- Added setup gate helper at `api/deployment/phoneSmsTestNumberSetupGate.ts`.
+- Added setup gate fixture at `api/contracts/phone-sms-test-number-setup-gate.example.json`.
+- Added source-of-truth doc at `docs/35_PHONE_SMS_TEST_NUMBER_SETUP_GATE.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony setup notes.
+- Kept setup blocked until provider, target use, and CAD test budget are manually confirmed.
+- Kept all existing numbers unported and unforwarded.
+- Kept phone webhooks, SMS, call recording, and AI auto-send disabled.
+- Did not add a Supabase migration.
+- Did not connect a provider account.
+- Did not buy a phone number.
+
+## QL-023 — Phone/SMS Test Number Manual Setup Evidence Intake
+
 Goal:
 
-- Turn the QL-021 decision into a setup gate.
-- Record which provider will be used for the first new test number.
-- Keep existing numbers protected until the test path is proven.
-
-Setup will be needed here for a test number or phone provider account.
+- Capture the manual provider choice, account-created status, budget approval, and safe setup notes.
+- Keep credentials and phone-number ownership evidence out of the repository.
+- Prepare the first test-number purchase review without enabling live webhooks.
