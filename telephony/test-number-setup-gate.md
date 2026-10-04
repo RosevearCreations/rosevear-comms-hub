@@ -26,7 +26,7 @@ The gate is blocked because the first provider, target use, and budget still nee
 
 ```text
 voipms
- telnyx
+telnyx
 twilio
 ```
 
