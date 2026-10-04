@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rosevearcreations.local/contracts/website-intake.schema.json",
+  "title": "Rosevear Comms Hub Website Intake",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["brand", "intakeType", "source", "contact", "request"],
+  "properties": {
+    "brand": {
+      "type": "string",
+      "enum": ["rosiedazzlers", "devilndove"]
+    },
+    "intakeType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["site", "formName", "submittedAt"],
+      "properties": {
+        "site": { "type": "string", "minLength": 1 },
+        "formName": { "type": "string", "minLength": 1 },
+        "pageUrl": { "type": "string" },
+        "submittedAt": { "type": "string", "format": "date-time" },
+        "utm": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "contact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "town": { "type": "string" },
+        "preferredReplyChannel": { "type": "string", "enum": ["phone", "sms", "email", "unknown"] }
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["subject", "message"],
+      "properties": {
+        "subject": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "flags": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        },
+        "recommendedService": { "type": "string" }
+      }
+    },
+    "consent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "canContact": { "type": "boolean" },
+        "canText": { "type": "boolean" },
+        "marketingOptIn": { "type": "boolean" },
+        "consentText": { "type": "string" }
+      }
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "label"],
+        "properties": {
+          "kind": { "type": "string", "enum": ["photo", "reference", "other"] },
+          "label": { "type": "string" },
+          "url": { "type": "string" }
+        }
+      },
+      "default": []
+    }
+  }
+}
