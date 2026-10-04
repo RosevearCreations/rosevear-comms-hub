@@ -1,24 +1,19 @@
 # API Folder
 
-Provider-neutral API contracts and server-side endpoint skeletons for Rosevear Comms Hub.
+Future home for API route source, endpoint skeletons, persistence adapters, and contracts.
 
-## Current areas
+Current contract drafts live in `api/contracts/` and `docs/10_API_CONTRACTS.md`.
 
-```text
-api/contracts/    JSON schemas and sample payloads
-api/endpoints/    Server-side endpoint skeletons, not live deployments
-```
-
-## QL-013 protected intake boundary
-
-`api/endpoints/protectedIntakeEndpoint.ts` is a disabled-by-default skeleton for future RosieDazzlers and DevilnDove website intake submissions.
-
-It must remain server-side only and must not expose direct browser writes to Supabase app tables.
-
-Relevant docs:
+Current server-side drafts:
 
 ```text
-docs/10_API_CONTRACTS.md
-docs/25_WEBSITE_INTAKE_INTEGRATION_DRAFT.md
-docs/26_PROTECTED_INTAKE_ENDPOINT_SKELETON.md
+api/endpoints/protectedIntakeEndpoint.ts
+api/persistence/intakePersistenceAdapter.ts
 ```
+
+Safety boundary:
+
+- protected intake endpoint disabled by default;
+- intake persistence disabled by default;
+- no public anonymous Supabase table writes;
+- no live customer-data writes yet.
