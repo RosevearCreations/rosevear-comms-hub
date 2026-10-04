@@ -6,11 +6,13 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-012 — Website Intake Integration Draft**
+**QL-013 — Protected Intake Endpoint Skeleton**
 
-QL-012 prepares the first safe website intake integration contract for RosieDazzlers and DevilnDove. It defines payload shape, brand routing, GitHub environment guidance, and the protected server-side path we will use later.
+QL-013 adds the first provider-neutral server-side intake endpoint skeleton for future RosieDazzlers and DevilnDove website submissions.
 
-No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
+The endpoint is disabled by default. It validates method, allowed origin, a server-side shared secret, brand, intake type, and required payload fields before returning dry-run success. It does not write live customer data until a later persistence adapter build.
+
+The application frontend still does **not** perform live customer-data reads or writes. Customer records, conversations, messages, intakes, tasks, phone calls, and SMS remain local-only until a later build.
 
 No live phone, SMS, AI sending, call recording, number forwarding, or number porting is active in this stage.
 
@@ -70,7 +72,20 @@ VITE_SUPABASE_URL=https://gxujcwpktaickcgzyvnu.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=<publishable key from Supabase>
 ```
 
-Do not commit service-role keys, secret keys, database passwords, JWT secrets, or connection strings.
+Protected intake endpoint values for a future server-side deployment:
+
+```text
+ENABLE_PROTECTED_INTAKE_ENDPOINT=false
+ALLOWED_INTAKE_ORIGINS=https://rosiedazzlers.ca,https://devilndove.com,https://devilndove.online
+```
+
+Only add this as a server-side secret when endpoint testing begins:
+
+```text
+INTAKE_SHARED_SECRET=<long random shared secret>
+```
+
+Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, or intake shared secrets.
 
 ## Auth redirect URLs
 
@@ -95,16 +110,16 @@ Start here:
 - [`docs/23_ADMIN_LOGIN_SESSION_VERIFICATION.md`](docs/23_ADMIN_LOGIN_SESSION_VERIFICATION.md)
 - [`docs/24_SUPABASE_READ_MODEL_LOCAL_FALLBACK.md`](docs/24_SUPABASE_READ_MODEL_LOCAL_FALLBACK.md)
 - [`docs/25_WEBSITE_INTAKE_INTEGRATION_DRAFT.md`](docs/25_WEBSITE_INTAKE_INTEGRATION_DRAFT.md)
+- [`docs/26_PROTECTED_INTAKE_ENDPOINT_SKELETON.md`](docs/26_PROTECTED_INTAKE_ENDPOINT_SKELETON.md)
 
-## Website intake contract
+## Website intake path
 
-QL-012 adds:
+QL-013 adds:
 
 ```text
-api/contracts/website-intake.schema.json
-integrations/website-intake/README.md
-integrations/website-intake/websiteIntakeContract.ts
-scripts/remote-operator-github-environments-checklist.md
+api/endpoints/protectedIntakeEndpoint.ts
+api/contracts/protected-intake-response.schema.json
+api/contracts/protected-intake-example.request.json
 ```
 
 The safe future path is:
@@ -112,8 +127,8 @@ The safe future path is:
 ```text
 Public website form
 → protected server-side endpoint
-→ validation + rate limit + shared secret/signature
-→ server-side write to hub tables
+→ validation + origin check + shared secret
+→ dry run now / server-side write in a later build
 → admin review before reply
 ```
 
@@ -121,7 +136,8 @@ Public website form
 
 ```text
 app/                    Vite React admin shell with local persistence and guarded Supabase auth/reference-read wiring
-api/contracts/           API contract drafts, including website intake payload schema
+api/contracts/           API contract drafts and schemas
+api/endpoints/           Provider-neutral server-side endpoint skeletons
 brand-configs/           Brand-specific settings and workflows
 database/                Schema, migrations, seeds, and hosted-backend notes
 docs/                    Source-of-truth documentation
@@ -130,17 +146,17 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-012 non-goals
+## QL-013 non-goals
 
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
 - Do not port any number yet.
 - Do not auto-send AI replies.
 - Do not record calls until consent language and storage rules are implemented.
 - Do not enter real production customer data yet.
-- Do not commit Supabase service-role keys, secret keys, database passwords, JWT secrets, or connection strings.
+- Do not commit Supabase service-role keys, secret keys, database passwords, JWT secrets, connection strings, or intake shared secrets.
 - Do not perform live customer-data reads/writes yet.
 - Do not expose anonymous public Supabase table access.
 
 ## Next build
 
-QL-013 — Protected Intake Endpoint Skeleton.
+QL-014 — Intake Persistence Adapter Draft.
