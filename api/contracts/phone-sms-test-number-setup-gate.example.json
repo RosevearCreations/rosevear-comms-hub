@@ -1,0 +1,36 @@
+{
+  "build": "QL-022",
+  "title": "Phone/SMS Test Number Setup Gate",
+  "decisionFrom": "QL-021",
+  "selectedApproach": "new_test_number_first",
+  "setupState": "blocked_pending_manual_setup",
+  "selectedProvider": null,
+  "allowedProviders": ["voipms", "telnyx", "twilio"],
+  "targetUse": "undecided",
+  "budgetApprovedCadMonthly": null,
+  "accountCreatedOutsideRepository": false,
+  "testNumberPurchasedOutsideRepository": false,
+  "existingNumbersProtected": true,
+  "portExistingNumbers": false,
+  "forwardExistingNumbers": false,
+  "enablePhoneWebhooks": false,
+  "enableSms": false,
+  "enableCallRecording": false,
+  "enableAiAutoSend": false,
+  "setupAllowed": false,
+  "testNumberPurchaseAllowed": false,
+  "productionSafe": true,
+  "blockers": [
+    "Choose exactly one first provider for the new test number: voipms, telnyx, or twilio.",
+    "Choose the first test-number use: RosieDazzlers, DevilnDove, or shared hub testing.",
+    "Confirm a small monthly/pay-as-you-go CAD test budget before creating or using the provider account."
+  ],
+  "forbiddenActions": [
+    "Do not port any existing number.",
+    "Do not forward any existing number.",
+    "Do not commit provider tokens, SIP credentials, phone-number ownership documents, or webhook secrets.",
+    "Do not enable phone webhooks, SMS, call recording, or AI auto-send.",
+    "Do not connect live website forms or real customer data to the phone/SMS path yet."
+  ],
+  "nextBuild": "QL-023 — Phone/SMS Test Number Manual Setup Evidence Intake"
+}
