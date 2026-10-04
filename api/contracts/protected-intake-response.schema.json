@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rosevearcreations.local/schemas/protected-intake-response.schema.json",
+  "title": "Protected Website Intake Response",
+  "type": "object",
+  "required": ["accepted", "mode"],
+  "additionalProperties": false,
+  "properties": {
+    "accepted": {
+      "type": "boolean"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["disabled", "dry_run", "stored", "rejected"]
+    },
+    "intakeId": {
+      "type": "string"
+    },
+    "error": {
+      "type": "string"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
