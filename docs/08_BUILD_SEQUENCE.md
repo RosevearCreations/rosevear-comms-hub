@@ -138,13 +138,28 @@ Result:
 
 ## QL-014 — Intake Persistence Adapter Draft
 
+Status: complete.
+
+Result:
+
+- Added provider-neutral adapter at `api/persistence/intakePersistenceAdapter.ts`.
+- Added dry-run persistence plan schema and example under `api/contracts/`.
+- Added source-of-truth doc at `docs/27_INTAKE_PERSISTENCE_ADAPTER_DRAFT.md`.
+- Added remote operator checklist at `scripts/remote-operator-intake-persistence-checklist.md`.
+- Draft maps validated website intake into contact, profile, conversation, message, intake, follow-up task, and audit records.
+- Kept `ENABLE_PROTECTED_INTAKE_ENDPOINT=false` and `ENABLE_INTAKE_PERSISTENCE=false` as the safe default.
+- Did not connect live websites or write live customer data.
+
+## QL-015 — Protected Intake Deployment Readiness Gate
+
 Goal:
 
-- Draft the server-side persistence adapter that turns a validated intake payload into contact, conversation, message, intake, task, and audit records.
-- Keep the live endpoint disabled until persistence and deployment are reviewed.
-- Do not expose direct browser writes to Supabase app tables.
+- Decide where the protected endpoint will run.
+- Confirm environment variables and secret placement.
+- Add deployment-specific wrapper only after target is selected.
+- Keep live intake disabled until reviewed.
 
-## QL-015 — Phone/SMS Provider Test Decision
+## QL-016 — Phone/SMS Provider Test Decision
 
 Goal:
 
