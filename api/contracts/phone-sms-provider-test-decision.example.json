@@ -1,0 +1,29 @@
+{
+  "build": "QL-021",
+  "title": "Phone/SMS Provider Test Decision",
+  "selectedApproach": "new_test_number_first",
+  "selectedProvider": null,
+  "setupState": "manual_setup_required",
+  "existingNumbersProtected": true,
+  "portExistingNumbers": false,
+  "forwardExistingNumbers": false,
+  "enablePhoneWebhooks": false,
+  "enableSms": false,
+  "enableCallRecording": false,
+  "shortlist": [
+    "voipms",
+    "telnyx",
+    "twilio"
+  ],
+  "deferredPbxCandidates": [
+    "freepbx_asterisk",
+    "3cx"
+  ],
+  "manualSetupNeededLater": [
+    "Select or create one provider account.",
+    "Buy or provision one new test number only.",
+    "Do not port existing numbers.",
+    "Do not forward existing numbers yet.",
+    "Keep phone webhooks, SMS, and call recording disabled until the test number is proven."
+  ]
+}

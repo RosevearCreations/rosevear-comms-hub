@@ -50,205 +50,110 @@ Result: development schema applied, expected tables verified, RLS verified, seed
 
 Status: complete.
 
-Result:
-
-- Generated types stored at `app/src/supabase/database.types.ts`.
-- Follow-up migration stored at `database/migrations/0005_supabase_security_performance_indexes.sql`.
-- Advisor follow-up migration `ql_007_security_performance_indexes` applied successfully.
+Result: generated Supabase types and applied follow-up security/performance index migration.
 
 ## QL-008B — Auth and Safe Admin Access Decision
 
 Status: complete.
 
-Result:
-
-- Decision documented in `docs/21_AUTH_SAFE_ADMIN_ACCESS_DECISION.md`.
-- Migration prepared at `database/migrations/0006_auth_admin_access_policies.sql`.
-- Migration `ql_008b_auth_admin_access_policies` applied successfully to Supabase during QL-009.
-- Owner allowlist row seeded privately in Supabase.
-- No secrets committed.
+Result: admin allowlist and safe auth/RLS decision prepared and later applied.
 
 ## QL-009 — Auth Boundary and Supabase Client Wiring
 
 Status: complete.
 
-Result:
-
-- Added `app/src/supabase/client.ts`.
-- Added `app/src/auth/authBoundary.ts`.
-- Added `@supabase/supabase-js` dependency.
-- Added `database/migrations/0007_move_rls_helpers_private_schema.sql`.
-- Applied `ql_009_move_rls_helpers_private_schema` to Supabase.
-- Supabase security advisors returned no security lints after the private-helper migration.
+Result: Supabase client boundary, private RLS helpers, and local-only default wiring.
 
 ## QL-010 — Admin Login UI and Session Verification
 
 Status: complete.
 
-Result:
-
-- Added guarded admin login/session UI in `app/src/auth/AdminSessionGate.tsx`.
-- Wrapped the app with the session gate in `app/src/main.tsx`.
-- Kept the default runtime local-only unless browser-safe Supabase feature flags are enabled.
-- Verified the live Supabase owner allowlist row exists without exposing the email in repo docs.
-- Verified RLS policies exist for all application tables.
-- Kept live customer-data reads and writes disabled.
+Result: guarded admin login/session UI with live customer-data reads and writes disabled.
 
 ## QL-011 — Supabase Read Model and Local Fallback
 
 Status: complete.
 
-Result:
-
-- Added `app/src/supabase/readModel.ts`.
-- Added safe reference reads for `public.brands` and the signed-in admin allowlist row.
-- Preserved local fallback when Supabase is not configured.
-- Kept live customer-data reads and writes disabled.
+Result: safe reference reads for `public.brands` and signed-in admin allowlist row.
 
 ## QL-012 — Website Intake Integration Draft
 
 Status: complete.
 
-Result:
-
-- Added website intake schema at `api/contracts/website-intake.schema.json`.
-- Added TypeScript contract at `integrations/website-intake/websiteIntakeContract.ts`.
-- Added integration notes at `integrations/website-intake/README.md`.
-- Added source-of-truth doc at `docs/25_WEBSITE_INTAKE_INTEGRATION_DRAFT.md`.
-- Added remote operator environment checklist at `scripts/remote-operator-github-environments-checklist.md`.
-- Documented recommended GitHub environment titles: `preview` and `production`.
-- Kept public anonymous Supabase table access disabled.
-- Did not connect live websites yet.
+Result: website intake schema, TypeScript contract, integration notes, and environment guidance.
 
 ## QL-013 — Protected Intake Endpoint Skeleton
 
 Status: complete.
 
-Result:
-
-- Added provider-neutral endpoint skeleton at `api/endpoints/protectedIntakeEndpoint.ts`.
-- Added response schema and example request in `api/contracts/`.
-- Added source-of-truth doc at `docs/26_PROTECTED_INTAKE_ENDPOINT_SKELETON.md`.
-- Added remote operator checklist at `scripts/remote-operator-protected-intake-endpoint-checklist.md`.
-- Endpoint is disabled by default.
-- Requires server-side origin and shared-secret checks when enabled.
-- Returns dry-run success until persistence is wired.
-- Does not add anonymous Supabase policies.
-- Does not write live customer data yet.
+Result: disabled-by-default provider-neutral protected intake endpoint skeleton.
 
 ## QL-014 — Intake Persistence Adapter Draft
 
 Status: complete.
 
-Result:
-
-- Added provider-neutral persistence adapter at `api/persistence/intakePersistenceAdapter.ts`.
-- Added draft mapping from website intake to contact, brand profile, conversation, message, intake, follow-up task, and audit event records.
-- Added persistence plan schema and example plan.
-- Kept persistence disabled by default.
-- Did not add a Supabase migration.
-- Did not enable live customer-data writes.
+Result: provider-neutral persistence adapter plan without live writes.
 
 ## QL-015 — Protected Intake Deployment Readiness Gate
 
 Status: complete.
 
-Result:
-
-- Added deployment readiness source-of-truth doc at `docs/28_PROTECTED_INTAKE_DEPLOYMENT_READINESS_GATE.md`.
-- Added readiness helper at `api/deployment/protectedIntakeDeploymentReadiness.ts`.
-- Added deployment gate and release checklists under `ops/deployment/`.
-- Added remote operator checklist.
-- Documented safe production green state for main.
-- Kept protected intake and persistence disabled by default.
-- Did not add a Supabase migration.
-- Did not connect live website forms.
+Result: deployment readiness helper and release checklists; protected intake remains disabled.
 
 ## QL-016 — Deployment Runtime Wrapper Selection
 
 Status: complete.
 
-Result:
-
-- Selected a Vercel serverless function wrapper template as the first protected-intake runtime path.
-- Added wrapper template at `runtimes/vercel/api/intake.ts`.
-- Added runtime decision helper at `api/deployment/runtimeWrapperSelection.ts`.
-- Added runtime source-of-truth doc at `docs/29_DEPLOYMENT_RUNTIME_WRAPPER_SELECTION.md`.
-- Added Vercel runtime notes at `runtimes/vercel/README.md` and `ops/deployment/vercel-runtime-wrapper-selection.md`.
-- Kept the wrapper outside the live root API path so it cannot become active accidentally.
-- Kept protected intake, persistence, rate limiting, and idempotency disabled by default.
-- Did not add a Supabase migration.
-- Did not connect live website forms.
+Result: selected Vercel serverless function wrapper template stored outside the live API path.
 
 ## QL-017 — Protected Intake Dry-Run Runtime Verification
 
 Status: complete.
 
-Result:
-
-- Added dry-run verification helper at `api/deployment/protectedIntakeDryRunVerification.ts`.
-- Added expected response fixture at `api/contracts/protected-intake-dry-run-verification.example.json`.
-- Added source-of-truth doc at `docs/30_PROTECTED_INTAKE_DRY_RUN_RUNTIME_VERIFICATION.md`.
-- Added build record and operator checklist.
-- Added Vercel dry-run verification notes under `ops/deployment/` and `runtimes/vercel/`.
-- Verified the expected disabled, rejected, and dry-run response modes at the contract level.
-- Kept protected intake and persistence disabled by default.
-- Did not add a Supabase migration.
-- Did not connect live website forms.
+Result: dry-run verification helper for disabled, rejected, and dry-run response modes.
 
 ## QL-018 — Protected Intake Preview Deployment Wiring
 
 Status: complete.
 
-Result:
-
-- Added preview-capable route at `api/intake.ts`.
-- Added preview wiring helper at `api/deployment/protectedIntakePreviewWiring.ts`.
-- Added preview wiring example at `api/contracts/protected-intake-preview-wiring.example.json`.
-- Added source-of-truth doc at `docs/31_PROTECTED_INTAKE_PREVIEW_DEPLOYMENT_WIRING.md`.
-- Added build record and operator checklist.
-- Added Vercel preview wiring notes under `ops/deployment/` and `runtimes/vercel/`.
-- Kept the endpoint disabled by default.
-- Kept persistence disabled.
-- Did not add a Supabase migration.
-- Did not connect live website forms.
+Result: preview-capable route at `api/intake.ts`, still disabled by default.
 
 ## QL-019 — Protected Intake Preview Disabled-Mode Check
 
 Status: complete.
 
-Result:
-
-- Added disabled-mode checker at `api/deployment/protectedIntakePreviewDisabledModeCheck.ts`.
-- Added expected disabled-mode fixture at `api/contracts/protected-intake-preview-disabled-mode-check.example.json`.
-- Added source-of-truth doc at `docs/32_PROTECTED_INTAKE_PREVIEW_DISABLED_MODE_CHECK.md`.
-- Added build record and operator checklists.
-- Documented expected safe preview result: `HTTP 503`, `mode: disabled`, `accepted: false`.
-- Kept protected intake and persistence disabled by default.
-- Did not add a Supabase migration.
-- Did not connect live website forms.
+Result: disabled-mode checker and expected safe preview result: `HTTP 503`, `mode: disabled`, `accepted: false`.
 
 ## QL-020 — Protected Intake Preview Enablement Gate
 
 Status: complete.
 
-Result:
-
-- Added preview enablement gate helper at `api/deployment/protectedIntakePreviewEnablementGate.ts`.
-- Added preview enablement gate fixture at `api/contracts/protected-intake-preview-enablement-gate.example.json`.
-- Added source-of-truth doc at `docs/33_PROTECTED_INTAKE_PREVIEW_ENABLEMENT_GATE.md`.
-- Added build record and operator checklists.
-- Documented the blockers that must clear before dry-run endpoint enablement can be tested.
-- Kept `ENABLE_PROTECTED_INTAKE_ENDPOINT=false` as the default.
-- Kept persistence disabled.
-- Did not add a Supabase migration.
-- Did not connect live website forms.
+Result: enablement gate helper and blockers before dry-run endpoint enablement can be tested.
 
 ## QL-021 — Phone/SMS Provider Test Decision
 
+Status: complete.
+
+Result:
+
+- Chose `new_test_number_first` as the first phone/SMS experiment path.
+- Added decision helper at `api/deployment/phoneSmsProviderTestDecision.ts`.
+- Added decision fixture at `api/contracts/phone-sms-provider-test-decision.example.json`.
+- Added source-of-truth doc at `docs/34_PHONE_SMS_PROVIDER_TEST_DECISION.md`.
+- Added build record, operator checklist, and telephony decision notes.
+- Shortlisted VoIP.ms, Telnyx, and Twilio for a new test number.
+- Deferred FreePBX/Asterisk and 3CX until after the simple test-number path is proven.
+- Kept all existing numbers unported and unforwarded.
+- Kept phone webhooks, SMS, call recording, and AI auto-send disabled.
+- Did not add a Supabase migration.
+- Did not connect a provider account.
+
+## QL-022 — Phone/SMS Test Number Setup Gate
+
 Goal:
 
-- Choose a test number approach.
-- Compare VoIP.ms, Telnyx, Twilio, FreePBX/Asterisk, and 3CX again with real workflow needs.
+- Turn the QL-021 decision into a setup gate.
+- Record which provider will be used for the first new test number.
+- Keep existing numbers protected until the test path is proven.
 
 Setup will be needed here for a test number or phone provider account.

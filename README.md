@@ -6,13 +6,11 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-020 — Protected Intake Preview Enablement Gate**
+**QL-021 — Phone/SMS Provider Test Decision**
 
-QL-020 adds the decision gate that must be satisfied before the protected website intake preview route can be enabled for dry-run testing. It does **not** enable the endpoint, does **not** enable persistence, and does **not** connect RosieDazzlers or DevilnDove public forms.
+QL-021 chooses the first phone/SMS experiment path: **one new test number first**. It does **not** connect a provider, does **not** buy a number, does **not** port or forward existing numbers, and does **not** enable phone webhooks, SMS, call recording, or AI auto-send.
 
 The protected intake endpoint and intake persistence both remain disabled by default. No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
-
-No live phone, SMS, AI sending, call recording, number forwarding, or number porting is active in this stage.
 
 ## Repository
 
@@ -52,8 +50,6 @@ preview
 production
 ```
 
-Use repository-wide Actions variables first unless a workflow specifically says it uses environments.
-
 Repository variables/secrets location:
 
 ```text
@@ -70,42 +66,31 @@ VITE_SUPABASE_URL=https://gxujcwpktaickcgzyvnu.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=<publishable key from Supabase>
 ```
 
-Protected intake endpoint values stay disabled until deployment review:
+Protected intake values stay disabled until deployment review:
 
 ```text
 ENABLE_PROTECTED_INTAKE_ENDPOINT=false
 ENABLE_INTAKE_PERSISTENCE=false
 ENABLE_RATE_LIMITING=false
 ENABLE_INTAKE_IDEMPOTENCY=false
-DEPLOYMENT_TARGET=vercel
-DEPLOYMENT_RUNTIME_WRAPPER=vercel_serverless_function
-PROTECTED_INTAKE_PREVIEW_ROUTE=/api/intake
-PROTECTED_INTAKE_DRY_RUN_EXPECTED_MODE=disabled
-PROTECTED_INTAKE_DISABLED_MODE_EXPECTED_STATUS=503
-PROTECTED_INTAKE_DISABLED_MODE_EXPECTED_MODE=disabled
 PROTECTED_INTAKE_ENABLEMENT_GATE_STATUS=hold
 PROTECTED_INTAKE_ENABLEMENT_ALLOWED=false
-PROTECTED_INTAKE_PREVIEW_URL=
-ALLOWED_INTAKE_ORIGINS=https://rosiedazzlers.ca,https://devilndove.com,https://devilndove.online
 ```
 
-Only add this as a server-side secret when endpoint testing begins:
+Phone/SMS test decision values:
 
 ```text
-INTAKE_SHARED_SECRET=<long random shared secret>
+PHONE_SMS_TEST_DECISION_STATUS=new_test_number_first
+PHONE_SMS_TEST_PROVIDER=undecided
+PHONE_SMS_TEST_NUMBER_REQUIRED=true
+PHONE_SMS_EXISTING_NUMBERS_PROTECTED=true
+ENABLE_PHONE_WEBHOOKS=false
+ENABLE_SMS=false
+ENABLE_CALL_RECORDING=false
+ENABLE_AI_AUTO_SEND=false
 ```
 
-Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, or intake shared secrets.
-
-## Auth redirect URLs
-
-For local testing, add this Supabase Auth redirect URL:
-
-```text
-http://localhost:5173
-```
-
-For a hosted preview or production deployment, add the deployed app URL after it exists. Do not use the GitHub repo URL as the Supabase Auth redirect URL; the redirect URL must be the running app URL.
+Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, provider API keys, SIP passwords, webhook secrets, or intake shared secrets.
 
 ## Source of truth
 
@@ -113,6 +98,7 @@ Start here:
 
 - [`docs/00_MASTER_SOURCE_OF_TRUTH.md`](docs/00_MASTER_SOURCE_OF_TRUTH.md)
 - [`docs/01_DECISION_RECORD.md`](docs/01_DECISION_RECORD.md)
+- [`docs/03_TELEPHONY_OPTIONS.md`](docs/03_TELEPHONY_OPTIONS.md)
 - [`docs/08_BUILD_SEQUENCE.md`](docs/08_BUILD_SEQUENCE.md)
 - [`docs/20_SUPABASE_MIGRATION_VERIFIED.md`](docs/20_SUPABASE_MIGRATION_VERIFIED.md)
 - [`docs/21_AUTH_SAFE_ADMIN_ACCESS_DECISION.md`](docs/21_AUTH_SAFE_ADMIN_ACCESS_DECISION.md)
@@ -128,38 +114,33 @@ Start here:
 - [`docs/31_PROTECTED_INTAKE_PREVIEW_DEPLOYMENT_WIRING.md`](docs/31_PROTECTED_INTAKE_PREVIEW_DEPLOYMENT_WIRING.md)
 - [`docs/32_PROTECTED_INTAKE_PREVIEW_DISABLED_MODE_CHECK.md`](docs/32_PROTECTED_INTAKE_PREVIEW_DISABLED_MODE_CHECK.md)
 - [`docs/33_PROTECTED_INTAKE_PREVIEW_ENABLEMENT_GATE.md`](docs/33_PROTECTED_INTAKE_PREVIEW_ENABLEMENT_GATE.md)
+- [`docs/34_PHONE_SMS_PROVIDER_TEST_DECISION.md`](docs/34_PHONE_SMS_PROVIDER_TEST_DECISION.md)
 
-## Website intake path
+## Phone/SMS path
 
-The preview-capable route is:
+The first phone/SMS experiment path is:
 
 ```text
-api/intake.ts
+new test number
+→ inbound call or SMS event
+→ contact/conversation/task evidence
+→ human review
+→ no auto-send
 ```
 
-The route wraps the protected handler while keeping the same safe gate:
+Provider candidates for the first new test number:
 
 ```text
-ENABLE_PROTECTED_INTAKE_ENDPOINT=false
+VoIP.ms
+Telnyx
+Twilio
 ```
 
-The dry-run enablement gate helper is:
+PBX candidates deferred until after the simple test-number path is proven:
 
 ```text
-api/deployment/protectedIntakePreviewEnablementGate.ts
-```
-
-The safe future path remains:
-
-```text
-Public website form
-→ protected server-side endpoint
-→ validation + origin check + shared secret
-→ disabled preview first
-→ enablement gate
-→ dry-run verification with persistence disabled
-→ server-side write only after later persistence gates
-→ admin review before reply
+FreePBX/Asterisk
+3CX
 ```
 
 ## Repository structure
@@ -167,7 +148,7 @@ Public website form
 ```text
 app/                    Vite React admin shell with local persistence and guarded Supabase auth/reference-read wiring
 api/contracts/           API contract drafts and schemas
-api/deployment/          Deployment readiness, verification, and enablement-gate helpers
+api/deployment/          Deployment readiness, verification, enablement, and provider-decision helpers
 api/endpoints/           Provider-neutral server-side endpoint skeletons
 api/persistence/         Provider-neutral persistence adapter drafts
 brand-configs/           Brand-specific settings and workflows
@@ -180,19 +161,18 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-020 non-goals
+## QL-021 non-goals
 
+- Do not port any number.
+- Do not forward any existing number.
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
-- Do not port any number yet.
+- Do not buy a number yet.
+- Do not enable phone/SMS webhooks.
+- Do not enable call recording.
 - Do not auto-send AI replies.
-- Do not record calls until consent language and storage rules are implemented.
-- Do not enter real production customer data yet.
-- Do not commit Supabase service-role keys, secret keys, database passwords, JWT secrets, connection strings, or intake shared secrets.
-- Do not perform live customer-data reads/writes yet.
-- Do not expose anonymous public Supabase table access.
-- Do not enable persistence.
-- Do not connect public website forms.
+- Do not enter real production customer data.
+- Do not commit provider tokens, API keys, SIP credentials, webhook secrets, or phone-number ownership documents.
 
 ## Next build
 
-QL-021 — Phone/SMS Provider Test Decision.
+QL-022 — Phone/SMS Test Number Setup Gate.
