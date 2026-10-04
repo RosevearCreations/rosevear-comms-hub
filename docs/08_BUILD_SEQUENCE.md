@@ -101,20 +101,35 @@ Status: complete.
 Result:
 
 - Added `app/src/supabase/readModel.ts`.
-- Updated `AdminSessionGate` to load safe reference data after verified admin login.
-- Limited live frontend reads to `brands` and the signed-in admin allowlist profile.
-- Kept customer-data reads and writes disabled.
-- Confirmed live Supabase brand seed rows exist for `devilndove` and `rosiedazzlers`.
-- Documented exact repo, Supabase URL, publishable-key, and auth redirect setup steps.
+- Added safe reference reads for `public.brands` and the signed-in admin allowlist row.
+- Preserved local fallback when Supabase is not configured.
+- Kept live customer-data reads and writes disabled.
 
 ## QL-012 — Website Intake Integration Draft
 
+Status: complete.
+
+Result:
+
+- Added website intake schema at `api/contracts/website-intake.schema.json`.
+- Added TypeScript contract at `integrations/website-intake/websiteIntakeContract.ts`.
+- Added integration notes at `integrations/website-intake/README.md`.
+- Added source-of-truth doc at `docs/25_WEBSITE_INTAKE_INTEGRATION_DRAFT.md`.
+- Added remote operator environment checklist at `scripts/remote-operator-github-environments-checklist.md`.
+- Documented recommended GitHub environment titles: `preview` and `production`.
+- Kept public anonymous Supabase table access disabled.
+- Did not connect live websites yet.
+
+## QL-013 — Protected Intake Endpoint Skeleton
+
 Goal:
 
-- Prepare RosieDazzlers and DevilnDove server-to-server intake payloads.
-- Do not expose unauthenticated public write endpoints.
+- Add first server-side intake endpoint skeleton.
+- Keep it disabled by default.
+- Require server-side validation and secret/signature verification.
+- Do not expose direct browser writes to Supabase app tables.
 
-## QL-013 — Phone/SMS Provider Test Decision
+## QL-014 — Phone/SMS Provider Test Decision
 
 Goal:
 
