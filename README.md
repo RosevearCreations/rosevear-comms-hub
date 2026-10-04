@@ -6,16 +6,11 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-011 — Supabase Read Model and Local Fallback**
+**QL-012 — Website Intake Integration Draft**
 
-QL-011 adds a safe Supabase read model after owner/admin login. The app still defaults to local browser storage, but when Supabase feature flags and the publishable key are supplied it can verify the admin session and read only safe reference data from Supabase.
+QL-012 prepares the first safe website intake integration contract for RosieDazzlers and DevilnDove. It defines payload shape, brand routing, GitHub environment guidance, and the protected server-side path we will use later.
 
-The only live Supabase reads introduced in this stage are:
-
-- `public.brands`
-- the signed-in admin's allowlist profile from `public.app_admins`
-
-The application frontend still does **not** perform live customer-data reads or writes. Customer records, conversations, messages, intakes, tasks, phone calls, and SMS remain local-only until a later build.
+No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
 
 No live phone, SMS, AI sending, call recording, number forwarding, or number porting is active in this stage.
 
@@ -48,6 +43,35 @@ https://gxujcwpktaickcgzyvnu.supabase.co
 
 Use the **Publishable key** from Supabase API Keys for `VITE_SUPABASE_PUBLISHABLE_KEY`. Do not use the secret/service-role key in the browser.
 
+## GitHub environments and variables
+
+For this repository, use these GitHub Environment titles only when a deployment workflow requires environment-scoped settings:
+
+```text
+preview
+production
+```
+
+Use repository-wide Actions variables first unless a workflow specifically says it uses environments.
+
+Repository variables/secrets location:
+
+```text
+Settings → Secrets and variables → Actions
+```
+
+Browser-safe Vite values for login/reference-read testing:
+
+```text
+VITE_ENABLE_HOSTED_DATABASE=true
+VITE_ENABLE_SUPABASE_CLIENT=true
+VITE_ENABLE_SUPABASE_LOGIN=true
+VITE_SUPABASE_URL=https://gxujcwpktaickcgzyvnu.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=<publishable key from Supabase>
+```
+
+Do not commit service-role keys, secret keys, database passwords, JWT secrets, or connection strings.
+
 ## Auth redirect URLs
 
 For local testing, add this Supabase Auth redirect URL:
@@ -70,52 +94,34 @@ Start here:
 - [`docs/22_AUTH_BOUNDARY_SUPABASE_CLIENT_WIRING.md`](docs/22_AUTH_BOUNDARY_SUPABASE_CLIENT_WIRING.md)
 - [`docs/23_ADMIN_LOGIN_SESSION_VERIFICATION.md`](docs/23_ADMIN_LOGIN_SESSION_VERIFICATION.md)
 - [`docs/24_SUPABASE_READ_MODEL_LOCAL_FALLBACK.md`](docs/24_SUPABASE_READ_MODEL_LOCAL_FALLBACK.md)
+- [`docs/25_WEBSITE_INTAKE_INTEGRATION_DRAFT.md`](docs/25_WEBSITE_INTAKE_INTEGRATION_DRAFT.md)
 
-## Run locally
+## Website intake contract
 
-```bash
-cd app
-npm install
-npm run dev
-```
-
-Build check:
-
-```bash
-cd app
-npm run check
-npm run build
-```
-
-The repository also has GitHub Actions configured to run the app check/build remotely on push and pull request. This matters because the current operator may not be running local Bash.
-
-## Login feature gates
-
-Supabase login and reference reads stay disabled unless all required browser-safe values are configured:
+QL-012 adds:
 
 ```text
-VITE_ENABLE_HOSTED_DATABASE=true
-VITE_ENABLE_SUPABASE_CLIENT=true
-VITE_SUPABASE_URL=https://gxujcwpktaickcgzyvnu.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=<publishable key from Supabase>
+api/contracts/website-intake.schema.json
+integrations/website-intake/README.md
+integrations/website-intake/websiteIntakeContract.ts
+scripts/remote-operator-github-environments-checklist.md
 ```
 
-Do not commit service-role keys, secret keys, database passwords, JWT secrets, or connection strings.
+The safe future path is:
 
-## Core decision
-
-Build **one shared application** with brand workspaces:
-
-- `rosiedazzlers`
-- `devilndove`
-
-RosieDazzlers is the first operational workflow because phone/quote handling is most urgent. DevilnDove is built into the architecture from day one.
+```text
+Public website form
+→ protected server-side endpoint
+→ validation + rate limit + shared secret/signature
+→ server-side write to hub tables
+→ admin review before reply
+```
 
 ## Repository structure
 
 ```text
 app/                    Vite React admin shell with local persistence and guarded Supabase auth/reference-read wiring
-api/contracts/           API contract drafts
+api/contracts/           API contract drafts, including website intake payload schema
 brand-configs/           Brand-specific settings and workflows
 database/                Schema, migrations, seeds, and hosted-backend notes
 docs/                    Source-of-truth documentation
@@ -124,7 +130,7 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-011 non-goals
+## QL-012 non-goals
 
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
 - Do not port any number yet.
@@ -133,3 +139,8 @@ telephony/               Phone/SMS provider-neutral integration notes
 - Do not enter real production customer data yet.
 - Do not commit Supabase service-role keys, secret keys, database passwords, JWT secrets, or connection strings.
 - Do not perform live customer-data reads/writes yet.
+- Do not expose anonymous public Supabase table access.
+
+## Next build
+
+QL-013 — Protected Intake Endpoint Skeleton.
