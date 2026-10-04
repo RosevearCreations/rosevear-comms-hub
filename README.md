@@ -6,9 +6,9 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-018 — Protected Intake Preview Deployment Wiring**
+**QL-019 — Protected Intake Preview Disabled-Mode Check**
 
-QL-018 adds a preview-capable protected intake route at `api/intake.ts`. The route is wired for Vercel preview deployment but remains disabled by default unless `ENABLE_PROTECTED_INTAKE_ENDPOINT=true` is set server-side.
+QL-019 adds the disabled-mode checker for the preview-capable protected intake route at `api/intake.ts`. The expected safe preview response is `HTTP 503`, `mode: disabled`, and `accepted: false` while `ENABLE_PROTECTED_INTAKE_ENDPOINT=false`.
 
 The protected intake endpoint and intake persistence both remain disabled by default. No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
 
@@ -79,8 +79,10 @@ ENABLE_RATE_LIMITING=false
 ENABLE_INTAKE_IDEMPOTENCY=false
 DEPLOYMENT_TARGET=vercel
 DEPLOYMENT_RUNTIME_WRAPPER=vercel_serverless_function
-PROTECTED_INTAKE_DRY_RUN_EXPECTED_MODE=disabled
 PROTECTED_INTAKE_PREVIEW_ROUTE=/api/intake
+PROTECTED_INTAKE_DRY_RUN_EXPECTED_MODE=disabled
+PROTECTED_INTAKE_DISABLED_MODE_EXPECTED_STATUS=503
+PROTECTED_INTAKE_DISABLED_MODE_EXPECTED_MODE=disabled
 PROTECTED_INTAKE_PREVIEW_URL=
 ALLOWED_INTAKE_ORIGINS=https://rosiedazzlers.ca,https://devilndove.com,https://devilndove.online
 ```
@@ -122,6 +124,7 @@ Start here:
 - [`docs/29_DEPLOYMENT_RUNTIME_WRAPPER_SELECTION.md`](docs/29_DEPLOYMENT_RUNTIME_WRAPPER_SELECTION.md)
 - [`docs/30_PROTECTED_INTAKE_DRY_RUN_RUNTIME_VERIFICATION.md`](docs/30_PROTECTED_INTAKE_DRY_RUN_RUNTIME_VERIFICATION.md)
 - [`docs/31_PROTECTED_INTAKE_PREVIEW_DEPLOYMENT_WIRING.md`](docs/31_PROTECTED_INTAKE_PREVIEW_DEPLOYMENT_WIRING.md)
+- [`docs/32_PROTECTED_INTAKE_PREVIEW_DISABLED_MODE_CHECK.md`](docs/32_PROTECTED_INTAKE_PREVIEW_DISABLED_MODE_CHECK.md)
 
 ## Website intake path
 
@@ -131,10 +134,10 @@ The preview-capable route is:
 api/intake.ts
 ```
 
-The route wraps the protected handler while keeping the same safe gate:
+The disabled-mode checker is:
 
 ```text
-ENABLE_PROTECTED_INTAKE_ENDPOINT=false
+api/deployment/protectedIntakePreviewDisabledModeCheck.ts
 ```
 
 The safe future path remains:
@@ -167,7 +170,7 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-018 non-goals
+## QL-019 non-goals
 
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
 - Do not port any number yet.
@@ -181,4 +184,4 @@ telephony/               Phone/SMS provider-neutral integration notes
 
 ## Next build
 
-QL-019 — Protected Intake Preview Disabled-Mode Check.
+QL-020 — Protected Intake Preview Enablement Gate.
