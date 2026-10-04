@@ -6,9 +6,11 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-022 — Phone/SMS Test Number Setup Gate**
+**QL-023 — Phone/SMS Test Number Manual Setup Evidence Intake**
 
-QL-022 turns the QL-021 provider decision into a blocked setup gate for **one new disposable test number first**. It does **not** connect a provider, does **not** buy a number, does **not** port or forward existing numbers, and does **not** enable phone webhooks, SMS, call recording, or AI auto-send.
+QL-023 adds the evidence-intake structure for the first manual provider-account setup step. It accepts only non-secret setup facts: provider label, target use, approved CAD budget, non-secret account reference, credential-storage location label, portal review, number-availability review, SMS/compliance review, and redacted notes.
+
+It does **not** choose a provider automatically, does **not** create a provider account, does **not** buy a number, does **not** port or forward existing numbers, and does **not** enable phone webhooks, SMS, call recording, or AI auto-send.
 
 The protected intake endpoint and intake persistence both remain disabled by default. No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
 
@@ -77,16 +79,23 @@ PROTECTED_INTAKE_ENABLEMENT_GATE_STATUS=hold
 PROTECTED_INTAKE_ENABLEMENT_ALLOWED=false
 ```
 
-Phone/SMS test-number setup values:
+Phone/SMS test-number evidence-intake values:
 
 ```text
 PHONE_SMS_TEST_DECISION_STATUS=new_test_number_first
 PHONE_SMS_TEST_NUMBER_SETUP_GATE_STATUS=blocked_pending_manual_setup
+PHONE_SMS_MANUAL_SETUP_EVIDENCE_STATUS=blocked_pending_manual_evidence
 PHONE_SMS_TEST_PROVIDER=undecided
 PHONE_SMS_TEST_NUMBER_REQUIRED=true
 PHONE_SMS_TEST_NUMBER_TARGET_USE=undecided
 PHONE_SMS_TEST_BUDGET_CAD_MONTHLY=
 PHONE_SMS_TEST_ACCOUNT_CREATED=false
+PHONE_SMS_TEST_ACCOUNT_REFERENCE_LABEL=
+PHONE_SMS_CREDENTIAL_STORAGE_LOCATION=undecided
+PHONE_SMS_PROVIDER_PORTAL_REVIEWED=false
+PHONE_SMS_NUMBER_AVAILABILITY_REVIEWED=false
+PHONE_SMS_SMS_COMPLIANCE_REVIEWED=false
+PHONE_SMS_SETUP_EVIDENCE_STORED_OUTSIDE_REPOSITORY=false
 PHONE_SMS_TEST_NUMBER_PURCHASED=false
 PHONE_SMS_EXISTING_NUMBERS_PROTECTED=true
 ENABLE_PHONE_WEBHOOKS=false
@@ -95,7 +104,7 @@ ENABLE_CALL_RECORDING=false
 ENABLE_AI_AUTO_SEND=false
 ```
 
-Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, provider API keys, SIP passwords, webhook secrets, or intake shared secrets.
+Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, provider API keys, SIP passwords, webhook secrets, phone-number ownership documents, invoices, screenshots, customer data, or existing phone numbers.
 
 ## Source of truth
 
@@ -121,6 +130,7 @@ Start here:
 - [`docs/33_PROTECTED_INTAKE_PREVIEW_ENABLEMENT_GATE.md`](docs/33_PROTECTED_INTAKE_PREVIEW_ENABLEMENT_GATE.md)
 - [`docs/34_PHONE_SMS_PROVIDER_TEST_DECISION.md`](docs/34_PHONE_SMS_PROVIDER_TEST_DECISION.md)
 - [`docs/35_PHONE_SMS_TEST_NUMBER_SETUP_GATE.md`](docs/35_PHONE_SMS_TEST_NUMBER_SETUP_GATE.md)
+- [`docs/36_PHONE_SMS_MANUAL_SETUP_EVIDENCE_INTAKE.md`](docs/36_PHONE_SMS_MANUAL_SETUP_EVIDENCE_INTAKE.md)
 
 ## Phone/SMS path
 
@@ -167,18 +177,20 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-022 non-goals
+## QL-023 non-goals
 
+- Do not select a provider automatically.
+- Do not create or connect a provider account.
+- Do not buy a number.
 - Do not port any number.
 - Do not forward any existing number.
-- Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms automatically.
-- Do not buy a number through repository code.
 - Do not enable phone/SMS webhooks.
+- Do not enable SMS.
 - Do not enable call recording.
 - Do not auto-send AI replies.
 - Do not enter real production customer data.
-- Do not commit provider tokens, API keys, SIP credentials, webhook secrets, or phone-number ownership documents.
+- Do not commit provider tokens, API keys, SIP credentials, webhook secrets, ownership documents, invoices, screenshots, customer data, or existing phone numbers.
 
 ## Next build
 
-QL-023 — Phone/SMS Test Number Manual Setup Evidence Intake.
+QL-024 — Phone/SMS Test Number Purchase Review Gate.
