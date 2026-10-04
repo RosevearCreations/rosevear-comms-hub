@@ -6,13 +6,11 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-013 — Protected Intake Endpoint Skeleton**
+**QL-014 — Intake Persistence Adapter Draft**
 
-QL-013 adds the first provider-neutral server-side intake endpoint skeleton for future RosieDazzlers and DevilnDove website submissions.
+QL-014 drafts the server-side persistence adapter that will eventually turn a validated website intake payload into hub records: contact, contact-brand profile, conversation, inbound message, intake request, follow-up task, and audit event.
 
-The endpoint is disabled by default. It validates method, allowed origin, a server-side shared secret, brand, intake type, and required payload fields before returning dry-run success. It does not write live customer data until a later persistence adapter build.
-
-The application frontend still does **not** perform live customer-data reads or writes. Customer records, conversations, messages, intakes, tasks, phone calls, and SMS remain local-only until a later build.
+This is still a draft-only build. The protected intake endpoint remains disabled by default. Intake persistence remains disabled by default. No live website form is connected, and no live customer data is written.
 
 No live phone, SMS, AI sending, call recording, number forwarding, or number porting is active in this stage.
 
@@ -72,10 +70,11 @@ VITE_SUPABASE_URL=https://gxujcwpktaickcgzyvnu.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=<publishable key from Supabase>
 ```
 
-Protected intake endpoint values for a future server-side deployment:
+Protected intake endpoint and persistence values for a future server-side deployment:
 
 ```text
 ENABLE_PROTECTED_INTAKE_ENDPOINT=false
+ENABLE_INTAKE_PERSISTENCE=false
 ALLOWED_INTAKE_ORIGINS=https://rosiedazzlers.ca,https://devilndove.com,https://devilndove.online
 ```
 
@@ -111,15 +110,17 @@ Start here:
 - [`docs/24_SUPABASE_READ_MODEL_LOCAL_FALLBACK.md`](docs/24_SUPABASE_READ_MODEL_LOCAL_FALLBACK.md)
 - [`docs/25_WEBSITE_INTAKE_INTEGRATION_DRAFT.md`](docs/25_WEBSITE_INTAKE_INTEGRATION_DRAFT.md)
 - [`docs/26_PROTECTED_INTAKE_ENDPOINT_SKELETON.md`](docs/26_PROTECTED_INTAKE_ENDPOINT_SKELETON.md)
+- [`docs/27_INTAKE_PERSISTENCE_ADAPTER_DRAFT.md`](docs/27_INTAKE_PERSISTENCE_ADAPTER_DRAFT.md)
 
 ## Website intake path
 
-QL-013 adds:
+QL-014 adds:
 
 ```text
-api/endpoints/protectedIntakeEndpoint.ts
-api/contracts/protected-intake-response.schema.json
-api/contracts/protected-intake-example.request.json
+api/persistence/intakePersistenceAdapter.ts
+api/persistence/README.md
+api/contracts/intake-persistence-plan.schema.json
+api/contracts/intake-persistence-example.plan.json
 ```
 
 The safe future path is:
@@ -128,8 +129,16 @@ The safe future path is:
 Public website form
 → protected server-side endpoint
 → validation + origin check + shared secret
-→ dry run now / server-side write in a later build
+→ server-side persistence adapter
+→ contact/conversation/message/intake/task/audit records
 → admin review before reply
+```
+
+Current safe state:
+
+```text
+ENABLE_PROTECTED_INTAKE_ENDPOINT=false
+ENABLE_INTAKE_PERSISTENCE=false
 ```
 
 ## Repository structure
@@ -138,6 +147,7 @@ Public website form
 app/                    Vite React admin shell with local persistence and guarded Supabase auth/reference-read wiring
 api/contracts/           API contract drafts and schemas
 api/endpoints/           Provider-neutral server-side endpoint skeletons
+api/persistence/         Provider-neutral persistence adapter drafts
 brand-configs/           Brand-specific settings and workflows
 database/                Schema, migrations, seeds, and hosted-backend notes
 docs/                    Source-of-truth documentation
@@ -146,7 +156,7 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-013 non-goals
+## QL-014 non-goals
 
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
 - Do not port any number yet.
@@ -159,4 +169,4 @@ telephony/               Phone/SMS provider-neutral integration notes
 
 ## Next build
 
-QL-014 — Intake Persistence Adapter Draft.
+QL-015 — Protected Intake Deployment Readiness Gate.
