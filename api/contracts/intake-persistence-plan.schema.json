@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rosevear.local/contracts/intake-persistence-plan.schema.json",
+  "title": "Rosevear Comms Hub Intake Persistence Plan",
+  "type": "object",
+  "required": ["mode", "records", "warnings"],
+  "additionalProperties": false,
+  "properties": {
+    "mode": {
+      "type": "string",
+      "enum": ["disabled", "dry_run", "stored"]
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "records": {
+      "type": "object",
+      "required": [
+        "contact",
+        "contactBrandProfile",
+        "conversation",
+        "message",
+        "intakeRequest",
+        "followUpTask",
+        "auditEvent"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "contact": { "type": "object" },
+        "contactBrandProfile": { "type": "object" },
+        "conversation": { "type": "object" },
+        "message": { "type": "object" },
+        "intakeRequest": { "type": "object" },
+        "followUpTask": { "type": "object" },
+        "auditEvent": { "type": "object" }
+      }
+    }
+  }
+}
