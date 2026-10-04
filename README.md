@@ -6,9 +6,9 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-017 — Protected Intake Dry-Run Runtime Verification**
+**QL-018 — Protected Intake Preview Deployment Wiring**
 
-QL-017 adds the dry-run verification plan and helper for the protected website intake runtime path. It verifies the expected disabled, rejected, and dry-run response modes before any live website form can be connected.
+QL-018 adds a preview-capable protected intake route at `api/intake.ts`. The route is wired for Vercel preview deployment but remains disabled by default unless `ENABLE_PROTECTED_INTAKE_ENDPOINT=true` is set server-side.
 
 The protected intake endpoint and intake persistence both remain disabled by default. No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
 
@@ -80,6 +80,7 @@ ENABLE_INTAKE_IDEMPOTENCY=false
 DEPLOYMENT_TARGET=vercel
 DEPLOYMENT_RUNTIME_WRAPPER=vercel_serverless_function
 PROTECTED_INTAKE_DRY_RUN_EXPECTED_MODE=disabled
+PROTECTED_INTAKE_PREVIEW_ROUTE=/api/intake
 PROTECTED_INTAKE_PREVIEW_URL=
 ALLOWED_INTAKE_ORIGINS=https://rosiedazzlers.ca,https://devilndove.com,https://devilndove.online
 ```
@@ -120,19 +121,20 @@ Start here:
 - [`docs/28_PROTECTED_INTAKE_DEPLOYMENT_READINESS_GATE.md`](docs/28_PROTECTED_INTAKE_DEPLOYMENT_READINESS_GATE.md)
 - [`docs/29_DEPLOYMENT_RUNTIME_WRAPPER_SELECTION.md`](docs/29_DEPLOYMENT_RUNTIME_WRAPPER_SELECTION.md)
 - [`docs/30_PROTECTED_INTAKE_DRY_RUN_RUNTIME_VERIFICATION.md`](docs/30_PROTECTED_INTAKE_DRY_RUN_RUNTIME_VERIFICATION.md)
+- [`docs/31_PROTECTED_INTAKE_PREVIEW_DEPLOYMENT_WIRING.md`](docs/31_PROTECTED_INTAKE_PREVIEW_DEPLOYMENT_WIRING.md)
 
 ## Website intake path
 
-The selected first wrapper path remains:
+The preview-capable route is:
 
 ```text
-runtimes/vercel/api/intake.ts
+api/intake.ts
 ```
 
-The dry-run verification helper is:
+The route wraps the protected handler while keeping the same safe gate:
 
 ```text
-api/deployment/protectedIntakeDryRunVerification.ts
+ENABLE_PROTECTED_INTAKE_ENDPOINT=false
 ```
 
 The safe future path remains:
@@ -141,7 +143,8 @@ The safe future path remains:
 Public website form
 → protected server-side endpoint
 → validation + origin check + shared secret
-→ disabled/dry-run verification first
+→ disabled preview first
+→ dry-run verification
 → server-side write only after later persistence gates
 → admin review before reply
 ```
@@ -164,7 +167,7 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-017 non-goals
+## QL-018 non-goals
 
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
 - Do not port any number yet.
@@ -174,8 +177,8 @@ telephony/               Phone/SMS provider-neutral integration notes
 - Do not commit Supabase service-role keys, secret keys, database passwords, JWT secrets, connection strings, or intake shared secrets.
 - Do not perform live customer-data reads/writes yet.
 - Do not expose anonymous public Supabase table access.
-- Do not move the wrapper template into a live deployed API route until deployment wiring is explicitly reviewed.
+- Do not enable the protected intake endpoint until preview disabled-mode is verified.
 
 ## Next build
 
-QL-018 — Protected Intake Preview Deployment Wiring.
+QL-019 — Protected Intake Preview Disabled-Mode Check.
