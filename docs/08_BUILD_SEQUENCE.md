@@ -230,11 +230,19 @@ Result:
 
 ## QL-020 — Protected Intake Preview Enablement Gate
 
-Goal:
+Status: complete.
 
-- Confirm preview URL and disabled-mode evidence.
-- Decide whether endpoint enablement can be tested with persistence still disabled.
-- Require rate-limit and idempotency decisions before any real form connection.
+Result:
+
+- Added preview enablement gate helper at `api/deployment/protectedIntakePreviewEnablementGate.ts`.
+- Added preview enablement gate fixture at `api/contracts/protected-intake-preview-enablement-gate.example.json`.
+- Added source-of-truth doc at `docs/33_PROTECTED_INTAKE_PREVIEW_ENABLEMENT_GATE.md`.
+- Added build record and operator checklists.
+- Documented the blockers that must clear before dry-run endpoint enablement can be tested.
+- Kept `ENABLE_PROTECTED_INTAKE_ENDPOINT=false` as the default.
+- Kept persistence disabled.
+- Did not add a Supabase migration.
+- Did not connect live website forms.
 
 ## QL-021 — Phone/SMS Provider Test Decision
 

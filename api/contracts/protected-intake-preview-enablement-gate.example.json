@@ -1,0 +1,26 @@
+{
+  "build": "QL-020",
+  "title": "Protected Intake Preview Enablement Gate",
+  "safeDefaults": {
+    "ENABLE_PROTECTED_INTAKE_ENDPOINT": "false",
+    "ENABLE_INTAKE_PERSISTENCE": "false",
+    "ENABLE_RATE_LIMITING": "false",
+    "ENABLE_INTAKE_IDEMPOTENCY": "false",
+    "PROTECTED_INTAKE_ENABLEMENT_GATE_STATUS": "hold",
+    "PROTECTED_INTAKE_ENABLEMENT_ALLOWED": "false"
+  },
+  "requiredEvidenceBeforeDryRunEnablement": {
+    "previewUrl": "required",
+    "disabledModeStatus": 503,
+    "disabledModeMode": "disabled",
+    "disabledModeAccepted": false,
+    "sharedSecretStoredServerSide": true,
+    "allowedOriginsConfigured": true,
+    "rateLimitingDecision": "approved",
+    "idempotencyDecision": "approved",
+    "persistenceDisabled": true,
+    "publicFormsDisconnected": true,
+    "serviceRoleKeyBrowserExposed": false
+  },
+  "productionGreenMeaning": "The gate is documented and promoted while endpoint and persistence remain disabled. No customer data is written."
+}

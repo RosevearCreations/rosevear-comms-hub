@@ -6,9 +6,9 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-019 — Protected Intake Preview Disabled-Mode Check**
+**QL-020 — Protected Intake Preview Enablement Gate**
 
-QL-019 adds the disabled-mode checker for the preview-capable protected intake route at `api/intake.ts`. The expected safe preview response is `HTTP 503`, `mode: disabled`, and `accepted: false` while `ENABLE_PROTECTED_INTAKE_ENDPOINT=false`.
+QL-020 adds the decision gate that must be satisfied before the protected website intake preview route can be enabled for dry-run testing. It does **not** enable the endpoint, does **not** enable persistence, and does **not** connect RosieDazzlers or DevilnDove public forms.
 
 The protected intake endpoint and intake persistence both remain disabled by default. No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
 
@@ -83,6 +83,8 @@ PROTECTED_INTAKE_PREVIEW_ROUTE=/api/intake
 PROTECTED_INTAKE_DRY_RUN_EXPECTED_MODE=disabled
 PROTECTED_INTAKE_DISABLED_MODE_EXPECTED_STATUS=503
 PROTECTED_INTAKE_DISABLED_MODE_EXPECTED_MODE=disabled
+PROTECTED_INTAKE_ENABLEMENT_GATE_STATUS=hold
+PROTECTED_INTAKE_ENABLEMENT_ALLOWED=false
 PROTECTED_INTAKE_PREVIEW_URL=
 ALLOWED_INTAKE_ORIGINS=https://rosiedazzlers.ca,https://devilndove.com,https://devilndove.online
 ```
@@ -125,6 +127,7 @@ Start here:
 - [`docs/30_PROTECTED_INTAKE_DRY_RUN_RUNTIME_VERIFICATION.md`](docs/30_PROTECTED_INTAKE_DRY_RUN_RUNTIME_VERIFICATION.md)
 - [`docs/31_PROTECTED_INTAKE_PREVIEW_DEPLOYMENT_WIRING.md`](docs/31_PROTECTED_INTAKE_PREVIEW_DEPLOYMENT_WIRING.md)
 - [`docs/32_PROTECTED_INTAKE_PREVIEW_DISABLED_MODE_CHECK.md`](docs/32_PROTECTED_INTAKE_PREVIEW_DISABLED_MODE_CHECK.md)
+- [`docs/33_PROTECTED_INTAKE_PREVIEW_ENABLEMENT_GATE.md`](docs/33_PROTECTED_INTAKE_PREVIEW_ENABLEMENT_GATE.md)
 
 ## Website intake path
 
@@ -134,10 +137,16 @@ The preview-capable route is:
 api/intake.ts
 ```
 
-The disabled-mode checker is:
+The route wraps the protected handler while keeping the same safe gate:
 
 ```text
-api/deployment/protectedIntakePreviewDisabledModeCheck.ts
+ENABLE_PROTECTED_INTAKE_ENDPOINT=false
+```
+
+The dry-run enablement gate helper is:
+
+```text
+api/deployment/protectedIntakePreviewEnablementGate.ts
 ```
 
 The safe future path remains:
@@ -147,7 +156,8 @@ Public website form
 → protected server-side endpoint
 → validation + origin check + shared secret
 → disabled preview first
-→ dry-run verification
+→ enablement gate
+→ dry-run verification with persistence disabled
 → server-side write only after later persistence gates
 → admin review before reply
 ```
@@ -157,7 +167,7 @@ Public website form
 ```text
 app/                    Vite React admin shell with local persistence and guarded Supabase auth/reference-read wiring
 api/contracts/           API contract drafts and schemas
-api/deployment/          Deployment readiness and verification helpers
+api/deployment/          Deployment readiness, verification, and enablement-gate helpers
 api/endpoints/           Provider-neutral server-side endpoint skeletons
 api/persistence/         Provider-neutral persistence adapter drafts
 brand-configs/           Brand-specific settings and workflows
@@ -170,7 +180,7 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-019 non-goals
+## QL-020 non-goals
 
 - Do not connect Bell Fibe, cell phones, SIP trunks, SMS, 3CX, FreePBX, Twilio, Telnyx, or VoIP.ms yet.
 - Do not port any number yet.
@@ -180,8 +190,9 @@ telephony/               Phone/SMS provider-neutral integration notes
 - Do not commit Supabase service-role keys, secret keys, database passwords, JWT secrets, connection strings, or intake shared secrets.
 - Do not perform live customer-data reads/writes yet.
 - Do not expose anonymous public Supabase table access.
-- Do not enable the protected intake endpoint until preview disabled-mode is verified.
+- Do not enable persistence.
+- Do not connect public website forms.
 
 ## Next build
 
-QL-020 — Protected Intake Preview Enablement Gate.
+QL-021 — Phone/SMS Provider Test Decision.
