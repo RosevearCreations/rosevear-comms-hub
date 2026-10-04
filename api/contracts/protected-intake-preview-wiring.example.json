@@ -1,0 +1,25 @@
+{
+  "build": "QL-018",
+  "title": "Protected Intake Preview Deployment Wiring",
+  "route": "/api/intake",
+  "target": "vercel",
+  "safeDefaults": {
+    "ENABLE_PROTECTED_INTAKE_ENDPOINT": "false",
+    "ENABLE_INTAKE_PERSISTENCE": "false",
+    "ENABLE_RATE_LIMITING": "false",
+    "ENABLE_INTAKE_IDEMPOTENCY": "false"
+  },
+  "requiredBeforeEndpointEnablement": [
+    "Vercel preview URL recorded",
+    "INTAKE_SHARED_SECRET stored as a server-side secret",
+    "ALLOWED_INTAKE_ORIGINS set",
+    "Dry-run request reviewed",
+    "Persistence still disabled"
+  ],
+  "nonGoals": [
+    "No connected public website form",
+    "No production customer data writes",
+    "No anonymous Supabase write policy",
+    "No service-role key in browser variables"
+  ]
+}
