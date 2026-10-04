@@ -215,13 +215,28 @@ Result:
 
 ## QL-019 — Protected Intake Preview Disabled-Mode Check
 
+Status: complete.
+
+Result:
+
+- Added disabled-mode checker at `api/deployment/protectedIntakePreviewDisabledModeCheck.ts`.
+- Added expected disabled-mode fixture at `api/contracts/protected-intake-preview-disabled-mode-check.example.json`.
+- Added source-of-truth doc at `docs/32_PROTECTED_INTAKE_PREVIEW_DISABLED_MODE_CHECK.md`.
+- Added build record and operator checklists.
+- Documented expected safe preview result: `HTTP 503`, `mode: disabled`, `accepted: false`.
+- Kept protected intake and persistence disabled by default.
+- Did not add a Supabase migration.
+- Did not connect live website forms.
+
+## QL-020 — Protected Intake Preview Enablement Gate
+
 Goal:
 
-- Confirm the preview route returns disabled mode in the deployed preview environment.
-- Keep persistence disabled.
-- Keep public website forms disconnected.
+- Confirm preview URL and disabled-mode evidence.
+- Decide whether endpoint enablement can be tested with persistence still disabled.
+- Require rate-limit and idempotency decisions before any real form connection.
 
-## QL-020 — Phone/SMS Provider Test Decision
+## QL-021 — Phone/SMS Provider Test Decision
 
 Goal:
 
