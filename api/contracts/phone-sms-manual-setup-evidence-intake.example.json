@@ -1,0 +1,73 @@
+{
+  "build": "QL-023",
+  "title": "Phone/SMS Test Number Manual Setup Evidence Intake",
+  "decisionFrom": "QL-021",
+  "gateFrom": "QL-022",
+  "selectedApproach": "new_test_number_first",
+  "evidenceStatus": "blocked_pending_manual_evidence",
+  "manualEvidence": {
+    "selectedProvider": "undecided",
+    "targetUse": "undecided",
+    "budgetApprovedCadMonthly": null,
+    "accountCreatedOutsideRepository": false,
+    "accountReferenceLabel": null,
+    "credentialStorageLocation": "undecided",
+    "providerPortalReviewed": false,
+    "numberAvailabilityReviewed": false,
+    "smsComplianceReviewed": false,
+    "setupNotes": [],
+    "evidenceStoredOutsideRepository": false,
+    "redactionConfirmations": {
+      "noProviderApiKeys": true,
+      "noSipCredentials": true,
+      "noWebhookSecrets": true,
+      "noPhoneNumberOwnershipDocuments": true,
+      "noCustomerData": true,
+      "noPersonalPhoneNumbers": true
+    },
+    "safetyFlags": {
+      "existingNumbersProtected": true,
+      "portExistingNumbers": false,
+      "forwardExistingNumbers": false,
+      "enablePhoneWebhooks": false,
+      "enableSms": false,
+      "enableCallRecording": false,
+      "enableAiAutoSend": false,
+      "testNumberPurchased": false
+    }
+  },
+  "evidenceComplete": false,
+  "productionSafe": true,
+  "purchaseReviewAllowed": false,
+  "blockers": [
+    "Record the chosen provider: voipms, telnyx, or twilio.",
+    "Record the first target use: RosieDazzlers, DevilnDove, or shared hub testing.",
+    "Record the approved monthly/pay-as-you-go CAD test budget.",
+    "Record whether the provider account was created outside the repository.",
+    "Add a non-secret account reference label, such as provider account nickname or workspace name.",
+    "Record where credentials will be stored without committing the credentials: password manager or deployment secret store.",
+    "Record that the provider portal setup screen was reviewed.",
+    "Record that Canadian test-number availability was reviewed.",
+    "Record that SMS/compliance requirements were reviewed before messaging is tested.",
+    "Store screenshots, invoices, ownership proof, or provider documents outside this repository."
+  ],
+  "acceptedEvidence": [
+    "Selected provider name: voipms, telnyx, or twilio.",
+    "Target use: RosieDazzlers, DevilnDove, or shared hub testing.",
+    "Approved CAD test budget as a number only.",
+    "Non-secret provider account reference label.",
+    "Credential storage location label without the credential value.",
+    "Plain-language setup notes with secrets removed.",
+    "Boolean confirmations that portal, availability, and compliance were reviewed."
+  ],
+  "forbiddenEvidence": [
+    "Provider API keys, tokens, client secrets, or passwords.",
+    "SIP usernames, SIP passwords, or trunk credentials.",
+    "Webhook secrets or signing secrets.",
+    "Phone-number ownership documents, invoices, or screenshots.",
+    "Customer names, phone numbers, SMS content, call recordings, or transcripts.",
+    "Personal, Bell Fibe, RosieDazzlers, or DevilnDove existing numbers."
+  ],
+  "nextSafeAction": "Collect only non-secret manual setup evidence and keep live phone/SMS disabled.",
+  "nextBuild": "QL-024 — Phone/SMS Test Number Purchase Review Gate"
+}

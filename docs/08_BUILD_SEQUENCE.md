@@ -167,8 +167,26 @@ Result:
 
 ## QL-023 — Phone/SMS Test Number Manual Setup Evidence Intake
 
+Status: complete.
+
+Result:
+
+- Added manual setup evidence intake helper at `api/deployment/phoneSmsManualSetupEvidenceIntake.ts`.
+- Added evidence intake fixture at `api/contracts/phone-sms-manual-setup-evidence-intake.example.json`.
+- Added source-of-truth doc at `docs/36_PHONE_SMS_MANUAL_SETUP_EVIDENCE_INTAKE.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony evidence notes.
+- Kept evidence blocked until provider, target use, budget, account reference, storage location, portal review, availability review, compliance review, and outside-repository evidence storage are confirmed.
+- Kept all credentials, ownership documents, invoices, screenshots, customer data, and existing phone numbers out of the repository.
+- Kept all existing numbers unported and unforwarded.
+- Kept phone webhooks, SMS, call recording, and AI auto-send disabled.
+- Did not add a Supabase migration.
+- Did not connect a provider account.
+- Did not buy a phone number.
+
+## QL-024 — Phone/SMS Test Number Purchase Review Gate
+
 Goal:
 
-- Capture the manual provider choice, account-created status, budget approval, and safe setup notes.
-- Keep credentials and phone-number ownership evidence out of the repository.
-- Prepare the first test-number purchase review without enabling live webhooks.
+- Review the non-secret manual setup evidence.
+- Confirm provider, target use, budget, storage location, portal review, number availability review, and SMS/compliance review.
+- Decide whether one new test number can be purchased manually without enabling live webhooks.
