@@ -293,8 +293,27 @@ Result:
 
 ## QL-036 — Phone/SMS Controlled Live Enablement Implementation Scaffold
 
+Status: complete.
+
+Result:
+
+- Added disabled implementation scaffold helper at `api/deployment/phoneSmsControlledLiveEnablementImplementationScaffold.ts`.
+- Added disabled implementation scaffold fixture at `api/contracts/phone-sms-controlled-live-enablement-implementation-scaffold.example.json`.
+- Added source-of-truth doc at `docs/49_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_IMPLEMENTATION_SCAFFOLD.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony implementation scaffold notes.
+- Added disabled scaffold surfaces for provider callback route, phone webhook route, SMS send adapter, call recording adapter, AI draft adapter, AI auto-send guard, persistence adapter, live customer access guard, operator console gate, audit log stub, and rollback switch.
+- Kept `scaffold_ready_for_disabled_verification` limited to the next disabled verification build only; QL-036 does not grant live enablement.
+- Kept every scaffold output `safeToPersist: false`.
+- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, and live customer writes disabled.
+- Rejected missing QL-034/QL-035 approvals, unsafe environments, missing scaffold surfaces, and unredacted/live/customer/phone-number/provider-secret/recording/transcript evidence.
+- Did not add a Supabase migration.
+- Did not connect a provider account.
+- Did not enable any provider callback route.
+
+## QL-037 — Phone/SMS Controlled Live Enablement Disabled Verification
+
 Goal:
 
-- Create a disabled-by-default implementation scaffold for the controlled live enablement path after QL-035 planning.
-- Keep provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, and live customer access disabled by default.
-- Require explicit later manual gates before any tiny monitored live pilot can be considered.
+- Verify that every QL-036 scaffold surface remains disabled by default.
+- Confirm provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, and live customer access still cannot run.
+- Keep any future tiny monitored live pilot blocked behind explicit later manual go/no-go gates.
