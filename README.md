@@ -6,20 +6,26 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-028 — Phone/SMS Disabled Dry-Run Runtime Verification**
+**QL-029 — Phone/SMS Disabled Dry-Run Evidence Mapping Review**
 
-QL-028 adds provider-neutral runtime verification for the first disabled/dry-run phone/SMS path. It verifies disabled-mode behavior and synthetic voice/SMS dry-run behavior before any provider callback can be configured.
+QL-029 adds provider-neutral evidence mapping review for synthetic disabled/dry-run phone/SMS events. It maps synthetic runtime evidence into preview-only contact, conversation, and human-review task shapes.
 
 The expected safe behavior is:
 
 ```text
-disabled mode → HTTP 503 → accepted: false → persisted: false
-synthetic voice dry-run → accepted: true → persisted: false
-synthetic SMS dry-run → accepted: true → persisted: false
-non-synthetic payload → rejected
+synthetic runtime evidence → redacted contact preview → conversation preview → human-review task preview
+safeToPersist: false
+providerWebhookConfigured: false
+persistenceWrites: false
+liveCustomerRead: false
+liveCustomerWrite: false
+smsSending: false
+callRecording: false
+aiDrafts: false
+aiAutoSend: false
 ```
 
-It does **not** connect a provider, does **not** configure a provider webhook, does **not** enable phone webhooks, does **not** enable SMS sending, does **not** enable call recording, does **not** enable AI drafts or AI auto-send, does **not** enable live customer reads or writes, does **not** commit provider credentials or webhook secret values, and does **not** store the actual purchased phone number.
+It does **not** connect a provider, does **not** configure a provider webhook, does **not** enable phone webhooks, does **not** enable SMS sending, does **not** enable call recording, does **not** enable AI drafts or AI auto-send, does **not** enable live customer reads or writes, does **not** persist mapped evidence, does **not** commit provider credentials or webhook secret values, and does **not** store the actual purchased phone number.
 
 The protected intake endpoint and intake persistence both remain disabled by default. No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
 
@@ -88,7 +94,7 @@ PROTECTED_INTAKE_ENABLEMENT_GATE_STATUS=hold
 PROTECTED_INTAKE_ENABLEMENT_ALLOWED=false
 ```
 
-Phone/SMS disabled dry-run runtime verification values:
+Phone/SMS disabled dry-run evidence mapping review values:
 
 ```text
 PHONE_SMS_TEST_DECISION_STATUS=new_test_number_first
@@ -99,6 +105,7 @@ PHONE_SMS_PURCHASE_EVIDENCE_STATUS=blocked_pending_purchase_evidence
 PHONE_SMS_CONNECTION_READINESS_STATUS=blocked_pending_connection_readiness
 PHONE_SMS_DISABLED_DRY_RUN_PLAN_STATUS=blocked_pending_disabled_dry_run_plan
 PHONE_SMS_DISABLED_DRY_RUN_RUNTIME_VERIFICATION_STATUS=blocked_pending_runtime_verification
+PHONE_SMS_DISABLED_DRY_RUN_EVIDENCE_MAPPING_STATUS=blocked_pending_evidence_mapping_review
 PHONE_SMS_TEST_PROVIDER=undecided
 PHONE_SMS_TEST_NUMBER_REQUIRED=true
 PHONE_SMS_TEST_NUMBER_TARGET_USE=undecided
@@ -114,6 +121,13 @@ PHONE_SMS_RUNTIME_VERIFICATION_NO_PERSISTENCE_WRITES=true
 PHONE_SMS_RUNTIME_VERIFICATION_LIVE_CUSTOMER_ACCESS_DISABLED=true
 PHONE_SMS_RUNTIME_VERIFICATION_PROVIDER_CALLBACK_CONFIGURED=false
 PHONE_SMS_RUNTIME_VERIFICATION_RESULT=not_run
+PHONE_SMS_EVIDENCE_MAPPING_SYNTHETIC_ONLY=true
+PHONE_SMS_EVIDENCE_MAPPING_NO_PERSISTENCE_WRITES=true
+PHONE_SMS_EVIDENCE_MAPPING_LIVE_CUSTOMER_ACCESS_DISABLED=true
+PHONE_SMS_EVIDENCE_MAPPING_CONTACT_SHAPE_REVIEWED=false
+PHONE_SMS_EVIDENCE_MAPPING_CONVERSATION_SHAPE_REVIEWED=false
+PHONE_SMS_EVIDENCE_MAPPING_TASK_SHAPE_REVIEWED=false
+PHONE_SMS_EVIDENCE_MAPPING_HUMAN_REVIEW_REQUIRED=true
 PHONE_SMS_PROVIDER_WEBHOOK_CONFIGURED=false
 PHONE_SMS_WEBHOOK_SECRET_NAME_PLANNED=false
 PHONE_SMS_WEBHOOK_SECRET_VALUE_STORED_OUTSIDE_REPOSITORY=false
@@ -141,7 +155,7 @@ ENABLE_AI_DRAFTS=false
 ENABLE_AI_AUTO_SEND=false
 ```
 
-Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, provider API keys, SIP passwords, webhook secrets or values, actual phone numbers, phone-number ownership documents, invoices, screenshots, customer data, live payloads, call recordings, transcripts, or existing phone numbers.
+Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, provider API keys, SIP passwords, webhook secrets or values, actual phone numbers, phone-number ownership documents, invoices, screenshots, customer data, live payloads, call recordings, transcripts, mapped live records, or existing phone numbers.
 
 ## Source of truth
 
@@ -173,6 +187,7 @@ Start here:
 - [`docs/39_PHONE_SMS_TEST_NUMBER_CONNECTION_READINESS_GATE.md`](docs/39_PHONE_SMS_TEST_NUMBER_CONNECTION_READINESS_GATE.md)
 - [`docs/40_PHONE_SMS_DISABLED_DRY_RUN_CONNECTION_PLAN.md`](docs/40_PHONE_SMS_DISABLED_DRY_RUN_CONNECTION_PLAN.md)
 - [`docs/41_PHONE_SMS_DISABLED_DRY_RUN_RUNTIME_VERIFICATION.md`](docs/41_PHONE_SMS_DISABLED_DRY_RUN_RUNTIME_VERIFICATION.md)
+- [`docs/42_PHONE_SMS_DISABLED_DRY_RUN_EVIDENCE_MAPPING_REVIEW.md`](docs/42_PHONE_SMS_DISABLED_DRY_RUN_EVIDENCE_MAPPING_REVIEW.md)
 
 ## Phone/SMS path
 
@@ -183,9 +198,9 @@ new test number
 → disabled/dry-run connection plan
 → synthetic inbound call or SMS fixture
 → disabled/dry-run runtime verification
-→ disabled/dry-run mapping review
-→ contact/conversation/task evidence shape
-→ human review
+→ disabled/dry-run evidence mapping review
+→ contact/conversation/task preview shape
+→ human review gate
 → no auto-send
 ```
 
@@ -222,7 +237,7 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-028 non-goals
+## QL-029 non-goals
 
 - Do not connect a provider account.
 - Do not configure provider webhooks.
@@ -238,8 +253,9 @@ telephony/               Phone/SMS provider-neutral integration notes
 - Do not auto-send AI replies.
 - Do not enter real production customer data or live provider payloads.
 - Do not enable live customer reads or writes.
-- Do not persist synthetic runtime fixture data.
+- Do not persist synthetic evidence previews.
+- Do not create mapped live contact, conversation, or task records.
 
 ## Next build
 
-QL-029 — Phone/SMS Disabled Dry-Run Evidence Mapping Review.
+QL-030 — Phone/SMS Disabled Dry-Run Human Review Gate.
