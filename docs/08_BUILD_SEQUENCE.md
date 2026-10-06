@@ -257,8 +257,28 @@ Result:
 
 ## QL-032 — Phone/SMS Disabled Dry-Run Rollback and Evidence Retention Review
 
+Status: complete.
+
+Result:
+
+- Added rollback and evidence-retention review helper at `api/deployment/phoneSmsDisabledDryRunRollbackEvidenceRetentionReview.ts`.
+- Added rollback and evidence-retention fixture at `api/contracts/phone-sms-disabled-dry-run-rollback-evidence-retention-review.example.json`.
+- Added source-of-truth doc at `docs/45_PHONE_SMS_DISABLED_DRY_RUN_ROLLBACK_EVIDENCE_RETENTION_REVIEW.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony rollback/retention notes.
+- Added retention classes for `discard_preview`, `retain_redacted_planning_note`, and `hold_pending_review`.
+- Reviewed synthetic evidence from QL-028 runtime verification, QL-029 evidence mapping, QL-030 human review, and QL-031 operator outcome journal.
+- Kept every retention entry `safeToPersist: false`.
+- Kept rollback scope limited to synthetic preview artifacts and labels.
+- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, and live customer writes disabled.
+- Rejected non-synthetic, non-redacted, live-payload, customer-data, actual-phone-number, provider-secret, recording, or transcript evidence.
+- Did not add a Supabase migration.
+- Did not connect a provider account.
+- Did not enable any provider callback route.
+
+## QL-033 — Phone/SMS Disabled Dry-Run Final Pre-Enablement Readiness Review
+
 Goal:
 
-- Review rollback and evidence-retention rules for synthetic disabled dry-run phone/SMS planning evidence.
-- Keep all retention notes synthetic, redacted, and non-persistent until a later explicit enablement gate.
+- Review the final pre-enablement readiness checklist for the disabled dry-run phone/SMS path.
+- Keep all readiness evidence synthetic, redacted, and non-persistent until a later explicit live enablement decision.
 - Keep live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, provider callbacks, and live customer access disabled.
