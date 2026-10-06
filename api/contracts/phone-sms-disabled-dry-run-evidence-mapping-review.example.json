@@ -1,0 +1,86 @@
+{
+  "build": "QL-029",
+  "title": "Phone/SMS Disabled Dry-Run Evidence Mapping Review",
+  "mappingStatus": "blocked_pending_evidence_mapping_review",
+  "sourceRuntimeBuild": "QL-028",
+  "runtimeVerificationRequiredStatus": "runtime_verification_green",
+  "syntheticOnly": true,
+  "safeToPersist": false,
+  "providerWebhookConfigured": false,
+  "livePhoneWebhookEnabled": false,
+  "smsSendingEnabled": false,
+  "callRecordingEnabled": false,
+  "aiDraftsEnabled": false,
+  "aiAutoSendEnabled": false,
+  "liveCustomerReadsEnabled": false,
+  "liveCustomerWritesEnabled": false,
+  "voiceEvidenceFixture": {
+    "evidenceId": "ql029-voice-evidence-fixture",
+    "channel": "voice",
+    "provider": "undecided",
+    "runtimeVerificationCaseId": "dry_run_voice_no_persistence",
+    "synthetic": true,
+    "receivedAt": "2026-10-06T13:00:00.000Z",
+    "routeLabel": "ql029-disabled-dry-run-route",
+    "fromAlias": "synthetic-caller-alias",
+    "toAlias": "test-number-alias-only",
+    "intentLabel": "request_callback_review",
+    "messagePreview": "Synthetic voice evidence only. No recording, transcript, customer data, or live payload is stored.",
+    "requestedHumanReview": true,
+    "evidenceNotes": [
+      "Map to one redacted contact preview.",
+      "Map to one conversation preview without recording or transcript storage.",
+      "Map to one human review task with auto-send disabled."
+    ]
+  },
+  "smsEvidenceFixture": {
+    "evidenceId": "ql029-sms-evidence-fixture",
+    "channel": "sms",
+    "provider": "undecided",
+    "runtimeVerificationCaseId": "dry_run_sms_no_persistence",
+    "synthetic": true,
+    "receivedAt": "2026-10-06T13:05:00.000Z",
+    "routeLabel": "ql029-disabled-dry-run-route",
+    "fromAlias": "synthetic-sender-alias",
+    "toAlias": "test-number-alias-only",
+    "intentLabel": "request_sms_review",
+    "messagePreview": "Synthetic SMS evidence only. No customer message body or live payload is stored.",
+    "requestedHumanReview": true,
+    "evidenceNotes": [
+      "Map to one redacted contact preview.",
+      "Map to one SMS conversation preview without live body storage.",
+      "Map to one human review task with SMS sending disabled."
+    ]
+  },
+  "expectedPreviewShape": {
+    "contact": {
+      "source": "phone_sms_disabled_dry_run",
+      "synthetic": true,
+      "safeToPersist": false,
+      "redactionStatus": "redacted_alias_only"
+    },
+    "conversation": {
+      "source": "synthetic_disabled_dry_run_fixture",
+      "synthetic": true,
+      "safeToPersist": false,
+      "livePayloadStored": false,
+      "recordingStored": false,
+      "transcriptStored": false
+    },
+    "task": {
+      "priority": "human_review_required",
+      "ownerRole": "human_operator",
+      "autoSendAllowed": false,
+      "aiDraftAllowed": false,
+      "safeToPersist": false
+    }
+  },
+  "forbiddenEvidence": [
+    "Actual phone numbers or phone-like values.",
+    "Provider credentials, SIP credentials, API keys, tokens, passwords, or webhook secret values.",
+    "Customer names, customer phone numbers, live SMS bodies, call recordings, transcripts, or live provider payloads.",
+    "Invoices, screenshots, receipts, ownership documents, or copied provider portal content.",
+    "Any persistence write, live customer read/write, live callback enablement, SMS sending, call recording, AI draft, or AI auto-send action."
+  ],
+  "nextBuild": "QL-030 — Phone/SMS Disabled Dry-Run Human Review Gate"
+}
