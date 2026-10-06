@@ -1,0 +1,125 @@
+{
+  "build": "QL-035",
+  "name": "Phone/SMS Controlled Live Enablement Plan",
+  "purpose": "Plan a tightly controlled future implementation path after QL-034 approval without enabling live traffic in this build.",
+  "input": {
+    "id": "ql035-controlled-live-enablement-plan-fixture",
+    "decisionGateOutcome": "approve_controlled_live_enablement_planning",
+    "decidedByAlias": "owner-alias-only",
+    "syntheticOnlyConfirmed": true,
+    "redactedOnlyConfirmed": true,
+    "noActualPhoneNumberConfirmed": true,
+    "noProviderCredentialConfirmed": true,
+    "noWebhookSecretValueConfirmed": true,
+    "noCustomerDataConfirmed": true,
+    "noLivePayloadConfirmed": true,
+    "noRecordingConfirmed": true,
+    "noTranscriptConfirmed": true,
+    "noPersistenceWritesConfirmed": true,
+    "noLiveCustomerAccessConfirmed": true,
+    "noProviderCallbackConfirmed": true,
+    "noPhoneWebhookConfirmed": true,
+    "noSmsSendConfirmed": true,
+    "noCallRecordingConfirmed": true,
+    "noAiDraftConfirmed": true,
+    "noAutoSendConfirmed": true,
+    "existingNumbersProtectedConfirmed": true,
+    "implementationBuildRequiredBeforeLiveTraffic": true
+  },
+  "requiredControlAreas": [
+    "manual_approval_boundary",
+    "provider_boundary",
+    "webhook_boundary",
+    "sms_send_boundary",
+    "recording_boundary",
+    "ai_boundary",
+    "persistence_boundary",
+    "customer_data_boundary",
+    "redaction_boundary",
+    "rate_limit_boundary",
+    "replay_protection_boundary",
+    "rollback_boundary",
+    "deployment_gate_boundary",
+    "operator_training_boundary"
+  ],
+  "requiredPhases": [
+    {
+      "id": "ql035-phase-implementation-scaffold",
+      "title": "Implementation scaffold planning phase",
+      "liveEnablementAllowedInQl035": false,
+      "implementationBuildRequiredBeforeLiveTraffic": true
+    },
+    {
+      "id": "ql035-phase-disabled-verification",
+      "title": "Disabled verification planning phase",
+      "liveEnablementAllowedInQl035": false,
+      "implementationBuildRequiredBeforeLiveTraffic": true
+    },
+    {
+      "id": "ql035-phase-manual-go-no-go",
+      "title": "Manual go/no-go planning phase",
+      "liveEnablementAllowedInQl035": false,
+      "implementationBuildRequiredBeforeLiveTraffic": true
+    }
+  ],
+  "expectedReadyOutcome": {
+    "status": "plan_ready_for_manual_implementation_design",
+    "decision": "approve_controlled_implementation_planning",
+    "readyForManualImplementationDesign": true,
+    "implementationBuildRequiredBeforeLiveTraffic": true,
+    "liveEnablementAllowed": false,
+    "providerCallbackAllowed": false,
+    "phoneWebhookAllowed": false,
+    "smsSendAllowed": false,
+    "callRecordingAllowed": false,
+    "aiDraftAllowed": false,
+    "autoSendAllowed": false,
+    "persistenceWrites": false,
+    "liveCustomerRead": false,
+    "liveCustomerWrite": false,
+    "safeToPersist": false,
+    "planningOnly": true,
+    "requiredNextBuild": "QL-036-controlled-live-enablement-implementation-scaffold"
+  },
+  "blockingOutcomes": [
+    {
+      "case": "QL-034 explicit decision gate is not approved",
+      "expectedStatus": "blocked_decision_gate_not_approved",
+      "expectedLiveEnablementAllowed": false
+    },
+    {
+      "case": "Live SMS is enabled too early",
+      "expectedStatus": "blocked_unsafe_environment",
+      "expectedLiveEnablementAllowed": false
+    },
+    {
+      "case": "Required control areas are missing",
+      "expectedStatus": "blocked_missing_required_controls",
+      "expectedLiveEnablementAllowed": false
+    },
+    {
+      "case": "Unredacted or live evidence is present",
+      "expectedStatus": "blocked_unredacted_or_live_evidence",
+      "expectedLiveEnablementAllowed": false
+    }
+  ],
+  "safety": {
+    "doesNotGrantLiveEnablement": true,
+    "doesNotConnectProvider": true,
+    "doesNotConfigureProviderWebhook": true,
+    "doesNotEnableProviderCallbacks": true,
+    "doesNotEnablePhoneWebhooks": true,
+    "doesNotEnableSmsSending": true,
+    "doesNotEnableCallRecording": true,
+    "doesNotEnableAiDrafts": true,
+    "doesNotEnableAiAutoSend": true,
+    "doesNotEnablePersistenceWrites": true,
+    "doesNotEnableLiveCustomerAccess": true,
+    "doesNotStoreActualPhoneNumbers": true,
+    "doesNotStoreProviderCredentials": true,
+    "doesNotStoreWebhookSecrets": true,
+    "doesNotStoreCustomerData": true,
+    "doesNotStoreRecordingsOrTranscripts": true,
+    "doesNotAddSupabaseMigration": true
+  }
+}
