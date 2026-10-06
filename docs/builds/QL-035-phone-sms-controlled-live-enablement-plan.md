@@ -64,6 +64,15 @@ implementation scaffold planning
 → manual go/no-go planning
 ```
 
+## Validation cases
+
+The helper validates these safe outcomes:
+
+- ready plan still has `liveEnablementAllowed: false`;
+- missing QL-034 approval remains blocked;
+- early live SMS remains blocked;
+- missing control areas remain blocked.
+
 ## Non-goals
 
 QL-035 does not:
