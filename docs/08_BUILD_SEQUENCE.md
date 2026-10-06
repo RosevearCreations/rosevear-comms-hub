@@ -196,8 +196,29 @@ Result:
 
 ## QL-029 — Phone/SMS Disabled Dry-Run Evidence Mapping Review
 
+Status: complete.
+
+Result:
+
+- Added evidence mapping review helper at `api/deployment/phoneSmsDisabledDryRunEvidenceMappingReview.ts`.
+- Added evidence mapping fixture at `api/contracts/phone-sms-disabled-dry-run-evidence-mapping-review.example.json`.
+- Added source-of-truth doc at `docs/42_PHONE_SMS_DISABLED_DRY_RUN_EVIDENCE_MAPPING_REVIEW.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony evidence mapping notes.
+- Mapped synthetic voice and SMS runtime evidence into redacted contact preview shapes.
+- Mapped synthetic voice and SMS runtime evidence into conversation preview shapes without live payload, recording, or transcript storage.
+- Mapped synthetic voice and SMS runtime evidence into human review task preview shapes with AI drafting and auto-send disabled.
+- Kept every preview `safeToPersist: false`.
+- Kept provider webhooks unconfigured.
+- Kept all existing numbers unported and unforwarded.
+- Kept live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, live customer reads, live customer writes, and persistence writes disabled.
+- Did not add a Supabase migration.
+- Did not connect a provider account.
+- Did not enable any provider callback route.
+
+## QL-030 — Phone/SMS Disabled Dry-Run Human Review Gate
+
 Goal:
 
-- Review how synthetic dry-run voice/SMS evidence maps into contact, conversation, and task shapes.
-- Keep all evidence synthetic, redacted, and non-persistent until a later explicit enablement gate.
+- Review the operator decision gate that must approve or reject synthetic mapped evidence before any future live enablement planning.
+- Keep all review inputs synthetic, redacted, and non-persistent until a later explicit enablement gate.
 - Keep live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, and live customer access disabled.
