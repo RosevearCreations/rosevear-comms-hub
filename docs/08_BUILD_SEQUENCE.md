@@ -237,8 +237,28 @@ Result:
 
 ## QL-027 — Phone/SMS Disabled Dry-Run Connection Plan
 
+Status: complete.
+
+Result:
+
+- Added disabled dry-run connection plan helper at `api/deployment/phoneSmsDisabledDryRunConnectionPlan.ts`.
+- Added disabled dry-run connection plan fixture at `api/contracts/phone-sms-disabled-dry-run-connection-plan.example.json`.
+- Added source-of-truth doc at `docs/40_PHONE_SMS_DISABLED_DRY_RUN_CONNECTION_PLAN.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony disabled dry-run planning notes.
+- Kept the disabled dry-run plan blocked until QL-026 readiness is complete and provider, target use, purchased-number alias, capability, deployment target, connection mode, endpoint mode, expected HTTP 503 disabled response, dry-run route label, provider portal review, provider webhook unconfigured confirmation, webhook-secret name planning, synthetic fixture planning, inbound mapping, contact/conversation/task mapping, persistence-disabled confirmation, live customer read/write disabled confirmations, rate-limit review, idempotency review, replay-protection review, logging-redaction review, rollback review, and operator approval are confirmed.
+- Kept the actual purchased test number out of the repository.
+- Kept provider credentials, webhook secret values, SIP credentials, invoices, screenshots, ownership documents, customer data, live payloads, recordings, transcripts, and existing numbers out of the repository.
+- Kept provider webhooks unconfigured.
+- Kept all existing numbers unported and unforwarded.
+- Kept live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, live customer reads, and live customer writes disabled.
+- Did not add a Supabase migration.
+- Did not connect a provider account.
+- Did not enable any provider callback route.
+
+## QL-028 — Phone/SMS Disabled Dry-Run Runtime Verification
+
 Goal:
 
-- Draft the disabled/dry-run connection plan for the purchased test number.
-- Keep provider credentials and webhook secrets in deployment secrets only.
-- Keep live phone webhooks, SMS sending, call recording, AI drafts, and AI auto-send disabled until a later explicit enablement gate.
+- Verify the disabled/dry-run route behavior with synthetic voice/SMS fixtures only.
+- Confirm the safe disabled response and no-persistence behavior before any provider callback can be configured.
+- Keep live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, and live customer access disabled until a later explicit enablement gate.
