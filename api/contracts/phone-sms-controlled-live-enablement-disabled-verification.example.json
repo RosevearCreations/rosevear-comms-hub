@@ -1,0 +1,128 @@
+{
+  "build": "QL-037",
+  "title": "Phone/SMS Controlled Live Enablement Disabled Verification",
+  "purpose": "Verify that every QL-036 implementation scaffold surface remains disabled by default before any later manual go/no-go gate is considered.",
+  "doesNotGrantLiveEnablement": true,
+  "safeToPersist": false,
+  "syntheticOnly": true,
+  "redactedOnly": true,
+  "requiredPriorBuilds": [
+    "QL-034 explicit live enablement decision gate approved for controlled planning",
+    "QL-035 controlled live enablement plan ready for manual implementation design",
+    "QL-036 disabled implementation scaffold ready for disabled verification"
+  ],
+  "disabledVerificationOnly": true,
+  "manualGoNoGoRequiredBeforeLivePilot": true,
+  "livePilotRemainsBlocked": true,
+  "requiredSurfaces": [
+    "provider_callback_route",
+    "phone_webhook_route",
+    "sms_send_adapter",
+    "call_recording_adapter",
+    "ai_draft_adapter",
+    "ai_auto_send_guard",
+    "persistence_adapter",
+    "live_customer_access_guard",
+    "operator_console_gate",
+    "audit_log_stub",
+    "rollback_switch"
+  ],
+  "expectedDisabledResponses": {
+    "provider_callback_route": "disabled_503",
+    "phone_webhook_route": "disabled_503",
+    "sms_send_adapter": "disabled_503",
+    "call_recording_adapter": "disabled_503",
+    "ai_draft_adapter": "disabled_503",
+    "ai_auto_send_guard": "disabled_503",
+    "persistence_adapter": "disabled_503",
+    "live_customer_access_guard": "disabled_503",
+    "operator_console_gate": "manual_gate_required",
+    "audit_log_stub": "no_op_disabled",
+    "rollback_switch": "no_op_disabled"
+  },
+  "safeEnvironment": {
+    "PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_GATE_STATUS": "approved_for_controlled_live_enablement_planning",
+    "PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_PLAN_STATUS": "plan_ready_for_manual_implementation_design",
+    "PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_IMPLEMENTATION_STATUS": "scaffold_ready_for_disabled_verification",
+    "PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_STATUS": "blocked_pending_disabled_verification",
+    "PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_SYNTHETIC_ONLY": true,
+    "PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_REDACTED_ONLY": true,
+    "PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_NO_PERSISTENCE_WRITES": true,
+    "PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_LIVE_CUSTOMER_ACCESS_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_PROVIDER_CALLBACK_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_PHONE_WEBHOOK_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_SMS_SEND_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_CALL_RECORDING_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_AI_DRAFTS_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_AUTO_SEND_DISABLED": true,
+    "PHONE_SMS_PROVIDER_WEBHOOK_CONFIGURED": false,
+    "TELEPHONY_PROVIDER": "undecided",
+    "ENABLE_PHONE_WEBHOOKS": false,
+    "ENABLE_SMS": false,
+    "ENABLE_CALL_RECORDING": false,
+    "ENABLE_AI_DRAFTS": false,
+    "ENABLE_AI_AUTO_SEND": false,
+    "PHONE_SMS_PERSISTENCE_WRITES_DISABLED": true,
+    "PHONE_SMS_LIVE_CUSTOMER_READS_DISABLED": true,
+    "PHONE_SMS_LIVE_CUSTOMER_WRITES_DISABLED": true,
+    "PHONE_SMS_EXISTING_NUMBERS_PROTECTED": true
+  },
+  "expectedGreenOutcome": {
+    "status": "disabled_verification_green",
+    "disabledVerificationGreen": true,
+    "liveEnablementAllowed": false,
+    "providerCallbackAllowed": false,
+    "phoneWebhookAllowed": false,
+    "smsSendAllowed": false,
+    "callRecordingAllowed": false,
+    "aiDraftAllowed": false,
+    "autoSendAllowed": false,
+    "persistenceWrites": false,
+    "liveCustomerRead": false,
+    "liveCustomerWrite": false,
+    "safeToPersist": false,
+    "requiredNextBuild": "QL-038-controlled-live-enablement-manual-go-no-go-gate"
+  },
+  "blockingCases": [
+    {
+      "id": "reject-enabled-sms",
+      "reason": "Any enabled SMS path blocks verification."
+    },
+    {
+      "id": "reject-provider-webhook",
+      "reason": "Any configured provider webhook blocks verification."
+    },
+    {
+      "id": "reject-missing-surface",
+      "reason": "Every QL-036 scaffold surface must be checked."
+    },
+    {
+      "id": "reject-live-or-unredacted-evidence",
+      "reason": "Verification evidence must remain synthetic, redacted, and not safe to persist."
+    },
+    {
+      "id": "reject-missing-prior-approval",
+      "reason": "QL-034, QL-035, and QL-036 readiness must all be present."
+    }
+  ],
+  "forbiddenArtifacts": [
+    "actual phone numbers",
+    "provider credentials",
+    "SIP credentials",
+    "webhook secret values",
+    "customer data",
+    "live provider payloads",
+    "recordings",
+    "transcripts",
+    "invoices",
+    "screenshots",
+    "ownership documents",
+    "mapped live records",
+    "journaled live records",
+    "retained live records",
+    "planning evidence",
+    "scaffold evidence",
+    "pilot evidence"
+  ],
+  "nextQueuedBuild": "QL-038 — Phone/SMS Controlled Live Enablement Manual Go/No-Go Gate"
+}
