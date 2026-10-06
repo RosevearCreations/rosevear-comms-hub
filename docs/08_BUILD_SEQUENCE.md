@@ -273,8 +273,28 @@ Result:
 
 ## QL-035 — Phone/SMS Controlled Live Enablement Plan
 
+Status: complete.
+
+Result:
+
+- Added controlled live enablement plan helper at `api/deployment/phoneSmsControlledLiveEnablementPlan.ts`.
+- Added controlled live enablement plan fixture at `api/contracts/phone-sms-controlled-live-enablement-plan.example.json`.
+- Added source-of-truth doc at `docs/48_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_PLAN.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony controlled-plan notes.
+- Added required controls for manual approval, provider boundaries, webhook boundaries, SMS sending, call recording, AI, persistence, customer data, redaction, rate limiting, replay protection, rollback, deployment gates, and operator training.
+- Added phases for implementation scaffold planning, disabled verification planning, and manual go/no-go planning.
+- Kept `plan_ready_for_manual_implementation_design` limited to the next disabled-by-default implementation scaffold build only; QL-035 does not grant live enablement.
+- Kept every plan output `safeToPersist: false`.
+- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, and live customer writes disabled.
+- Rejected missing QL-034 approval, unsafe environments, missing control areas, missing phases, and unredacted/live/customer/phone-number/provider-secret/recording/transcript evidence.
+- Did not add a Supabase migration.
+- Did not connect a provider account.
+- Did not enable any provider callback route.
+
+## QL-036 — Phone/SMS Controlled Live Enablement Implementation Scaffold
+
 Goal:
 
-- Plan a tightly controlled live enablement implementation path after the explicit QL-034 decision gate.
-- Keep default state disabled until exact manual approvals, rollback rules, provider boundaries, redaction rules, and deployment gates are defined.
-- Do not enable provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, or live customer access unless a later production-safe implementation build explicitly changes them.
+- Create a disabled-by-default implementation scaffold for the controlled live enablement path after QL-035 planning.
+- Keep provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, and live customer access disabled by default.
+- Require explicit later manual gates before any tiny monitored live pilot can be considered.
