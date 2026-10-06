@@ -1,0 +1,119 @@
+{
+  "build": "QL-034",
+  "title": "Phone/SMS Explicit Live Enablement Decision Gate",
+  "status": "blocked_pending_explicit_live_enablement_decision_gate",
+  "purpose": "Provide a provider-neutral, redacted, non-persistent decision gate after QL-033 final pre-enablement readiness review.",
+  "scope": {
+    "syntheticOnly": true,
+    "redactedOnly": true,
+    "safeToPersist": false,
+    "planningOnly": true,
+    "liveEnablementAllowed": false,
+    "implementationBuildRequiredBeforeLiveTraffic": true
+  },
+  "allowedDecisions": [
+    {
+      "decision": "remain_blocked",
+      "meaning": "Keep the phone/SMS path blocked. No controlled implementation planning is approved."
+    },
+    {
+      "decision": "continue_rework",
+      "meaning": "Return to synthetic planning or readiness work before any live enablement planning."
+    },
+    {
+      "decision": "approve_controlled_live_enablement_planning",
+      "meaning": "Approve only a later controlled implementation plan build. This does not enable live traffic, provider callbacks, persistence, SMS sending, call recording, AI drafts, or auto-send."
+    }
+  ],
+  "requiredPrerequisiteBuilds": [
+    "QL-028-runtime-verification",
+    "QL-029-evidence-mapping-review",
+    "QL-030-human-review-gate",
+    "QL-031-operator-outcome-journal",
+    "QL-032-rollback-evidence-retention-review",
+    "QL-033-final-pre-enablement-readiness-review"
+  ],
+  "safeEnvironment": {
+    "PHONE_SMS_DISABLED_DRY_RUN_RUNTIME_VERIFICATION_STATUS": "runtime_verification_green",
+    "PHONE_SMS_DISABLED_DRY_RUN_EVIDENCE_MAPPING_STATUS": "evidence_mapping_review_green",
+    "PHONE_SMS_DISABLED_DRY_RUN_HUMAN_REVIEW_GATE_STATUS": "human_review_gate_ready",
+    "PHONE_SMS_DISABLED_DRY_RUN_OPERATOR_OUTCOME_JOURNAL_STATUS": "operator_outcome_journal_ready",
+    "PHONE_SMS_DISABLED_DRY_RUN_ROLLBACK_RETENTION_STATUS": "rollback_retention_review_ready",
+    "PHONE_SMS_FINAL_PRE_ENABLEMENT_STATUS": "final_pre_enablement_ready_for_decision_planning",
+    "PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_GATE_STATUS": "blocked_pending_explicit_live_enablement_decision_gate",
+    "PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_SYNTHETIC_ONLY": true,
+    "PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_REDACTED_ONLY": true,
+    "PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_NO_PERSISTENCE_WRITES": true,
+    "PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_LIVE_CUSTOMER_ACCESS_DISABLED": true,
+    "PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_PROVIDER_CALLBACK_DISABLED": true,
+    "PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_PHONE_WEBHOOK_DISABLED": true,
+    "PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_SMS_SEND_DISABLED": true,
+    "PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_CALL_RECORDING_DISABLED": true,
+    "PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_AI_DRAFTS_DISABLED": true,
+    "PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_AUTO_SEND_DISABLED": true,
+    "PHONE_SMS_PROVIDER_WEBHOOK_CONFIGURED": false,
+    "ENABLE_PHONE_WEBHOOKS": false,
+    "ENABLE_SMS": false,
+    "ENABLE_CALL_RECORDING": false,
+    "ENABLE_AI_DRAFTS": false,
+    "ENABLE_AI_AUTO_SEND": false,
+    "PHONE_SMS_PERSISTENCE_WRITES_DISABLED": true,
+    "PHONE_SMS_LIVE_CUSTOMER_READS_DISABLED": true,
+    "PHONE_SMS_LIVE_CUSTOMER_WRITES_DISABLED": true,
+    "PHONE_SMS_WEBHOOK_SECRET_VALUE_STORED_OUTSIDE_REPOSITORY": false,
+    "PHONE_SMS_EXISTING_NUMBERS_PROTECTED": true
+  },
+  "expectedApprovedPlanningOutcome": {
+    "status": "approved_for_controlled_live_enablement_planning",
+    "approvedForControlledLiveEnablementPlanning": true,
+    "liveEnablementAllowed": false,
+    "implementationBuildRequiredBeforeLiveTraffic": true,
+    "providerCallbackAllowed": false,
+    "phoneWebhookAllowed": false,
+    "smsSendAllowed": false,
+    "callRecordingAllowed": false,
+    "aiDraftAllowed": false,
+    "autoSendAllowed": false,
+    "persistenceWrites": false,
+    "liveCustomerRead": false,
+    "liveCustomerWrite": false,
+    "safeToPersist": false,
+    "requiredNextBuild": "QL-035-controlled-live-enablement-plan"
+  },
+  "blockedOutcomes": [
+    "blocked_decision_rejected",
+    "blocked_pending_rework",
+    "blocked_unsafe_environment",
+    "blocked_incomplete_prerequisites",
+    "blocked_unredacted_or_live_evidence"
+  ],
+  "verificationCases": [
+    "approve_controlled_planning_only",
+    "continue_rework_keeps_blocked",
+    "reject_keeps_blocked",
+    "unsafe_environment_rejected",
+    "unsafe_evidence_rejected"
+  ],
+  "forbiddenEvidence": [
+    "actual phone numbers or phone-like numbers",
+    "real operator identities",
+    "provider credentials or webhook secret values",
+    "SIP credentials or passwords",
+    "customer data or mapped live records",
+    "journaled live records or retained live records",
+    "live provider payloads",
+    "call recordings",
+    "transcripts",
+    "invoices",
+    "screenshots",
+    "ownership documents",
+    "persistent contact, conversation, task, audit, journal, readiness, or retention rows",
+    "enabled provider callbacks",
+    "enabled phone webhooks",
+    "enabled SMS sending",
+    "enabled call recording",
+    "enabled AI drafts",
+    "enabled AI auto-send"
+  ],
+  "nextBuild": "QL-035 — Phone/SMS Controlled Live Enablement Plan"
+}

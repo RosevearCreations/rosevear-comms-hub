@@ -6,17 +6,18 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-033 — Phone/SMS Disabled Dry-Run Final Pre-Enablement Readiness Review**
+**QL-034 — Phone/SMS Explicit Live Enablement Decision Gate**
 
-QL-033 adds a provider-neutral final pre-enablement readiness review for the synthetic disabled dry-run phone/SMS path. It reviews whether the redacted, non-persistent evidence from QL-028 through QL-032 is complete enough to move to a future explicit live enablement decision gate.
+QL-034 adds a provider-neutral explicit decision gate after the synthetic disabled dry-run phone/SMS path has completed QL-033 final pre-enablement readiness review. It decides whether the path remains blocked, returns for rework, or proceeds only to a later controlled live enablement planning build.
 
 The expected safe behavior is:
 
 ```text
-synthetic dry-run readiness evidence → redacted final pre-enablement readiness preview
+synthetic redacted readiness evidence + explicit human decision
+→ decision gate outcome
 safeToPersist: false
-readyForExplicitLiveEnablementDecisionGate: true only for planning-ready outcomes
-futureEnablementPlanningOnly: true only for planning-ready outcomes
+approvedForControlledLiveEnablementPlanning: true only for planning approval
+implementationBuildRequiredBeforeLiveTraffic: true
 liveEnablementAllowed: false
 providerCallbackAllowed: false
 smsSendAllowed: false
@@ -29,7 +30,7 @@ liveCustomerRead: false
 liveCustomerWrite: false
 ```
 
-It does **not** connect a provider, does **not** configure a provider webhook, does **not** enable provider callbacks, does **not** enable phone webhooks, does **not** enable SMS sending, does **not** enable call recording, does **not** enable AI drafts or AI auto-send, does **not** enable live customer reads or writes, does **not** persist mapped evidence, human review outcomes, journal entries, retention entries, or readiness evidence, does **not** commit provider credentials or webhook secret values, does **not** store real operator identities, and does **not** store the actual purchased phone number.
+It does **not** connect a provider, does **not** configure a provider webhook, does **not** enable provider callbacks, does **not** enable phone webhooks, does **not** enable SMS sending, does **not** enable call recording, does **not** enable AI drafts or AI auto-send, does **not** enable live customer reads or writes, does **not** persist mapped evidence, human review outcomes, journal entries, retention entries, readiness evidence, or decision evidence, does **not** commit provider credentials or webhook secret values, does **not** store real operator identities, does **not** store the actual purchased phone number, and does **not** grant live enablement.
 
 The protected intake endpoint and intake persistence both remain disabled by default. No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
 
@@ -98,7 +99,7 @@ PROTECTED_INTAKE_ENABLEMENT_GATE_STATUS=hold
 PROTECTED_INTAKE_ENABLEMENT_ALLOWED=false
 ```
 
-Phone/SMS disabled dry-run final pre-enablement readiness review values:
+Phone/SMS explicit live enablement decision gate values:
 
 ```text
 PHONE_SMS_TEST_DECISION_STATUS=new_test_number_first
@@ -114,6 +115,7 @@ PHONE_SMS_DISABLED_DRY_RUN_HUMAN_REVIEW_GATE_STATUS=blocked_pending_human_review
 PHONE_SMS_DISABLED_DRY_RUN_OPERATOR_OUTCOME_JOURNAL_STATUS=blocked_pending_operator_outcome_journal
 PHONE_SMS_DISABLED_DRY_RUN_ROLLBACK_RETENTION_STATUS=blocked_pending_rollback_retention_review
 PHONE_SMS_FINAL_PRE_ENABLEMENT_STATUS=blocked_pending_final_pre_enablement_readiness_review
+PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_GATE_STATUS=blocked_pending_explicit_live_enablement_decision_gate
 PHONE_SMS_TEST_PROVIDER=undecided
 PHONE_SMS_TEST_NUMBER_REQUIRED=true
 PHONE_SMS_TEST_NUMBER_TARGET_USE=undecided
@@ -174,6 +176,20 @@ PHONE_SMS_FINAL_PRE_ENABLEMENT_AI_DRAFTS_DISABLED=true
 PHONE_SMS_FINAL_PRE_ENABLEMENT_DECISION=not_reviewed
 PHONE_SMS_FINAL_PRE_ENABLEMENT_RESULT=not_run
 PHONE_SMS_FINAL_PRE_ENABLEMENT_READY_FOR_DECISION_GATE=false
+PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_SYNTHETIC_ONLY=true
+PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_REDACTED_ONLY=true
+PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_NO_PERSISTENCE_WRITES=true
+PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_LIVE_CUSTOMER_ACCESS_DISABLED=true
+PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_PROVIDER_CALLBACK_DISABLED=true
+PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_PHONE_WEBHOOK_DISABLED=true
+PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_SMS_SEND_DISABLED=true
+PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_CALL_RECORDING_DISABLED=true
+PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_AI_DRAFTS_DISABLED=true
+PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_AUTO_SEND_DISABLED=true
+PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_DECISION=not_reviewed
+PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_RESULT=not_run
+PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_APPROVED_FOR_PLANNING=false
+PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_IMPLEMENTATION_BUILD_REQUIRED=true
 PHONE_SMS_PROVIDER_WEBHOOK_CONFIGURED=false
 PHONE_SMS_WEBHOOK_SECRET_NAME_PLANNED=false
 PHONE_SMS_WEBHOOK_SECRET_VALUE_STORED_OUTSIDE_REPOSITORY=false
@@ -201,7 +217,7 @@ ENABLE_AI_DRAFTS=false
 ENABLE_AI_AUTO_SEND=false
 ```
 
-Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, provider API keys, SIP passwords, webhook secrets or values, actual phone numbers, phone-number ownership documents, invoices, screenshots, customer data, live payloads, call recordings, transcripts, mapped live records, journaled live records, rollback evidence, readiness evidence, real operator identities, or existing phone numbers.
+Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, provider API keys, SIP passwords, webhook secrets or values, actual phone numbers, phone-number ownership documents, invoices, screenshots, customer data, live payloads, call recordings, transcripts, mapped live records, journaled live records, rollback evidence, readiness evidence, decision evidence, real operator identities, or existing phone numbers.
 
 ## Source of truth
 
@@ -238,6 +254,7 @@ Start here:
 - [`docs/44_PHONE_SMS_DISABLED_DRY_RUN_OPERATOR_OUTCOME_JOURNAL.md`](docs/44_PHONE_SMS_DISABLED_DRY_RUN_OPERATOR_OUTCOME_JOURNAL.md)
 - [`docs/45_PHONE_SMS_DISABLED_DRY_RUN_ROLLBACK_EVIDENCE_RETENTION_REVIEW.md`](docs/45_PHONE_SMS_DISABLED_DRY_RUN_ROLLBACK_EVIDENCE_RETENTION_REVIEW.md)
 - [`docs/46_PHONE_SMS_DISABLED_DRY_RUN_FINAL_PRE_ENABLEMENT_READINESS_REVIEW.md`](docs/46_PHONE_SMS_DISABLED_DRY_RUN_FINAL_PRE_ENABLEMENT_READINESS_REVIEW.md)
+- [`docs/47_PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_DECISION_GATE.md`](docs/47_PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_DECISION_GATE.md)
 
 ## Phone/SMS path
 
@@ -255,6 +272,7 @@ new test number
 → rollback and evidence-retention review
 → final pre-enablement readiness review
 → explicit live enablement decision gate
+→ controlled live enablement plan
 → no auto-send
 ```
 
@@ -291,7 +309,7 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-033 non-goals
+## QL-034 non-goals
 
 - Do not connect a provider account.
 - Do not configure provider webhooks.
@@ -307,12 +325,13 @@ telephony/               Phone/SMS provider-neutral integration notes
 - Do not auto-send AI replies.
 - Do not enter real production customer data or live provider payloads.
 - Do not enable live customer reads or writes.
-- Do not persist synthetic evidence previews, human review outcomes, journal entries, retention entries, or readiness evidence.
-- Do not create mapped live contact, conversation, task, journal, retention, readiness, or audit records.
+- Do not persist synthetic evidence previews, human review outcomes, journal entries, retention entries, readiness evidence, or decision evidence.
+- Do not create mapped live contact, conversation, task, journal, retention, readiness, decision, or audit records.
 - Do not store real operator identities.
 - Do not add a Supabase migration.
 - Do not grant live enablement.
+- Do not implement the controlled live plan; QL-034 only decides whether planning may proceed.
 
 ## Next build
 
-QL-034 — Phone/SMS Explicit Live Enablement Decision Gate.
+QL-035 — Phone/SMS Controlled Live Enablement Plan.
