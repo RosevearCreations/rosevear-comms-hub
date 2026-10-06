@@ -6,11 +6,11 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-024 — Phone/SMS Test Number Purchase Review Gate**
+**QL-025 — Phone/SMS Test Number Purchase Evidence Intake**
 
-QL-024 adds the purchase-review gate for the first manual test-number purchase. It may allow the owner to manually purchase **one new disposable Canadian test number** only after QL-023 evidence is complete, provider/target/budget/cost details are reviewed, owner approval is recorded, and every safety/redaction lock remains true.
+QL-025 adds redacted purchase-evidence intake for the first manually purchased test number. It can record only safe labels and confirmations: provider, target use, budget, actual CAD costs, a non-secret purchase reference label, a non-secret alias for the purchased number, external storage locations, region/type labels, capability labels, and redaction/safety confirmations.
 
-It does **not** buy a number, does **not** store the actual candidate or purchased number, does **not** connect a provider account, does **not** commit provider credentials or purchase documents, does **not** port or forward existing numbers, and does **not** enable phone webhooks, SMS, call recording, or AI auto-send.
+It does **not** buy a number through code, does **not** store the actual purchased number, does **not** commit invoices/screenshots/ownership documents, does **not** connect a provider account, does **not** port or forward existing numbers, and does **not** enable phone webhooks, SMS sending, call recording, or AI auto-send.
 
 The protected intake endpoint and intake persistence both remain disabled by default. No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
 
@@ -79,29 +79,30 @@ PROTECTED_INTAKE_ENABLEMENT_GATE_STATUS=hold
 PROTECTED_INTAKE_ENABLEMENT_ALLOWED=false
 ```
 
-Phone/SMS test-number purchase-review values:
+Phone/SMS purchase-evidence values:
 
 ```text
 PHONE_SMS_TEST_DECISION_STATUS=new_test_number_first
 PHONE_SMS_TEST_NUMBER_SETUP_GATE_STATUS=blocked_pending_manual_setup
 PHONE_SMS_MANUAL_SETUP_EVIDENCE_STATUS=blocked_pending_manual_evidence
 PHONE_SMS_PURCHASE_REVIEW_GATE_STATUS=blocked_pending_purchase_review
+PHONE_SMS_PURCHASE_EVIDENCE_STATUS=blocked_pending_purchase_evidence
 PHONE_SMS_TEST_PROVIDER=undecided
 PHONE_SMS_TEST_NUMBER_REQUIRED=true
 PHONE_SMS_TEST_NUMBER_TARGET_USE=undecided
 PHONE_SMS_TEST_BUDGET_CAD_MONTHLY=
-PHONE_SMS_TEST_ACCOUNT_CREATED=false
 PHONE_SMS_TEST_ACCOUNT_REFERENCE_LABEL=
-PHONE_SMS_CREDENTIAL_STORAGE_LOCATION=undecided
-PHONE_SMS_PROVIDER_PORTAL_REVIEWED=false
-PHONE_SMS_NUMBER_AVAILABILITY_REVIEWED=false
-PHONE_SMS_SMS_COMPLIANCE_REVIEWED=false
-PHONE_SMS_SETUP_EVIDENCE_STORED_OUTSIDE_REPOSITORY=false
+PHONE_SMS_PURCHASE_COMPLETED_OUTSIDE_REPOSITORY=false
+PHONE_SMS_PURCHASE_REFERENCE_LABEL=
+PHONE_SMS_PURCHASED_NUMBER_ALIAS_LABEL=
+PHONE_SMS_PURCHASED_NUMBER_STORAGE_LOCATION=undecided
+PHONE_SMS_PURCHASE_DOCUMENT_STORAGE_LOCATION=undecided
 PHONE_SMS_CANDIDATE_NUMBER_REGION_LABEL=
+PHONE_SMS_ACTUAL_NUMBER_REGION_LABEL=
 PHONE_SMS_EXPECTED_CAPABILITY=undecided
-PHONE_SMS_ESTIMATED_MONTHLY_COST_CAD=
-PHONE_SMS_ESTIMATED_SETUP_COST_CAD=
-PHONE_SMS_PURCHASE_APPROVED_BY_OWNER=false
+PHONE_SMS_ACTUAL_CAPABILITY=undecided
+PHONE_SMS_MONTHLY_COST_CAD=
+PHONE_SMS_SETUP_COST_CAD=
 PHONE_SMS_TEST_NUMBER_PURCHASED=false
 PHONE_SMS_EXISTING_NUMBERS_PROTECTED=true
 ENABLE_PHONE_WEBHOOKS=false
@@ -138,6 +139,7 @@ Start here:
 - [`docs/35_PHONE_SMS_TEST_NUMBER_SETUP_GATE.md`](docs/35_PHONE_SMS_TEST_NUMBER_SETUP_GATE.md)
 - [`docs/36_PHONE_SMS_MANUAL_SETUP_EVIDENCE_INTAKE.md`](docs/36_PHONE_SMS_MANUAL_SETUP_EVIDENCE_INTAKE.md)
 - [`docs/37_PHONE_SMS_TEST_NUMBER_PURCHASE_REVIEW_GATE.md`](docs/37_PHONE_SMS_TEST_NUMBER_PURCHASE_REVIEW_GATE.md)
+- [`docs/38_PHONE_SMS_TEST_NUMBER_PURCHASE_EVIDENCE_INTAKE.md`](docs/38_PHONE_SMS_TEST_NUMBER_PURCHASE_EVIDENCE_INTAKE.md)
 
 ## Phone/SMS path
 
@@ -184,10 +186,11 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-024 non-goals
+## QL-025 non-goals
 
 - Do not buy a number through repository code.
 - Do not commit the actual candidate or purchased number.
+- Do not commit invoices, screenshots, receipts, or ownership documents.
 - Do not select a provider automatically.
 - Do not create or connect a provider account.
 - Do not port any number.
@@ -201,4 +204,4 @@ telephony/               Phone/SMS provider-neutral integration notes
 
 ## Next build
 
-QL-025 — Phone/SMS Test Number Purchase Evidence Intake.
+QL-026 — Phone/SMS Test Number Connection Readiness Gate.

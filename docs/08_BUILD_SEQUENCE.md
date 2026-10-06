@@ -204,8 +204,27 @@ Result:
 
 ## QL-025 — Phone/SMS Test Number Purchase Evidence Intake
 
+Status: complete.
+
+Result:
+
+- Added purchase evidence intake helper at `api/deployment/phoneSmsTestNumberPurchaseEvidenceIntake.ts`.
+- Added purchase evidence fixture at `api/contracts/phone-sms-test-number-purchase-evidence-intake.example.json`.
+- Added source-of-truth doc at `docs/38_PHONE_SMS_TEST_NUMBER_PURCHASE_EVIDENCE_INTAKE.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony purchase-evidence notes.
+- Kept purchase evidence blocked until QL-024 approval, provider, target use, budget, account label, manual purchase confirmation, purchase reference label, purchased-number alias, external storage locations, region/type labels, capabilities, CAD costs, redaction confirmations, and safety locks are complete.
+- Kept the actual purchased test number out of the repository.
+- Kept invoices, screenshots, receipts, ownership documents, credentials, customer data, and existing numbers out of the repository.
+- Kept all existing numbers unported and unforwarded.
+- Kept phone webhooks, SMS sending, call recording, and AI auto-send disabled.
+- Did not add a Supabase migration.
+- Did not connect a provider account.
+- Did not enable the purchased test number.
+
+## QL-026 — Phone/SMS Test Number Connection Readiness Gate
+
 Goal:
 
-- Record only redacted, non-secret evidence that one new test number was purchased manually.
-- Keep the actual number and all ownership documents outside the repository.
-- Keep phone webhooks, SMS sending, call recording, and AI auto-send disabled.
+- Review whether the purchased test number is ready for a disabled/dry-run connection plan.
+- Keep provider credentials in deployment secrets only.
+- Keep phone webhooks, SMS sending, call recording, and AI auto-send disabled until a later explicit enablement gate.
