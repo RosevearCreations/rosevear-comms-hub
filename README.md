@@ -6,22 +6,22 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-034 — Phone/SMS Explicit Live Enablement Decision Gate**
+**QL-035 — Phone/SMS Controlled Live Enablement Plan**
 
-QL-034 adds a provider-neutral explicit decision gate after the synthetic disabled dry-run phone/SMS path has completed QL-033 final pre-enablement readiness review. It decides whether the path remains blocked, returns for rework, or proceeds only to a later controlled live enablement planning build.
+QL-035 plans a tightly controlled live enablement implementation path after the explicit QL-034 decision gate. It defines manual approvals, rollback rules, provider boundaries, redaction rules, deployment gates, and operator training requirements for a later disabled-by-default implementation scaffold.
 
 The expected safe behavior is:
 
 ```text
-synthetic redacted readiness evidence + explicit human decision
-→ decision gate outcome
+QL-034 planning approval + synthetic redacted planning labels
+→ controlled live enablement plan
 safeToPersist: false
-approvedForControlledLiveEnablementPlanning: true only for planning approval
+readyForManualImplementationDesign: true only when all required controls are present
 implementationBuildRequiredBeforeLiveTraffic: true
 liveEnablementAllowed: false
 providerCallbackAllowed: false
-smsSendAllowed: false
 phoneWebhookAllowed: false
+smsSendAllowed: false
 callRecordingAllowed: false
 aiDraftAllowed: false
 autoSendAllowed: false
@@ -30,7 +30,7 @@ liveCustomerRead: false
 liveCustomerWrite: false
 ```
 
-It does **not** connect a provider, does **not** configure a provider webhook, does **not** enable provider callbacks, does **not** enable phone webhooks, does **not** enable SMS sending, does **not** enable call recording, does **not** enable AI drafts or AI auto-send, does **not** enable live customer reads or writes, does **not** persist mapped evidence, human review outcomes, journal entries, retention entries, readiness evidence, or decision evidence, does **not** commit provider credentials or webhook secret values, does **not** store real operator identities, does **not** store the actual purchased phone number, and does **not** grant live enablement.
+It does **not** connect a provider, does **not** configure a provider webhook, does **not** enable provider callbacks, does **not** enable phone webhooks, does **not** enable SMS sending, does **not** enable call recording, does **not** enable AI drafts or AI auto-send, does **not** enable live customer reads or writes, does **not** persist mapped evidence, human review outcomes, journal entries, retention entries, readiness evidence, decision evidence, or planning evidence, does **not** commit provider credentials or webhook secret values, does **not** store real operator identities, does **not** store the actual purchased phone number, and does **not** grant live enablement.
 
 The protected intake endpoint and intake persistence both remain disabled by default. No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
 
@@ -99,117 +99,28 @@ PROTECTED_INTAKE_ENABLEMENT_GATE_STATUS=hold
 PROTECTED_INTAKE_ENABLEMENT_ALLOWED=false
 ```
 
-Phone/SMS explicit live enablement decision gate values:
+Phone/SMS controlled live enablement plan values:
 
 ```text
-PHONE_SMS_TEST_DECISION_STATUS=new_test_number_first
-PHONE_SMS_TEST_NUMBER_SETUP_GATE_STATUS=blocked_pending_manual_setup
-PHONE_SMS_MANUAL_SETUP_EVIDENCE_STATUS=blocked_pending_manual_evidence
-PHONE_SMS_PURCHASE_REVIEW_GATE_STATUS=blocked_pending_purchase_review
-PHONE_SMS_PURCHASE_EVIDENCE_STATUS=blocked_pending_purchase_evidence
-PHONE_SMS_CONNECTION_READINESS_STATUS=blocked_pending_connection_readiness
-PHONE_SMS_DISABLED_DRY_RUN_PLAN_STATUS=blocked_pending_disabled_dry_run_plan
-PHONE_SMS_DISABLED_DRY_RUN_RUNTIME_VERIFICATION_STATUS=blocked_pending_runtime_verification
-PHONE_SMS_DISABLED_DRY_RUN_EVIDENCE_MAPPING_STATUS=blocked_pending_evidence_mapping_review
-PHONE_SMS_DISABLED_DRY_RUN_HUMAN_REVIEW_GATE_STATUS=blocked_pending_human_review_gate
-PHONE_SMS_DISABLED_DRY_RUN_OPERATOR_OUTCOME_JOURNAL_STATUS=blocked_pending_operator_outcome_journal
-PHONE_SMS_DISABLED_DRY_RUN_ROLLBACK_RETENTION_STATUS=blocked_pending_rollback_retention_review
-PHONE_SMS_FINAL_PRE_ENABLEMENT_STATUS=blocked_pending_final_pre_enablement_readiness_review
 PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_GATE_STATUS=blocked_pending_explicit_live_enablement_decision_gate
-PHONE_SMS_TEST_PROVIDER=undecided
-PHONE_SMS_TEST_NUMBER_REQUIRED=true
-PHONE_SMS_TEST_NUMBER_TARGET_USE=undecided
-PHONE_SMS_PURCHASED_NUMBER_ALIAS_LABEL=
-PHONE_SMS_ACTUAL_CAPABILITY=undecided
-PHONE_SMS_DRY_RUN_DEPLOYMENT_TARGET=undecided
-PHONE_SMS_DRY_RUN_CONNECTION_MODE=undecided
-PHONE_SMS_DRY_RUN_ENDPOINT_MODE=undecided
-PHONE_SMS_DRY_RUN_EXPECTED_DISABLED_STATUS=503
-PHONE_SMS_DRY_RUN_ROUTE_LABEL=
-PHONE_SMS_RUNTIME_VERIFICATION_SYNTHETIC_ONLY=true
-PHONE_SMS_RUNTIME_VERIFICATION_NO_PERSISTENCE_WRITES=true
-PHONE_SMS_RUNTIME_VERIFICATION_LIVE_CUSTOMER_ACCESS_DISABLED=true
-PHONE_SMS_RUNTIME_VERIFICATION_PROVIDER_CALLBACK_CONFIGURED=false
-PHONE_SMS_RUNTIME_VERIFICATION_RESULT=not_run
-PHONE_SMS_EVIDENCE_MAPPING_SYNTHETIC_ONLY=true
-PHONE_SMS_EVIDENCE_MAPPING_NO_PERSISTENCE_WRITES=true
-PHONE_SMS_EVIDENCE_MAPPING_LIVE_CUSTOMER_ACCESS_DISABLED=true
-PHONE_SMS_EVIDENCE_MAPPING_CONTACT_SHAPE_REVIEWED=false
-PHONE_SMS_EVIDENCE_MAPPING_CONVERSATION_SHAPE_REVIEWED=false
-PHONE_SMS_EVIDENCE_MAPPING_TASK_SHAPE_REVIEWED=false
-PHONE_SMS_EVIDENCE_MAPPING_HUMAN_REVIEW_REQUIRED=true
-PHONE_SMS_HUMAN_REVIEW_SYNTHETIC_ONLY=true
-PHONE_SMS_HUMAN_REVIEW_NO_PERSISTENCE_WRITES=true
-PHONE_SMS_HUMAN_REVIEW_LIVE_CUSTOMER_ACCESS_DISABLED=true
-PHONE_SMS_HUMAN_REVIEW_PROVIDER_CALLBACK_DISABLED=true
-PHONE_SMS_HUMAN_REVIEW_AUTO_SEND_DISABLED=true
-PHONE_SMS_HUMAN_REVIEW_AI_DRAFTS_DISABLED=true
-PHONE_SMS_HUMAN_REVIEW_OPERATOR_DECISION=not_reviewed
-PHONE_SMS_HUMAN_REVIEW_RESULT=not_run
-PHONE_SMS_OPERATOR_OUTCOME_SYNTHETIC_ONLY=true
-PHONE_SMS_OPERATOR_OUTCOME_NO_PERSISTENCE_WRITES=true
-PHONE_SMS_OPERATOR_OUTCOME_LIVE_CUSTOMER_ACCESS_DISABLED=true
-PHONE_SMS_OPERATOR_OUTCOME_PROVIDER_CALLBACK_DISABLED=true
-PHONE_SMS_OPERATOR_OUTCOME_AUTO_SEND_DISABLED=true
-PHONE_SMS_OPERATOR_OUTCOME_AI_DRAFTS_DISABLED=true
-PHONE_SMS_OPERATOR_OUTCOME_JOURNAL_RESULT=not_run
-PHONE_SMS_OPERATOR_OUTCOME_DECISION=not_journaled
-PHONE_SMS_OPERATOR_OUTCOME_RETENTION_REVIEWED=false
-PHONE_SMS_OPERATOR_OUTCOME_ROLLBACK_REVIEWED=false
-PHONE_SMS_ROLLBACK_RETENTION_SYNTHETIC_ONLY=true
-PHONE_SMS_ROLLBACK_RETENTION_REDACTED_ONLY=true
-PHONE_SMS_ROLLBACK_RETENTION_NO_PERSISTENCE_WRITES=true
-PHONE_SMS_ROLLBACK_RETENTION_LIVE_CUSTOMER_ACCESS_DISABLED=true
-PHONE_SMS_ROLLBACK_RETENTION_PROVIDER_CALLBACK_DISABLED=true
-PHONE_SMS_ROLLBACK_RETENTION_AUTO_SEND_DISABLED=true
-PHONE_SMS_ROLLBACK_RETENTION_AI_DRAFTS_DISABLED=true
-PHONE_SMS_ROLLBACK_RETENTION_RESULT=not_run
-PHONE_SMS_ROLLBACK_RETENTION_DECISION=not_reviewed
-PHONE_SMS_ROLLBACK_RETENTION_WINDOW=undecided
-PHONE_SMS_FINAL_PRE_ENABLEMENT_SYNTHETIC_ONLY=true
-PHONE_SMS_FINAL_PRE_ENABLEMENT_REDACTED_ONLY=true
-PHONE_SMS_FINAL_PRE_ENABLEMENT_NO_PERSISTENCE_WRITES=true
-PHONE_SMS_FINAL_PRE_ENABLEMENT_LIVE_CUSTOMER_ACCESS_DISABLED=true
-PHONE_SMS_FINAL_PRE_ENABLEMENT_PROVIDER_CALLBACK_DISABLED=true
-PHONE_SMS_FINAL_PRE_ENABLEMENT_AUTO_SEND_DISABLED=true
-PHONE_SMS_FINAL_PRE_ENABLEMENT_AI_DRAFTS_DISABLED=true
-PHONE_SMS_FINAL_PRE_ENABLEMENT_DECISION=not_reviewed
-PHONE_SMS_FINAL_PRE_ENABLEMENT_RESULT=not_run
-PHONE_SMS_FINAL_PRE_ENABLEMENT_READY_FOR_DECISION_GATE=false
-PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_SYNTHETIC_ONLY=true
-PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_REDACTED_ONLY=true
-PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_NO_PERSISTENCE_WRITES=true
-PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_LIVE_CUSTOMER_ACCESS_DISABLED=true
-PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_PROVIDER_CALLBACK_DISABLED=true
-PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_PHONE_WEBHOOK_DISABLED=true
-PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_SMS_SEND_DISABLED=true
-PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_CALL_RECORDING_DISABLED=true
-PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_AI_DRAFTS_DISABLED=true
-PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_AUTO_SEND_DISABLED=true
-PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_DECISION=not_reviewed
-PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_RESULT=not_run
-PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_APPROVED_FOR_PLANNING=false
-PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_IMPLEMENTATION_BUILD_REQUIRED=true
+PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_PLAN_STATUS=blocked_pending_controlled_live_enablement_plan
+PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_SYNTHETIC_ONLY=true
+PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_REDACTED_ONLY=true
+PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_NO_PERSISTENCE_WRITES=true
+PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_CUSTOMER_ACCESS_DISABLED=true
+PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_PROVIDER_CALLBACK_DISABLED=true
+PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_PHONE_WEBHOOK_DISABLED=true
+PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_SMS_SEND_DISABLED=true
+PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_CALL_RECORDING_DISABLED=true
+PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_AI_DRAFTS_DISABLED=true
+PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_AUTO_SEND_DISABLED=true
+PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_IMPLEMENTATION_BUILD_REQUIRED=true
+PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_READY_FOR_IMPLEMENTATION_DESIGN=false
 PHONE_SMS_PROVIDER_WEBHOOK_CONFIGURED=false
-PHONE_SMS_WEBHOOK_SECRET_NAME_PLANNED=false
 PHONE_SMS_WEBHOOK_SECRET_VALUE_STORED_OUTSIDE_REPOSITORY=false
-PHONE_SMS_SYNTHETIC_VOICE_FIXTURE_PLANNED=false
-PHONE_SMS_SYNTHETIC_SMS_FIXTURE_PLANNED=false
-PHONE_SMS_DRY_RUN_PERSISTENCE_MODE=undecided
 PHONE_SMS_PERSISTENCE_WRITES_DISABLED=true
 PHONE_SMS_LIVE_CUSTOMER_READS_DISABLED=true
 PHONE_SMS_LIVE_CUSTOMER_WRITES_DISABLED=true
-PHONE_SMS_RATE_LIMIT_PLAN_REVIEWED=false
-PHONE_SMS_IDEMPOTENCY_PLAN_REVIEWED=false
-PHONE_SMS_REPLAY_PROTECTION_PLAN_REVIEWED=false
-PHONE_SMS_LOGGING_REDACTION_PLAN_REVIEWED=false
-PHONE_SMS_ROLLBACK_PLAN_REVIEWED=false
-PHONE_SMS_OPERATOR_APPROVED_RUNTIME_VERIFICATION=false
-PHONE_SMS_TEST_NUMBER_PURCHASED=false
-PHONE_SMS_EXISTING_NUMBERS_PROTECTED=true
-TELEPHONY_PROVIDER=
-TELEPHONY_WEBHOOK_SECRET=
-SMS_WEBHOOK_SECRET=
 ENABLE_PHONE_WEBHOOKS=false
 ENABLE_SMS=false
 ENABLE_CALL_RECORDING=false
@@ -217,7 +128,7 @@ ENABLE_AI_DRAFTS=false
 ENABLE_AI_AUTO_SEND=false
 ```
 
-Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, provider API keys, SIP passwords, webhook secrets or values, actual phone numbers, phone-number ownership documents, invoices, screenshots, customer data, live payloads, call recordings, transcripts, mapped live records, journaled live records, rollback evidence, readiness evidence, decision evidence, real operator identities, or existing phone numbers.
+Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, provider API keys, SIP passwords, webhook secrets or values, actual phone numbers, phone-number ownership documents, invoices, screenshots, customer data, live payloads, call recordings, transcripts, mapped live records, journaled live records, rollback evidence, readiness evidence, decision evidence, planning evidence, real operator identities, or existing phone numbers.
 
 ## Source of truth
 
@@ -255,6 +166,7 @@ Start here:
 - [`docs/45_PHONE_SMS_DISABLED_DRY_RUN_ROLLBACK_EVIDENCE_RETENTION_REVIEW.md`](docs/45_PHONE_SMS_DISABLED_DRY_RUN_ROLLBACK_EVIDENCE_RETENTION_REVIEW.md)
 - [`docs/46_PHONE_SMS_DISABLED_DRY_RUN_FINAL_PRE_ENABLEMENT_READINESS_REVIEW.md`](docs/46_PHONE_SMS_DISABLED_DRY_RUN_FINAL_PRE_ENABLEMENT_READINESS_REVIEW.md)
 - [`docs/47_PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_DECISION_GATE.md`](docs/47_PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_DECISION_GATE.md)
+- [`docs/48_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_PLAN.md`](docs/48_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_PLAN.md)
 
 ## Phone/SMS path
 
@@ -273,6 +185,7 @@ new test number
 → final pre-enablement readiness review
 → explicit live enablement decision gate
 → controlled live enablement plan
+→ disabled-by-default implementation scaffold
 → no auto-send
 ```
 
@@ -309,7 +222,7 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-034 non-goals
+## QL-035 non-goals
 
 - Do not connect a provider account.
 - Do not configure provider webhooks.
@@ -325,13 +238,12 @@ telephony/               Phone/SMS provider-neutral integration notes
 - Do not auto-send AI replies.
 - Do not enter real production customer data or live provider payloads.
 - Do not enable live customer reads or writes.
-- Do not persist synthetic evidence previews, human review outcomes, journal entries, retention entries, readiness evidence, or decision evidence.
-- Do not create mapped live contact, conversation, task, journal, retention, readiness, decision, or audit records.
+- Do not persist synthetic evidence previews, human review outcomes, journal entries, retention entries, readiness evidence, decision evidence, or planning evidence.
+- Do not create mapped live contact, conversation, task, journal, retention, readiness, decision, planning, or audit records.
 - Do not store real operator identities.
 - Do not add a Supabase migration.
 - Do not grant live enablement.
-- Do not implement the controlled live plan; QL-034 only decides whether planning may proceed.
 
 ## Next build
 
-QL-035 — Phone/SMS Controlled Live Enablement Plan.
+QL-036 — Phone/SMS Controlled Live Enablement Implementation Scaffold.
