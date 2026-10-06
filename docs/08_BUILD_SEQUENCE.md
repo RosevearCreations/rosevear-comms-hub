@@ -217,8 +217,28 @@ Result:
 
 ## QL-030 — Phone/SMS Disabled Dry-Run Human Review Gate
 
+Status: complete.
+
+Result:
+
+- Added human review gate helper at `api/deployment/phoneSmsDisabledDryRunHumanReviewGate.ts`.
+- Added human review gate fixture at `api/contracts/phone-sms-disabled-dry-run-human-review-gate.example.json`.
+- Added source-of-truth doc at `docs/43_PHONE_SMS_DISABLED_DRY_RUN_HUMAN_REVIEW_GATE.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony human review notes.
+- Added approve, reject, and hold decision previews for synthetic mapped evidence only.
+- Kept approved decisions limited to future enablement planning.
+- Kept every review outcome `safeToPersist: false`.
+- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, and live customer writes disabled.
+- Rejected non-synthetic mapped evidence.
+- Rejected unsafe environments that enable live SMS behavior.
+- Did not add a Supabase migration.
+- Did not connect a provider account.
+- Did not enable any provider callback route.
+
+## QL-031 — Phone/SMS Disabled Dry-Run Operator Outcome Journal
+
 Goal:
 
-- Review the operator decision gate that must approve or reject synthetic mapped evidence before any future live enablement planning.
-- Keep all review inputs synthetic, redacted, and non-persistent until a later explicit enablement gate.
-- Keep live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, and live customer access disabled.
+- Review the operator outcome journal shape for synthetic human review decisions.
+- Keep all journal entries synthetic, redacted, and non-persistent until a later explicit enablement gate.
+- Keep live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, and live customer access disabled.
