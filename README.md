@@ -6,16 +6,16 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-031 — Phone/SMS Disabled Dry-Run Operator Outcome Journal**
+**QL-032 — Phone/SMS Disabled Dry-Run Rollback and Evidence Retention Review**
 
-QL-031 adds a provider-neutral operator outcome journal for synthetic QL-030 human review decisions. It records whether a synthetic preview was approved for future enablement planning, rejected, or held for another synthetic review pass.
+QL-032 adds a provider-neutral rollback and evidence-retention review for synthetic disabled dry-run phone/SMS planning evidence from QL-028 through QL-031. It labels what should be discarded, what may remain as a redacted planning note, and what must be held for rework before any future readiness gate.
 
 The expected safe behavior is:
 
 ```text
-synthetic human review decision → redacted operator outcome journal preview
+synthetic dry-run evidence → redacted rollback/retention review preview
 safeToPersist: false
-futureEnablementPlanningAllowed: true only for approved planning outcomes
+futureEnablementPlanningOnly: true only for approved planning outcomes
 liveEnablementAllowed: false
 providerCallbackAllowed: false
 smsSendAllowed: false
@@ -26,7 +26,7 @@ liveCustomerRead: false
 liveCustomerWrite: false
 ```
 
-It does **not** connect a provider, does **not** configure a provider webhook, does **not** enable provider callbacks, does **not** enable phone webhooks, does **not** enable SMS sending, does **not** enable call recording, does **not** enable AI drafts or AI auto-send, does **not** enable live customer reads or writes, does **not** persist mapped evidence, human review outcomes, or journal entries, does **not** commit provider credentials or webhook secret values, does **not** store real operator identities, and does **not** store the actual purchased phone number.
+It does **not** connect a provider, does **not** configure a provider webhook, does **not** enable provider callbacks, does **not** enable phone webhooks, does **not** enable SMS sending, does **not** enable call recording, does **not** enable AI drafts or AI auto-send, does **not** enable live customer reads or writes, does **not** persist mapped evidence, human review outcomes, journal entries, or retention entries, does **not** commit provider credentials or webhook secret values, does **not** store real operator identities, and does **not** store the actual purchased phone number.
 
 The protected intake endpoint and intake persistence both remain disabled by default. No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
 
@@ -95,7 +95,7 @@ PROTECTED_INTAKE_ENABLEMENT_GATE_STATUS=hold
 PROTECTED_INTAKE_ENABLEMENT_ALLOWED=false
 ```
 
-Phone/SMS disabled dry-run operator outcome journal values:
+Phone/SMS disabled dry-run rollback and evidence-retention review values:
 
 ```text
 PHONE_SMS_TEST_DECISION_STATUS=new_test_number_first
@@ -109,6 +109,7 @@ PHONE_SMS_DISABLED_DRY_RUN_RUNTIME_VERIFICATION_STATUS=blocked_pending_runtime_v
 PHONE_SMS_DISABLED_DRY_RUN_EVIDENCE_MAPPING_STATUS=blocked_pending_evidence_mapping_review
 PHONE_SMS_DISABLED_DRY_RUN_HUMAN_REVIEW_GATE_STATUS=blocked_pending_human_review_gate
 PHONE_SMS_DISABLED_DRY_RUN_OPERATOR_OUTCOME_JOURNAL_STATUS=blocked_pending_operator_outcome_journal
+PHONE_SMS_DISABLED_DRY_RUN_ROLLBACK_RETENTION_STATUS=blocked_pending_rollback_retention_review
 PHONE_SMS_TEST_PROVIDER=undecided
 PHONE_SMS_TEST_NUMBER_REQUIRED=true
 PHONE_SMS_TEST_NUMBER_TARGET_USE=undecided
@@ -149,6 +150,16 @@ PHONE_SMS_OPERATOR_OUTCOME_JOURNAL_RESULT=not_run
 PHONE_SMS_OPERATOR_OUTCOME_DECISION=not_journaled
 PHONE_SMS_OPERATOR_OUTCOME_RETENTION_REVIEWED=false
 PHONE_SMS_OPERATOR_OUTCOME_ROLLBACK_REVIEWED=false
+PHONE_SMS_ROLLBACK_RETENTION_SYNTHETIC_ONLY=true
+PHONE_SMS_ROLLBACK_RETENTION_REDACTED_ONLY=true
+PHONE_SMS_ROLLBACK_RETENTION_NO_PERSISTENCE_WRITES=true
+PHONE_SMS_ROLLBACK_RETENTION_LIVE_CUSTOMER_ACCESS_DISABLED=true
+PHONE_SMS_ROLLBACK_RETENTION_PROVIDER_CALLBACK_DISABLED=true
+PHONE_SMS_ROLLBACK_RETENTION_AUTO_SEND_DISABLED=true
+PHONE_SMS_ROLLBACK_RETENTION_AI_DRAFTS_DISABLED=true
+PHONE_SMS_ROLLBACK_RETENTION_RESULT=not_run
+PHONE_SMS_ROLLBACK_RETENTION_DECISION=not_reviewed
+PHONE_SMS_ROLLBACK_RETENTION_WINDOW=undecided
 PHONE_SMS_PROVIDER_WEBHOOK_CONFIGURED=false
 PHONE_SMS_WEBHOOK_SECRET_NAME_PLANNED=false
 PHONE_SMS_WEBHOOK_SECRET_VALUE_STORED_OUTSIDE_REPOSITORY=false
@@ -176,7 +187,7 @@ ENABLE_AI_DRAFTS=false
 ENABLE_AI_AUTO_SEND=false
 ```
 
-Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, provider API keys, SIP passwords, webhook secrets or values, actual phone numbers, phone-number ownership documents, invoices, screenshots, customer data, live payloads, call recordings, transcripts, mapped live records, journaled live records, real operator identities, or existing phone numbers.
+Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, provider API keys, SIP passwords, webhook secrets or values, actual phone numbers, phone-number ownership documents, invoices, screenshots, customer data, live payloads, call recordings, transcripts, mapped live records, journaled live records, rollback evidence, real operator identities, or existing phone numbers.
 
 ## Source of truth
 
@@ -211,6 +222,7 @@ Start here:
 - [`docs/42_PHONE_SMS_DISABLED_DRY_RUN_EVIDENCE_MAPPING_REVIEW.md`](docs/42_PHONE_SMS_DISABLED_DRY_RUN_EVIDENCE_MAPPING_REVIEW.md)
 - [`docs/43_PHONE_SMS_DISABLED_DRY_RUN_HUMAN_REVIEW_GATE.md`](docs/43_PHONE_SMS_DISABLED_DRY_RUN_HUMAN_REVIEW_GATE.md)
 - [`docs/44_PHONE_SMS_DISABLED_DRY_RUN_OPERATOR_OUTCOME_JOURNAL.md`](docs/44_PHONE_SMS_DISABLED_DRY_RUN_OPERATOR_OUTCOME_JOURNAL.md)
+- [`docs/45_PHONE_SMS_DISABLED_DRY_RUN_ROLLBACK_EVIDENCE_RETENTION_REVIEW.md`](docs/45_PHONE_SMS_DISABLED_DRY_RUN_ROLLBACK_EVIDENCE_RETENTION_REVIEW.md)
 
 ## Phone/SMS path
 
@@ -226,6 +238,7 @@ new test number
 → human review gate
 → operator outcome journal
 → rollback and evidence-retention review
+→ final pre-enablement readiness review
 → no auto-send
 ```
 
@@ -262,7 +275,7 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-031 non-goals
+## QL-032 non-goals
 
 - Do not connect a provider account.
 - Do not configure provider webhooks.
@@ -278,10 +291,11 @@ telephony/               Phone/SMS provider-neutral integration notes
 - Do not auto-send AI replies.
 - Do not enter real production customer data or live provider payloads.
 - Do not enable live customer reads or writes.
-- Do not persist synthetic evidence previews, human review outcomes, or journal entries.
-- Do not create mapped live contact, conversation, task, journal, or audit records.
+- Do not persist synthetic evidence previews, human review outcomes, journal entries, or retention entries.
+- Do not create mapped live contact, conversation, task, journal, retention, or audit records.
 - Do not store real operator identities.
+- Do not add a Supabase migration.
 
 ## Next build
 
-QL-032 — Phone/SMS Disabled Dry-Run Rollback and Evidence Retention Review.
+QL-033 — Phone/SMS Disabled Dry-Run Final Pre-Enablement Readiness Review.
