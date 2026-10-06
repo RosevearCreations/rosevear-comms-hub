@@ -6,11 +6,11 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-026 — Phone/SMS Test Number Connection Readiness Gate**
+**QL-027 — Phone/SMS Disabled Dry-Run Connection Plan**
 
-QL-026 adds a connection-readiness gate for the first manually purchased disposable test number. It reviews whether the number is ready for a later **disabled/dry-run connection plan** by checking only safe labels and confirmations: provider, target use, purchased-number alias, external storage locations, provider portal access, connection-settings review, disabled/dry-run route label, deployment target, capability labels, scenario reviews, allowed-origin review, rate-limit review, idempotency review, logging-redaction review, rollback review, and operator approval.
+QL-027 adds a disabled/dry-run connection plan for the first manually purchased disposable test number. It prepares only a safe plan for synthetic inbound voice/SMS fixture review: provider label, target use, purchased-number alias, capability, deployment target, disabled/dry-run route label, expected HTTP 503 disabled response, provider portal review, webhook-secret name planning without a value, synthetic fixture planning, inbound mapping, persistence-disabled confirmation, live customer read/write disabled confirmations, rate-limit, idempotency, replay protection, logging redaction, rollback, and operator approval.
 
-It does **not** connect a provider, does **not** enable phone webhooks, does **not** enable SMS sending, does **not** enable call recording, does **not** enable AI drafts or AI auto-send, does **not** commit provider credentials or webhook secrets, and does **not** store the actual purchased phone number.
+It does **not** connect a provider, does **not** configure a provider webhook, does **not** enable phone webhooks, does **not** enable SMS sending, does **not** enable call recording, does **not** enable AI drafts or AI auto-send, does **not** enable live customer reads or writes, does **not** commit provider credentials or webhook secret values, and does **not** store the actual purchased phone number.
 
 The protected intake endpoint and intake persistence both remain disabled by default. No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
 
@@ -79,7 +79,7 @@ PROTECTED_INTAKE_ENABLEMENT_GATE_STATUS=hold
 PROTECTED_INTAKE_ENABLEMENT_ALLOWED=false
 ```
 
-Phone/SMS connection-readiness values:
+Phone/SMS disabled dry-run planning values:
 
 ```text
 PHONE_SMS_TEST_DECISION_STATUS=new_test_number_first
@@ -88,26 +88,32 @@ PHONE_SMS_MANUAL_SETUP_EVIDENCE_STATUS=blocked_pending_manual_evidence
 PHONE_SMS_PURCHASE_REVIEW_GATE_STATUS=blocked_pending_purchase_review
 PHONE_SMS_PURCHASE_EVIDENCE_STATUS=blocked_pending_purchase_evidence
 PHONE_SMS_CONNECTION_READINESS_STATUS=blocked_pending_connection_readiness
+PHONE_SMS_DISABLED_DRY_RUN_PLAN_STATUS=blocked_pending_disabled_dry_run_plan
 PHONE_SMS_TEST_PROVIDER=undecided
 PHONE_SMS_TEST_NUMBER_REQUIRED=true
 PHONE_SMS_TEST_NUMBER_TARGET_USE=undecided
 PHONE_SMS_PURCHASED_NUMBER_ALIAS_LABEL=
-PHONE_SMS_PURCHASED_NUMBER_STORAGE_LOCATION=undecided
-PHONE_SMS_CREDENTIAL_STORAGE_LOCATION=undecided
-PHONE_SMS_WEBHOOK_SECRET_STORAGE_LOCATION=undecided
-PHONE_SMS_CONNECTION_MODE=undecided
-PHONE_SMS_CONNECTION_DEPLOYMENT_TARGET=undecided
-PHONE_SMS_DRY_RUN_ROUTE_LABEL=
 PHONE_SMS_ACTUAL_CAPABILITY=undecided
-PHONE_SMS_PROVIDER_PORTAL_ACCESS_CONFIRMED=false
-PHONE_SMS_PROVIDER_CONNECTION_SETTINGS_REVIEWED=false
-PHONE_SMS_WEBHOOK_ENDPOINT_DRAFTED=false
-PHONE_SMS_ALLOWED_ORIGINS_REVIEWED=false
+PHONE_SMS_DRY_RUN_DEPLOYMENT_TARGET=undecided
+PHONE_SMS_DRY_RUN_CONNECTION_MODE=undecided
+PHONE_SMS_DRY_RUN_ENDPOINT_MODE=undecided
+PHONE_SMS_DRY_RUN_EXPECTED_DISABLED_STATUS=503
+PHONE_SMS_DRY_RUN_ROUTE_LABEL=
+PHONE_SMS_PROVIDER_WEBHOOK_CONFIGURED=false
+PHONE_SMS_WEBHOOK_SECRET_NAME_PLANNED=false
+PHONE_SMS_WEBHOOK_SECRET_VALUE_STORED_OUTSIDE_REPOSITORY=false
+PHONE_SMS_SYNTHETIC_VOICE_FIXTURE_PLANNED=false
+PHONE_SMS_SYNTHETIC_SMS_FIXTURE_PLANNED=false
+PHONE_SMS_DRY_RUN_PERSISTENCE_MODE=undecided
+PHONE_SMS_PERSISTENCE_WRITES_DISABLED=true
+PHONE_SMS_LIVE_CUSTOMER_READS_DISABLED=true
+PHONE_SMS_LIVE_CUSTOMER_WRITES_DISABLED=true
 PHONE_SMS_RATE_LIMIT_PLAN_REVIEWED=false
 PHONE_SMS_IDEMPOTENCY_PLAN_REVIEWED=false
+PHONE_SMS_REPLAY_PROTECTION_PLAN_REVIEWED=false
 PHONE_SMS_LOGGING_REDACTION_PLAN_REVIEWED=false
 PHONE_SMS_ROLLBACK_PLAN_REVIEWED=false
-PHONE_SMS_OPERATOR_APPROVED_DRY_RUN_PLAN=false
+PHONE_SMS_OPERATOR_APPROVED_RUNTIME_VERIFICATION=false
 PHONE_SMS_TEST_NUMBER_PURCHASED=false
 PHONE_SMS_EXISTING_NUMBERS_PROTECTED=true
 TELEPHONY_PROVIDER=
@@ -120,7 +126,7 @@ ENABLE_AI_DRAFTS=false
 ENABLE_AI_AUTO_SEND=false
 ```
 
-Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, provider API keys, SIP passwords, webhook secrets, actual phone numbers, phone-number ownership documents, invoices, screenshots, customer data, live payloads, call recordings, transcripts, or existing phone numbers.
+Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, provider API keys, SIP passwords, webhook secrets or values, actual phone numbers, phone-number ownership documents, invoices, screenshots, customer data, live payloads, call recordings, transcripts, or existing phone numbers.
 
 ## Source of truth
 
@@ -150,6 +156,7 @@ Start here:
 - [`docs/37_PHONE_SMS_TEST_NUMBER_PURCHASE_REVIEW_GATE.md`](docs/37_PHONE_SMS_TEST_NUMBER_PURCHASE_REVIEW_GATE.md)
 - [`docs/38_PHONE_SMS_TEST_NUMBER_PURCHASE_EVIDENCE_INTAKE.md`](docs/38_PHONE_SMS_TEST_NUMBER_PURCHASE_EVIDENCE_INTAKE.md)
 - [`docs/39_PHONE_SMS_TEST_NUMBER_CONNECTION_READINESS_GATE.md`](docs/39_PHONE_SMS_TEST_NUMBER_CONNECTION_READINESS_GATE.md)
+- [`docs/40_PHONE_SMS_DISABLED_DRY_RUN_CONNECTION_PLAN.md`](docs/40_PHONE_SMS_DISABLED_DRY_RUN_CONNECTION_PLAN.md)
 
 ## Phone/SMS path
 
@@ -158,8 +165,9 @@ The first phone/SMS experiment path is:
 ```text
 new test number
 → disabled/dry-run connection plan
-→ inbound call or SMS event review
-→ contact/conversation/task evidence
+→ synthetic inbound call or SMS fixture
+→ disabled/dry-run mapping review
+→ contact/conversation/task evidence shape
 → human review
 → no auto-send
 ```
@@ -197,12 +205,13 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-026 non-goals
+## QL-027 non-goals
 
 - Do not connect a provider account.
+- Do not configure provider webhooks.
 - Do not enable provider callbacks.
 - Do not commit the actual purchased number.
-- Do not commit provider credentials, SIP credentials, webhook secrets, invoices, screenshots, receipts, or ownership documents.
+- Do not commit provider credentials, SIP credentials, webhook secrets, webhook secret values, invoices, screenshots, receipts, or ownership documents.
 - Do not port any number.
 - Do not forward any existing number.
 - Do not enable phone/SMS webhooks.
@@ -211,7 +220,8 @@ telephony/               Phone/SMS provider-neutral integration notes
 - Do not enable AI drafts.
 - Do not auto-send AI replies.
 - Do not enter real production customer data or live provider payloads.
+- Do not enable live customer reads or writes.
 
 ## Next build
 
-QL-027 — Phone/SMS Disabled Dry-Run Connection Plan.
+QL-028 — Phone/SMS Disabled Dry-Run Runtime Verification.
