@@ -1,0 +1,121 @@
+{
+  "build": "QL-036",
+  "name": "Phone/SMS Controlled Live Enablement Implementation Scaffold",
+  "purpose": "Define disabled-by-default implementation surfaces after QL-035 planning without enabling live phone/SMS behavior.",
+  "expectedReport": {
+    "status": "scaffold_ready_for_disabled_verification",
+    "syntheticOnly": true,
+    "redactedOnly": true,
+    "safeToPersist": false,
+    "liveEnablementAllowed": false,
+    "requiredNextBuild": "QL-037-controlled-live-enablement-disabled-verification"
+  },
+  "environment": {
+    "PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_GATE_STATUS": "approved_for_controlled_live_enablement_planning",
+    "PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_PLAN_STATUS": "plan_ready_for_manual_implementation_design",
+    "PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_IMPLEMENTATION_STATUS": "blocked_pending_disabled_implementation_scaffold",
+    "PHONE_SMS_CONTROLLED_IMPLEMENTATION_SYNTHETIC_ONLY": true,
+    "PHONE_SMS_CONTROLLED_IMPLEMENTATION_REDACTED_ONLY": true,
+    "PHONE_SMS_CONTROLLED_IMPLEMENTATION_NO_PERSISTENCE_WRITES": true,
+    "PHONE_SMS_CONTROLLED_IMPLEMENTATION_LIVE_CUSTOMER_ACCESS_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_IMPLEMENTATION_PROVIDER_CALLBACK_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_IMPLEMENTATION_PHONE_WEBHOOK_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_IMPLEMENTATION_SMS_SEND_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_IMPLEMENTATION_CALL_RECORDING_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_IMPLEMENTATION_AI_DRAFTS_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_IMPLEMENTATION_AUTO_SEND_DISABLED": true,
+    "PHONE_SMS_PROVIDER_WEBHOOK_CONFIGURED": false,
+    "TELEPHONY_PROVIDER": "undecided",
+    "ENABLE_PHONE_WEBHOOKS": false,
+    "ENABLE_SMS": false,
+    "ENABLE_CALL_RECORDING": false,
+    "ENABLE_AI_DRAFTS": false,
+    "ENABLE_AI_AUTO_SEND": false,
+    "PHONE_SMS_PERSISTENCE_WRITES_DISABLED": true,
+    "PHONE_SMS_LIVE_CUSTOMER_READS_DISABLED": true,
+    "PHONE_SMS_LIVE_CUSTOMER_WRITES_DISABLED": true,
+    "PHONE_SMS_EXISTING_NUMBERS_PROTECTED": true
+  },
+  "input": {
+    "id": "ql036-safe-disabled-implementation-scaffold",
+    "source": "implementation_scaffold_design",
+    "ql034DecisionApprovedForPlanning": true,
+    "ql035PlanReadyForManualImplementationDesign": true,
+    "implementationBuildOnly": true,
+    "disabledVerificationRequiredBeforeManualGoNoGo": true,
+    "manualGoNoGoRequiredBeforeLivePilot": true,
+    "syntheticEvidenceOnlyConfirmed": true,
+    "redactedEvidenceOnlyConfirmed": true,
+    "noPersistenceConfirmed": true,
+    "noLiveCustomerAccessConfirmed": true,
+    "noProviderCallbackConfirmed": true,
+    "noPhoneWebhookConfirmed": true,
+    "noSmsSendConfirmed": true,
+    "noCallRecordingConfirmed": true,
+    "noAiDraftConfirmed": true,
+    "noAutoSendConfirmed": true,
+    "existingNumbersProtectedConfirmed": true,
+    "componentSurfaces": [
+      "provider_callback_route",
+      "phone_webhook_route",
+      "sms_send_adapter",
+      "call_recording_adapter",
+      "ai_draft_adapter",
+      "ai_auto_send_guard",
+      "persistence_adapter",
+      "live_customer_access_guard",
+      "operator_console_gate",
+      "audit_log_stub",
+      "rollback_switch"
+    ]
+  },
+  "expectedOutcome": {
+    "status": "scaffold_ready_for_disabled_verification",
+    "scaffoldReadyForDisabledVerification": true,
+    "implementationBuildOnly": true,
+    "disabledVerificationRequiredBeforeManualGoNoGo": true,
+    "manualGoNoGoRequiredBeforeLivePilot": true,
+    "liveEnablementAllowed": false,
+    "providerCallbackAllowed": false,
+    "phoneWebhookAllowed": false,
+    "smsSendAllowed": false,
+    "callRecordingAllowed": false,
+    "aiDraftAllowed": false,
+    "autoSendAllowed": false,
+    "persistenceWrites": false,
+    "liveCustomerRead": false,
+    "liveCustomerWrite": false,
+    "safeToPersist": false,
+    "requiredNextBuild": "QL-037-controlled-live-enablement-disabled-verification"
+  },
+  "blockingCases": [
+    {
+      "id": "ql036-missing-plan-approval",
+      "expectedStatus": "blocked_pending_plan_approval"
+    },
+    {
+      "id": "ql036-unsafe-live-behavior",
+      "expectedStatus": "blocked_live_behavior_enabled"
+    },
+    {
+      "id": "ql036-missing-component",
+      "expectedStatus": "blocked_missing_component"
+    },
+    {
+      "id": "ql036-unsafe-evidence",
+      "expectedStatus": "blocked_unredacted_or_live_evidence"
+    }
+  ],
+  "nonGoals": [
+    "No provider account is connected.",
+    "No provider webhook is configured.",
+    "No provider callback is enabled.",
+    "No phone webhook is enabled.",
+    "No SMS sending is enabled.",
+    "No call recording is enabled.",
+    "No AI draft or AI auto-send behavior is enabled.",
+    "No persistence writes or live customer reads/writes are enabled.",
+    "No Supabase migration is added.",
+    "No actual phone number, provider credential, webhook secret value, customer data, live payload, recording, or transcript is stored."
+  ]
+}
