@@ -73,6 +73,16 @@ disabled verification before manual go/no-go
 manual go/no-go before any live pilot
 ```
 
+## Validation cases
+
+The scaffold helper includes validation coverage for:
+
+- safe disabled scaffold ready for disabled verification;
+- missing QL-034 or QL-035 approval;
+- unsafe live behavior enabled;
+- missing scaffold component;
+- unsafe or unredacted evidence.
+
 ## Non-goals
 
 QL-036 does not connect a provider, configure a provider webhook, enable callbacks, enable phone/SMS webhooks, send SMS, record calls, draft or auto-send AI replies, persist phone/SMS evidence, read or write live customer data, add a Supabase migration, or store actual phone numbers, provider credentials, webhook secret values, customer data, live payloads, recordings, or transcripts.
