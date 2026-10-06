@@ -6,9 +6,18 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-027 — Phone/SMS Disabled Dry-Run Connection Plan**
+**QL-028 — Phone/SMS Disabled Dry-Run Runtime Verification**
 
-QL-027 adds a disabled/dry-run connection plan for the first manually purchased disposable test number. It prepares only a safe plan for synthetic inbound voice/SMS fixture review: provider label, target use, purchased-number alias, capability, deployment target, disabled/dry-run route label, expected HTTP 503 disabled response, provider portal review, webhook-secret name planning without a value, synthetic fixture planning, inbound mapping, persistence-disabled confirmation, live customer read/write disabled confirmations, rate-limit, idempotency, replay protection, logging redaction, rollback, and operator approval.
+QL-028 adds provider-neutral runtime verification for the first disabled/dry-run phone/SMS path. It verifies disabled-mode behavior and synthetic voice/SMS dry-run behavior before any provider callback can be configured.
+
+The expected safe behavior is:
+
+```text
+disabled mode → HTTP 503 → accepted: false → persisted: false
+synthetic voice dry-run → accepted: true → persisted: false
+synthetic SMS dry-run → accepted: true → persisted: false
+non-synthetic payload → rejected
+```
 
 It does **not** connect a provider, does **not** configure a provider webhook, does **not** enable phone webhooks, does **not** enable SMS sending, does **not** enable call recording, does **not** enable AI drafts or AI auto-send, does **not** enable live customer reads or writes, does **not** commit provider credentials or webhook secret values, and does **not** store the actual purchased phone number.
 
@@ -79,7 +88,7 @@ PROTECTED_INTAKE_ENABLEMENT_GATE_STATUS=hold
 PROTECTED_INTAKE_ENABLEMENT_ALLOWED=false
 ```
 
-Phone/SMS disabled dry-run planning values:
+Phone/SMS disabled dry-run runtime verification values:
 
 ```text
 PHONE_SMS_TEST_DECISION_STATUS=new_test_number_first
@@ -89,6 +98,7 @@ PHONE_SMS_PURCHASE_REVIEW_GATE_STATUS=blocked_pending_purchase_review
 PHONE_SMS_PURCHASE_EVIDENCE_STATUS=blocked_pending_purchase_evidence
 PHONE_SMS_CONNECTION_READINESS_STATUS=blocked_pending_connection_readiness
 PHONE_SMS_DISABLED_DRY_RUN_PLAN_STATUS=blocked_pending_disabled_dry_run_plan
+PHONE_SMS_DISABLED_DRY_RUN_RUNTIME_VERIFICATION_STATUS=blocked_pending_runtime_verification
 PHONE_SMS_TEST_PROVIDER=undecided
 PHONE_SMS_TEST_NUMBER_REQUIRED=true
 PHONE_SMS_TEST_NUMBER_TARGET_USE=undecided
@@ -99,6 +109,11 @@ PHONE_SMS_DRY_RUN_CONNECTION_MODE=undecided
 PHONE_SMS_DRY_RUN_ENDPOINT_MODE=undecided
 PHONE_SMS_DRY_RUN_EXPECTED_DISABLED_STATUS=503
 PHONE_SMS_DRY_RUN_ROUTE_LABEL=
+PHONE_SMS_RUNTIME_VERIFICATION_SYNTHETIC_ONLY=true
+PHONE_SMS_RUNTIME_VERIFICATION_NO_PERSISTENCE_WRITES=true
+PHONE_SMS_RUNTIME_VERIFICATION_LIVE_CUSTOMER_ACCESS_DISABLED=true
+PHONE_SMS_RUNTIME_VERIFICATION_PROVIDER_CALLBACK_CONFIGURED=false
+PHONE_SMS_RUNTIME_VERIFICATION_RESULT=not_run
 PHONE_SMS_PROVIDER_WEBHOOK_CONFIGURED=false
 PHONE_SMS_WEBHOOK_SECRET_NAME_PLANNED=false
 PHONE_SMS_WEBHOOK_SECRET_VALUE_STORED_OUTSIDE_REPOSITORY=false
@@ -157,6 +172,7 @@ Start here:
 - [`docs/38_PHONE_SMS_TEST_NUMBER_PURCHASE_EVIDENCE_INTAKE.md`](docs/38_PHONE_SMS_TEST_NUMBER_PURCHASE_EVIDENCE_INTAKE.md)
 - [`docs/39_PHONE_SMS_TEST_NUMBER_CONNECTION_READINESS_GATE.md`](docs/39_PHONE_SMS_TEST_NUMBER_CONNECTION_READINESS_GATE.md)
 - [`docs/40_PHONE_SMS_DISABLED_DRY_RUN_CONNECTION_PLAN.md`](docs/40_PHONE_SMS_DISABLED_DRY_RUN_CONNECTION_PLAN.md)
+- [`docs/41_PHONE_SMS_DISABLED_DRY_RUN_RUNTIME_VERIFICATION.md`](docs/41_PHONE_SMS_DISABLED_DRY_RUN_RUNTIME_VERIFICATION.md)
 
 ## Phone/SMS path
 
@@ -166,6 +182,7 @@ The first phone/SMS experiment path is:
 new test number
 → disabled/dry-run connection plan
 → synthetic inbound call or SMS fixture
+→ disabled/dry-run runtime verification
 → disabled/dry-run mapping review
 → contact/conversation/task evidence shape
 → human review
@@ -205,7 +222,7 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-027 non-goals
+## QL-028 non-goals
 
 - Do not connect a provider account.
 - Do not configure provider webhooks.
@@ -221,7 +238,8 @@ telephony/               Phone/SMS provider-neutral integration notes
 - Do not auto-send AI replies.
 - Do not enter real production customer data or live provider payloads.
 - Do not enable live customer reads or writes.
+- Do not persist synthetic runtime fixture data.
 
 ## Next build
 
-QL-028 — Phone/SMS Disabled Dry-Run Runtime Verification.
+QL-029 — Phone/SMS Disabled Dry-Run Evidence Mapping Review.

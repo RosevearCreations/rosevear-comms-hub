@@ -1,0 +1,106 @@
+{
+  "build": "QL-028",
+  "title": "Phone/SMS Disabled Dry-Run Runtime Verification",
+  "runtimeVerificationStatus": "blocked_pending_runtime_verification",
+  "scope": {
+    "syntheticFixturesOnly": true,
+    "providerWebhookConfigured": false,
+    "livePhoneWebhooksEnabled": false,
+    "smsSendingEnabled": false,
+    "callRecordingEnabled": false,
+    "aiDraftsEnabled": false,
+    "aiAutoSendEnabled": false,
+    "persistenceWritesDisabled": true,
+    "liveCustomerReadsDisabled": true,
+    "liveCustomerWritesDisabled": true
+  },
+  "expectedDisabledResponse": {
+    "status": 503,
+    "mode": "disabled",
+    "accepted": false,
+    "persisted": false
+  },
+  "expectedDryRunResponse": {
+    "status": 202,
+    "mode": "dry_run",
+    "accepted": true,
+    "persisted": false,
+    "liveCustomerRead": false,
+    "liveCustomerWrite": false,
+    "providerWebhookConfigured": false
+  },
+  "syntheticFixtures": [
+    {
+      "eventId": "ql028-voice-fixture",
+      "channel": "voice",
+      "provider": "undecided",
+      "routeLabel": "ql028-disabled-dry-run-route",
+      "synthetic": true,
+      "fromAlias": "synthetic-caller-alias",
+      "toAlias": "test-number-alias-only",
+      "messagePreview": "Synthetic voice event. No recording, transcript, or customer data is stored.",
+      "mappingPreview": {
+        "contactAlias": "synthetic-contact",
+        "conversationAlias": "synthetic-voice-conversation",
+        "taskAlias": "human-review-task"
+      }
+    },
+    {
+      "eventId": "ql028-sms-fixture",
+      "channel": "sms",
+      "provider": "undecided",
+      "routeLabel": "ql028-disabled-dry-run-route",
+      "synthetic": true,
+      "fromAlias": "synthetic-sender-alias",
+      "toAlias": "test-number-alias-only",
+      "messagePreview": "Synthetic SMS event. No customer message body is stored.",
+      "mappingPreview": {
+        "contactAlias": "synthetic-contact",
+        "conversationAlias": "synthetic-sms-conversation",
+        "taskAlias": "human-review-task"
+      }
+    }
+  ],
+  "verificationCases": [
+    {
+      "caseId": "disabled_voice_returns_503",
+      "expectedStatus": 503,
+      "expectedMode": "disabled",
+      "expectedAccepted": false,
+      "expectedPersisted": false,
+      "expectedPersistenceCalls": 0
+    },
+    {
+      "caseId": "dry_run_voice_no_persistence",
+      "expectedStatus": 202,
+      "expectedMode": "dry_run",
+      "expectedAccepted": true,
+      "expectedPersisted": false,
+      "expectedPersistenceCalls": 0
+    },
+    {
+      "caseId": "dry_run_sms_no_persistence",
+      "expectedStatus": 202,
+      "expectedMode": "dry_run",
+      "expectedAccepted": true,
+      "expectedPersisted": false,
+      "expectedPersistenceCalls": 0
+    },
+    {
+      "caseId": "reject_non_synthetic_payload",
+      "expectedStatus": 422,
+      "expectedMode": "rejected",
+      "expectedAccepted": false,
+      "expectedPersisted": false,
+      "expectedPersistenceCalls": 0
+    }
+  ],
+  "forbiddenEvidence": [
+    "Actual candidate or purchased phone number",
+    "Existing personal, Bell Fibe, RosieDazzlers, or DevilnDove numbers",
+    "Provider credentials, SIP credentials, tokens, passwords, webhook secret values, or live callback URLs containing secrets",
+    "Invoices, screenshots, receipts, ownership documents, recordings, transcripts, live payloads, or customer data",
+    "Any instruction to configure provider webhooks or enable live phone/SMS features"
+  ],
+  "nextBuild": "QL-029 — Phone/SMS Disabled Dry-Run Evidence Mapping Review"
+}
