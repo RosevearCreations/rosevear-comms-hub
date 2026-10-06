@@ -181,18 +181,11 @@ Status: complete.
 Result:
 
 - Added runtime verification helper at `api/deployment/phoneSmsDisabledDryRunRuntimeVerification.ts`.
-- Added runtime verification fixture at `api/contracts/phone-sms-disabled-dry-run-runtime-verification.example.json`.
-- Added source-of-truth doc at `docs/41_PHONE_SMS_DISABLED_DRY_RUN_RUNTIME_VERIFICATION.md`.
-- Added build record, remote-operator checklist, ops checklist, and telephony runtime verification notes.
 - Verified the expected safe disabled response shape: `HTTP 503`, `mode: disabled`, `accepted: false`, `persisted: false`.
 - Verified synthetic voice and SMS dry-run fixtures can be accepted without persistence.
 - Verified non-synthetic payloads are rejected.
-- Kept provider webhooks unconfigured.
-- Kept all existing numbers unported and unforwarded.
-- Kept live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, live customer reads, and live customer writes disabled.
-- Did not add a Supabase migration.
-- Did not connect a provider account.
-- Did not enable any provider callback route.
+- Kept provider webhooks unconfigured, all existing numbers unported/unforwarded, and all live phone/SMS features disabled.
+- Did not add a Supabase migration, connect a provider account, or enable a provider callback route.
 
 ## QL-029 — Phone/SMS Disabled Dry-Run Evidence Mapping Review
 
@@ -201,19 +194,10 @@ Status: complete.
 Result:
 
 - Added evidence mapping review helper at `api/deployment/phoneSmsDisabledDryRunEvidenceMappingReview.ts`.
-- Added evidence mapping fixture at `api/contracts/phone-sms-disabled-dry-run-evidence-mapping-review.example.json`.
-- Added source-of-truth doc at `docs/42_PHONE_SMS_DISABLED_DRY_RUN_EVIDENCE_MAPPING_REVIEW.md`.
-- Added build record, remote-operator checklist, ops checklist, and telephony evidence mapping notes.
-- Mapped synthetic voice and SMS runtime evidence into redacted contact preview shapes.
-- Mapped synthetic voice and SMS runtime evidence into conversation preview shapes without live payload, recording, or transcript storage.
-- Mapped synthetic voice and SMS runtime evidence into human review task preview shapes with AI drafting and auto-send disabled.
+- Mapped synthetic voice and SMS runtime evidence into redacted contact, conversation, and human-review task preview shapes.
 - Kept every preview `safeToPersist: false`.
-- Kept provider webhooks unconfigured.
-- Kept all existing numbers unported and unforwarded.
-- Kept live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, live customer reads, live customer writes, and persistence writes disabled.
-- Did not add a Supabase migration.
-- Did not connect a provider account.
-- Did not enable any provider callback route.
+- Kept provider webhooks unconfigured, all existing numbers unported/unforwarded, and all live phone/SMS features disabled.
+- Did not add a Supabase migration, connect a provider account, or enable a provider callback route.
 
 ## QL-030 — Phone/SMS Disabled Dry-Run Human Review Gate
 
@@ -222,18 +206,11 @@ Status: complete.
 Result:
 
 - Added human review gate helper at `api/deployment/phoneSmsDisabledDryRunHumanReviewGate.ts`.
-- Added human review gate fixture at `api/contracts/phone-sms-disabled-dry-run-human-review-gate.example.json`.
-- Added source-of-truth doc at `docs/43_PHONE_SMS_DISABLED_DRY_RUN_HUMAN_REVIEW_GATE.md`.
-- Added build record, remote-operator checklist, ops checklist, and telephony human review notes.
 - Added approve, reject, and hold decision previews for synthetic mapped evidence only.
 - Kept approved decisions limited to future enablement planning.
 - Kept every review outcome `safeToPersist: false`.
-- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, and live customer writes disabled.
-- Rejected non-synthetic mapped evidence.
-- Rejected unsafe environments that enable live SMS behavior.
-- Did not add a Supabase migration.
-- Did not connect a provider account.
-- Did not enable any provider callback route.
+- Rejected non-synthetic mapped evidence and unsafe live SMS environments.
+- Did not add a Supabase migration, connect a provider account, or enable a provider callback route.
 
 ## QL-031 — Phone/SMS Disabled Dry-Run Operator Outcome Journal
 
@@ -242,18 +219,11 @@ Status: complete.
 Result:
 
 - Added operator outcome journal helper at `api/deployment/phoneSmsDisabledDryRunOperatorOutcomeJournal.ts`.
-- Added operator outcome journal fixture at `api/contracts/phone-sms-disabled-dry-run-operator-outcome-journal.example.json`.
-- Added source-of-truth doc at `docs/44_PHONE_SMS_DISABLED_DRY_RUN_OPERATOR_OUTCOME_JOURNAL.md`.
-- Added build record, remote-operator checklist, ops checklist, and telephony operator outcome journal notes.
 - Added approve, reject, and hold journal previews for synthetic QL-030 human review decisions only.
 - Kept approved outcomes limited to future enablement planning.
 - Kept every journal entry `safeToPersist: false`.
-- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, and live customer writes disabled.
-- Rejected non-synthetic human review decisions.
-- Rejected unsafe environments that enable persistence writes or live phone/SMS behavior.
-- Did not add a Supabase migration.
-- Did not connect a provider account.
-- Did not enable any provider callback route.
+- Rejected non-synthetic human review decisions and unsafe persistence/live phone/SMS environments.
+- Did not add a Supabase migration, connect a provider account, or enable a provider callback route.
 
 ## QL-032 — Phone/SMS Disabled Dry-Run Rollback and Evidence Retention Review
 
@@ -262,18 +232,11 @@ Status: complete.
 Result:
 
 - Added rollback and evidence-retention review helper at `api/deployment/phoneSmsDisabledDryRunRollbackEvidenceRetentionReview.ts`.
-- Added rollback and evidence-retention fixture at `api/contracts/phone-sms-disabled-dry-run-rollback-evidence-retention-review.example.json`.
-- Added source-of-truth doc at `docs/45_PHONE_SMS_DISABLED_DRY_RUN_ROLLBACK_EVIDENCE_RETENTION_REVIEW.md`.
-- Added build record, remote-operator checklist, ops checklist, and telephony rollback/retention notes.
 - Added retention classes for `discard_preview`, `retain_redacted_planning_note`, and `hold_pending_review`.
-- Reviewed synthetic evidence from QL-028 runtime verification, QL-029 evidence mapping, QL-030 human review, and QL-031 operator outcome journal.
-- Kept every retention entry `safeToPersist: false`.
-- Kept rollback scope limited to synthetic preview artifacts and labels.
-- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, and live customer writes disabled.
+- Reviewed synthetic evidence from QL-028 through QL-031.
+- Kept every retention entry `safeToPersist: false` and rollback scope limited to synthetic preview artifacts and labels.
 - Rejected non-synthetic, non-redacted, live-payload, customer-data, actual-phone-number, provider-secret, recording, or transcript evidence.
-- Did not add a Supabase migration.
-- Did not connect a provider account.
-- Did not enable any provider callback route.
+- Did not add a Supabase migration, connect a provider account, or enable a provider callback route.
 
 ## QL-033 — Phone/SMS Disabled Dry-Run Final Pre-Enablement Readiness Review
 
@@ -282,23 +245,36 @@ Status: complete.
 Result:
 
 - Added final pre-enablement readiness helper at `api/deployment/phoneSmsDisabledDryRunFinalPreEnablementReadinessReview.ts`.
-- Added final pre-enablement readiness fixture at `api/contracts/phone-sms-disabled-dry-run-final-pre-enablement-readiness-review.example.json`.
-- Added source-of-truth doc at `docs/46_PHONE_SMS_DISABLED_DRY_RUN_FINAL_PRE_ENABLEMENT_READINESS_REVIEW.md`.
-- Added build record, remote-operator checklist, ops checklist, and telephony final readiness notes.
-- Reviewed required synthetic evidence from QL-028 runtime verification, QL-029 evidence mapping, QL-030 human review, QL-031 operator outcome journal, and QL-032 rollback/retention review.
+- Reviewed required synthetic evidence from QL-028 through QL-032.
 - Added final readiness decisions for `ready_for_explicit_live_enablement_decision_gate`, `hold_pending_rework`, and `reject_enablement_path`.
 - Kept `ready_for_explicit_live_enablement_decision_gate` limited to a future decision gate only; QL-033 does not grant live enablement.
 - Kept every readiness output `safeToPersist: false`.
-- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, and live customer writes disabled.
 - Rejected non-synthetic, non-redacted, live-payload, customer-data, actual-phone-number, provider-secret, recording, transcript, or unsafe enablement evidence.
+- Did not add a Supabase migration, connect a provider account, or enable a provider callback route.
+
+## QL-034 — Phone/SMS Explicit Live Enablement Decision Gate
+
+Status: complete.
+
+Result:
+
+- Added explicit decision gate helper at `api/deployment/phoneSmsExplicitLiveEnablementDecisionGate.ts`.
+- Added explicit decision gate fixture at `api/contracts/phone-sms-explicit-live-enablement-decision-gate.example.json`.
+- Added source-of-truth doc at `docs/47_PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_DECISION_GATE.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony explicit decision-gate notes.
+- Added decisions for `remain_blocked`, `continue_rework`, and `approve_controlled_live_enablement_planning`.
+- Kept `approve_controlled_live_enablement_planning` limited to the next controlled planning build only; QL-034 does not grant live enablement.
+- Kept every decision-gate output `safeToPersist: false`.
+- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, and live customer writes disabled.
+- Rejected unsafe environments and unredacted/live/customer/phone-number/provider-secret/recording/transcript evidence.
 - Did not add a Supabase migration.
 - Did not connect a provider account.
 - Did not enable any provider callback route.
 
-## QL-034 — Phone/SMS Explicit Live Enablement Decision Gate
+## QL-035 — Phone/SMS Controlled Live Enablement Plan
 
 Goal:
 
-- Decide whether the disabled dry-run path should remain blocked, continue rework, or proceed toward a tightly controlled live enablement plan.
-- Keep default state disabled unless an explicit human decision approves the next planning step.
-- Keep provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, and live customer access disabled unless a later production-safe implementation build explicitly changes them.
+- Plan a tightly controlled live enablement implementation path after the explicit QL-034 decision gate.
+- Keep default state disabled until exact manual approvals, rollback rules, provider boundaries, redaction rules, and deployment gates are defined.
+- Do not enable provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, or live customer access unless a later production-safe implementation build explicitly changes them.
