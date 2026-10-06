@@ -237,8 +237,28 @@ Result:
 
 ## QL-031 — Phone/SMS Disabled Dry-Run Operator Outcome Journal
 
+Status: complete.
+
+Result:
+
+- Added operator outcome journal helper at `api/deployment/phoneSmsDisabledDryRunOperatorOutcomeJournal.ts`.
+- Added operator outcome journal fixture at `api/contracts/phone-sms-disabled-dry-run-operator-outcome-journal.example.json`.
+- Added source-of-truth doc at `docs/44_PHONE_SMS_DISABLED_DRY_RUN_OPERATOR_OUTCOME_JOURNAL.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony operator outcome journal notes.
+- Added approve, reject, and hold journal previews for synthetic QL-030 human review decisions only.
+- Kept approved outcomes limited to future enablement planning.
+- Kept every journal entry `safeToPersist: false`.
+- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, and live customer writes disabled.
+- Rejected non-synthetic human review decisions.
+- Rejected unsafe environments that enable persistence writes or live phone/SMS behavior.
+- Did not add a Supabase migration.
+- Did not connect a provider account.
+- Did not enable any provider callback route.
+
+## QL-032 — Phone/SMS Disabled Dry-Run Rollback and Evidence Retention Review
+
 Goal:
 
-- Review the operator outcome journal shape for synthetic human review decisions.
-- Keep all journal entries synthetic, redacted, and non-persistent until a later explicit enablement gate.
-- Keep live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, and live customer access disabled.
+- Review rollback and evidence-retention rules for synthetic disabled dry-run phone/SMS planning evidence.
+- Keep all retention notes synthetic, redacted, and non-persistent until a later explicit enablement gate.
+- Keep live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, provider callbacks, and live customer access disabled.
