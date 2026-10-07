@@ -1,0 +1,135 @@
+{
+  "build": "QL-039",
+  "title": "Phone/SMS Controlled Live Enablement Tiny Monitored Pilot Plan",
+  "purpose": "Define the smallest controlled monitored pilot plan after QL-038 manual go/no-go approval without enabling live behavior.",
+  "scope": {
+    "syntheticOnly": true,
+    "redactedOnly": true,
+    "safeToPersist": false,
+    "livePilotRemainsBlocked": true,
+    "laterDisabledPilotImplementationBuildRequired": true,
+    "approvedForLaterDisabledPilotImplementationDesign": true
+  },
+  "allowedDecisions": [
+    {
+      "decision": "approve_later_disabled_pilot_implementation_design",
+      "meaning": "The plan is complete enough to start QL-040 disabled pilot implementation design. This does not enable live traffic."
+    },
+    {
+      "decision": "continue_rework",
+      "meaning": "The plan needs rework before QL-040 can start."
+    },
+    {
+      "decision": "remain_blocked",
+      "meaning": "The phone/SMS path remains blocked."
+    }
+  ],
+  "requiredPrerequisites": [
+    "QL-034 explicit live enablement decision gate approved planning only",
+    "QL-035 controlled live enablement plan completed as planning only",
+    "QL-036 disabled implementation scaffold completed with live behavior blocked",
+    "QL-037 disabled verification proved every scaffold surface remains disabled",
+    "QL-038 manual go/no-go gate approved tiny monitored pilot planning only"
+  ],
+  "requiredControls": [
+    "pilot_scope",
+    "pilot_operator_coverage",
+    "pilot_manual_approval",
+    "pilot_provider_boundary",
+    "pilot_callback_boundary",
+    "pilot_webhook_boundary",
+    "pilot_sms_boundary",
+    "pilot_recording_boundary",
+    "pilot_ai_boundary",
+    "pilot_persistence_boundary",
+    "pilot_live_customer_boundary",
+    "pilot_rate_limit_boundary",
+    "pilot_replay_protection",
+    "pilot_redaction_boundary",
+    "pilot_observability_boundary",
+    "pilot_rollback_boundary",
+    "pilot_success_abort_criteria",
+    "pilot_later_build_required"
+  ],
+  "safeEnvironment": {
+    "syntheticOnly": true,
+    "redactedOnly": true,
+    "safeToPersist": false,
+    "liveEnablementAllowed": false,
+    "laterDisabledPilotImplementationBuildRequired": true,
+    "providerWebhookConfigured": false,
+    "providerCallbackAllowed": false,
+    "phoneWebhookAllowed": false,
+    "smsSendAllowed": false,
+    "callRecordingAllowed": false,
+    "aiDraftAllowed": false,
+    "autoSendAllowed": false,
+    "persistenceWrites": false,
+    "liveCustomerRead": false,
+    "liveCustomerWrite": false,
+    "actualPhoneNumberStored": false,
+    "providerCredentialsStored": false,
+    "webhookSecretValueStored": false,
+    "liveProviderPayloadStored": false,
+    "realOperatorIdentityStored": false
+  },
+  "pilotBoundaries": {
+    "maximumScope": "one controlled test-number path, planning only in QL-039",
+    "operatorRequired": true,
+    "manualApprovalRequired": true,
+    "autoReplyAllowed": false,
+    "autoSendAllowed": false,
+    "recordingAllowed": false,
+    "persistenceAllowed": false,
+    "liveCustomerAccessAllowed": false,
+    "providerWebhookConfigured": false,
+    "rollbackRequiredBeforeImplementation": true,
+    "successAbortCriteriaRequiredBeforeImplementation": true
+  },
+  "forbiddenEvidence": [
+    "actual phone numbers",
+    "existing phone numbers",
+    "real operator identities",
+    "provider credentials",
+    "SIP credentials",
+    "webhook secret values",
+    "customer data",
+    "mapped live records",
+    "journaled live records",
+    "retained live records",
+    "readiness evidence",
+    "decision evidence",
+    "planning evidence",
+    "scaffold evidence",
+    "disabled verification evidence",
+    "manual go/no-go evidence",
+    "pilot evidence",
+    "live provider payloads",
+    "recordings",
+    "transcripts",
+    "invoices",
+    "screenshots",
+    "ownership documents"
+  ],
+  "verificationCases": [
+    "approve_later_disabled_implementation_design_only",
+    "continue_rework_keeps_blocked",
+    "remain_blocked_keeps_blocked",
+    "unsafe_environment_rejected",
+    "unsafe_prerequisite_rejected",
+    "missing_control_rejected"
+  ],
+  "nonGoals": [
+    "No provider account connection.",
+    "No provider webhook configuration.",
+    "No live phone webhook enablement.",
+    "No SMS sending enablement.",
+    "No call recording enablement.",
+    "No AI draft or AI auto-send enablement.",
+    "No persistence writes.",
+    "No live customer reads or writes.",
+    "No Supabase migration.",
+    "No real provider payloads or customer data."
+  ],
+  "nextBuild": "QL-040 — Phone/SMS Controlled Live Enablement Disabled Pilot Implementation Design"
+}
