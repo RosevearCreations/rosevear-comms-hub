@@ -1,0 +1,106 @@
+{
+  "build": "QL-038",
+  "name": "Phone/SMS Controlled Live Enablement Manual Go/No-Go Gate",
+  "purpose": "Record a synthetic, redacted manual go/no-go decision after QL-037 disabled verification without enabling live traffic.",
+  "scope": {
+    "syntheticOnly": true,
+    "redactedOnly": true,
+    "safeToPersist": false,
+    "pilotPlanningOnly": true,
+    "liveEnablementAllowed": false,
+    "tinyMonitoredPilotImplementationRequiredBeforeTraffic": true
+  },
+  "allowedDecisions": [
+    {
+      "decision": "approve_tiny_monitored_pilot_planning",
+      "meaning": "Allows QL-039 tiny monitored pilot planning only. It does not enable live provider traffic, SMS, callbacks, recordings, AI, persistence, or live customer access."
+    },
+    {
+      "decision": "continue_rework",
+      "meaning": "Blocks pilot planning and returns to rework while all live surfaces remain disabled."
+    },
+    {
+      "decision": "remain_blocked",
+      "meaning": "Keeps the phone/SMS path blocked while all live surfaces remain disabled."
+    }
+  ],
+  "requiredPriorGates": [
+    "QL-034 explicit live enablement decision gate approved for controlled planning",
+    "QL-035 controlled live enablement plan ready for manual implementation design",
+    "QL-036 disabled implementation scaffold ready for disabled verification",
+    "QL-037 disabled verification green"
+  ],
+  "requiredControls": [
+    "owner_approval",
+    "operator_training_acknowledgement",
+    "provider_boundary_acknowledgement",
+    "webhook_boundary_acknowledgement",
+    "sms_send_boundary_acknowledgement",
+    "call_recording_boundary_acknowledgement",
+    "ai_boundary_acknowledgement",
+    "persistence_boundary_acknowledgement",
+    "live_customer_data_boundary_acknowledgement",
+    "redaction_boundary_acknowledgement",
+    "rollback_boundary_acknowledgement",
+    "rate_limit_boundary_acknowledgement",
+    "replay_protection_boundary_acknowledgement",
+    "pilot_scope_boundary_acknowledgement",
+    "post_pilot_review_required"
+  ],
+  "safeEnvironment": {
+    "PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_GATE_STATUS": "approved_for_controlled_live_enablement_planning",
+    "PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_PLAN_STATUS": "plan_ready_for_manual_implementation_design",
+    "PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_IMPLEMENTATION_STATUS": "scaffold_ready_for_disabled_verification",
+    "PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_STATUS": "disabled_verification_green",
+    "PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_STATUS": "blocked_pending_manual_go_no_go_gate",
+    "PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_SYNTHETIC_ONLY": true,
+    "PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_REDACTED_ONLY": true,
+    "PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_NO_PERSISTENCE_WRITES": true,
+    "PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_LIVE_CUSTOMER_ACCESS_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_PROVIDER_CALLBACK_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_PHONE_WEBHOOK_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_SMS_SEND_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_CALL_RECORDING_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_AI_DRAFTS_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_AUTO_SEND_DISABLED": true,
+    "PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_PILOT_IMPLEMENTATION_REQUIRED": true,
+    "PHONE_SMS_PROVIDER_WEBHOOK_CONFIGURED": false,
+    "ENABLE_PHONE_WEBHOOKS": false,
+    "ENABLE_SMS": false,
+    "ENABLE_CALL_RECORDING": false,
+    "ENABLE_AI_DRAFTS": false,
+    "ENABLE_AI_AUTO_SEND": false,
+    "PHONE_SMS_PERSISTENCE_WRITES_DISABLED": true,
+    "PHONE_SMS_LIVE_CUSTOMER_READS_DISABLED": true,
+    "PHONE_SMS_LIVE_CUSTOMER_WRITES_DISABLED": true,
+    "PHONE_SMS_EXISTING_NUMBERS_PROTECTED": true
+  },
+  "expectedApprovedOutcome": {
+    "status": "approved_for_tiny_monitored_pilot_planning",
+    "approvedForTinyMonitoredPilotPlanning": true,
+    "liveEnablementAllowed": false,
+    "providerCallbackAllowed": false,
+    "phoneWebhookAllowed": false,
+    "smsSendAllowed": false,
+    "callRecordingAllowed": false,
+    "aiDraftAllowed": false,
+    "autoSendAllowed": false,
+    "persistenceWrites": false,
+    "liveCustomerRead": false,
+    "liveCustomerWrite": false,
+    "safeToPersist": false,
+    "requiredNextBuild": "QL-039-controlled-live-enablement-tiny-monitored-pilot-plan"
+  },
+  "blockingCases": [
+    "missing QL-037 disabled verification green status",
+    "manual decision remains blocked or asks for rework",
+    "missing owner approval",
+    "missing operator training acknowledgement",
+    "missing rollback acknowledgement",
+    "missing required control acknowledgement",
+    "unredacted or non-synthetic evidence",
+    "actual phone number, provider credential, webhook secret, customer data, live payload, recording, or transcript present",
+    "provider callbacks, phone webhooks, SMS, call recording, AI drafts, AI auto-send, persistence writes, or live customer access enabled"
+  ],
+  "nextBuild": "QL-039 — Phone/SMS Controlled Live Enablement Tiny Monitored Pilot Plan"
+}

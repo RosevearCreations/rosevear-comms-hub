@@ -41,31 +41,33 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-034 — Phone/SMS Explicit Live Enablement Decision Gate — complete.
 - QL-035 — Phone/SMS Controlled Live Enablement Plan — complete.
 - QL-036 — Phone/SMS Controlled Live Enablement Implementation Scaffold — complete.
+- QL-037 — Phone/SMS Controlled Live Enablement Disabled Verification — complete.
 
-## QL-037 — Phone/SMS Controlled Live Enablement Disabled Verification
+## QL-038 — Phone/SMS Controlled Live Enablement Manual Go/No-Go Gate
 
 Status: complete.
 
 Result:
 
-- Added disabled verification helper at `api/deployment/phoneSmsControlledLiveEnablementDisabledVerification.ts`.
-- Added disabled verification fixture at `api/contracts/phone-sms-controlled-live-enablement-disabled-verification.example.json`.
-- Added source-of-truth doc at `docs/50_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_DISABLED_VERIFICATION.md`.
-- Added build record, remote-operator checklist, ops checklist, and telephony disabled verification notes.
-- Verified required disabled surfaces for provider callback route, phone webhook route, SMS send adapter, call recording adapter, AI draft adapter, AI auto-send guard, persistence adapter, live customer access guard, operator console gate, audit log stub, and rollback switch.
-- Kept `disabled_verification_green` limited to proof that the scaffold remains disabled; QL-037 does not grant live enablement.
-- Kept every verification output `safeToPersist: false`.
+- Added manual go/no-go gate helper at `api/deployment/phoneSmsControlledLiveEnablementManualGoNoGoGate.ts`.
+- Added manual go/no-go fixture at `api/contracts/phone-sms-controlled-live-enablement-manual-go-no-go-gate.example.json`.
+- Added source-of-truth doc at `docs/51_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_MANUAL_GO_NO_GO_GATE.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony manual go/no-go notes.
+- Added manual decisions for `approve_tiny_monitored_pilot_planning`, `continue_rework`, and `remain_blocked`.
+- Kept `approve_tiny_monitored_pilot_planning` limited to the next tiny monitored pilot planning build only; QL-038 does not grant live enablement.
+- Required owner approval, operator training acknowledgement, provider boundary acknowledgement, webhook boundary acknowledgement, SMS boundary acknowledgement, call recording boundary acknowledgement, AI boundary acknowledgement, persistence boundary acknowledgement, live customer data boundary acknowledgement, redaction acknowledgement, rollback acknowledgement, rate limiting acknowledgement, replay protection acknowledgement, pilot scope acknowledgement, and post-pilot review requirement.
+- Kept every gate output `safeToPersist: false`.
 - Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, and live customer writes disabled.
-- Rejected missing QL-034/QL-035/QL-036 approvals, unsafe environments, missing scaffold probes, enabled live behavior, and unredacted/live/customer/phone-number/provider-secret/recording/transcript evidence.
+- Rejected missing QL-037 verification, missing approvals, unsafe environments, missing controls, and unredacted/live/customer/phone-number/provider-secret/recording/transcript evidence.
 - Did not add a Supabase migration.
 - Did not connect a provider account.
 - Did not enable any provider callback route.
 
-## QL-038 — Phone/SMS Controlled Live Enablement Manual Go/No-Go Gate
+## QL-039 — Phone/SMS Controlled Live Enablement Tiny Monitored Pilot Plan
 
 Goal:
 
-- Add a manual go/no-go gate after QL-037 disabled verification.
-- Allow decisions for remain blocked, require rework, or approve preparation of a later tiny monitored pilot plan.
-- Keep provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, and live customer access disabled by default.
-- Require explicit later implementation and production proof before any live pilot behavior can be considered.
+- Plan a tiny monitored pilot after QL-038 manual go/no-go approval.
+- Keep the pilot planning boundary explicit: tiny scope, monitored operation, rollback, rate limits, replay protection, redaction, and post-pilot review.
+- Keep provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, and live customer access disabled by default until a later implementation build and production proof explicitly changes them.
+- Require explicit later implementation and production proof before any live pilot behavior can run.
