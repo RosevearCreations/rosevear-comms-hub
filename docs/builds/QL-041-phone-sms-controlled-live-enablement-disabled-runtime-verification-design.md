@@ -14,8 +14,6 @@ Status: queued for promotion.
 
 ## Updated files
 
-- `.env.example`
-- `README.md`
 - `docs/08_BUILD_SEQUENCE.md`
 
 ## Result
