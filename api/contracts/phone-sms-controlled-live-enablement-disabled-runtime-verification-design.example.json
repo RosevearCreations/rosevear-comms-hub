@@ -1,0 +1,80 @@
+{
+  "buildId": "QL-041",
+  "title": "Phone/SMS Controlled Live Enablement Disabled Runtime Verification Design",
+  "purpose": "Design the synthetic disabled-runtime verification probes for the QL-040 disabled pilot implementation surfaces before any live pilot runtime can be considered.",
+  "decision": "approve_disabled_runtime_verification_scaffold",
+  "allowedDecisionOnlyUnlocks": "QL-042 disabled runtime verification scaffold",
+  "doesNotGrantLiveEnablement": true,
+  "doesNotStartLivePilot": true,
+  "safeToPersist": false,
+  "runtimeRemainsDisabled": {
+    "providerWebhookConfigured": false,
+    "providerCallbackAllowed": false,
+    "phoneWebhookAllowed": false,
+    "smsSendAllowed": false,
+    "callRecordingAllowed": false,
+    "aiDraftAllowed": false,
+    "autoSendAllowed": false,
+    "persistenceWrites": false,
+    "liveCustomerRead": false,
+    "liveCustomerWrite": false,
+    "livePilotRuntimeAllowed": false
+  },
+  "requiredPrerequisites": [
+    "QL-034 planning approval",
+    "QL-035 controlled live enablement plan",
+    "QL-036 disabled implementation scaffold",
+    "QL-037 disabled verification green",
+    "QL-038 manual go/no-go approval for pilot planning only",
+    "QL-039 tiny monitored pilot plan",
+    "QL-040 disabled pilot implementation design"
+  ],
+  "requiredDisabledRuntimeSurfaces": [
+    "feature_flag_boundary",
+    "provider_callback_disabled_response",
+    "phone_webhook_disabled_response",
+    "sms_send_disabled_response",
+    "recording_disabled_response",
+    "ai_disabled_response",
+    "persistence_write_disabled_response",
+    "live_customer_access_disabled_response",
+    "manual_operator_handoff_disabled_response",
+    "rate_limit_guard_disabled_response",
+    "replay_protection_guard_disabled_response",
+    "idempotency_guard_disabled_response",
+    "redacted_observability_disabled_response",
+    "rollback_kill_switch_disabled_response",
+    "success_abort_criteria_disabled_response",
+    "post_review_gate_disabled_response"
+  ],
+  "probeRequirements": {
+    "expectedDisabledStatusCodes": [503, 423, 451],
+    "mustRedactOutput": true,
+    "mustAvoidPersistence": true,
+    "mustAvoidProviderSideEffect": true,
+    "mustAvoidCustomerData": true,
+    "syntheticOnly": true,
+    "redactedOnly": true
+  },
+  "blockingOutcomes": [
+    "missing prerequisites",
+    "unsafe environment",
+    "missing disabled runtime verification surfaces",
+    "unsafe probe side effects",
+    "unredacted evidence label",
+    "live provider payload",
+    "actual phone number",
+    "customer data",
+    "recording or transcript",
+    "provider secret or webhook secret value",
+    "real operator identity"
+  ],
+  "expectedReadyOutcome": {
+    "status": "disabled_runtime_verification_design_ready",
+    "approvedForDisabledRuntimeVerificationScaffold": true,
+    "liveRuntimeRemainsBlocked": true,
+    "finalProductionProofRequiredBeforePilotRuntime": true,
+    "requiredNextBuild": "QL-042 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Scaffold"
+  },
+  "nextQueuedBuild": "QL-042 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Scaffold"
+}
