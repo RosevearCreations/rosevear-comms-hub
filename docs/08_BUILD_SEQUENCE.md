@@ -50,33 +50,34 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-043 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Execution Plan — complete.
 - QL-044 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Dry-Run Cases — complete.
 - QL-045 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Dry-Run Result Review — complete.
+- QL-046 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Closure Plan — complete.
 
-## QL-046 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Closure Plan
+## QL-047 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Closure Review
 
 Status: complete.
 
 Result:
 
-- Added disabled runtime verification closure plan helper at `api/deployment/phoneSmsControlledLiveEnablementDisabledRuntimeVerificationClosurePlan.ts`.
-- Added disabled runtime verification closure plan fixture at `api/contracts/phone-sms-controlled-live-enablement-disabled-runtime-verification-closure-plan.example.json`.
-- Added source-of-truth doc at `docs/59_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_DISABLED_RUNTIME_VERIFICATION_CLOSURE_PLAN.md`.
-- Added build record, remote-operator checklist, ops checklist, and telephony disabled runtime verification closure notes.
-- Added decision for `approve_disabled_runtime_verification_closure_review`.
-- Kept approval limited to the next disabled runtime verification closure review build only; QL-046 does not execute runtime verification or start a live pilot.
-- Closed disabled-only items for prerequisite chain, disabled case results, provider boundary, phone webhook boundary, SMS boundary, recording boundary, AI boundary, persistence boundary, live customer boundary, dry-run execution boundary, redacted observability, rollback readiness, operator review, post-review, and next-gate closure.
-- Required each closure item to confirm disabled-only behavior, synthetic evidence only, redacted evidence only, no live behavior, and `safeToPersist: false`.
+- Added disabled runtime verification closure review helper at `api/deployment/phoneSmsControlledLiveEnablementDisabledRuntimeVerificationClosureReview.ts`.
+- Added disabled runtime verification closure review fixture at `api/contracts/phone-sms-controlled-live-enablement-disabled-runtime-verification-closure-review.example.json`.
+- Added source-of-truth doc at `docs/60_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_DISABLED_RUNTIME_VERIFICATION_CLOSURE_REVIEW.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony disabled runtime verification closure review notes.
+- Added decision for `approve_disabled_runtime_verification_archive_retention_review`.
+- Kept approval limited to the next disabled runtime verification archive and retention review build only; QL-047 does not execute runtime verification or start a live pilot.
+- Reviewed disabled-only items for prerequisite chain, disabled case results, provider boundary, phone webhook boundary, SMS boundary, recording boundary, AI boundary, persistence boundary, live customer boundary, dry-run execution boundary, redacted observability, rollback readiness, operator review, post-review, and archive/retention readiness.
+- Required each review item to confirm reviewed, passed, disabled-only behavior, no provider delivery, no dry-run execution, no live behavior, synthetic evidence only, redacted evidence only, and `safeToPersist: false`.
 - Kept provider webhooks unconfigured.
-- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, and live pilot runtime disabled.
-- Rejected missing prerequisites, unsafe environments, missing closure items, unsafe closure items, missing closure-review requirement, and unredacted/live/customer/phone-number/provider-secret/recording/transcript/operator evidence.
+- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, provider delivery, and live pilot runtime disabled.
+- Rejected missing prerequisites, unsafe environments, missing review items, failed review items, non-review scope, and unredacted/live/customer/phone-number/provider-secret/recording/transcript/operator/SIP/payload evidence.
 - Did not add a Supabase migration.
 - Did not connect a provider account.
 - Did not enable any provider callback route.
 
-## QL-047 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Closure Review
+## QL-048 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Archive & Retention Review
 
 Goal:
 
-- Review the disabled runtime verification closure plan produced by QL-046.
-- Keep all provider callbacks, phone webhooks, SMS sending, recording, AI, persistence writes, live customer access, dry-run execution, and live pilot runtime disabled unless later builds explicitly prove and enable a controlled path.
-- Confirm closure items, unresolved-risk handling, rollback readiness, redacted observability, and human-review requirements are complete.
+- Review archive and retention requirements after QL-047 closure review.
+- Keep all provider callbacks, phone webhooks, SMS sending, recording, AI, persistence writes, live customer access, dry-run execution, provider delivery, and live pilot runtime disabled unless later builds explicitly prove and enable a controlled path.
+- Confirm that only synthetic and redacted non-persistent evidence labels are carried forward.
 - Require final production proof before any pilot runtime behavior can be considered.
