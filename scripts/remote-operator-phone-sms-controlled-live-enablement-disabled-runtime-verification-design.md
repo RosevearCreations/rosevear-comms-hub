@@ -13,8 +13,6 @@
 - `ops/telephony/phone-sms-controlled-live-enablement-disabled-runtime-verification-design.md`
 - `telephony/controlled-live-enablement-disabled-runtime-verification-design.md`
 - `scripts/remote-operator-phone-sms-controlled-live-enablement-disabled-runtime-verification-design.md`
-- `.env.example`
-- `README.md`
 - `docs/08_BUILD_SEQUENCE.md`
 
 ## Safety proof
