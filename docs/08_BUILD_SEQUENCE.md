@@ -43,33 +43,34 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-036 — Phone/SMS Controlled Live Enablement Implementation Scaffold — complete.
 - QL-037 — Phone/SMS Controlled Live Enablement Disabled Verification — complete.
 - QL-038 — Phone/SMS Controlled Live Enablement Manual Go/No-Go Gate — complete.
+- QL-039 — Phone/SMS Controlled Live Enablement Tiny Monitored Pilot Plan — complete.
 
-## QL-039 — Phone/SMS Controlled Live Enablement Tiny Monitored Pilot Plan
+## QL-040 — Phone/SMS Controlled Live Enablement Disabled Pilot Implementation Design
 
 Status: complete.
 
 Result:
 
-- Added tiny monitored pilot plan helper at `api/deployment/phoneSmsControlledLiveEnablementTinyMonitoredPilotPlan.ts`.
-- Added tiny monitored pilot plan fixture at `api/contracts/phone-sms-controlled-live-enablement-tiny-monitored-pilot-plan.example.json`.
-- Added source-of-truth doc at `docs/52_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_TINY_MONITORED_PILOT_PLAN.md`.
-- Added build record, remote-operator checklist, ops checklist, and telephony tiny monitored pilot plan notes.
-- Added decisions for `approve_later_disabled_pilot_implementation_design`, `continue_rework`, and `remain_blocked`.
-- Kept approval limited to the next disabled pilot implementation design build only; QL-039 does not start a live pilot.
-- Required pilot controls for scope, operator coverage, manual approval, provider boundary, callback boundary, webhook boundary, SMS boundary, recording boundary, AI boundary, persistence boundary, live customer boundary, rate limits, replay protection, redaction, observability, rollback, success and abort criteria, and later build requirement.
-- Kept every plan output `safeToPersist: false`.
+- Added disabled pilot implementation design helper at `api/deployment/phoneSmsControlledLiveEnablementDisabledPilotImplementationDesign.ts`.
+- Added disabled pilot implementation design fixture at `api/contracts/phone-sms-controlled-live-enablement-disabled-pilot-implementation-design.example.json`.
+- Added source-of-truth doc at `docs/53_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_DISABLED_PILOT_IMPLEMENTATION_DESIGN.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony disabled pilot implementation design notes.
+- Added decision for `approve_disabled_pilot_runtime_verification_design`.
+- Kept approval limited to the next disabled runtime verification design build only; QL-040 does not start a live pilot.
+- Required implementation design surfaces for feature flags, callback validation, disabled webhook/SMS/recording/AI/persistence/customer-access stubs, manual operator handoff, rate limits, replay protection, idempotency, redacted observability, rollback, success criteria, abort criteria, and post-pilot review.
+- Kept every design output `safeToPersist: false`.
 - Kept provider webhooks unconfigured.
 - Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, and live customer writes disabled.
-- Rejected missing QL-034/QL-035/QL-036/QL-037/QL-038 prerequisites, unsafe environments, unsafe prerequisite evidence, missing controls, and unredacted/live/customer/phone-number/provider-secret/recording/transcript/operator evidence.
+- Rejected missing prerequisites, unsafe environments, missing design surfaces, and unredacted/live/customer/phone-number/provider-secret/recording/transcript/operator evidence.
 - Did not add a Supabase migration.
 - Did not connect a provider account.
 - Did not enable any provider callback route.
 
-## QL-040 — Phone/SMS Controlled Live Enablement Disabled Pilot Implementation Design
+## QL-041 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Design
 
 Goal:
 
-- Design a disabled-by-default implementation shape for the tiny monitored pilot after QL-039.
-- Keep provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, and live customer access disabled unless later builds explicitly prove and enable a controlled path.
-- Define implementation surfaces for callback validation, rate limits, replay protection, idempotency, redacted observability, manual operator handling, rollback, success criteria, and abort criteria.
-- Require explicit production proof before any pilot behavior can run.
+- Design disabled runtime verification for the QL-040 disabled pilot implementation surfaces.
+- Keep provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, and live customer access disabled unless a later explicit production proof enables a controlled path.
+- Verify that the disabled implementation stubs return safe disabled responses before any live pilot behavior can run.
+- Require final production proof before any pilot runtime behavior can be considered.
