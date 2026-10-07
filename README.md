@@ -6,9 +6,9 @@ This repository is the source of truth and first runnable scaffold for a shared 
 
 ## Current stage
 
-**QL-037 — Phone/SMS Controlled Live Enablement Disabled Verification**
+**QL-038 — Phone/SMS Controlled Live Enablement Manual Go/No-Go Gate**
 
-QL-037 verifies that every QL-036 controlled live enablement implementation scaffold surface remains disabled by default. It confirms disabled/no-op/manual-gate responses for provider callbacks, phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence, live customer access, operator gating, audit stubs, and rollback stubs.
+QL-038 records a manual go/no-go decision after QL-037 disabled verification. It can approve only the next tiny monitored pilot planning build. It does **not** grant live enablement.
 
 The expected safe behavior is:
 
@@ -16,11 +16,11 @@ The expected safe behavior is:
 QL-034 planning approval
 + QL-035 controlled live enablement plan
 + QL-036 disabled implementation scaffold
-→ QL-037 disabled verification
++ QL-037 disabled verification green
+→ QL-038 manual go/no-go gate
 safeToPersist: false
-disabledVerificationGreen: true only when every required surface remains disabled
-manualGoNoGoRequiredBeforeLivePilot: true
-livePilotRemainsBlocked: true
+approvedForTinyMonitoredPilotPlanning: true only when all manual controls are acknowledged
+tinyMonitoredPilotImplementationRequiredBeforeTraffic: true
 liveEnablementAllowed: false
 providerCallbackAllowed: false
 phoneWebhookAllowed: false
@@ -33,7 +33,7 @@ liveCustomerRead: false
 liveCustomerWrite: false
 ```
 
-It does **not** connect a provider, does **not** configure provider webhooks, does **not** enable provider callbacks, does **not** enable phone webhooks, does **not** enable SMS sending, does **not** enable call recording, does **not** enable AI drafts or AI auto-send, does **not** enable live customer reads or writes, does **not** persist mapped evidence, human review outcomes, journal entries, retention entries, readiness evidence, decision evidence, planning evidence, scaffold evidence, or disabled verification evidence, does **not** commit provider credentials or webhook secret values, does **not** store real operator identities, does **not** store the actual purchased phone number, does **not** add a Supabase migration, and does **not** grant live enablement.
+It does **not** connect a provider, does **not** configure provider webhooks, does **not** enable provider callbacks, does **not** enable phone webhooks, does **not** enable SMS sending, does **not** enable call recording, does **not** enable AI drafts or AI auto-send, does **not** enable live customer reads or writes, does **not** persist manual go/no-go evidence, does **not** commit provider credentials or webhook secret values, does **not** store real operator identities, does **not** store the actual purchased phone number, does **not** add a Supabase migration, and does **not** start a live pilot.
 
 The protected intake endpoint and intake persistence both remain disabled by default. No public website is connected live yet. No public anonymous Supabase table policies are added. The frontend still does **not** perform live customer-data reads or writes.
 
@@ -96,24 +96,25 @@ PROTECTED_INTAKE_ENABLEMENT_GATE_STATUS=hold
 PROTECTED_INTAKE_ENABLEMENT_ALLOWED=false
 ```
 
-Phone/SMS controlled live enablement disabled verification values:
+Phone/SMS controlled live enablement manual go/no-go gate values:
 
 ```text
 PHONE_SMS_EXPLICIT_LIVE_ENABLEMENT_GATE_STATUS=blocked_pending_explicit_live_enablement_decision_gate
 PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_PLAN_STATUS=blocked_pending_controlled_live_enablement_plan
 PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_IMPLEMENTATION_STATUS=blocked_pending_disabled_implementation_scaffold
 PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_STATUS=blocked_pending_disabled_verification
-PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_SYNTHETIC_ONLY=true
-PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_REDACTED_ONLY=true
-PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_NO_PERSISTENCE_WRITES=true
-PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_LIVE_CUSTOMER_ACCESS_DISABLED=true
-PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_PROVIDER_CALLBACK_DISABLED=true
-PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_PHONE_WEBHOOK_DISABLED=true
-PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_SMS_SEND_DISABLED=true
-PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_CALL_RECORDING_DISABLED=true
-PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_AI_DRAFTS_DISABLED=true
-PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_AUTO_SEND_DISABLED=true
-PHONE_SMS_CONTROLLED_DISABLED_VERIFICATION_MANUAL_GATE_REQUIRED=true
+PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_STATUS=blocked_pending_manual_go_no_go_gate
+PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_SYNTHETIC_ONLY=true
+PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_REDACTED_ONLY=true
+PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_NO_PERSISTENCE_WRITES=true
+PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_LIVE_CUSTOMER_ACCESS_DISABLED=true
+PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_PROVIDER_CALLBACK_DISABLED=true
+PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_PHONE_WEBHOOK_DISABLED=true
+PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_SMS_SEND_DISABLED=true
+PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_CALL_RECORDING_DISABLED=true
+PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_AI_DRAFTS_DISABLED=true
+PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_AUTO_SEND_DISABLED=true
+PHONE_SMS_CONTROLLED_MANUAL_GO_NO_GO_PILOT_IMPLEMENTATION_REQUIRED=true
 PHONE_SMS_PROVIDER_WEBHOOK_CONFIGURED=false
 PHONE_SMS_PERSISTENCE_WRITES_DISABLED=true
 PHONE_SMS_LIVE_CUSTOMER_READS_DISABLED=true
@@ -125,7 +126,7 @@ ENABLE_AI_DRAFTS=false
 ENABLE_AI_AUTO_SEND=false
 ```
 
-Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, provider API keys, SIP passwords, webhook secrets or values, actual phone numbers, phone-number ownership documents, invoices, screenshots, customer data, live payloads, call recordings, transcripts, mapped live records, journaled live records, rollback evidence, readiness evidence, decision evidence, planning evidence, scaffold evidence, disabled verification evidence, pilot evidence, real operator identities, or existing phone numbers.
+Do not commit service-role keys, secret keys, database passwords, JWT secrets, connection strings, provider API keys, SIP passwords, webhook secrets or values, actual phone numbers, phone-number ownership documents, invoices, screenshots, customer data, live payloads, call recordings, transcripts, mapped live records, journaled live records, rollback evidence, readiness evidence, decision evidence, planning evidence, scaffold evidence, disabled verification evidence, manual go/no-go evidence, pilot evidence, real operator identities, or existing phone numbers.
 
 ## Source of truth
 
@@ -137,6 +138,7 @@ Start here:
 - [`docs/08_BUILD_SEQUENCE.md`](docs/08_BUILD_SEQUENCE.md)
 - [`docs/49_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_IMPLEMENTATION_SCAFFOLD.md`](docs/49_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_IMPLEMENTATION_SCAFFOLD.md)
 - [`docs/50_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_DISABLED_VERIFICATION.md`](docs/50_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_DISABLED_VERIFICATION.md)
+- [`docs/51_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_MANUAL_GO_NO_GO_GATE.md`](docs/51_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_MANUAL_GO_NO_GO_GATE.md)
 
 ## Phone/SMS path
 
@@ -156,6 +158,7 @@ new test number
 → disabled-by-default implementation scaffold
 → disabled verification
 → manual go/no-go gate
+→ tiny monitored pilot plan
 → no auto-send
 ```
 
@@ -192,7 +195,7 @@ scripts/                 Local/helper scripts and remote-operator checklists
 telephony/               Phone/SMS provider-neutral integration notes
 ```
 
-## QL-037 non-goals
+## QL-038 non-goals
 
 - Do not connect a provider account.
 - Do not configure provider webhooks.
@@ -208,12 +211,13 @@ telephony/               Phone/SMS provider-neutral integration notes
 - Do not auto-send AI replies.
 - Do not enter real production customer data or live provider payloads.
 - Do not enable live customer reads or writes.
-- Do not persist synthetic evidence previews, human review outcomes, journal entries, retention entries, readiness evidence, decision evidence, planning evidence, scaffold evidence, disabled verification evidence, or pilot evidence.
+- Do not persist manual go/no-go evidence or pilot evidence.
 - Do not create mapped live contact, conversation, task, journal, retention, readiness, decision, planning, scaffold, verification, pilot, or audit records.
 - Do not store real operator identities.
 - Do not add a Supabase migration.
+- Do not start a live pilot.
 - Do not grant live enablement.
 
 ## Next build
 
-QL-038 — Phone/SMS Controlled Live Enablement Manual Go/No-Go Gate.
+QL-039 — Phone/SMS Controlled Live Enablement Tiny Monitored Pilot Plan.
