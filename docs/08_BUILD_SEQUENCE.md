@@ -45,33 +45,34 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-038 — Phone/SMS Controlled Live Enablement Manual Go/No-Go Gate — complete.
 - QL-039 — Phone/SMS Controlled Live Enablement Tiny Monitored Pilot Plan — complete.
 - QL-040 — Phone/SMS Controlled Live Enablement Disabled Pilot Implementation Design — complete.
+- QL-041 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Design — complete.
 
-## QL-041 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Design
+## QL-042 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Scaffold
 
 Status: complete.
 
 Result:
 
-- Added disabled runtime verification design helper at `api/deployment/phoneSmsControlledLiveEnablementDisabledRuntimeVerificationDesign.ts`.
-- Added disabled runtime verification design fixture at `api/contracts/phone-sms-controlled-live-enablement-disabled-runtime-verification-design.example.json`.
-- Added source-of-truth doc at `docs/54_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_DISABLED_RUNTIME_VERIFICATION_DESIGN.md`.
-- Added build record, remote-operator checklist, ops checklist, and telephony disabled runtime verification design notes.
-- Added decision for `approve_disabled_runtime_verification_scaffold`.
-- Kept approval limited to the next disabled runtime verification scaffold build only; QL-041 does not start a live pilot.
-- Required verification surfaces for feature flags, provider callback disabled response, phone webhook disabled response, SMS send disabled response, recording disabled response, AI disabled response, persistence write disabled response, live customer access disabled response, manual operator handoff disabled response, rate limits, replay protection, idempotency, redacted observability, rollback, success/abort criteria, and post-review gate.
-- Kept every verification design output `safeToPersist: false`.
+- Added disabled runtime verification scaffold helper at `api/deployment/phoneSmsControlledLiveEnablementDisabledRuntimeVerificationScaffold.ts`.
+- Added disabled runtime verification scaffold fixture at `api/contracts/phone-sms-controlled-live-enablement-disabled-runtime-verification-scaffold.example.json`.
+- Added source-of-truth doc at `docs/55_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_DISABLED_RUNTIME_VERIFICATION_SCAFFOLD.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony disabled runtime verification scaffold notes.
+- Added decision for `approve_disabled_runtime_verification_execution_plan`.
+- Kept approval limited to the next disabled runtime verification execution plan build only; QL-042 does not start a live pilot.
+- Required scaffolded disabled probes for feature flags, provider callback validation, phone webhook handling, SMS sending, recording, AI drafts, AI auto-send, persistence writes, live customer access, manual operator handoff, rate limits, replay protection, idempotency, redacted observability, rollback, success criteria, abort criteria, and post-review gates.
+- Kept every scaffold output `safeToPersist: false`.
 - Kept provider webhooks unconfigured.
 - Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, live customer writes, and live pilot runtime disabled.
-- Rejected missing prerequisites, unsafe environments, missing verification surfaces, unsafe probes, and unredacted/live/customer/phone-number/provider-secret/recording/transcript/operator evidence.
+- Rejected missing prerequisites, unsafe environments, missing probe surfaces, unsafe probe surfaces, and unredacted/live/customer/phone-number/provider-secret/recording/transcript/operator evidence.
 - Did not add a Supabase migration.
 - Did not connect a provider account.
 - Did not enable any provider callback route.
 
-## QL-042 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Scaffold
+## QL-043 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Execution Plan
 
 Goal:
 
-- Add a disabled runtime verification scaffold for the QL-041 verification design.
+- Define the execution plan for running the QL-042 disabled runtime verification scaffold without enabling live behavior.
 - Keep all provider callbacks, phone webhooks, SMS sending, recording, AI, persistence writes, live customer access, and live pilot runtime disabled unless later builds explicitly prove and enable a controlled path.
-- Return disabled/blocked/manual-review responses from synthetic verification probes.
+- Specify the synthetic request/response sequence, expected disabled statuses, redacted observability, rollback confirmation, and post-run review criteria.
 - Require final production proof before any pilot runtime behavior can be considered.
