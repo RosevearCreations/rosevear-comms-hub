@@ -54,33 +54,34 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-047 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Closure Review — complete.
 - QL-048 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Archive & Retention Review — complete.
 - QL-049 — Phone/SMS Controlled Live Enablement Disabled Runtime Verification Final Disabled Closure Gate — complete.
+- QL-050 — Phone/SMS Controlled Live Enablement Post-Closure Live-Pilot Readiness Decision Gate — complete.
 
-## QL-050 — Phone/SMS Controlled Live Enablement Post-Closure Live-Pilot Readiness Decision Gate
+## QL-051 — Phone/SMS Controlled Live Enablement Live-Pilot Prerequisite Evidence Intake
 
 Status: complete.
 
 Result:
 
-- Added post-closure live-pilot readiness decision gate helper at `api/deployment/phoneSmsControlledLiveEnablementPostClosureLivePilotReadinessDecisionGate.ts`.
-- Added post-closure live-pilot readiness decision gate fixture at `api/contracts/phone-sms-controlled-live-enablement-post-closure-live-pilot-readiness-decision-gate.example.json`.
-- Added source-of-truth doc at `docs/63_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_POST_CLOSURE_LIVE_PILOT_READINESS_DECISION_GATE.md`.
-- Added build record, remote-operator checklist, ops checklist, and telephony post-closure readiness decision notes.
-- Added decision for `approve_live_pilot_prerequisite_evidence_intake`.
-- Kept approval limited to the next prerequisite evidence intake build only; QL-050 does not grant live enablement, execute runtime verification, start a live pilot, connect a provider, enable provider delivery, or write persistence.
-- Reviewed readiness items for disabled-runtime-verification chain closure, owner/manual approval, provider setup prerequisites, consent and opt-out requirements, staff operator controls, rollback and kill-switch requirements, production proof, rate-limit and replay controls, audit/redaction requirements, customer data boundaries, provider callback boundaries, SMS send boundary, recording boundary, AI boundary, persistence boundary, live-pilot runtime boundary, and next evidence-intake limitation.
-- Required each readiness item to confirm reviewed, passed, decision-gate-only behavior, no live enablement approval, no live pilot runtime, no provider delivery, no persistence writes, synthetic evidence only, redacted evidence only, and `safeToPersist: false`.
+- Added live-pilot prerequisite evidence intake helper at `api/deployment/phoneSmsControlledLiveEnablementLivePilotPrerequisiteEvidenceIntake.ts`.
+- Added live-pilot prerequisite evidence intake fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-prerequisite-evidence-intake.example.json`.
+- Added source-of-truth doc at `docs/64_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_PREREQUISITE_EVIDENCE_INTAKE.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony prerequisite evidence intake notes.
+- Added decision for `approve_live_pilot_prerequisite_evidence_review`.
+- Kept approval limited to the next prerequisite evidence review build only; QL-051 does not grant live enablement, execute runtime verification, start a live pilot, connect a provider, enable provider delivery, attach a live number, or write persistence.
+- Intakes evidence for owner/manual approval, provider setup prerequisites, provider disabled-mode boundary, phone-number ownership readiness, SMS consent policy, STOP/START/HELP policy, call-recording notice policy, staff access controls, rollback and kill-switch readiness, rate-limit and replay controls, audit and redaction controls, customer-data boundary, provider callback disabled proof, live phone webhook disabled proof, SMS sending disabled proof, recording disabled proof, AI features disabled proof, persistence write disabled proof, live pilot runtime disabled proof, and production proof readiness.
+- Required each evidence item to confirm collected, ready for review, intake-only, no live data, no provider delivery, no runtime execution, synthetic evidence only, redacted evidence only, and `safeToPersist: false`.
 - Kept provider webhooks unconfigured.
-- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, provider delivery, archive writes, retention policy writes, and live pilot runtime disabled.
-- Rejected missing disabled-closure prerequisites, unsafe environments, missing readiness items, failed readiness items, non-gate scope, non-synthetic labels, and non-redacted labels.
+- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, and live pilot runtime disabled.
+- Rejected missing prerequisites, unsafe environments, missing evidence items, failed evidence items, non-intake scope, non-synthetic labels, and non-redacted labels.
 - Did not add a Supabase migration.
 - Did not connect a provider account.
 - Did not enable any provider callback route.
 
-## QL-051 — Phone/SMS Controlled Live Enablement Live-Pilot Prerequisite Evidence Intake
+## QL-052 — Phone/SMS Controlled Live Enablement Live-Pilot Prerequisite Evidence Review
 
 Goal:
 
-- Collect prerequisite evidence for any possible future live-pilot path after QL-050 readiness decision gate.
-- Keep all provider callbacks, phone webhooks, SMS sending, recording, AI, persistence writes, live customer access, dry-run execution, provider delivery, archive writes, retention policy writes, and live pilot runtime disabled unless a later build explicitly proves and enables a controlled path.
+- Review the prerequisite evidence intake from QL-051 before any live-pilot path can be considered.
+- Keep all provider callbacks, phone webhooks, SMS sending, recording, AI, persistence writes, live customer access, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, and live pilot runtime disabled unless a later build explicitly proves and enables a controlled path.
 - Confirm owner/manual approval evidence, provider setup evidence, consent/opt-out evidence, rollback evidence, staff/operator control evidence, rate-limit/replay-control evidence, and production proof evidence remain synthetic/redacted until an explicit later live path is approved.
 - Require final production proof before any pilot runtime behavior can be considered.
