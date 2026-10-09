@@ -1,0 +1,101 @@
+{
+  "build": "QL-061",
+  "stage": "phone-sms-controlled-live-enablement-live-pilot-controlled-activation-plan-review",
+  "status": "controlled_activation_plan_review_ready",
+  "decision": "approve_disabled_operator_console_scaffold",
+  "safeToPersist": false,
+  "syntheticOnly": true,
+  "redactedOnly": true,
+  "approvalScope": {
+    "disabledOperatorConsoleScaffoldOnly": true,
+    "liveEnablementAllowed": false,
+    "livePilotRuntimeAllowed": false,
+    "providerAccountConnectionAllowed": false,
+    "providerLiveNumberAttachmentAllowed": false,
+    "providerCallbackRegistrationAllowed": false,
+    "providerDeliveryAllowed": false,
+    "smsSendingAllowed": false,
+    "callRecordingAllowed": false,
+    "aiDraftAllowed": false,
+    "aiAutoSendAllowed": false,
+    "persistenceWritesAllowed": false,
+    "liveCustomerReadAllowed": false,
+    "liveCustomerWriteAllowed": false,
+    "archiveWritesAllowed": false,
+    "retentionPolicyWritesAllowed": false
+  },
+  "requiredPriorApprovals": {
+    "ql059ExplicitGoNoGoApproved": true,
+    "ql060ControlledActivationPlanningReady": true
+  },
+  "environment": {
+    "providerWebhookConfigured": false,
+    "providerCallbackAllowed": false,
+    "phoneWebhookAllowed": false,
+    "smsSendAllowed": false,
+    "callRecordingAllowed": false,
+    "aiDraftAllowed": false,
+    "aiAutoSendAllowed": false,
+    "persistenceWritesAllowed": false,
+    "liveCustomerReadAllowed": false,
+    "liveCustomerWriteAllowed": false,
+    "dryRunExecutionAllowed": false,
+    "providerDeliveryAllowed": false,
+    "archiveWritesAllowed": false,
+    "retentionPolicyWritesAllowed": false,
+    "providerAccountConnected": false,
+    "providerLiveNumberAttached": false,
+    "livePilotRuntimeAllowed": false
+  },
+  "reviewItems": [
+    "owner_decision_and_scope_reviewed",
+    "manual_activation_boundary_reviewed",
+    "variables_plan_reviewed",
+    "services_plan_reviewed",
+    "application_links_plan_reviewed",
+    "provider_account_step_reviewed",
+    "live_number_attachment_step_reviewed",
+    "callback_registration_step_reviewed",
+    "rollback_and_kill_switch_reviewed",
+    "rate_limit_and_replay_reviewed",
+    "monitoring_and_alerting_reviewed",
+    "operator_review_and_help_reviewed",
+    "audit_and_redaction_reviewed",
+    "customer_boundary_reviewed",
+    "production_verification_reviewed",
+    "disabled_operator_console_scaffold_needed"
+  ],
+  "firstUsefulInterfaceAnswer": {
+    "currentGeneralInterface": "The app already has an admin interface and section help overlay from QL-059.",
+    "firstPhoneSmsSpecificInterface": "QL-062 should add a disabled operator console scaffold.",
+    "allowedInteractionBeforeLiveEnablement": [
+      "view readiness status",
+      "view manual activation checklist",
+      "view required variables and service links",
+      "record synthetic/redacted review notes",
+      "display disabled controls for later operator workflow"
+    ],
+    "blockedInteractionBeforeLaterApproval": [
+      "send SMS",
+      "place or receive live calls",
+      "connect provider accounts",
+      "attach live provider numbers",
+      "register provider callbacks",
+      "read or write live customer data",
+      "persist live pilot records"
+    ]
+  },
+  "requiredNextBuild": "QL-062-phone-sms-controlled-live-enablement-live-pilot-disabled-operator-console-scaffold",
+  "nonGoals": [
+    "Do not connect a provider account.",
+    "Do not attach a provider live number.",
+    "Do not register provider callbacks.",
+    "Do not send SMS.",
+    "Do not enable call recording.",
+    "Do not enable AI drafting or auto-send.",
+    "Do not write live persistence records.",
+    "Do not read or write live customer data.",
+    "Do not execute runtime verification.",
+    "Do not add a Supabase migration."
+  ]
+}
