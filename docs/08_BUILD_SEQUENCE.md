@@ -112,9 +112,33 @@ Result:
 
 ## QL-065 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Evidence Review
 
+Status: complete.
+
+Result:
+
+- Added disabled operator console evidence-review helper at `api/deployment/phoneSmsControlledLiveEnablementLivePilotDisabledOperatorConsoleEvidenceReview.ts`.
+- Added evidence-review contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-disabled-operator-console-evidence-review.example.json`.
+- Updated the disabled operator console to show QL-065 stage, evidence review cards, variable-name-only review, rejected evidence examples, and disabled persistence/live-pilot actions.
+- Added source-of-truth doc at `docs/78_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_DISABLED_OPERATOR_CONSOLE_EVIDENCE_REVIEW.md`.
+- Added build record, remote operator checklist, ops checklist, and telephony evidence-review note.
+- Confirmed QL-065 remains evidence-review-only and approves only a later disabled evidence closure gate.
+- Confirmed reviewed evidence must be synthetic, redacted, review-only, unsafe to persist, and free of secrets, callback tokens, live phone numbers, message bodies, transcripts, recordings, and live customer data.
+- Confirmed variable handling remains name-only and does not capture secret values.
+- Confirmed rejected evidence examples are visible in the disabled operator console.
+- Confirmed future action buttons remain disabled and cannot send SMS, call customers, connect providers, attach live numbers, persist evidence, or start live pilot runtime.
+- Kept provider webhooks unconfigured.
+- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, and live pilot runtime disabled.
+- Did not add Vercel or Cloudflare Pages hosting.
+- Did not add a Supabase migration.
+- Did not connect a provider account.
+- Did not enable any provider callback route.
+
+## QL-066 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Evidence Closure Gate
+
 Goal:
 
-- Review the QL-064 synthetic/redacted disabled operator console evidence intake before any later live-pilot behavior can be considered.
-- Confirm every evidence item is review-only, redacted, synthetic, free of secrets, free of live customer data, and unsafe to persist.
+- Close the QL-065 reviewed disabled operator console evidence set before any later live-pilot behavior can be considered.
+- Confirm every reviewed evidence item remains review-only, redacted, synthetic, free of secrets, free of live customer data, and unsafe to persist.
 - Confirm the operator console remains reachable, visible, reviewable, and fully disabled in production.
+- Confirm rejected evidence categories remain blocked.
 - Keep all provider callbacks, phone webhooks, SMS sending, recording, AI, persistence writes, live customer access, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, and live pilot runtime disabled unless a later build explicitly proves and enables a controlled path.
