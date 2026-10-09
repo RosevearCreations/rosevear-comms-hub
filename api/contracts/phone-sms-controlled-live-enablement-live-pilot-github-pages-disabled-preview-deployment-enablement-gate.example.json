@@ -1,0 +1,46 @@
+{
+  "build": "QL-072",
+  "title": "Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Enablement Gate",
+  "decision": "approve_gated_github_pages_disabled_preview_workflow",
+  "scope": "github_pages_disabled_preview_deployment_enablement_gate_only",
+  "targetPublicUrl": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+  "viteBasePath": "/rosevear-comms-hub/",
+  "workflow": {
+    "path": ".github/workflows/pages-disabled-preview.yml",
+    "deploymentGateVariable": "ENABLE_GITHUB_PAGES_DISABLED_PREVIEW",
+    "deploysOnlyWhenGateIsTrue": true,
+    "buildCommand": "npm run pages:build",
+    "artifactPath": "app/dist",
+    "staticReviewOnly": true,
+    "requiresGitHubPagesSource": "GitHub Actions"
+  },
+  "allowedBrowserVariables": [
+    "VITE_SUPABASE_URL",
+    "VITE_SUPABASE_ANON_KEY"
+  ],
+  "blockedBrowserValues": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "PHONE_SMS_PROVIDER_API_KEY",
+    "PHONE_SMS_PROVIDER_API_SECRET",
+    "PHONE_SMS_WEBHOOK_SIGNING_SECRET",
+    "PHONE_SMS_CALLBACK_TOKEN",
+    "live phone numbers",
+    "live message bodies",
+    "transcripts",
+    "recordings",
+    "live customer data"
+  ],
+  "runtimeBoundary": {
+    "smsSendAllowed": false,
+    "callRuntimeAllowed": false,
+    "providerCallbacksAllowed": false,
+    "livePhoneWebhookAllowed": false,
+    "callRecordingAllowed": false,
+    "aiAutoSendAllowed": false,
+    "persistenceWritesAllowed": false,
+    "archiveWritesAllowed": false,
+    "retentionPolicyWritesAllowed": false,
+    "livePilotRuntimeAllowed": false
+  },
+  "nextBuild": "QL-073 — GitHub Pages Disabled Preview Deployment Verification"
+}

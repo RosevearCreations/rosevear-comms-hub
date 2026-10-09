@@ -75,41 +75,34 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-068 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Pathway Decision Gate — complete.
 - QL-069 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Implementation Plan — complete.
 - QL-070 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Preview Review — complete.
+- QL-071 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Plan — complete.
 
-## QL-071 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Plan
+## QL-072 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Enablement Gate
 
 Status: complete.
 
 Result:
 
-- Planned the GitHub Pages static disabled preview deployment path for the reviewed Quo-lite interface.
-- Updated the floating interface preview to show QL-071 deployment-plan state.
-- Confirmed the planned public review URL remains `https://rosevearcreations.github.io/rosevear-comms-hub/`.
-- Confirmed the planned Vite base path is `/rosevear-comms-hub/` for a future Pages static build.
-- Confirmed the preview remains static, disabled, browser-safe, and review-only.
-- Added GitHub Pages disabled preview deployment-plan helper at `api/deployment/phoneSmsControlledLiveEnablementLivePilotGithubPagesDisabledPreviewDeploymentPlan.ts`.
-- Added deployment-plan contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-github-pages-disabled-preview-deployment-plan.example.json`.
-- Added source-of-truth doc at `docs/84_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_GITHUB_PAGES_DISABLED_PREVIEW_DEPLOYMENT_PLAN.md`.
-- Added build record, remote operator checklist, ops checklist, and telephony deployment-plan note.
-- Documented required manual setup steps: GitHub repository Settings → Pages → Source: GitHub Actions, and Settings → Secrets and variables → Actions → Variables for public variables only.
-- Confirmed allowed browser variables remain limited to `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
+- Added `app` script `pages:build` to build the static disabled preview with Vite base path `/rosevear-comms-hub/`.
+- Added gated GitHub Pages workflow at `.github/workflows/pages-disabled-preview.yml`.
+- The Pages workflow deploys only when repository Actions variable `ENABLE_GITHUB_PAGES_DISABLED_PREVIEW` is set to `true`.
+- The workflow builds only static review assets from `app/dist` and uses the target public URL `https://rosevearcreations.github.io/rosevear-comms-hub/`.
+- Updated the floating interface preview to show QL-072 enablement-gate state.
+- Added enablement-gate guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotGithubPagesDisabledPreviewDeploymentEnablementGate.ts`.
+- Added enablement-gate contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-github-pages-disabled-preview-deployment-enablement-gate.example.json`.
+- Added source-of-truth doc at `docs/85_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_GITHUB_PAGES_DISABLED_PREVIEW_DEPLOYMENT_ENABLEMENT_GATE.md`.
+- Added build record, ops checklist, remote operator checklist, and telephony boundary note.
+- Confirmed GitHub Pages source must be set to GitHub Actions before expecting the public URL to work.
+- Confirmed optional browser variables remain limited to `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
 - Confirmed service-role keys, provider credentials, callback tokens, live phone numbers, live message bodies, transcripts, recordings, and live customer data remain out of browser code.
-- Approved only the next safe build: a GitHub Pages disabled preview deployment enablement gate.
-- Kept provider callbacks, live phone webhooks, SMS sending, call runtime, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, hosting deployment, GitHub Pages workflow, GitHub Pages deployment, and live pilot runtime disabled.
-- Did not add Vercel, Cloudflare Pages, or GitHub Pages deployment.
-- Did not add a Supabase migration.
-- Did not add a Supabase Edge Function.
-- Did not connect a provider account.
-- Did not enable any provider callback route.
+- Kept provider callbacks, live phone webhooks, SMS sending, call runtime, call recording, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, Vercel, Cloudflare Pages, Supabase migrations, Supabase Edge Functions, and live pilot runtime disabled.
 
-## QL-072 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Enablement Gate
+## QL-073 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Verification
 
 Goal:
 
-- Enable the GitHub Pages static disabled preview only if the deployment remains browser-safe, static, review-only, and fully disabled.
-- Add a GitHub Actions Pages workflow only if it builds the static app with base path `/rosevear-comms-hub/` and deploys only static review assets.
-- Confirm the target public review URL is `https://rosevearcreations.github.io/rosevear-comms-hub/`.
-- Confirm GitHub Pages source is set to GitHub Actions before expecting the URL to work.
-- Allow only public browser variables in the static preview: `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
-- Keep service-role keys, provider credentials, callback tokens, live phone numbers, message bodies, transcripts, recordings, and live customer data out of browser code.
+- Verify whether the gated GitHub Pages disabled preview workflow is skipped or deployed based on `ENABLE_GITHUB_PAGES_DISABLED_PREVIEW`.
+- Confirm the public URL `https://rosevearcreations.github.io/rosevear-comms-hub/` loads only if GitHub Pages Source is set to GitHub Actions and the enablement variable is `true`.
+- Confirm the deployed preview remains static, browser-safe, and fully disabled.
+- Confirm no service-role keys, provider credentials, callback tokens, live phone numbers, message bodies, transcripts, recordings, or live customer data appear in browser output.
 - Keep all provider callbacks, phone webhooks, SMS sending, call runtime, recording, AI, persistence writes, live customer access, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, and live pilot runtime disabled unless a later build explicitly proves and enables a controlled path.
