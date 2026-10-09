@@ -74,25 +74,27 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-067 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Post-Closure Readiness Review — complete.
 - QL-068 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Pathway Decision Gate — complete.
 - QL-069 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Implementation Plan — complete.
+- QL-070 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Preview Review — complete.
 
-## QL-070 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Preview Review
+## QL-071 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Plan
 
 Status: complete.
 
 Result:
 
-- Reviewed the visible disabled interface preview added in QL-069.
-- Updated the floating interface preview to show QL-070 review state.
-- Added the planned future GitHub Pages static preview URL to the preview UI: `https://rosevearcreations.github.io/rosevear-comms-hub/`.
-- Confirmed the future URL is not live in QL-070 because no GitHub Pages workflow or deployment was added.
-- Confirmed the preview is useful enough to validate direction for the brand switcher, inbox queue, customer/contact summary, conversation timeline, disabled Phone/SMS controls, follow-up task board, safe deployment status, and manual readiness checklist.
-- Added disabled interface preview review helper at `api/deployment/phoneSmsControlledLiveEnablementLivePilotDisabledInterfacePreviewReview.ts`.
-- Added disabled interface preview review contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-disabled-interface-preview-review.example.json`.
-- Added source-of-truth doc at `docs/83_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_DISABLED_INTERFACE_PREVIEW_REVIEW.md`.
-- Added build record, remote operator checklist, ops checklist, and telephony preview review note.
-- Approved only the next safe build: a GitHub Pages disabled preview deployment plan.
-- Confirmed browser variables remain limited to a future `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` boundary.
+- Planned the GitHub Pages static disabled preview deployment path for the reviewed Quo-lite interface.
+- Updated the floating interface preview to show QL-071 deployment-plan state.
+- Confirmed the planned public review URL remains `https://rosevearcreations.github.io/rosevear-comms-hub/`.
+- Confirmed the planned Vite base path is `/rosevear-comms-hub/` for a future Pages static build.
+- Confirmed the preview remains static, disabled, browser-safe, and review-only.
+- Added GitHub Pages disabled preview deployment-plan helper at `api/deployment/phoneSmsControlledLiveEnablementLivePilotGithubPagesDisabledPreviewDeploymentPlan.ts`.
+- Added deployment-plan contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-github-pages-disabled-preview-deployment-plan.example.json`.
+- Added source-of-truth doc at `docs/84_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_GITHUB_PAGES_DISABLED_PREVIEW_DEPLOYMENT_PLAN.md`.
+- Added build record, remote operator checklist, ops checklist, and telephony deployment-plan note.
+- Documented required manual setup steps: GitHub repository Settings → Pages → Source: GitHub Actions, and Settings → Secrets and variables → Actions → Variables for public variables only.
+- Confirmed allowed browser variables remain limited to `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
 - Confirmed service-role keys, provider credentials, callback tokens, live phone numbers, live message bodies, transcripts, recordings, and live customer data remain out of browser code.
+- Approved only the next safe build: a GitHub Pages disabled preview deployment enablement gate.
 - Kept provider callbacks, live phone webhooks, SMS sending, call runtime, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, hosting deployment, GitHub Pages workflow, GitHub Pages deployment, and live pilot runtime disabled.
 - Did not add Vercel, Cloudflare Pages, or GitHub Pages deployment.
 - Did not add a Supabase migration.
@@ -100,14 +102,14 @@ Result:
 - Did not connect a provider account.
 - Did not enable any provider callback route.
 
-## QL-071 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Plan
+## QL-072 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Enablement Gate
 
 Goal:
 
-- Plan the GitHub Pages static preview deployment for the disabled interface.
-- Keep the preview static, disabled, browser-safe, and review-only.
-- Confirm the target public review URL remains `https://rosevearcreations.github.io/rosevear-comms-hub/`.
-- Plan any required GitHub Pages settings and GitHub Actions variable setup step-by-step.
+- Enable the GitHub Pages static disabled preview only if the deployment remains browser-safe, static, review-only, and fully disabled.
+- Add a GitHub Actions Pages workflow only if it builds the static app with base path `/rosevear-comms-hub/` and deploys only static review assets.
+- Confirm the target public review URL is `https://rosevearcreations.github.io/rosevear-comms-hub/`.
+- Confirm GitHub Pages source is set to GitHub Actions before expecting the URL to work.
 - Allow only public browser variables in the static preview: `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
 - Keep service-role keys, provider credentials, callback tokens, live phone numbers, message bodies, transcripts, recordings, and live customer data out of browser code.
 - Keep all provider callbacks, phone webhooks, SMS sending, call runtime, recording, AI, persistence writes, live customer access, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, and live pilot runtime disabled unless a later build explicitly proves and enables a controlled path.
