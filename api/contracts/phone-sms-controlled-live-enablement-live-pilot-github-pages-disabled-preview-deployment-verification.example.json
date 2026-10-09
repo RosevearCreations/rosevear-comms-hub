@@ -1,0 +1,60 @@
+{
+  "build": "QL-073",
+  "scope": "github_pages_disabled_preview_deployment_verification_only",
+  "decision": "approve_static_disabled_preview_verification_complete",
+  "targetPublicUrl": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+  "viteBasePath": "/rosevear-comms-hub/",
+  "enablementVariableName": "ENABLE_GITHUB_PAGES_DISABLED_PREVIEW",
+  "workflow": {
+    "path": ".github/workflows/pages-disabled-preview.yml",
+    "expectedOutcomes": ["deployed", "skipped_by_gate", "pending_external_setting"],
+    "staticAssetsOnly": true,
+    "safeSkipWhenVariableMissing": true
+  },
+  "verification": {
+    "appCiGreenOnMain": true,
+    "pagesWorkflowObservedOnMain": true,
+    "pagesWorkflowGateRespected": true,
+    "targetPublicUrlChecked": true,
+    "viteBasePathVerified": true,
+    "staticAssetsOnlyVerified": true,
+    "browserSecretBoundaryVerified": true
+  },
+  "browserForbidden": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "PHONE_SMS_PROVIDER_API_KEY",
+    "PHONE_SMS_PROVIDER_API_SECRET",
+    "PHONE_SMS_WEBHOOK_SIGNING_SECRET",
+    "PHONE_SMS_CALLBACK_TOKEN",
+    "live phone numbers",
+    "live message bodies",
+    "transcripts",
+    "recordings",
+    "live customer data"
+  ],
+  "runtimeDisabled": {
+    "providerCallbacks": true,
+    "livePhoneWebhooks": true,
+    "smsSending": true,
+    "callRuntime": true,
+    "callRecording": true,
+    "aiAutoSend": true,
+    "persistenceWrites": true,
+    "liveCustomerReads": true,
+    "liveCustomerWrites": true,
+    "dryRunExecution": true,
+    "providerDelivery": true,
+    "archiveWrites": true,
+    "retentionPolicyWrites": true,
+    "providerAccountConnection": true,
+    "providerLiveNumberAttachment": true,
+    "callbackRegistration": true,
+    "livePilotRuntime": true
+  },
+  "notes": [
+    "QL-073 verifies deployment behavior after promotion to main.",
+    "A successful app CI run is required before claiming main production GREEN.",
+    "The Pages workflow may deploy only if GitHub Pages Source is GitHub Actions and ENABLE_GITHUB_PAGES_DISABLED_PREVIEW is true.",
+    "A skipped Pages workflow is treated as a safe external-setting result, not a live runtime enablement."
+  ]
+}
