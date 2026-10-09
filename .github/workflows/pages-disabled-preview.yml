@@ -1,0 +1,66 @@
+name: GitHub Pages Disabled Preview
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - app/**
+      - .github/workflows/pages-disabled-preview.yml
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages-disabled-preview
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build disabled preview
+    if: ${{ vars.ENABLE_GITHUB_PAGES_DISABLED_PREVIEW == 'true' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    env:
+      VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+      VITE_ENABLE_SUPABASE_CLIENT: 'false'
+      VITE_ENABLE_HOSTED_DATABASE: 'false'
+      VITE_PHONE_SMS_PROVIDER_ENABLED: 'false'
+      VITE_PHONE_SMS_LIVE_PILOT_ENABLED: 'false'
+      VITE_PHONE_SMS_CALLBACKS_ENABLED: 'false'
+      VITE_PHONE_SMS_PERSISTENCE_ENABLED: 'false'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Build static disabled preview
+        run: npm run pages:build
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload static preview artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: app/dist
+
+  deploy:
+    name: Deploy disabled preview
+    if: ${{ vars.ENABLE_GITHUB_PAGES_DISABLED_PREVIEW == 'true' && github.ref == 'refs/heads/main' }}
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
