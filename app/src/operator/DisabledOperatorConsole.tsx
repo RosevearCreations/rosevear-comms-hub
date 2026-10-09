@@ -14,46 +14,46 @@ const safetyLocks = [
   'Live pilot runtime: disabled'
 ];
 
-const readinessSteps = [
-  'Confirm QL-063 review remains GREEN on main before collecting evidence.',
-  'Capture synthetic/redacted screenshots or notes only.',
-  'List variable names only; never capture secret values.',
-  'Record guidance-only service and application links with redacted labels.',
-  'Confirm every future action button remains disabled.',
-  'Confirm safety locks still block provider, runtime, persistence, and customer-data paths.',
-  'Require owner review before any later evidence review or activation build.'
+const reviewSteps = [
+  'Confirm QL-064 evidence intake is present and complete before approving review closure.',
+  'Reject any item that contains secrets, credential values, callback tokens, phone numbers, message bodies, transcripts, recordings, or live customer data.',
+  'Confirm the disabled console remains reachable, visible, reviewable, and fully blocked from the admin interface.',
+  'Confirm variable handling remains name-only and guidance links contain no credentials or live callback targets.',
+  'Confirm every future action button remains disabled in production.',
+  'Confirm provider, runtime, persistence, archive, retention, and live-pilot paths remain disabled.',
+  'Approve only the next disabled evidence closure gate; do not approve live pilot activation.'
 ];
 
-const evidenceIntakeItems = [
+const evidenceReviewItems = [
   {
-    title: 'Console reachability',
-    body: 'Record that the disabled console opens from the admin interface and remains review-only.',
-    status: 'synthetic-redacted'
+    title: 'Console reachability evidence',
+    body: 'Reviewed as synthetic/redacted proof that the console opens from the admin interface without enabling provider access.',
+    status: 'reviewed'
   },
   {
-    title: 'Disabled action states',
-    body: 'Record that SMS, call, provider connection, and live-number buttons are visible but disabled.',
-    status: 'blocked'
+    title: 'Disabled action state evidence',
+    body: 'Reviewed as proof that SMS, call, provider connection, live-number, persistence, and live-pilot controls remain disabled.',
+    status: 'accepted'
   },
   {
-    title: 'Variable-name inventory',
-    body: 'Capture names such as PROVIDER_API_KEY and SMS_PROVIDER_ACCOUNT_ID without values.',
+    title: 'Variable-name evidence',
+    body: 'Reviewed as name-only inventory with no values, no secret material, and no callback tokens.',
     status: 'names-only'
   },
   {
-    title: 'Service links',
-    body: 'Capture provider/admin/application links as guidance-only references with no credentials.',
+    title: 'Guidance-link evidence',
+    body: 'Reviewed as labels and routing notes only, with no provider credential links or live customer data.',
     status: 'redacted'
   },
   {
-    title: 'Safety locks',
-    body: 'Record that callbacks, webhooks, recording, AI, persistence, archives, and runtime remain off.',
+    title: 'Safety-lock evidence',
+    body: 'Reviewed as proof that callbacks, webhooks, recording, AI, persistence, archive, retention, and runtime are off.',
     status: 'locked'
   },
   {
-    title: 'Operator notes',
-    body: 'Capture only synthetic/redacted notes that are safe for review and not safe for persistence.',
-    status: 'review-only'
+    title: 'Production proof evidence',
+    body: 'Reviewed as build/status proof only; no runtime activation, live traffic, or provider delivery is allowed.',
+    status: 'ci-only'
   }
 ];
 
@@ -67,27 +67,26 @@ const nonSecretVariableNames = [
   'PHONE_SMS_LIVE_PILOT_ENABLED'
 ];
 
-const guidanceLinks = [
-  'Rosevear Comms Hub admin app',
-  'Provider dashboard placeholder',
-  'Callback URL planning note',
-  'STOP/START/HELP policy note',
-  'Recording-notice policy note',
-  'Rollback and kill-switch note'
+const rejectedEvidenceExamples = [
+  'Secret values or screenshots containing API keys',
+  'Live customer names, phone numbers, message bodies, transcripts, or recordings',
+  'Provider callback URLs containing tokens or live routing paths',
+  'Any screenshot proving an enabled send/call/connect/live-pilot button',
+  'Any persisted evidence artifact or archive-retention write'
 ];
 
 const operatorNotes = [
   {
-    title: 'What works in this console now',
-    body: 'Operators can collect review evidence that the disabled console is reachable, visible, and safely blocked without connecting providers or sending messages.'
+    title: 'Review result',
+    body: 'QL-065 accepts only synthetic/redacted disabled-console evidence and moves the sequence toward a disabled evidence closure gate.'
   },
   {
-    title: 'What is intentionally blocked',
-    body: 'No SMS send button, call button, provider callback URL, provider credential form, live phone number field, customer-data read/write, or persistence action is enabled in QL-064.'
+    title: 'Interface status',
+    body: 'The operator interface is present in the app, but this build does not add Vercel, Cloudflare Pages, provider runtime, or browser-held secrets.'
   },
   {
     title: 'Next safe stage',
-    body: 'QL-065 should review this synthetic/redacted evidence intake before any future live-pilot behavior is considered.'
+    body: 'QL-066 should close the reviewed evidence set and keep live-pilot activation blocked unless a later explicit build changes the boundary.'
   }
 ];
 
@@ -106,10 +105,10 @@ function DisabledOperatorConsole() {
         <div className="operator-console-panel" role="dialog" aria-modal="false" aria-label="Disabled phone and SMS operator console">
           <div className="operator-console-header">
             <div>
-              <p className="eyebrow">QL-064 disabled operator console evidence intake</p>
-              <h2>Phone/SMS live-pilot evidence intake</h2>
+              <p className="eyebrow">QL-065 disabled operator console evidence review</p>
+              <h2>Phone/SMS live-pilot evidence review</h2>
               <p>
-                This interface collects synthetic/redacted evidence for review only. It does not connect a provider, attach a live number, send SMS, record calls, inspect live customers, write persistence, or start live runtime.
+                This interface reviews the QL-064 synthetic/redacted evidence intake. It does not connect a provider, attach a live number, send SMS, record calls, inspect live customers, write persistence, or start live runtime.
               </p>
             </div>
             <button className="operator-console-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close disabled operator console">
@@ -120,8 +119,8 @@ function DisabledOperatorConsole() {
           <div className="operator-console-status-grid">
             <article>
               <span>Stage</span>
-              <strong>QL-064</strong>
-              <small>Evidence intake only</small>
+              <strong>QL-065</strong>
+              <small>Evidence review only</small>
             </article>
             <article>
               <span>Runtime</span>
@@ -134,14 +133,14 @@ function DisabledOperatorConsole() {
               <small>No outbound traffic</small>
             </article>
             <article>
-              <span>Evidence</span>
-              <strong>Redacted</strong>
-              <small>Synthetic notes only</small>
+              <span>Review</span>
+              <strong>Safe</strong>
+              <small>Redacted evidence only</small>
             </article>
           </div>
 
           <div className="operator-console-callout">
-            <strong>Evidence intake guardrail:</strong> collect labels, screenshots, and notes only when they are synthetic, redacted, review-only, and unsafe to persist.
+            <strong>Evidence review guardrail:</strong> approve only synthetic/redacted disabled-console evidence. Reject secrets, live data, provider callbacks, enabled buttons, persisted artifacts, and any runtime proof.
           </div>
 
           <div className="operator-console-grid">
@@ -155,9 +154,9 @@ function DisabledOperatorConsole() {
             </article>
 
             <article className="operator-console-card">
-              <h3>Manual evidence checklist</h3>
+              <h3>Manual review checklist</h3>
               <ol>
-                {readinessSteps.map((step) => (
+                {reviewSteps.map((step) => (
                   <li key={step}>{step}</li>
                 ))}
               </ol>
@@ -165,9 +164,9 @@ function DisabledOperatorConsole() {
           </div>
 
           <article className="operator-console-card operator-console-evidence-section">
-            <h3>QL-064 evidence intake queue</h3>
+            <h3>QL-065 evidence review queue</h3>
             <div className="operator-console-evidence-list">
-              {evidenceIntakeItems.map((item) => (
+              {evidenceReviewItems.map((item) => (
                 <div className="operator-console-evidence-card" key={item.title}>
                   <span>{item.status}</span>
                   <h4>{item.title}</h4>
@@ -179,7 +178,7 @@ function DisabledOperatorConsole() {
 
           <div className="operator-console-grid">
             <article className="operator-console-card">
-              <h3>Variable names only</h3>
+              <h3>Variable names reviewed only</h3>
               <div className="operator-console-pill-list">
                 {nonSecretVariableNames.map((name) => (
                   <code key={name}>{name}</code>
@@ -188,10 +187,10 @@ function DisabledOperatorConsole() {
             </article>
 
             <article className="operator-console-card">
-              <h3>Guidance-only links</h3>
+              <h3>Rejected evidence examples</h3>
               <ul>
-                {guidanceLinks.map((link) => (
-                  <li key={link}>{link}</li>
+                {rejectedEvidenceExamples.map((example) => (
+                  <li key={example}>{example}</li>
                 ))}
               </ul>
             </article>
