@@ -5,7 +5,7 @@ const previewModules = [
   {
     title: 'Unified inbox',
     body: 'Brand-aware conversations for Rosie Dazzlers and Devil n Dove with contact, intake, and task context in one review surface.',
-    status: 'Visible preview'
+    status: 'Reviewed useful'
   },
   {
     title: 'Operator command centre',
@@ -24,9 +24,16 @@ const previewModules = [
   }
 ];
 
+const reviewFindings = [
+  'Preview is useful enough to validate overall Quo-lite direction.',
+  'Static dashboard regions communicate the expected operator workflow.',
+  'Disabled Phone/SMS controls make the future live path visible without enabling it.',
+  'A real review link is the next useful step, but it must stay static and disabled.'
+];
+
 const implementationSteps = [
   'Keep this preview inside the existing app while the direction is reviewed.',
-  'Prepare GitHub Pages only as a later static UI host; do not deploy in QL-069.',
+  'Prepare GitHub Pages only as the next static disabled preview deployment plan; do not deploy in QL-070.',
   'Use only public browser variables later: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.',
   'Keep provider secrets, service-role work, callback verification, and webhook handling behind Supabase Edge Functions later.',
   'Do not expose live phone numbers, customer message bodies, transcripts, recordings, callback tokens, or provider credentials in browser code.',
@@ -55,6 +62,8 @@ const disabledActions = [
   'Start live pilot'
 ];
 
+const futurePreviewUrl = 'https://rosevearcreations.github.io/rosevear-comms-hub/';
+
 function DisabledInterfacePreview() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -63,17 +72,17 @@ function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-069</small>
+        <small>QL-070</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-069 disabled interface implementation preview">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-070 disabled interface preview review">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-069 disabled interface implementation plan</p>
+              <p className="interface-preview-eyebrow">QL-070 disabled interface preview review</p>
               <h2>Quo-lite operator interface direction</h2>
               <p>
-                This is a visible static preview of the direction: a combined communications dashboard with disabled Phone/SMS controls, brand context, customer timeline, and safe deployment boundaries.
+                This is the reviewed static preview direction: a combined communications dashboard with disabled Phone/SMS controls, brand context, customer timeline, and safe deployment boundaries.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -82,7 +91,25 @@ function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            Preview only. No GitHub Pages deployment, no provider connection, no callback route, no SMS, no calls, no recording, no AI send, no persistence writes, and no live pilot runtime are enabled.
+            Preview review only. No GitHub Pages deployment, no provider connection, no callback route, no SMS, no calls, no recording, no AI send, no persistence writes, and no live pilot runtime are enabled in QL-070.
+          </div>
+
+          <div className="interface-preview-review-grid">
+            <article className="interface-preview-link-card">
+              <p className="interface-preview-eyebrow">Future review link</p>
+              <h3>GitHub Pages candidate</h3>
+              <code className="interface-preview-link">{futurePreviewUrl}</code>
+              <p>
+                This is the planned static preview URL, but QL-070 confirms it is not live yet. The next safe build should add a GitHub Pages disabled preview deployment plan.
+              </p>
+            </article>
+            <article className="interface-preview-card interface-preview-next-step">
+              <p className="interface-preview-eyebrow">QL-070 decision</p>
+              <h3>Direction accepted for next deployment planning</h3>
+              <p>
+                The visible interface is useful for review. The next step should be a GitHub Pages static preview deployment plan with browser-safe variables only.
+              </p>
+            </article>
           </div>
 
           <div className="interface-preview-shell" aria-label="Static operator dashboard mockup">
@@ -99,7 +126,7 @@ function DisabledInterfacePreview() {
               <div className="interface-preview-safe-card">
                 <strong>Deployment path</strong>
                 <span>GitHub Pages candidate</span>
-                <small>Not deployed in QL-069</small>
+                <small>Reviewed in QL-070; still not deployed</small>
               </div>
             </aside>
 
@@ -109,7 +136,7 @@ function DisabledInterfacePreview() {
                   <p className="interface-preview-eyebrow">Operator queue</p>
                   <h3>Today’s communication cockpit</h3>
                 </div>
-                <span>Static / disabled</span>
+                <span>Static / disabled / reviewed</span>
               </div>
 
               <div className="interface-preview-grid">
@@ -168,14 +195,22 @@ function DisabledInterfacePreview() {
 
           <div className="interface-preview-columns">
             <article className="interface-preview-card">
-              <h3>Interface regions planned</h3>
+              <h3>QL-070 review findings</h3>
+              <ol>
+                {reviewFindings.map((finding) => (
+                  <li key={finding}>{finding}</li>
+                ))}
+              </ol>
+            </article>
+            <article className="interface-preview-card">
+              <h3>Interface regions reviewed</h3>
               <div className="interface-preview-pill-list">
                 {interfaceRegions.map((region) => (
                   <span key={region}>{region}</span>
                 ))}
               </div>
             </article>
-            <article className="interface-preview-card">
+            <article className="interface-preview-card interface-preview-wide-card">
               <h3>Implementation checklist</h3>
               <ol>
                 {implementationSteps.map((step) => (
