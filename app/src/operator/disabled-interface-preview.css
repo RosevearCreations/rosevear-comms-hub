@@ -60,7 +60,8 @@
 .interface-preview-topline h3,
 .interface-preview-card h3,
 .interface-preview-card h4,
-.interface-preview-module h4 {
+.interface-preview-module h4,
+.interface-preview-link-card h3 {
   margin: 0;
 }
 
@@ -97,6 +98,46 @@
   border-radius: 18px;
   padding: 14px 16px;
   font-weight: 800;
+}
+
+.interface-preview-review-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 1.2fr) minmax(260px, 0.8fr);
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.interface-preview-link-card {
+  display: grid;
+  gap: 10px;
+  background: #eef6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.interface-preview-link-card p,
+.interface-preview-next-step p {
+  color: #475569;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.interface-preview-link {
+  display: block;
+  overflow-wrap: anywhere;
+  border-radius: 14px;
+  background: #0f172a;
+  color: #e0f2fe;
+  padding: 12px;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 13px;
+}
+
+.interface-preview-next-step {
+  border-color: #bbf7d0;
+  background: #ecfdf5;
 }
 
 .interface-preview-shell {
@@ -212,6 +253,10 @@
   gap: 8px;
 }
 
+.interface-preview-wide-card {
+  grid-column: 1 / -1;
+}
+
 .interface-preview-card > span {
   color: #64748b;
   font-weight: 800;
@@ -282,7 +327,8 @@
   .interface-preview-grid,
   .interface-preview-detail-grid,
   .interface-preview-module-grid,
-  .interface-preview-columns {
+  .interface-preview-columns,
+  .interface-preview-review-grid {
     grid-template-columns: 1fr;
   }
 

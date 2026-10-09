@@ -1,0 +1,67 @@
+{
+  "build": "QL-070",
+  "title": "Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Preview Review",
+  "requestedScope": "disabled_interface_preview_review_only",
+  "requestedDecision": "approve_github_pages_disabled_preview_deployment_plan",
+  "futurePreviewUrl": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+  "approvedNextBuild": "QL-071-phone-sms-controlled-live-enablement-live-pilot-github-pages-disabled-preview-deployment-plan",
+  "reviewResult": {
+    "visiblePreviewUsefulForDirection": true,
+    "staticOnly": true,
+    "disabledOnly": true,
+    "browserSafe": true,
+    "reviewOnly": true,
+    "deploymentAdded": false,
+    "githubPagesWorkflowAdded": false,
+    "liveRuntimeEnabled": false
+  },
+  "reviewedItems": [
+    "visible_preview_mounted",
+    "brand_switcher_reviewed",
+    "inbox_queue_reviewed",
+    "customer_contact_summary_reviewed",
+    "conversation_timeline_reviewed",
+    "disabled_phone_sms_controls_reviewed",
+    "follow_up_task_board_reviewed",
+    "safe_deployment_status_reviewed",
+    "manual_readiness_checklist_reviewed",
+    "future_github_pages_link_status_reviewed",
+    "browser_variable_boundary_reviewed",
+    "server_only_secret_boundary_reviewed"
+  ],
+  "allowedBrowserVariables": [
+    "VITE_SUPABASE_URL",
+    "VITE_SUPABASE_ANON_KEY"
+  ],
+  "serverOnlySecrets": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "PHONE_SMS_PROVIDER_API_KEY",
+    "PHONE_SMS_PROVIDER_API_SECRET",
+    "PHONE_SMS_WEBHOOK_SIGNING_SECRET",
+    "PHONE_SMS_CALLBACK_TOKEN"
+  ],
+  "blockedInThisBuild": {
+    "githubPagesDeployment": true,
+    "githubPagesWorkflow": true,
+    "vercelHosting": true,
+    "cloudflarePagesHosting": true,
+    "supabaseMigration": true,
+    "supabaseEdgeFunction": true,
+    "providerAccountConnection": true,
+    "providerCallbackRoute": true,
+    "phoneWebhook": true,
+    "smsSending": true,
+    "callRuntime": true,
+    "callRecording": true,
+    "aiDrafts": true,
+    "aiAutoSend": true,
+    "persistenceWrites": true,
+    "liveCustomerAccess": true,
+    "archiveWrites": true,
+    "retentionPolicyWrites": true,
+    "providerLiveNumberAttachment": true,
+    "callbackRegistration": true,
+    "livePilotRuntime": true
+  },
+  "manualIntervention": "None for QL-070. QL-071 should provide any GitHub Pages setup steps if a static preview deployment is added later."
+}
