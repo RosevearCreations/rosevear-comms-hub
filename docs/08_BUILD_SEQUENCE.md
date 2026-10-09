@@ -63,37 +63,33 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-056 — Phone/SMS Controlled Live Enablement Live-Pilot Prerequisite Gap Evidence Review — complete.
 - QL-057 — Phone/SMS Controlled Live Enablement Live-Pilot Prerequisite Gap Evidence Closure Gate — complete.
 - QL-058 — Phone/SMS Controlled Live Enablement Live-Pilot Prerequisite Final Readiness Review — complete.
+- QL-059 — Phone/SMS Controlled Live Enablement Live-Pilot Explicit Go/No-Go Decision Gate — complete.
 
-## QL-059 — Phone/SMS Controlled Live Enablement Live-Pilot Explicit Go/No-Go Decision Gate
+## QL-060 — Phone/SMS Controlled Live Enablement Live-Pilot Controlled Activation Planning
 
 Status: complete.
 
 Result:
 
-- Added explicit go/no-go helper at `api/deployment/phoneSmsControlledLiveEnablementLivePilotExplicitGoNoGoDecisionGate.ts`.
-- Added explicit go/no-go fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-explicit-go-no-go-decision-gate.example.json`.
-- Added app-wide help overlay at `app/src/help/SiteHelpSystem.tsx`.
-- Added circled “i” help styling at `app/src/help/site-help.css`.
-- Mounted the help system in `app/src/main.tsx`.
-- Added source-of-truth doc at `docs/72_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_EXPLICIT_GO_NO_GO_DECISION_GATE.md`.
-- Added help-system doc at `docs/help/WEBSITE_SECTION_HELP_SYSTEM.md`.
-- Added build record, remote-operator checklist, ops checklist, and telephony explicit go/no-go notes.
-- Added decision for `approve_controlled_live_pilot_activation_planning`.
-- Kept approval limited to the next controlled activation planning build only; QL-059 does not grant live enablement, execute runtime verification, start a live pilot, connect a provider, enable provider delivery, attach a live number, or write persistence.
-- Added section help topics for hub overview, brand switcher, navigation, dashboard stats, inbox controls, conversation detail, contacts, tasks, intakes, data tools, manual lead, live-pilot decision safety, and manual intervention.
-- Added manual intervention guidance for variables, services, application links, redacted evidence, and runtime locks.
-- Required each go/no-go item to confirm owner review, decision-gate-only scope, activation-planning-only scope, provider delivery blocked, runtime execution blocked, provider connection blocked, persistence writes blocked, synthetic evidence only, redacted evidence only, and `safeToPersist: false`.
+- Added controlled activation planning helper at `api/deployment/phoneSmsControlledLiveEnablementLivePilotControlledActivationPlanning.ts`.
+- Added controlled activation planning fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-controlled-activation-planning.example.json`.
+- Added source-of-truth doc at `docs/73_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_CONTROLLED_ACTIVATION_PLANNING.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony controlled activation planning notes.
+- Added decision for `approve_controlled_live_pilot_activation_plan_review`.
+- Kept approval limited to QL-061 controlled activation plan review only; QL-060 does not grant live enablement, execute runtime verification, start a live pilot, connect a provider, enable provider delivery, attach a live number, register callbacks, or write persistence.
+- Planned manual activation boundary, environment variable plan, provider account step plan, provider live-number attachment plan, callback registration plan, SMS consent enforcement plan, STOP/START/HELP enforcement plan, call-recording notice plan, operator access plan, rollback and kill-switch plan, rate-limit and replay-control plan, monitoring and alerting plan, audit and redaction plan, customer-data boundary plan, production verification plan, help/manual-intervention plan, and QL-061 plan-review readiness.
+- Required each activation planning item to confirm owner review, planning-only scope, plan-review-only next step, manual intervention steps, variable list, service links, application links, rollback, kill switch, rate limits, replay protection, monitoring, operator checklist, synthetic evidence only, redacted evidence only, live runtime blocked, provider delivery blocked, persistence writes blocked, and `safeToPersist: false`.
 - Kept provider webhooks unconfigured.
 - Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, and live pilot runtime disabled.
 - Did not add a Supabase migration.
 - Did not connect a provider account.
 - Did not enable any provider callback route.
 
-## QL-060 — Phone/SMS Controlled Live Enablement Live-Pilot Controlled Activation Planning
+## QL-061 — Phone/SMS Controlled Live Enablement Live-Pilot Controlled Activation Plan Review
 
 Goal:
 
-- Plan the controlled activation path after QL-059 explicit go/no-go decision approval.
-- Keep all provider callbacks, phone webhooks, SMS sending, recording, AI, persistence writes, live customer access, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, and live pilot runtime disabled unless QL-060 explicitly proves a still-disabled planning path.
-- Carry forward the section help system and manual intervention guide as required operating documentation.
+- Review the QL-060 controlled activation plan before any implementation or runtime path can be considered.
+- Keep all provider callbacks, phone webhooks, SMS sending, recording, AI, persistence writes, live customer access, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, and live pilot runtime disabled unless a later build explicitly proves and enables a controlled path.
+- Confirm variables, services, application links, rollback, kill switch, monitoring, operator review, help documentation, and production proof remain complete and redacted.
 - Require final production proof before any pilot runtime behavior can be considered.
