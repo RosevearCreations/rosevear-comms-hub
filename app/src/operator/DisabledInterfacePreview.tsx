@@ -8,7 +8,7 @@ const previewModules = [
   {
     title: 'Unified inbox',
     body: 'Brand-aware conversations for Rosie Dazzlers and Devil n Dove with contact, intake, and task context in one static review surface.',
-    status: 'Ready for static preview'
+    status: 'Ready for review'
   },
   {
     title: 'Operator command centre',
@@ -16,9 +16,9 @@ const previewModules = [
     status: 'Locked'
   },
   {
-    title: 'GitHub Pages path',
-    body: `Static build uses the ${viteBasePath} base path and can publish to the planned GitHub Pages URL after the repo Pages source and enablement variable are set.`,
-    status: 'Gated workflow added'
+    title: 'GitHub Pages verification',
+    body: `QL-073 verifies whether the gated Pages workflow deploys the static app with the ${viteBasePath} base path or safely skips when the enablement variable is absent.`,
+    status: 'Verification active'
   },
   {
     title: 'Provider boundary',
@@ -27,12 +27,13 @@ const previewModules = [
   }
 ];
 
-const enablementGateSteps = [
-  'GitHub Pages workflow exists but is gated by ENABLE_GITHUB_PAGES_DISABLED_PREVIEW=true.',
-  'Repository Pages source must be set to GitHub Actions before expecting the public URL to work.',
-  'The static build uses npm run pages:build and Vite base path /rosevear-comms-hub/.',
-  'Browser env is limited to public values only; live provider and service-role secrets are never exposed.',
-  'SMS, calls, callbacks, recording, AI send, persistence writes, archive writes, retention writes, and live pilot runtime remain disabled.'
+const verificationSteps = [
+  'Confirm the normal app CI still passes install, check, and build on main.',
+  'Confirm the GitHub Pages disabled preview workflow either deploys when ENABLE_GITHUB_PAGES_DISABLED_PREVIEW=true or skips safely when the variable is absent.',
+  'Confirm the target public review URL remains https://rosevearcreations.github.io/rosevear-comms-hub/.',
+  'Confirm the static build uses npm run pages:build and Vite base path /rosevear-comms-hub/.',
+  'Confirm browser output remains static and does not contain provider credentials, service-role keys, callback tokens, live phone data, live message bodies, transcripts, recordings, or live customer data.',
+  'Confirm SMS, calls, callbacks, recording, AI send, persistence writes, archive writes, retention writes, and live pilot runtime remain disabled.'
 ];
 
 const disabledActions = [
@@ -54,17 +55,17 @@ function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-072</small>
+        <small>QL-073</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-072 GitHub Pages disabled preview deployment enablement gate">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-073 GitHub Pages disabled preview deployment verification">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-072 GitHub Pages disabled preview deployment enablement gate</p>
-              <h2>Quo-lite static review link is workflow-ready</h2>
+              <p className="interface-preview-eyebrow">QL-073 GitHub Pages disabled preview deployment verification</p>
+              <h2>Quo-lite static review link verification</h2>
               <p>
-                This build adds the gated GitHub Pages deployment workflow for the disabled preview. It remains static, browser-safe, and locked until the repository Pages source and enablement variable are set.
+                This build verifies the disabled GitHub Pages preview deployment path while keeping the app static, browser-safe, and locked. It proves whether the Pages workflow deploys or safely skips based on the repository variable.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -73,23 +74,23 @@ function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            Static disabled preview only. Phone/SMS providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, and live pilot runtime remain OFF.
+            Verification only. Phone/SMS providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, and live pilot runtime remain OFF.
           </div>
 
           <div className="interface-preview-review-grid">
             <article className="interface-preview-link-card">
-              <p className="interface-preview-eyebrow">Target public review URL</p>
+              <p className="interface-preview-eyebrow">Public review URL under verification</p>
               <h3>GitHub Pages disabled preview</h3>
               <code className="interface-preview-link">{targetPreviewUrl}</code>
               <p>
-                The workflow is now in code, but the URL only becomes live after GitHub Pages is set to GitHub Actions and the ENABLE_GITHUB_PAGES_DISABLED_PREVIEW Actions variable is set to true.
+                QL-073 verifies this URL after the workflow runs. A successful Pages deployment requires GitHub Pages Source = GitHub Actions and ENABLE_GITHUB_PAGES_DISABLED_PREVIEW=true.
               </p>
             </article>
             <article className="interface-preview-card interface-preview-next-step">
-              <p className="interface-preview-eyebrow">QL-072 decision</p>
-              <h3>Deployment workflow added behind a safety gate</h3>
+              <p className="interface-preview-eyebrow">QL-073 decision</p>
+              <h3>Deployment path verification, not live feature enablement</h3>
               <p>
-                The repository can now produce a static disabled preview without Vercel, Cloudflare Pages, provider secrets, callbacks, or live runtime behavior.
+                The verification proves the static preview path without enabling provider callbacks, SMS, calls, AI sends, persistence writes, or live pilot behavior.
               </p>
             </article>
           </div>
@@ -107,8 +108,8 @@ function DisabledInterfacePreview() {
               </button>
               <div className="interface-preview-safe-card">
                 <strong>Deployment status</strong>
-                <span>GitHub Pages gated</span>
-                <small>Static workflow added; live controls locked</small>
+                <span>Pages verification</span>
+                <small>Static workflow checked; live controls locked</small>
               </div>
             </aside>
 
@@ -118,7 +119,7 @@ function DisabledInterfacePreview() {
                   <p className="interface-preview-eyebrow">Operator queue</p>
                   <h3>Today’s communication cockpit</h3>
                 </div>
-                <span>Static / disabled / Pages-gated</span>
+                <span>Static / disabled / verifying Pages</span>
               </div>
 
               <div className="interface-preview-grid">
@@ -177,9 +178,9 @@ function DisabledInterfacePreview() {
 
           <div className="interface-preview-columns">
             <article className="interface-preview-card interface-preview-wide-card">
-              <h3>QL-072 enablement checklist</h3>
+              <h3>QL-073 verification checklist</h3>
               <ol>
-                {enablementGateSteps.map((step) => (
+                {verificationSteps.map((step) => (
                   <li key={step}>{step}</li>
                 ))}
               </ol>
