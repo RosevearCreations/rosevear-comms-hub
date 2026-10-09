@@ -64,32 +64,36 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-057 — Phone/SMS Controlled Live Enablement Live-Pilot Prerequisite Gap Evidence Closure Gate — complete.
 - QL-058 — Phone/SMS Controlled Live Enablement Live-Pilot Prerequisite Final Readiness Review — complete.
 - QL-059 — Phone/SMS Controlled Live Enablement Live-Pilot Explicit Go/No-Go Decision Gate — complete.
+- QL-060 — Phone/SMS Controlled Live Enablement Live-Pilot Controlled Activation Planning — complete.
 
-## QL-060 — Phone/SMS Controlled Live Enablement Live-Pilot Controlled Activation Planning
+## QL-061 — Phone/SMS Controlled Live Enablement Live-Pilot Controlled Activation Plan Review
 
 Status: complete.
 
 Result:
 
-- Added controlled activation planning helper at `api/deployment/phoneSmsControlledLiveEnablementLivePilotControlledActivationPlanning.ts`.
-- Added controlled activation planning fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-controlled-activation-planning.example.json`.
-- Added source-of-truth doc at `docs/73_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_CONTROLLED_ACTIVATION_PLANNING.md`.
-- Added build record, remote-operator checklist, ops checklist, and telephony controlled activation planning notes.
-- Added decision for `approve_controlled_live_pilot_activation_plan_review`.
-- Kept approval limited to QL-061 controlled activation plan review only; QL-060 does not grant live enablement, execute runtime verification, start a live pilot, connect a provider, enable provider delivery, attach a live number, register callbacks, or write persistence.
-- Planned manual activation boundary, environment variable plan, provider account step plan, provider live-number attachment plan, callback registration plan, SMS consent enforcement plan, STOP/START/HELP enforcement plan, call-recording notice plan, operator access plan, rollback and kill-switch plan, rate-limit and replay-control plan, monitoring and alerting plan, audit and redaction plan, customer-data boundary plan, production verification plan, help/manual-intervention plan, and QL-061 plan-review readiness.
-- Required each activation planning item to confirm owner review, planning-only scope, plan-review-only next step, manual intervention steps, variable list, service links, application links, rollback, kill switch, rate limits, replay protection, monitoring, operator checklist, synthetic evidence only, redacted evidence only, live runtime blocked, provider delivery blocked, persistence writes blocked, and `safeToPersist: false`.
+- Added controlled activation plan review helper at `api/deployment/phoneSmsControlledLiveEnablementLivePilotControlledActivationPlanReview.ts`.
+- Added controlled activation plan review fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-controlled-activation-plan-review.example.json`.
+- Added source-of-truth doc at `docs/74_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_CONTROLLED_ACTIVATION_PLAN_REVIEW.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony controlled activation plan review notes.
+- Added decision for `approve_disabled_operator_console_scaffold`.
+- Answered the interface timing question: the app already has a general admin interface and help overlay; the first phone/SMS-specific interactive surface should be QL-062 as a disabled operator console scaffold.
+- Kept QL-062 limited to readiness display, manual checklist review, variables/service/application link visibility, disabled controls, and synthetic/redacted operator notes.
+- Kept live enablement, runtime verification, live pilot start, provider connection, provider delivery, provider callback registration, live number attachment, and persistence blocked.
+- Required review of owner decision and scope, manual activation boundary, variables plan, services plan, application links plan, provider account step, live-number attachment step, callback registration step, rollback and kill switch, rate limit and replay control, monitoring and alerting, operator review and help, audit and redaction, customer boundary, production verification, and disabled operator console scaffold need.
+- Required each item to remain review-only, controlled-activation-plan scoped, disabled-console-only, synthetic, redacted, non-persistable, no provider connection, no live-number attachment, no callback registration, no provider delivery, no runtime execution, no persistence writes, and no live customer data.
 - Kept provider webhooks unconfigured.
 - Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, and live pilot runtime disabled.
 - Did not add a Supabase migration.
 - Did not connect a provider account.
 - Did not enable any provider callback route.
 
-## QL-061 — Phone/SMS Controlled Live Enablement Live-Pilot Controlled Activation Plan Review
+## QL-062 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Scaffold
 
 Goal:
 
-- Review the QL-060 controlled activation plan before any implementation or runtime path can be considered.
-- Keep all provider callbacks, phone webhooks, SMS sending, recording, AI, persistence writes, live customer access, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, and live pilot runtime disabled unless a later build explicitly proves and enables a controlled path.
-- Confirm variables, services, application links, rollback, kill switch, monitoring, operator review, help documentation, and production proof remain complete and redacted.
+- Add the first phone/SMS-specific interactive surface as a disabled operator console scaffold.
+- Show readiness state, safety locks, manual activation checklist, variables list without secret values, service/application links, provider steps as disabled checklist items, and synthetic/redacted operator notes.
+- Keep all controls disabled unless later builds explicitly prove and enable a controlled path.
+- Do not connect providers, attach live numbers, register callbacks, send SMS, record calls, enable AI drafts, write persistence, read/write live customer data, execute runtime verification, write archives, apply retention writes, or start live pilot runtime.
 - Require final production proof before any pilot runtime behavior can be considered.
