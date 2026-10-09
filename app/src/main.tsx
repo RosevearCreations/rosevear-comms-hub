@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { AdminSessionGate } from './auth/AdminSessionGate';
+import { SiteHelpSystem } from './help/SiteHelpSystem';
 import './styles.css';
 
 const rootElement = document.getElementById('root');
@@ -14,6 +15,7 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <AdminSessionGate>
       <App />
+      <SiteHelpSystem />
     </AdminSessionGate>
   </React.StrictMode>
 );
