@@ -72,24 +72,27 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-065 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Evidence Review — complete.
 - QL-066 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Evidence Closure Gate — complete.
 - QL-067 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Post-Closure Readiness Review — complete.
+- QL-068 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Pathway Decision Gate — complete.
 
-## QL-068 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Pathway Decision Gate
+## QL-069 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Implementation Plan
 
 Status: complete.
 
 Result:
 
-- Added disabled interface pathway decision helper at `api/deployment/phoneSmsControlledLiveEnablementLivePilotDisabledInterfacePathwayDecisionGate.ts`.
-- Added disabled interface pathway decision contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-disabled-interface-pathway-decision-gate.example.json`.
-- Updated the disabled operator console to show QL-068 stage, pathway options, browser-safe variable names, server-only secret names, decision blocks, and disabled future actions.
-- Added source-of-truth doc at `docs/81_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_DISABLED_INTERFACE_PATHWAY_DECISION_GATE.md`.
-- Added build record, remote operator checklist, ops checklist, and telephony decision note.
-- Confirmed QL-068 remains decision-gate-only and approves only a later disabled interface implementation plan.
-- Selected GitHub Pages only as a future disabled static interface candidate; no GitHub Pages workflow or deployment was added.
-- Reserved Supabase Edge Functions only as a later backend boundary for provider secrets, callback verification, webhook handling, and service-role work; no Supabase migration or Edge Function was added.
-- Rejected Vercel and Cloudflare Pages for this rough-sketch phase because current account/project limits should not be expanded.
-- Confirmed browser variables must remain limited to public Supabase URL and anon key in a later deployment build.
-- Confirmed server-only secrets must stay out of browser code.
+- Added a visible disabled interface preview component at `app/src/operator/DisabledInterfacePreview.tsx`.
+- Added preview styling at `app/src/operator/disabled-interface-preview.css`.
+- Mounted the preview in `app/src/main.tsx` beside the site help system and disabled operator console.
+- Added disabled interface implementation-plan helper at `api/deployment/phoneSmsControlledLiveEnablementLivePilotDisabledInterfaceImplementationPlan.ts`.
+- Added disabled interface implementation-plan contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-disabled-interface-implementation-plan.example.json`.
+- Added source-of-truth doc at `docs/82_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_DISABLED_INTERFACE_IMPLEMENTATION_PLAN.md`.
+- Added build record, remote operator checklist, ops checklist, and telephony implementation-plan note.
+- Confirmed QL-069 remains visible-preview-only and approves only a later disabled interface preview review.
+- Confirmed the visible preview shows the intended Quo-lite direction: brand switcher, inbox queue, customer/contact summary, conversation timeline, disabled Phone/SMS controls, follow-up task board, safe deployment status, and manual readiness checklist.
+- Confirmed GitHub Pages remains a future static UI candidate only; no GitHub Pages workflow or deployment was added.
+- Confirmed Supabase Edge Functions remain a later server-only boundary only; no Supabase migration or Edge Function was added.
+- Confirmed browser variables remain limited to the later planned `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` boundary.
+- Confirmed service-role keys, provider credentials, callback tokens, live phone numbers, live message bodies, transcripts, recordings, and live customer data remain out of browser code.
 - Kept provider callbacks, live phone webhooks, SMS sending, call runtime, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, hosting deployment, and live pilot runtime disabled.
 - Did not add Vercel, Cloudflare Pages, or GitHub Pages deployment.
 - Did not add a Supabase migration.
@@ -97,13 +100,14 @@ Result:
 - Did not connect a provider account.
 - Did not enable any provider callback route.
 
-## QL-069 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Implementation Plan
+## QL-070 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Preview Review
 
 Goal:
 
-- Produce the disabled interface implementation plan after the QL-068 pathway decision gate.
-- Plan, but do not yet deploy, the GitHub Pages static UI path for the disabled operator interface.
-- Plan the browser variable boundary for `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` only.
-- Plan the server-only Supabase Edge Function boundary for later provider secrets, service-role work, callback verification, and webhook handling.
-- Confirm no service-role key, provider credential, callback token, live phone number, message body, transcript, recording, or live customer data can be exposed to browser code.
-- Keep all provider callbacks, phone webhooks, SMS sending, call runtime, recording, AI, persistence writes, live customer access, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, hosting deployment, and live pilot runtime disabled unless a later build explicitly proves and enables a controlled path.
+- Review the visible disabled interface preview added in QL-069.
+- Confirm the preview is useful enough to validate direction without enabling any live path.
+- Confirm the preview remains static, disabled, browser-safe, and review-only.
+- Confirm the preview shows the intended operator direction for the brand switcher, inbox queue, customer/contact summary, conversation timeline, disabled Phone/SMS controls, follow-up task board, safe deployment status, and manual readiness checklist.
+- Confirm no GitHub Pages workflow or deployment has been added yet.
+- Confirm no Vercel, Cloudflare Pages, Supabase migration, Supabase Edge Function, provider account, callback route, webhook, live number, browser-held secret, persistence write, archive write, retention policy write, SMS send, call runtime, recording, AI send, or live pilot runtime has been added.
+- Decide whether the next safe step should be a GitHub Pages disabled preview deployment plan or more interface refinement inside the existing app.
