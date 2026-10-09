@@ -1,0 +1,97 @@
+{
+  "build": "QL-063",
+  "title": "Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Review",
+  "purpose": "Review the QL-062 disabled operator console scaffold before any console evidence intake or later enablement path can be considered.",
+  "scope": "disabled_operator_console_review_only",
+  "requestedDecision": "approve_disabled_operator_console_evidence_intake",
+  "approvedNextBuild": "QL-064-phone-sms-controlled-live-enablement-live-pilot-disabled-operator-console-evidence-intake",
+  "interfaceAccessReviewed": {
+    "currentInterface": "Existing Rosevear Comms Hub admin web app deployed from main.",
+    "consoleEntryPoint": "Floating Phone/SMS console — disabled button in the lower-right corner.",
+    "reviewConclusion": "Console is safe as a readiness-only surface and remains unsuitable for live traffic until later explicit builds prove and enable a controlled path."
+  },
+  "requiredPriorBuilds": [
+    "QL-034 through QL-062 must be complete before this review can pass."
+  ],
+  "reviewItems": [
+    "console_mount_review",
+    "floating_access_button_review",
+    "readiness_status_review",
+    "safety_lock_review",
+    "manual_activation_checklist_review",
+    "variables_without_secrets_review",
+    "service_application_links_review",
+    "disabled_future_action_buttons_review",
+    "synthetic_redacted_operator_notes_review",
+    "help_overlay_alignment_review",
+    "provider_connection_block_review",
+    "live_number_attachment_block_review",
+    "callback_registration_block_review",
+    "sms_sending_block_review",
+    "call_recording_block_review",
+    "ai_feature_block_review",
+    "persistence_and_customer_data_block_review",
+    "archive_retention_block_review",
+    "production_ci_proof_review",
+    "next_evidence_intake_readiness_review"
+  ],
+  "requiredItemAssertions": {
+    "reviewed": true,
+    "passed": true,
+    "reviewOnly": true,
+    "consoleVisibleFromAdmin": true,
+    "disabledConsoleOnly": true,
+    "noLiveEnablementApproval": true,
+    "noProviderConnection": true,
+    "noLiveNumberAttachment": true,
+    "noCallbackRegistration": true,
+    "noProviderDelivery": true,
+    "noSmsSending": true,
+    "noRuntimeExecution": true,
+    "noPersistenceWrites": true,
+    "noLiveCustomerData": true,
+    "noArchiveRetentionWrites": true,
+    "syntheticEvidenceOnly": true,
+    "redactedEvidenceOnly": true,
+    "safeToPersist": false
+  },
+  "forbiddenRuntimeState": {
+    "providerWebhookConfigured": false,
+    "providerCallbackAllowed": false,
+    "livePhoneWebhookAllowed": false,
+    "smsSendAllowed": false,
+    "callRecordingAllowed": false,
+    "aiDraftAllowed": false,
+    "aiAutoSendAllowed": false,
+    "persistenceWritesAllowed": false,
+    "liveCustomerReadAllowed": false,
+    "liveCustomerWriteAllowed": false,
+    "dryRunExecutionAllowed": false,
+    "providerDeliveryAllowed": false,
+    "archiveWritesAllowed": false,
+    "retentionPolicyWritesAllowed": false,
+    "providerAccountConnected": false,
+    "providerLiveNumberAttached": false,
+    "callbackRegistrationAllowed": false,
+    "livePilotRuntimeAllowed": false
+  },
+  "evidencePolicy": {
+    "allowedEvidenceLabelsPrefix": "synthetic-redacted-",
+    "forbiddenEvidence": [
+      "unredacted customer data",
+      "real phone numbers",
+      "provider credentials",
+      "provider callback payloads",
+      "live SMS payloads",
+      "call recordings",
+      "transcripts",
+      "live customer records",
+      "provider account screenshots with secrets"
+    ]
+  },
+  "productionVerification": [
+    "npm install",
+    "npm run check",
+    "npm run build"
+  ]
+}
