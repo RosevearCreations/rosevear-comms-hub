@@ -65,35 +65,36 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-058 — Phone/SMS Controlled Live Enablement Live-Pilot Prerequisite Final Readiness Review — complete.
 - QL-059 — Phone/SMS Controlled Live Enablement Live-Pilot Explicit Go/No-Go Decision Gate — complete.
 - QL-060 — Phone/SMS Controlled Live Enablement Live-Pilot Controlled Activation Planning — complete.
+- QL-061 — Phone/SMS Controlled Live Enablement Live-Pilot Controlled Activation Plan Review — complete.
 
-## QL-061 — Phone/SMS Controlled Live Enablement Live-Pilot Controlled Activation Plan Review
+## QL-062 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Scaffold
 
 Status: complete.
 
 Result:
 
-- Added controlled activation plan review helper at `api/deployment/phoneSmsControlledLiveEnablementLivePilotControlledActivationPlanReview.ts`.
-- Added controlled activation plan review fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-controlled-activation-plan-review.example.json`.
-- Added source-of-truth doc at `docs/74_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_CONTROLLED_ACTIVATION_PLAN_REVIEW.md`.
-- Added build record, remote-operator checklist, ops checklist, and telephony controlled activation plan review notes.
-- Added decision for `approve_disabled_operator_console_scaffold`.
-- Answered the interface timing question: the app already has a general admin interface and help overlay; the first phone/SMS-specific interactive surface should be QL-062 as a disabled operator console scaffold.
-- Kept QL-062 limited to readiness display, manual checklist review, variables/service/application link visibility, disabled controls, and synthetic/redacted operator notes.
-- Kept live enablement, runtime verification, live pilot start, provider connection, provider delivery, provider callback registration, live number attachment, and persistence blocked.
-- Required review of owner decision and scope, manual activation boundary, variables plan, services plan, application links plan, provider account step, live-number attachment step, callback registration step, rollback and kill switch, rate limit and replay control, monitoring and alerting, operator review and help, audit and redaction, customer boundary, production verification, and disabled operator console scaffold need.
-- Required each item to remain review-only, controlled-activation-plan scoped, disabled-console-only, synthetic, redacted, non-persistable, no provider connection, no live-number attachment, no callback registration, no provider delivery, no runtime execution, no persistence writes, and no live customer data.
-- Kept provider webhooks unconfigured.
-- Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, and live pilot runtime disabled.
+- Added disabled phone/SMS operator console at `app/src/operator/DisabledOperatorConsole.tsx`.
+- Added console styling at `app/src/operator/disabled-operator-console.css`.
+- Mounted the console in `app/src/main.tsx` beside the existing admin app and help system.
+- Added disabled operator console scaffold helper at `api/deployment/phoneSmsControlledLiveEnablementLivePilotDisabledOperatorConsoleScaffold.ts`.
+- Added disabled operator console scaffold fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-disabled-operator-console-scaffold.example.json`.
+- Added source-of-truth doc at `docs/75_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_DISABLED_OPERATOR_CONSOLE_SCAFFOLD.md`.
+- Added build record, remote-operator checklist, ops checklist, and telephony disabled operator console scaffold notes.
+- Added decision for `approve_disabled_operator_console_scaffold_review`.
+- Answered current interface access: use the existing Rosevear Comms Hub admin web app deployed from `main`; after QL-062, open the floating **Phone/SMS console — disabled** button in the lower-right corner.
+- Kept the console limited to readiness display, safety locks, manual checklist, variable/service/application-link guidance, synthetic/redacted operator notes, and disabled future action buttons.
+- Kept live enablement, runtime verification, live pilot start, provider connection, provider delivery, provider callback registration, live-number attachment, SMS sending, calling, recording, AI draft/auto-send, persistence writes, live customer reads/writes, archive writes, and retention writes blocked.
+- Required console items to remain present, disabled, review-only, synthetic, redacted, non-persistable, blocking live runtime, blocking provider delivery, and blocking persistence.
 - Did not add a Supabase migration.
 - Did not connect a provider account.
 - Did not enable any provider callback route.
 
-## QL-062 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Scaffold
+## QL-063 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Review
 
 Goal:
 
-- Add the first phone/SMS-specific interactive surface as a disabled operator console scaffold.
-- Show readiness state, safety locks, manual activation checklist, variables list without secret values, service/application links, provider steps as disabled checklist items, and synthetic/redacted operator notes.
-- Keep all controls disabled unless later builds explicitly prove and enable a controlled path.
-- Do not connect providers, attach live numbers, register callbacks, send SMS, record calls, enable AI drafts, write persistence, read/write live customer data, execute runtime verification, write archives, apply retention writes, or start live pilot runtime.
+- Review the QL-062 disabled operator console scaffold before any runtime-adjacent implementation can be considered.
+- Verify console access from the deployed admin app and confirm the floating phone/SMS console remains disabled/readiness-only.
+- Confirm disabled future action buttons cannot send SMS, call customers, connect providers, attach live numbers, register callbacks, write persistence, or access live customer data.
+- Keep all provider callbacks, phone webhooks, SMS sending, recording, AI, persistence writes, live customer access, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, and live pilot runtime disabled unless a later build explicitly proves and enables a controlled path.
 - Require final production proof before any pilot runtime behavior can be considered.
