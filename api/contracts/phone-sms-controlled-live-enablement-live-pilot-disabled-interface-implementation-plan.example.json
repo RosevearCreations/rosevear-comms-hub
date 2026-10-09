@@ -1,0 +1,85 @@
+{
+  "build": "QL-069",
+  "name": "Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Implementation Plan",
+  "requestedScope": "disabled_interface_implementation_plan_visible_preview_only",
+  "decision": "approve_disabled_interface_preview_review",
+  "visibleInterfacePreviewAdded": true,
+  "deploymentAdded": false,
+  "approvedNextBuild": "QL-070-phone-sms-controlled-live-enablement-live-pilot-disabled-interface-preview-review",
+  "pathway": {
+    "githubPagesStaticUiCandidate": true,
+    "githubPagesDeploymentAdded": false,
+    "vercelHostingAdded": false,
+    "cloudflarePagesHostingAdded": false,
+    "supabaseMigrationAdded": false,
+    "supabaseEdgeFunctionAdded": false
+  },
+  "visiblePreview": {
+    "mountedComponent": "app/src/operator/DisabledInterfacePreview.tsx",
+    "styleSheet": "app/src/operator/disabled-interface-preview.css",
+    "mountedIn": "app/src/main.tsx",
+    "operatorVisibleLabel": "Interface preview",
+    "staticOnly": true,
+    "disabledOnly": true,
+    "reviewOnly": true
+  },
+  "plannedRegions": [
+    "brand_switcher_preview",
+    "inbox_queue_preview",
+    "customer_contact_summary_preview",
+    "conversation_timeline_preview",
+    "disabled_phone_sms_controls_preview",
+    "follow_up_task_board_preview",
+    "safe_deployment_status_preview",
+    "manual_readiness_checklist_preview"
+  ],
+  "browserVariableBoundary": {
+    "allowedLater": [
+      "VITE_SUPABASE_URL",
+      "VITE_SUPABASE_ANON_KEY"
+    ],
+    "serviceRoleKeyAllowedInBrowser": false,
+    "providerCredentialAllowedInBrowser": false,
+    "callbackTokenAllowedInBrowser": false
+  },
+  "serverOnlyBoundary": {
+    "reservedForLaterSupabaseEdgeFunctions": true,
+    "secrets": [
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "PHONE_SMS_PROVIDER_API_KEY",
+      "PHONE_SMS_PROVIDER_API_SECRET",
+      "PHONE_SMS_WEBHOOK_SIGNING_SECRET",
+      "PHONE_SMS_CALLBACK_TOKEN"
+    ]
+  },
+  "runtimeBoundary": {
+    "providerWebhookConfigured": false,
+    "providerCallbackAllowed": false,
+    "livePhoneWebhookAllowed": false,
+    "smsSendAllowed": false,
+    "callRuntimeAllowed": false,
+    "callRecordingAllowed": false,
+    "aiDraftAllowed": false,
+    "aiAutoSendAllowed": false,
+    "persistenceWritesAllowed": false,
+    "liveCustomerReadAllowed": false,
+    "liveCustomerWriteAllowed": false,
+    "dryRunExecutionAllowed": false,
+    "providerDeliveryAllowed": false,
+    "archiveWritesAllowed": false,
+    "retentionPolicyWritesAllowed": false,
+    "providerAccountConnected": false,
+    "providerLiveNumberAttached": false,
+    "callbackRegistrationAllowed": false,
+    "livePilotRuntimeAllowed": false
+  },
+  "manualIntervention": {
+    "required": false,
+    "notes": [
+      "No GitHub Pages setup is required for QL-069.",
+      "No Vercel or Cloudflare Pages project is required for QL-069.",
+      "No Supabase migration or Edge Function is required for QL-069.",
+      "No provider credentials, callback routes, live numbers, browser-held secrets, persistence writes, archive writes, retention policy writes, SMS, calls, recordings, AI sends, or live pilot runtime paths are enabled."
+    ]
+  }
+}
