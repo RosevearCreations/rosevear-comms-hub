@@ -1,0 +1,94 @@
+{
+  "build": "QL-064",
+  "title": "Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Evidence Intake",
+  "purpose": "Collect synthetic/redacted evidence that the disabled operator console remains reachable, visible, reviewable, and fully disabled after QL-063 review.",
+  "scope": "disabled_operator_console_evidence_intake_only",
+  "requestedDecision": "approve_disabled_operator_console_evidence_review",
+  "approvedNextBuild": "QL-065-phone-sms-controlled-live-enablement-live-pilot-disabled-operator-console-evidence-review",
+  "evidencePolicy": {
+    "syntheticOnly": true,
+    "redactedOnly": true,
+    "containsSecretValues": false,
+    "containsLiveCustomerData": false,
+    "safeToPersist": false,
+    "ownerReviewRequired": true
+  },
+  "requiredEvidenceItems": [
+    "console_reachability_evidence",
+    "console_visibility_evidence",
+    "readiness_status_evidence",
+    "safety_lock_evidence",
+    "manual_activation_checklist_evidence",
+    "variable_name_evidence",
+    "service_application_link_evidence",
+    "disabled_future_action_state_evidence",
+    "synthetic_redacted_operator_note_evidence",
+    "help_overlay_alignment_evidence",
+    "provider_connection_block_evidence",
+    "live_number_attachment_block_evidence",
+    "callback_registration_block_evidence",
+    "sms_sending_block_evidence",
+    "call_recording_block_evidence",
+    "ai_feature_block_evidence",
+    "persistence_customer_data_block_evidence",
+    "archive_retention_block_evidence",
+    "production_ci_evidence",
+    "evidence_review_readiness_evidence"
+  ],
+  "nonSecretVariableNames": [
+    "PHONE_SMS_PROVIDER",
+    "PHONE_SMS_PROVIDER_ACCOUNT_ID",
+    "PHONE_SMS_PROVIDER_API_KEY",
+    "PHONE_SMS_PROVIDER_API_SECRET",
+    "PHONE_SMS_CALLBACK_BASE_URL",
+    "PHONE_SMS_WEBHOOK_SIGNING_SECRET",
+    "PHONE_SMS_LIVE_PILOT_ENABLED"
+  ],
+  "guidanceOnlyLinks": [
+    "Rosevear Comms Hub admin app",
+    "Provider dashboard placeholder",
+    "Callback URL planning note",
+    "STOP/START/HELP policy note",
+    "Recording-notice policy note",
+    "Rollback and kill-switch note"
+  ],
+  "requiredDisabledFlags": {
+    "providerWebhookConfigured": false,
+    "providerCallbackAllowed": false,
+    "livePhoneWebhookAllowed": false,
+    "smsSendAllowed": false,
+    "callRecordingAllowed": false,
+    "aiDraftAllowed": false,
+    "aiAutoSendAllowed": false,
+    "persistenceWritesAllowed": false,
+    "liveCustomerReadAllowed": false,
+    "liveCustomerWriteAllowed": false,
+    "dryRunExecutionAllowed": false,
+    "providerDeliveryAllowed": false,
+    "archiveWritesAllowed": false,
+    "retentionPolicyWritesAllowed": false,
+    "providerAccountConnected": false,
+    "providerLiveNumberAttached": false,
+    "callbackRegistrationAllowed": false,
+    "livePilotRuntimeAllowed": false
+  },
+  "manualProof": {
+    "adminConsoleButton": "Phone/SMS console — disabled",
+    "stageBadge": "QL-064 evidence intake only",
+    "runtimeBadge": "OFF",
+    "providerDeliveryBadge": "OFF",
+    "evidenceBadge": "Redacted",
+    "disabledButtons": [
+      "Send SMS disabled",
+      "Call customer disabled",
+      "Connect provider disabled",
+      "Attach live number disabled",
+      "Persist evidence disabled",
+      "Start live pilot disabled"
+    ]
+  },
+  "notes": [
+    "This fixture contains no provider secrets, live customer data, callback URLs with tokens, phone numbers, transcripts, or message bodies.",
+    "QL-064 does not create a Supabase migration and does not enable any live provider/runtime/persistence path."
+  ]
+}

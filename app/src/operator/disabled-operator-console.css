@@ -42,8 +42,8 @@
   position: absolute;
   right: 0;
   bottom: 58px;
-  width: min(780px, calc(100vw - 32px));
-  max-height: min(760px, calc(100vh - 96px));
+  width: min(860px, calc(100vw - 32px));
+  max-height: min(800px, calc(100vh - 96px));
   overflow: auto;
   background: #fff;
   color: #172033;
@@ -62,7 +62,8 @@
 
 .operator-console-header h2,
 .operator-console-card h3,
-.operator-console-note h4 {
+.operator-console-note h4,
+.operator-console-evidence-card h4 {
   margin: 0;
   color: #0f172a;
 }
@@ -97,7 +98,9 @@
 
 .operator-console-status-grid article,
 .operator-console-card,
-.operator-console-note {
+.operator-console-note,
+.operator-console-callout,
+.operator-console-evidence-card {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 18px;
@@ -106,7 +109,8 @@
 
 .operator-console-status-grid span,
 .operator-console-status-grid small,
-.operator-console-note p {
+.operator-console-note p,
+.operator-console-evidence-card p {
   color: #64748b;
 }
 
@@ -115,6 +119,12 @@
   color: #0f172a;
   font-size: 24px;
   margin: 4px 0;
+}
+
+.operator-console-callout {
+  margin: 0 0 14px;
+  color: #334155;
+  line-height: 1.5;
 }
 
 .operator-console-grid {
@@ -134,9 +144,50 @@
   line-height: 1.6;
 }
 
-.operator-console-note p {
+.operator-console-note p,
+.operator-console-evidence-card p {
   margin: 8px 0 0;
   line-height: 1.5;
+}
+
+.operator-console-evidence-section {
+  margin-top: 12px;
+}
+
+.operator-console-evidence-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.operator-console-evidence-card span {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.operator-console-pill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.operator-console-pill-list code {
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #0f172a;
+  padding: 6px 8px;
+  font-size: 12px;
 }
 
 .operator-console-disabled-actions {
@@ -166,7 +217,8 @@
 
   .operator-console-status-grid,
   .operator-console-grid,
-  .operator-console-grid.three {
+  .operator-console-grid.three,
+  .operator-console-evidence-list {
     grid-template-columns: 1fr;
   }
 }
