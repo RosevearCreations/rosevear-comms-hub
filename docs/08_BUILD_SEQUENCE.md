@@ -70,36 +70,37 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-063 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Review — complete.
 - QL-064 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Evidence Intake — complete.
 - QL-065 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Evidence Review — complete.
+- QL-066 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Evidence Closure Gate — complete.
 
-## QL-066 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Evidence Closure Gate
+## QL-067 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Post-Closure Readiness Review
 
 Status: complete.
 
 Result:
 
-- Added disabled operator console evidence closure-gate helper at `api/deployment/phoneSmsControlledLiveEnablementLivePilotDisabledOperatorConsoleEvidenceClosureGate.ts`.
-- Added evidence closure-gate contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-disabled-operator-console-evidence-closure-gate.example.json`.
-- Updated the disabled operator console to show QL-066 stage, closure-gate cards, variable-name-only closure, closure blocks, and disabled persistence/live-pilot actions.
-- Added source-of-truth doc at `docs/79_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_DISABLED_OPERATOR_CONSOLE_EVIDENCE_CLOSURE_GATE.md`.
-- Added build record, remote operator checklist, ops checklist, and telephony evidence closure-gate note.
-- Confirmed QL-066 remains evidence-closure-only and approves only a later disabled post-closure readiness review.
-- Confirmed closed evidence must be synthetic, redacted, review-only, closure-only, unsafe to persist, and free of secrets, callback tokens, live phone numbers, message bodies, transcripts, recordings, live customer data, enabled runtime evidence, archive writes, and retention policy writes.
+- Added disabled operator console post-closure readiness review helper at `api/deployment/phoneSmsControlledLiveEnablementLivePilotDisabledOperatorConsolePostClosureReadinessReview.ts`.
+- Added post-closure readiness review contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-disabled-operator-console-post-closure-readiness-review.example.json`.
+- Updated the disabled operator console to show QL-067 stage, readiness review cards, variable-name-only review, readiness blocks, and disabled future actions.
+- Added source-of-truth doc at `docs/80_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_DISABLED_OPERATOR_CONSOLE_POST_CLOSURE_READINESS_REVIEW.md`.
+- Added build record, remote operator checklist, ops checklist, and telephony post-closure readiness note.
+- Confirmed QL-067 remains post-closure-readiness-review-only and approves only a later disabled interface pathway decision gate.
+- Confirmed closed evidence remains synthetic, redacted, review-only, closure-only, unsafe to persist, and free of secrets, callback tokens, live phone numbers, message bodies, transcripts, recordings, live customer data, enabled runtime evidence, hosting changes, archive writes, and retention policy writes.
 - Confirmed variable handling remains name-only and does not capture secret values.
-- Confirmed rejected evidence categories remain blocked and visible in the disabled operator console.
-- Confirmed future action buttons remain disabled and cannot send SMS, call customers, connect providers, attach live numbers, persist closure, or start live pilot runtime.
+- Confirmed rejected evidence categories remain blocked after closure and visible in the disabled operator console.
+- Confirmed future action buttons remain disabled and cannot send SMS, call customers, connect providers, attach live numbers, add hosting, or start live pilot runtime.
 - Kept provider webhooks unconfigured.
 - Kept provider callbacks, live phone webhooks, SMS sending, call recording, AI drafts, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, and live pilot runtime disabled.
-- Did not add Vercel or Cloudflare Pages hosting.
+- Did not add Vercel, Cloudflare Pages, or GitHub Pages deployment.
 - Did not add a Supabase migration.
 - Did not connect a provider account.
 - Did not enable any provider callback route.
 
-## QL-067 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Operator Console Post-Closure Readiness Review
+## QL-068 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Pathway Decision Gate
 
 Goal:
 
-- Review the closed QL-066 disabled operator console evidence set before any later live-pilot behavior can be considered.
-- Confirm the closed evidence set remains synthetic, redacted, review-only, closure-only, unsafe to persist, free of secrets, and free of live customer data.
+- Decide the disabled interface pathway before any hosting or live-pilot behavior can be considered.
+- Compare GitHub Pages, Supabase-hosted backend functions, and existing no-Vercel/no-Cloudflare constraints without deploying or enabling anything.
+- Confirm the interface pathway does not expose service-role secrets, provider credentials, callback tokens, live customer data, or live phone/SMS runtime controls in the browser.
 - Confirm the operator console remains reachable, visible, reviewable, and fully disabled in production.
-- Confirm rejected evidence categories remain blocked after closure.
-- Confirm no Vercel, Cloudflare Pages, Supabase migration, provider account connection, callback route, provider webhook, live number attachment, SMS sending, call recording, AI sending, persistence write, archive write, retention policy write, or live-pilot runtime path was introduced.
+- Keep all provider callbacks, phone webhooks, SMS sending, recording, AI, persistence writes, live customer access, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, hosting deployment, and live pilot runtime disabled unless a later build explicitly proves and enables a controlled path.
