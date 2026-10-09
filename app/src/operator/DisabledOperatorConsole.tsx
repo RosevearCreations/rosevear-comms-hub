@@ -14,45 +14,45 @@ const safetyLocks = [
   'Live pilot runtime: disabled'
 ];
 
-const reviewSteps = [
-  'Confirm QL-064 evidence intake is present and complete before approving review closure.',
-  'Reject any item that contains secrets, credential values, callback tokens, phone numbers, message bodies, transcripts, recordings, or live customer data.',
+const closureSteps = [
+  'Confirm QL-065 evidence review is present, complete, and accepted only for disabled evidence closure.',
+  'Close only synthetic/redacted evidence labels; do not close any item that includes secret values, callback tokens, phone numbers, message bodies, transcripts, recordings, or live customer data.',
   'Confirm the disabled console remains reachable, visible, reviewable, and fully blocked from the admin interface.',
-  'Confirm variable handling remains name-only and guidance links contain no credentials or live callback targets.',
+  'Confirm every rejected evidence category remains rejected and cannot be promoted into a persisted artifact.',
   'Confirm every future action button remains disabled in production.',
   'Confirm provider, runtime, persistence, archive, retention, and live-pilot paths remain disabled.',
-  'Approve only the next disabled evidence closure gate; do not approve live pilot activation.'
+  'Approve only the next disabled post-closure readiness review; do not approve live pilot activation.'
 ];
 
-const evidenceReviewItems = [
+const closureGateItems = [
   {
-    title: 'Console reachability evidence',
-    body: 'Reviewed as synthetic/redacted proof that the console opens from the admin interface without enabling provider access.',
-    status: 'reviewed'
+    title: 'Reviewed evidence set',
+    body: 'Closed as synthetic/redacted review material only, with no live customer data and no secret values.',
+    status: 'closed'
   },
   {
-    title: 'Disabled action state evidence',
-    body: 'Reviewed as proof that SMS, call, provider connection, live-number, persistence, and live-pilot controls remain disabled.',
-    status: 'accepted'
+    title: 'Console disabled proof',
+    body: 'Closed as proof that the operator console remains reachable and fully disabled in production.',
+    status: 'verified'
   },
   {
-    title: 'Variable-name evidence',
-    body: 'Reviewed as name-only inventory with no values, no secret material, and no callback tokens.',
-    status: 'names-only'
+    title: 'Rejected evidence categories',
+    body: 'Closed with secrets, callback tokens, phone numbers, message bodies, transcripts, recordings, and live data still rejected.',
+    status: 'blocked'
   },
   {
-    title: 'Guidance-link evidence',
-    body: 'Reviewed as labels and routing notes only, with no provider credential links or live customer data.',
-    status: 'redacted'
-  },
-  {
-    title: 'Safety-lock evidence',
-    body: 'Reviewed as proof that callbacks, webhooks, recording, AI, persistence, archive, retention, and runtime are off.',
+    title: 'Disabled actions',
+    body: 'Closed with SMS, calls, provider connection, live-number attachment, persistence, and live pilot controls disabled.',
     status: 'locked'
   },
   {
-    title: 'Production proof evidence',
-    body: 'Reviewed as build/status proof only; no runtime activation, live traffic, or provider delivery is allowed.',
+    title: 'Runtime boundary',
+    body: 'Closed with provider callbacks, webhooks, AI, archive, retention, and runtime paths still off.',
+    status: 'off'
+  },
+  {
+    title: 'Production proof',
+    body: 'Closed with production build evidence only; no traffic, provider delivery, or runtime activation is allowed.',
     status: 'ci-only'
   }
 ];
@@ -67,26 +67,26 @@ const nonSecretVariableNames = [
   'PHONE_SMS_LIVE_PILOT_ENABLED'
 ];
 
-const rejectedEvidenceExamples = [
-  'Secret values or screenshots containing API keys',
-  'Live customer names, phone numbers, message bodies, transcripts, or recordings',
-  'Provider callback URLs containing tokens or live routing paths',
-  'Any screenshot proving an enabled send/call/connect/live-pilot button',
-  'Any persisted evidence artifact or archive-retention write'
+const closureBlocks = [
+  'No provider credential values may be closed as evidence.',
+  'No live customer names, phone numbers, message bodies, transcripts, or recordings may be closed as evidence.',
+  'No callback URL containing tokens or live routing paths may be closed as evidence.',
+  'No enabled SMS, call, provider, persistence, or live-pilot control may be accepted.',
+  'No archive, retention, or persistence write may run from this closure gate.'
 ];
 
 const operatorNotes = [
   {
-    title: 'Review result',
-    body: 'QL-065 accepts only synthetic/redacted disabled-console evidence and moves the sequence toward a disabled evidence closure gate.'
+    title: 'Closure result',
+    body: 'QL-066 closes the reviewed disabled-console evidence set without turning on any provider, webhook, messaging, recording, AI, persistence, archive, or live-pilot runtime.'
   },
   {
     title: 'Interface status',
-    body: 'The operator interface is present in the app, but this build does not add Vercel, Cloudflare Pages, provider runtime, or browser-held secrets.'
+    body: 'The operator interface remains available as a disabled console inside the app. This build does not add Vercel, Cloudflare Pages, provider runtime, or browser-held secrets.'
   },
   {
     title: 'Next safe stage',
-    body: 'QL-066 should close the reviewed evidence set and keep live-pilot activation blocked unless a later explicit build changes the boundary.'
+    body: 'QL-067 should perform a post-closure readiness review while preserving the disabled boundary unless a later explicit build changes it.'
   }
 ];
 
@@ -105,10 +105,10 @@ function DisabledOperatorConsole() {
         <div className="operator-console-panel" role="dialog" aria-modal="false" aria-label="Disabled phone and SMS operator console">
           <div className="operator-console-header">
             <div>
-              <p className="eyebrow">QL-065 disabled operator console evidence review</p>
-              <h2>Phone/SMS live-pilot evidence review</h2>
+              <p className="eyebrow">QL-066 disabled operator console evidence closure gate</p>
+              <h2>Phone/SMS live-pilot evidence closure gate</h2>
               <p>
-                This interface reviews the QL-064 synthetic/redacted evidence intake. It does not connect a provider, attach a live number, send SMS, record calls, inspect live customers, write persistence, or start live runtime.
+                This interface closes the QL-065 reviewed synthetic/redacted evidence set. It does not connect a provider, attach a live number, send SMS, record calls, inspect live customers, write persistence, or start live runtime.
               </p>
             </div>
             <button className="operator-console-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close disabled operator console">
@@ -119,8 +119,8 @@ function DisabledOperatorConsole() {
           <div className="operator-console-status-grid">
             <article>
               <span>Stage</span>
-              <strong>QL-065</strong>
-              <small>Evidence review only</small>
+              <strong>QL-066</strong>
+              <small>Evidence closure only</small>
             </article>
             <article>
               <span>Runtime</span>
@@ -133,14 +133,14 @@ function DisabledOperatorConsole() {
               <small>No outbound traffic</small>
             </article>
             <article>
-              <span>Review</span>
-              <strong>Safe</strong>
-              <small>Redacted evidence only</small>
+              <span>Closure</span>
+              <strong>Closed</strong>
+              <small>Redacted proof only</small>
             </article>
           </div>
 
           <div className="operator-console-callout">
-            <strong>Evidence review guardrail:</strong> approve only synthetic/redacted disabled-console evidence. Reject secrets, live data, provider callbacks, enabled buttons, persisted artifacts, and any runtime proof.
+            <strong>Evidence closure guardrail:</strong> close only synthetic/redacted disabled-console evidence. Keep secrets, live customer data, callback tokens, enabled buttons, persisted artifacts, and runtime proof rejected.
           </div>
 
           <div className="operator-console-grid">
@@ -154,9 +154,9 @@ function DisabledOperatorConsole() {
             </article>
 
             <article className="operator-console-card">
-              <h3>Manual review checklist</h3>
+              <h3>Manual closure checklist</h3>
               <ol>
-                {reviewSteps.map((step) => (
+                {closureSteps.map((step) => (
                   <li key={step}>{step}</li>
                 ))}
               </ol>
@@ -164,9 +164,9 @@ function DisabledOperatorConsole() {
           </div>
 
           <article className="operator-console-card operator-console-evidence-section">
-            <h3>QL-065 evidence review queue</h3>
+            <h3>QL-066 evidence closure gate</h3>
             <div className="operator-console-evidence-list">
-              {evidenceReviewItems.map((item) => (
+              {closureGateItems.map((item) => (
                 <div className="operator-console-evidence-card" key={item.title}>
                   <span>{item.status}</span>
                   <h4>{item.title}</h4>
@@ -178,7 +178,7 @@ function DisabledOperatorConsole() {
 
           <div className="operator-console-grid">
             <article className="operator-console-card">
-              <h3>Variable names reviewed only</h3>
+              <h3>Variable names closed only</h3>
               <div className="operator-console-pill-list">
                 {nonSecretVariableNames.map((name) => (
                   <code key={name}>{name}</code>
@@ -187,10 +187,10 @@ function DisabledOperatorConsole() {
             </article>
 
             <article className="operator-console-card">
-              <h3>Rejected evidence examples</h3>
+              <h3>Closure blocks</h3>
               <ul>
-                {rejectedEvidenceExamples.map((example) => (
-                  <li key={example}>{example}</li>
+                {closureBlocks.map((block) => (
+                  <li key={block}>{block}</li>
                 ))}
               </ul>
             </article>
@@ -219,7 +219,7 @@ function DisabledOperatorConsole() {
               Attach live number disabled
             </button>
             <button type="button" disabled>
-              Persist evidence disabled
+              Persist closure disabled
             </button>
             <button type="button" disabled>
               Start live pilot disabled
