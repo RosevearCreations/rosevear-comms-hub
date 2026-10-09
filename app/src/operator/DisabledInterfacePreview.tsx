@@ -5,7 +5,7 @@ const previewModules = [
   {
     title: 'Unified inbox',
     body: 'Brand-aware conversations for Rosie Dazzlers and Devil n Dove with contact, intake, and task context in one review surface.',
-    status: 'Reviewed useful'
+    status: 'Deployment planned'
   },
   {
     title: 'Operator command centre',
@@ -31,9 +31,18 @@ const reviewFindings = [
   'A real review link is the next useful step, but it must stay static and disabled.'
 ];
 
+const deploymentPlanSteps = [
+  'Use GitHub Pages as the static disabled preview host for the existing app build output.',
+  'Set GitHub Pages source to GitHub Actions before enabling the deployment workflow.',
+  'Add only public browser variables: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.',
+  'Keep service-role keys, provider credentials, callback tokens, live phone numbers, message bodies, transcripts, recordings, and live customer data out of browser code.',
+  'Build the app with the GitHub Pages base path /rosevear-comms-hub/.',
+  'Deploy only the static disabled preview; do not enable SMS, calls, callbacks, persistence, archive, retention, AI send, or live pilot runtime.'
+];
+
 const implementationSteps = [
-  'Keep this preview inside the existing app while the direction is reviewed.',
-  'Prepare GitHub Pages only as the next static disabled preview deployment plan; do not deploy in QL-070.',
+  'Keep this preview inside the existing app while the GitHub Pages deployment plan is reviewed.',
+  'Prepare GitHub Pages as the next static disabled preview deployment path; do not deploy in QL-071.',
   'Use only public browser variables later: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.',
   'Keep provider secrets, service-role work, callback verification, and webhook handling behind Supabase Edge Functions later.',
   'Do not expose live phone numbers, customer message bodies, transcripts, recordings, callback tokens, or provider credentials in browser code.',
@@ -72,17 +81,17 @@ function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-070</small>
+        <small>QL-071</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-070 disabled interface preview review">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-071 GitHub Pages disabled preview deployment plan">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-070 disabled interface preview review</p>
-              <h2>Quo-lite operator interface direction</h2>
+              <p className="interface-preview-eyebrow">QL-071 GitHub Pages disabled preview deployment plan</p>
+              <h2>Quo-lite operator interface review link path</h2>
               <p>
-                This is the reviewed static preview direction: a combined communications dashboard with disabled Phone/SMS controls, brand context, customer timeline, and safe deployment boundaries.
+                This build plans the static GitHub Pages preview path for the reviewed interface while keeping every Phone/SMS, provider, persistence, AI, archive, retention, and live-pilot runtime path disabled.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -91,23 +100,23 @@ function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            Preview review only. No GitHub Pages deployment, no provider connection, no callback route, no SMS, no calls, no recording, no AI send, no persistence writes, and no live pilot runtime are enabled in QL-070.
+            Deployment plan only. No GitHub Pages workflow, no Pages deployment, no provider connection, no callback route, no SMS, no calls, no recording, no AI send, no persistence writes, and no live pilot runtime are enabled in QL-071.
           </div>
 
           <div className="interface-preview-review-grid">
             <article className="interface-preview-link-card">
-              <p className="interface-preview-eyebrow">Future review link</p>
-              <h3>GitHub Pages candidate</h3>
+              <p className="interface-preview-eyebrow">Planned public review URL</p>
+              <h3>GitHub Pages disabled preview</h3>
               <code className="interface-preview-link">{futurePreviewUrl}</code>
               <p>
-                This is the planned static preview URL, but QL-070 confirms it is not live yet. The next safe build should add a GitHub Pages disabled preview deployment plan.
+                QL-071 confirms this as the target static review URL. It remains not live until a later deployment enablement build adds the GitHub Pages workflow and the repository Pages setting is switched to GitHub Actions.
               </p>
             </article>
             <article className="interface-preview-card interface-preview-next-step">
-              <p className="interface-preview-eyebrow">QL-070 decision</p>
-              <h3>Direction accepted for next deployment planning</h3>
+              <p className="interface-preview-eyebrow">QL-071 decision</p>
+              <h3>Deployment path planned, not enabled</h3>
               <p>
-                The visible interface is useful for review. The next step should be a GitHub Pages static preview deployment plan with browser-safe variables only.
+                The next safe build should enable a static GitHub Pages disabled preview using only browser-safe variables and no live Phone/SMS runtime.
               </p>
             </article>
           </div>
@@ -125,8 +134,8 @@ function DisabledInterfacePreview() {
               </button>
               <div className="interface-preview-safe-card">
                 <strong>Deployment path</strong>
-                <span>GitHub Pages candidate</span>
-                <small>Reviewed in QL-070; still not deployed</small>
+                <span>GitHub Pages planned</span>
+                <small>QL-071 plan only; still not deployed</small>
               </div>
             </aside>
 
@@ -136,7 +145,7 @@ function DisabledInterfacePreview() {
                   <p className="interface-preview-eyebrow">Operator queue</p>
                   <h3>Today’s communication cockpit</h3>
                 </div>
-                <span>Static / disabled / reviewed</span>
+                <span>Static / disabled / deployment planned</span>
               </div>
 
               <div className="interface-preview-grid">
@@ -195,7 +204,7 @@ function DisabledInterfacePreview() {
 
           <div className="interface-preview-columns">
             <article className="interface-preview-card">
-              <h3>QL-070 review findings</h3>
+              <h3>QL-070 review findings carried forward</h3>
               <ol>
                 {reviewFindings.map((finding) => (
                   <li key={finding}>{finding}</li>
@@ -203,7 +212,15 @@ function DisabledInterfacePreview() {
               </ol>
             </article>
             <article className="interface-preview-card">
-              <h3>Interface regions reviewed</h3>
+              <h3>QL-071 deployment plan</h3>
+              <ol>
+                {deploymentPlanSteps.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ol>
+            </article>
+            <article className="interface-preview-card">
+              <h3>Interface regions planned for static preview</h3>
               <div className="interface-preview-pill-list">
                 {interfaceRegions.map((region) => (
                   <span key={region}>{region}</span>

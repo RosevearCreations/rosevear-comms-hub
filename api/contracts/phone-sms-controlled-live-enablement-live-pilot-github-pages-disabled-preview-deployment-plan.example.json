@@ -1,0 +1,88 @@
+{
+  "build": "QL-071",
+  "title": "Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Plan",
+  "purpose": "Plan the static GitHub Pages disabled preview deployment path without enabling deployment or live Phone/SMS runtime.",
+  "scope": "github_pages_disabled_preview_deployment_plan_only",
+  "requestedDecision": "approve_github_pages_disabled_preview_deployment_enablement_gate",
+  "approvedNextBuild": "QL-072-phone-sms-controlled-live-enablement-live-pilot-github-pages-disabled-preview-deployment-enablement-gate",
+  "targetPublicUrl": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+  "plannedViteBasePath": "/rosevear-comms-hub/",
+  "deploymentState": {
+    "githubPagesWorkflowAdded": false,
+    "githubPagesDeploymentAdded": false,
+    "githubPagesSourceChanged": false,
+    "vercelHostingAdded": false,
+    "cloudflarePagesHostingAdded": false
+  },
+  "allowedBrowserVariables": [
+    "VITE_SUPABASE_URL",
+    "VITE_SUPABASE_ANON_KEY"
+  ],
+  "serverOnlySecrets": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "PHONE_SMS_PROVIDER_API_KEY",
+    "PHONE_SMS_PROVIDER_API_SECRET",
+    "PHONE_SMS_WEBHOOK_SIGNING_SECRET",
+    "PHONE_SMS_CALLBACK_TOKEN"
+  ],
+  "forbiddenBrowserEvidence": [
+    "service-role-key",
+    "provider-credential",
+    "callback-token",
+    "live-phone-number",
+    "live-message-body",
+    "transcript",
+    "recording",
+    "live-customer-data"
+  ],
+  "requiredPlanItems": [
+    "target_public_url_confirmed",
+    "github_pages_source_setting_planned",
+    "github_actions_workflow_planned_not_enabled",
+    "vite_base_path_planned",
+    "static_build_output_planned",
+    "browser_variable_boundary_planned",
+    "server_only_secret_boundary_planned",
+    "provider_runtime_disabled",
+    "phone_sms_runtime_disabled",
+    "persistence_runtime_disabled",
+    "archive_retention_runtime_disabled",
+    "manual_setup_steps_documented",
+    "next_enablement_gate_defined"
+  ],
+  "manualSetupSteps": [
+    "GitHub repository: RosevearCreations/rosevear-comms-hub.",
+    "Open Settings > Pages.",
+    "Set Build and deployment Source to GitHub Actions when the later enablement build adds the workflow.",
+    "Open Settings > Secrets and variables > Actions > Variables.",
+    "Add VITE_SUPABASE_URL only if the static preview needs the public Supabase URL.",
+    "Add VITE_SUPABASE_ANON_KEY only if the static preview needs the public anon key.",
+    "Do not add SUPABASE_SERVICE_ROLE_KEY, provider credentials, webhook signing secrets, callback tokens, live phone numbers, transcripts, recordings, or live customer data to browser variables.",
+    "After the later enablement build deploys, review https://rosevearcreations.github.io/rosevear-comms-hub/ as a static disabled preview only."
+  ],
+  "disabledRuntimeBoundary": {
+    "providerCallbacks": false,
+    "livePhoneWebhooks": false,
+    "smsSending": false,
+    "callRuntime": false,
+    "callRecording": false,
+    "aiDrafts": false,
+    "aiAutoSend": false,
+    "persistenceWrites": false,
+    "liveCustomerReads": false,
+    "liveCustomerWrites": false,
+    "dryRunExecution": false,
+    "providerDelivery": false,
+    "archiveWrites": false,
+    "retentionPolicyWrites": false,
+    "providerAccountConnection": false,
+    "providerLiveNumberAttachment": false,
+    "callbackRegistration": false,
+    "livePilotRuntime": false
+  },
+  "result": {
+    "safeToPlan": true,
+    "safeToDeployInThisBuild": false,
+    "approvedForNextEnablementGate": true
+  }
+}
