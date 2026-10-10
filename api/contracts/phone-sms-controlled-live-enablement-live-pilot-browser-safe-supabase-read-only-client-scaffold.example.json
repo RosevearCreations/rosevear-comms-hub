@@ -1,0 +1,47 @@
+{
+  "buildId": "QL-090",
+  "name": "Public Disabled Preview Browser-Safe Supabase Read-Only Client Scaffold",
+  "supabase": {
+    "expectedProjectUrl": "https://gxujcwpktaickcgzyvnu.supabase.co",
+    "clientWrapperAdded": true,
+    "anonKeyOnly": true,
+    "explicitEnableFlag": "VITE_QL_ENABLE_SUPABASE_READS=true",
+    "fallbackWhenMissingEnv": true,
+    "unexpectedProjectBlocked": true
+  },
+  "allowedBrowserSources": [
+    "public.ql_public_synthetic_conversations",
+    "public.ql_public_system_status"
+  ],
+  "blockedBrowserSources": [
+    "contacts",
+    "conversations",
+    "messages",
+    "phone_calls",
+    "sms_messages",
+    "provider_payloads",
+    "consent_logs",
+    "app_admins",
+    "audit_events",
+    "archives",
+    "retention_records"
+  ],
+  "runtimeBoundary": {
+    "writesEnabled": false,
+    "liveCustomerReadsEnabled": false,
+    "providerPayloadReadsEnabled": false,
+    "phoneSmsRuntimeEnabled": false,
+    "archiveWritesEnabled": false,
+    "retentionWritesEnabled": false,
+    "aiSendEnabled": false,
+    "livePilotRuntimeEnabled": false
+  },
+  "fallbacks": [
+    "missing-env-keeps-local-synthetic-samples",
+    "read-disabled-flag-keeps-local-synthetic-samples",
+    "unexpected-project-url-blocks-client",
+    "failed-read-keeps-local-synthetic-samples",
+    "unexpected-payload-rejected"
+  ],
+  "nextBuild": "QL-091-public-disabled-preview-browser-safe-supabase-read-only-client-review"
+}

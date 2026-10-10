@@ -73,11 +73,28 @@ Result:
 
 ## QL-090 — Public Disabled Preview Browser-Safe Supabase Read-Only Client Scaffold
 
+Status: complete.
+
+Result:
+
+- Added `app/src/integrations/supabaseReadOnlyClient.ts` as the browser-safe Supabase read-only scaffold.
+- Added env typing for `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and `VITE_QL_ENABLE_SUPABASE_READS`.
+- Required the expected project URL `https://gxujcwpktaickcgzyvnu.supabase.co` before creating any browser client.
+- Required the explicit read-enable flag `VITE_QL_ENABLE_SUPABASE_READS=true` before creating the anon-key client.
+- Added read functions limited to `public.ql_public_synthetic_conversations` and `public.ql_public_system_status`.
+- Added Supabase migration `20261010205200_ql090_public_read_only_views.sql` for synthetic public read-only views.
+- Updated the floating public disabled preview to show QL-090 scaffold status, env gating, allowed sources, blocked sources, and fallback rules.
+- Added QL-090 readiness guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotBrowserSafeSupabaseReadOnlyClientScaffold.ts`.
+- Added QL-090 contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-browser-safe-supabase-read-only-client-scaffold.example.json`.
+- Added source documentation, build record, ops checklist, remote-operator note, and telephony boundary note.
+- Kept provider callbacks, live phone webhooks, SMS sending, call runtime, call recording, AI auto-send, live customer reads/writes, provider delivery, archive writes, retention writes, provider account connection, provider live-number attachment, callback registration, and live pilot runtime disabled.
+
+## QL-091 — Public Disabled Preview Browser-Safe Supabase Read-Only Client Review
+
 Goal:
 
-- Scaffold a browser-safe Supabase read-only client without enabling any mutation path.
-- Use public anon-key boundaries only.
-- Read only from synthetic public-safe view/function outputs approved by QL-089.
-- Keep hard-coded local samples as the default fallback when env variables are missing, reads fail, or payloads are unexpected.
-- Keep live customer data, provider payloads, SMS/call events, archives, retention records, and live pilot runtime out of scope.
+- Review the QL-090 read-only client scaffold behavior in the public disabled preview.
+- Confirm missing-env and disabled-read-flag fallback messaging is clear.
+- Confirm allowed read targets remain synthetic public views only.
+- Confirm unexpected project URLs, live/customer/provider/admin/archive/retention sources, writes, and live pilot runtime remain blocked.
 - Verify App CI, Supabase Preview, Cloudflare Worker build, and any public preview deployment checks before promotion.
