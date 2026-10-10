@@ -60,13 +60,12 @@
 .interface-preview-topline h3,
 .interface-preview-card h3,
 .interface-preview-card h4,
-.interface-preview-module h4,
 .interface-preview-link-card h3 {
   margin: 0;
 }
 
 .interface-preview-header p {
-  max-width: 820px;
+  max-width: 880px;
   color: #dbeafe;
   line-height: 1.55;
 }
@@ -100,25 +99,45 @@
   font-weight: 800;
 }
 
-.interface-preview-review-grid {
+.interface-preview-review-grid,
+.interface-preview-shell,
+.interface-preview-grid,
+.interface-preview-detail-grid,
+.interface-preview-columns,
+.interface-preview-help-grid {
   display: grid;
-  grid-template-columns: minmax(260px, 1.2fr) minmax(260px, 0.8fr);
   gap: 16px;
+}
+
+.interface-preview-review-grid {
+  grid-template-columns: minmax(260px, 1.2fr) minmax(260px, 0.8fr);
   margin-bottom: 18px;
+}
+
+.interface-preview-link-card,
+.interface-preview-card,
+.interface-preview-sidebar,
+.interface-preview-workspace,
+.interface-preview-help-card {
+  background: #fff;
+  border: 1px solid #dbe3ee;
+  border-radius: 20px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
 }
 
 .interface-preview-link-card {
   display: grid;
   gap: 10px;
   background: #eef6ff;
-  border: 1px solid #bfdbfe;
-  border-radius: 20px;
+  border-color: #bfdbfe;
   padding: 18px;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
 }
 
 .interface-preview-link-card p,
-.interface-preview-next-step p {
+.interface-preview-next-step p,
+.interface-preview-interactions p,
+.interface-preview-control-note,
+.interface-preview-help-card p {
   color: #475569;
   line-height: 1.55;
   margin: 0;
@@ -141,23 +160,15 @@
 }
 
 .interface-preview-shell {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 18px;
+  grid-template-columns: 280px 1fr;
   background: #e2e8f0;
   border: 1px solid #cbd5e1;
   border-radius: 24px;
   padding: 18px;
 }
 
-.interface-preview-sidebar,
-.interface-preview-workspace,
-.interface-preview-card,
-.interface-preview-module {
-  background: #fff;
-  border: 1px solid #dbe3ee;
-  border-radius: 20px;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+.interface-preview-shell.refined {
+  background: linear-gradient(135deg, #e0f2fe, #f8fafc 38%, #dcfce7);
 }
 
 .interface-preview-sidebar {
@@ -165,6 +176,30 @@
   gap: 12px;
   align-content: start;
   padding: 18px;
+}
+
+.interface-preview-section-title,
+.interface-preview-card-heading,
+.interface-preview-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+}
+
+.interface-preview-help {
+  display: inline-grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  min-width: 23px;
+  border: 2px solid #2563eb;
+  border-radius: 999px;
+  color: #1d4ed8;
+  background: #eff6ff;
+  font-weight: 950;
+  font-style: normal;
+  line-height: 1;
 }
 
 .interface-preview-brand {
@@ -185,11 +220,17 @@
 }
 
 .interface-preview-brand small,
+.interface-preview-brand em,
 .interface-preview-safe-card small,
 .interface-preview-card small,
-.interface-preview-module p,
-.interface-preview-card li {
+.interface-preview-card li,
+.interface-preview-card li span {
   color: #64748b;
+}
+
+.interface-preview-brand em {
+  font-size: 12px;
+  font-style: normal;
 }
 
 .interface-preview-safe-card {
@@ -207,15 +248,7 @@
   gap: 16px;
 }
 
-.interface-preview-topline {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  align-items: start;
-}
-
-.interface-preview-topline > span,
-.interface-preview-module > span {
+.interface-preview-topline > span {
   display: inline-flex;
   width: fit-content;
   border-radius: 999px;
@@ -224,14 +257,6 @@
   padding: 7px 10px;
   font-size: 12px;
   font-weight: 900;
-}
-
-.interface-preview-grid,
-.interface-preview-detail-grid,
-.interface-preview-module-grid,
-.interface-preview-columns {
-  display: grid;
-  gap: 16px;
 }
 
 .interface-preview-grid {
@@ -243,21 +268,18 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.interface-preview-card,
-.interface-preview-module {
-  padding: 18px;
-}
-
 .interface-preview-card {
   display: grid;
   gap: 8px;
+  padding: 18px;
 }
 
 .interface-preview-wide-card {
   grid-column: 1 / -1;
 }
 
-.interface-preview-card > span {
+.interface-preview-card > span,
+.interface-preview-card-heading > span {
   color: #64748b;
   font-weight: 800;
 }
@@ -271,11 +293,34 @@
   background: #eff6ff;
 }
 
-.interface-preview-card.timeline ul,
+.interface-preview-card.safe {
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.interface-preview-card.locked {
+  border-color: #fed7aa;
+  background: #fff7ed;
+}
+
+.interface-preview-card.timeline ol,
 .interface-preview-card ol {
   margin: 8px 0 0;
-  padding-left: 18px;
+  padding-left: 20px;
   line-height: 1.6;
+}
+
+.interface-preview-card.timeline li {
+  margin-bottom: 10px;
+}
+
+.interface-preview-card.timeline li strong {
+  display: block;
+  font-size: 15px;
+}
+
+.interface-preview-card.timeline li.locked-step strong {
+  color: #9a3412;
 }
 
 .interface-preview-action-grid,
@@ -294,14 +339,14 @@
   font-weight: 800;
 }
 
-.interface-preview-module-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin-top: 18px;
+.interface-preview-help-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
-.interface-preview-module {
+.interface-preview-help-card {
   display: grid;
-  gap: 10px;
+  gap: 8px;
+  padding: 14px;
 }
 
 .interface-preview-pill-list span {
@@ -326,9 +371,9 @@
   .interface-preview-shell,
   .interface-preview-grid,
   .interface-preview-detail-grid,
-  .interface-preview-module-grid,
   .interface-preview-columns,
-  .interface-preview-review-grid {
+  .interface-preview-review-grid,
+  .interface-preview-help-grid {
     grid-template-columns: 1fr;
   }
 
