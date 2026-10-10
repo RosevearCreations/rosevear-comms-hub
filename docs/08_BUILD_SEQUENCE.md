@@ -46,6 +46,7 @@ Result:
 - Reconfirmed Supabase target project: `https://gxujcwpktaickcgzyvnu.supabase.co`.
 - Reconfirmed Supabase GitHub integration settings: repository `RosevearCreations/rosevear-comms-hub`, working directory `.`, production branch `main`.
 - Confirmed the root `supabase/` scaffold remains the safe database/function testing boundary.
+- Queried the Supabase migration history and adopted existing remote migration versions `20261003185837`, `20261003185925`, `20261003233600`, and `20261003233636` into local migration-history files so the GitHub integration can reconcile remote history.
 - Added QL-088 readiness guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotCloudflareSupabaseLiveReadinessReview.ts`.
 - Added QL-088 contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-cloudflare-supabase-live-readiness-review.example.json`.
 - Added source documentation, build record, ops checklist, remote-operator note, and telephony boundary note.
