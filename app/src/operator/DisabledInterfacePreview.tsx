@@ -4,62 +4,99 @@ import './disabled-interface-preview.css';
 const targetPreviewUrl = 'https://rosevearcreations.github.io/rosevear-comms-hub/';
 const viteBasePath = '/rosevear-comms-hub/';
 
-const refinementModules = [
+const brandPanels = [
   {
-    title: 'Public preview continuity',
-    body: `Keep the GitHub Pages disabled preview reachable at ${targetPreviewUrl} with the ${viteBasePath} base path while refinements are planned.`,
-    status: 'Keep live'
+    name: 'Rosie Dazzlers',
+    context: 'Mobile detailing',
+    sample: 'Ceramic quote follow-up',
+    count: '4 open',
+    active: true
   },
   {
-    title: 'Priority refinements',
-    body: 'Plan the first visible improvements for layout clarity, brand switching, inbox cards, timeline wording, disabled action labels, help notes, and accessibility.',
-    status: 'Plan'
-  },
-  {
-    title: 'First safe interaction',
-    body: 'Choose the first browser-safe interaction to build next without provider delivery, callbacks, live phone data, persistence writes, or live pilot runtime.',
-    status: 'Select'
-  },
-  {
-    title: 'Safety boundary',
-    body: 'Provider credentials, callback tokens, service-role keys, live numbers, webhooks, message bodies, transcripts, recordings, and live customer records remain excluded from browser output.',
-    status: 'Protected'
+    name: 'Devil n Dove',
+    context: 'Maker shop',
+    sample: 'Custom order reply',
+    count: '2 open',
+    active: false
   }
 ];
 
-const refinementPlanItems = [
+const refinedQueueCards = [
   {
-    label: 'Layout pass',
-    plan: 'Reduce visual clutter, make the operator cockpit read top-to-bottom, and keep the brand/sidebar/workspace relationship obvious.'
+    label: 'Needs reply',
+    value: '4',
+    detail: 'Website + missed-call follow-ups',
+    help: 'Prioritizes visible work only; no real message send is connected.',
+    tone: 'priority'
   },
   {
-    label: 'Brand context',
-    plan: 'Make Rosie Dazzlers and Devil n Dove feel like two separate inboxes inside one shared Quo-lite console.'
+    label: 'Draft follow-ups',
+    value: '2',
+    detail: 'Operator review before sending later',
+    help: 'Draft-only means the preview can show intent without provider delivery.',
+    tone: 'safe'
   },
   {
-    label: 'Inbox card clarity',
-    plan: 'Refine the queue cards so the operator can see urgency, source, brand, customer context, and draft-only status at a glance.'
-  },
-  {
-    label: 'Timeline clarity',
-    plan: 'Improve the sample customer timeline so it shows inquiry, internal note, draft task, and locked SMS/call actions in a more realistic order.'
-  },
-  {
-    label: 'Help system',
-    plan: 'Add first-pass circled-i guidance near the brand switcher, queue, timeline, disabled controls, and public deployment status.'
-  },
-  {
-    label: 'First interaction',
-    plan: 'Prefer a browser-safe sample interaction such as brand switching, sample conversation selection, task filtering, or a local feedback checklist.'
+    label: 'Phone/SMS runtime',
+    value: 'OFF',
+    detail: 'Controls visible, locked, and inert',
+    help: 'Runtime remains blocked for calls, SMS, callbacks, recordings, and AI send.',
+    tone: 'locked'
   }
 ];
 
-const refinementDecisionRules = [
-  'QL-077 may plan refinements and update the static public preview wording only.',
-  'QL-077 may not enable real provider connections, callbacks, SMS delivery, call runtime, recording, AI send, persistence writes, archive writes, retention writes, or live pilot behavior.',
-  'The next implementation build should improve visible public-preview usability before adding any backend or provider runtime.',
-  'Any future interactive surface must use synthetic sample data or browser-local state only until a later build explicitly proves a safe backend boundary.',
-  'GitHub Pages remains the current public disabled preview host; Vercel and Cloudflare Pages remain out of scope.'
+const timelineSteps = [
+  {
+    title: 'Inquiry received',
+    detail: 'Synthetic website request enters the sample queue.',
+    locked: false
+  },
+  {
+    title: 'Internal note added',
+    detail: 'Operator can understand where a private note will appear later.',
+    locked: false
+  },
+  {
+    title: 'Draft task prepared',
+    detail: 'Follow-up is staged as review-only sample data.',
+    locked: false
+  },
+  {
+    title: 'SMS/call actions locked',
+    detail: 'No provider connection, callback registration, or live customer record is used.',
+    locked: true
+  }
+];
+
+const helpMarkers = [
+  {
+    area: 'Brand switcher',
+    guidance: 'Explains how Rosie Dazzlers and Devil n Dove stay separated inside one shared console.'
+  },
+  {
+    area: 'Queue cards',
+    guidance: 'Explains urgency, source, draft-only state, and why visible counts are synthetic.'
+  },
+  {
+    area: 'Timeline',
+    guidance: 'Explains inquiry, note, draft task, and locked communication action order.'
+  },
+  {
+    area: 'Disabled controls',
+    guidance: 'Explains why live SMS, calls, callbacks, AI, archive, retention, and persistence remain off.'
+  },
+  {
+    area: 'Deployment status',
+    guidance: 'Explains the GitHub Pages preview and public-safe browser boundary.'
+  }
+];
+
+const firstSafeInteractionOptions = [
+  'Sample brand switcher',
+  'Synthetic conversation selector',
+  'Local task filter',
+  'Preview layout preference',
+  'Browser-local feedback checklist'
 ];
 
 const disabledActions = [
@@ -73,6 +110,14 @@ const disabledActions = [
   'Start live pilot'
 ];
 
+function HelpMarker({ label }: { label: string }) {
+  return (
+    <span className="interface-preview-help" title={label} aria-label={`Help: ${label}`}>
+      i
+    </span>
+  );
+}
+
 function DisabledInterfacePreview() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -81,17 +126,17 @@ function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-077</small>
+        <small>QL-078</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-077 public disabled preview refinement plan">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-078 public disabled preview refinement implementation">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-077 Public disabled preview refinement plan</p>
-              <h2>Quo-lite public preview refinement plan</h2>
+              <p className="interface-preview-eyebrow">QL-078 Public disabled preview refinement implementation</p>
+              <h2>Quo-lite public preview refinements</h2>
               <p>
-                This build turns the feedback review into a prioritized refinement plan for the public disabled preview. It keeps the GitHub Pages preview active while planning safer layout, labels, help notes, brand context, and first browser-safe interactions.
+                This build implements the safe public-preview refinements planned in QL-077: clearer layout sections, visible circled-i help markers, refined brand and queue context, a more readable synthetic timeline, and first safe interaction candidates.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -100,7 +145,7 @@ function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            Refinement plan only. The public preview may be live, but Phone/SMS providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, and live pilot runtime remain OFF.
+            Static public preview only. Phone/SMS providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, Supabase runtime changes, and live pilot runtime remain OFF.
           </div>
 
           <div className="interface-preview-review-grid">
@@ -109,32 +154,34 @@ function DisabledInterfacePreview() {
               <h3>GitHub Pages disabled preview</h3>
               <code className="interface-preview-link">{targetPreviewUrl}</code>
               <p>
-                QL-077 keeps this as the live public refinement target. Use it to review planned layout, labels, help notes, brand switching, inbox cards, and first safe interaction choices.
+                The preview remains served from GitHub Pages with the <code>{viteBasePath}</code> base path. The browser bundle stays public-safe and runtime-disabled.
               </p>
             </article>
             <article className="interface-preview-card interface-preview-next-step">
-              <p className="interface-preview-eyebrow">QL-077 decision</p>
-              <h3>Plan refinement before implementation</h3>
+              <p className="interface-preview-eyebrow">QL-078 refinement result</p>
+              <h3>Usability refined before live integration</h3>
               <p>
-                The next work should improve the static public preview and select one browser-safe interaction. Real SMS, calls, provider callbacks, persistence writes, and live pilot behavior stay blocked.
+                The page now gives a clearer first impression and prepares for a future browser-safe interaction using synthetic sample data or local state only.
               </p>
             </article>
           </div>
 
-          <div className="interface-preview-shell" aria-label="Static operator dashboard mockup">
+          <div className="interface-preview-shell refined" aria-label="Static operator dashboard mockup">
             <aside className="interface-preview-sidebar">
-              <p className="interface-preview-eyebrow">Brands</p>
-              <button type="button" className="interface-preview-brand active" disabled>
-                Rosie Dazzlers
-                <small>Mobile detailing inbox</small>
-              </button>
-              <button type="button" className="interface-preview-brand" disabled>
-                Devil n Dove
-                <small>Maker shop inbox</small>
-              </button>
+              <div className="interface-preview-section-title">
+                <p className="interface-preview-eyebrow">Brands</p>
+                <HelpMarker label="Brand switcher guidance" />
+              </div>
+              {brandPanels.map((brand) => (
+                <button type="button" className={brand.active ? 'interface-preview-brand active' : 'interface-preview-brand'} disabled key={brand.name}>
+                  <span>{brand.name}</span>
+                  <small>{brand.context} · {brand.count}</small>
+                  <em>{brand.sample}</em>
+                </button>
+              ))}
               <div className="interface-preview-safe-card">
                 <strong>Preview status</strong>
-                <span>Refinement plan</span>
+                <span>Refinement implemented</span>
                 <small>Static Pages preview; live controls locked</small>
               </div>
             </aside>
@@ -145,81 +192,82 @@ function DisabledInterfacePreview() {
                   <p className="interface-preview-eyebrow">Operator queue</p>
                   <h3>Today’s communication cockpit</h3>
                 </div>
-                <span>Static / disabled / refinement plan</span>
+                <span>Static / disabled / refined</span>
               </div>
 
-              <div className="interface-preview-grid">
-                <article className="interface-preview-card priority">
-                  <span>Needs reply</span>
-                  <strong>4</strong>
-                  <small>Website + missed-call follow-ups</small>
-                </article>
-                <article className="interface-preview-card">
-                  <span>Quotes waiting</span>
-                  <strong>2</strong>
-                  <small>Draft-only, no sending</small>
-                </article>
-                <article className="interface-preview-card">
-                  <span>Phone/SMS runtime</span>
-                  <strong>OFF</strong>
-                  <small>Controls are visible but locked</small>
-                </article>
+              <div className="interface-preview-grid refined-cards">
+                {refinedQueueCards.map((card) => (
+                  <article className={`interface-preview-card ${card.tone}`} key={card.label}>
+                    <div className="interface-preview-card-heading">
+                      <span>{card.label}</span>
+                      <HelpMarker label={card.help} />
+                    </div>
+                    <strong>{card.value}</strong>
+                    <small>{card.detail}</small>
+                  </article>
+                ))}
               </div>
 
               <div className="interface-preview-detail-grid">
-                <article className="interface-preview-card timeline">
-                  <p className="interface-preview-eyebrow">Customer timeline</p>
+                <article className="interface-preview-card timeline refined-timeline">
+                  <div className="interface-preview-card-heading">
+                    <p className="interface-preview-eyebrow">Customer timeline</p>
+                    <HelpMarker label="Timeline guidance" />
+                  </div>
                   <h4>Example: ceramic quote follow-up</h4>
-                  <ul>
-                    <li>Website request received</li>
-                    <li>Internal note added</li>
-                    <li>Quote follow-up task created</li>
-                    <li>SMS/call buttons remain disabled</li>
-                  </ul>
+                  <ol>
+                    {timelineSteps.map((step) => (
+                      <li key={step.title} className={step.locked ? 'locked-step' : undefined}>
+                        <strong>{step.title}</strong>
+                        <span>{step.detail}</span>
+                      </li>
+                    ))}
+                  </ol>
                 </article>
 
                 <article className="interface-preview-card controls">
-                  <p className="interface-preview-eyebrow">Disabled controls</p>
+                  <div className="interface-preview-card-heading">
+                    <p className="interface-preview-eyebrow">Disabled controls</p>
+                    <HelpMarker label="Disabled control guidance" />
+                  </div>
                   <div className="interface-preview-action-grid">
                     {disabledActions.map((action) => (
                       <button type="button" disabled key={action}>
-                        {action} disabled
+                        {action} locked
                       </button>
                     ))}
                   </div>
+                  <p className="interface-preview-control-note">
+                    All buttons are visible to show the future operator surface, but they are intentionally inert in the public preview.
+                  </p>
                 </article>
               </div>
             </main>
           </div>
 
-          <div className="interface-preview-module-grid">
-            {refinementModules.map((module) => (
-              <article className="interface-preview-module" key={module.title}>
-                <span>{module.status}</span>
-                <h4>{module.title}</h4>
-                <p>{module.body}</p>
-              </article>
-            ))}
-          </div>
-
           <div className="interface-preview-columns">
             <article className="interface-preview-card interface-preview-wide-card">
-              <h3>QL-077 refinement priorities</h3>
-              <ol>
-                {refinementPlanItems.map((item) => (
-                  <li key={item.label}>
-                    <strong>{item.label}:</strong> {item.plan}
-                  </li>
+              <h3>Implemented QL-078 refinements</h3>
+              <div className="interface-preview-help-grid">
+                {helpMarkers.map((marker) => (
+                  <div className="interface-preview-help-card" key={marker.area}>
+                    <HelpMarker label={`${marker.area} help`} />
+                    <strong>{marker.area}</strong>
+                    <p>{marker.guidance}</p>
+                  </div>
                 ))}
-              </ol>
+              </div>
             </article>
-            <article className="interface-preview-card interface-preview-wide-card">
-              <h3>QL-077 decision rules</h3>
-              <ol>
-                {refinementDecisionRules.map((decision) => (
-                  <li key={decision}>{decision}</li>
+            <article className="interface-preview-card interface-preview-wide-card interface-preview-interactions">
+              <h3>First browser-safe interaction candidates</h3>
+              <p>
+                These are still candidates only. A later build can implement one using synthetic sample data or browser-local state, without provider, Supabase runtime, or live customer data.
+              </p>
+              <div className="interface-preview-pill-list">
+                {firstSafeInteractionOptions.map((option) => (
+                  <span key={option}>{option}</span>
                 ))}
-              </ol>
+              </div>
             </article>
           </div>
         </div>
