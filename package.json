@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "postinstall": "npm --prefix app install && npm --prefix app run build",
     "build": "npm --prefix app install && npm --prefix app run build",
     "deploy": "wrangler deploy",
     "cloudflare:deploy": "npm run build && wrangler deploy"
