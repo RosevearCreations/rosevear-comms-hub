@@ -1,0 +1,52 @@
+{
+  "build": "QL-089",
+  "targetPreviewUrl": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+  "cloudflareWorkerCheckName": "Workers Builds: rosevear-comms-hub",
+  "supabaseProjectUrl": "https://gxujcwpktaickcgzyvnu.supabase.co",
+  "supabaseGitHubIntegration": {
+    "repository": "RosevearCreations/rosevear-comms-hub",
+    "workingDirectory": ".",
+    "productionBranch": "main"
+  },
+  "planOnly": true,
+  "browserClientInstantiated": false,
+  "usesSupabaseAnonKeyOnly": true,
+  "plannedAllowedSources": [
+    "public_synthetic_conversation_view",
+    "public_synthetic_status_view",
+    "ql_status_function_output"
+  ],
+  "blockedSources": [
+    "contacts",
+    "conversations",
+    "messages",
+    "phone_calls",
+    "sms_messages",
+    "consent_logs",
+    "app_admins",
+    "audit_events",
+    "archives",
+    "retention_records",
+    "provider_payloads",
+    "live_customer_records"
+  ],
+  "fallbacks": {
+    "missingEnvironmentKeepsLocalSamples": true,
+    "failedReadKeepsLocalSamples": true,
+    "unexpectedDataRejectsRemotePayload": true
+  },
+  "disabledRuntime": {
+    "livePhoneSmsRuntimeEnabled": false,
+    "providerCallbacksEnabled": false,
+    "liveCustomerReadsEnabled": false,
+    "liveCustomerWritesEnabled": false,
+    "archiveWritesEnabled": false,
+    "retentionWritesEnabled": false,
+    "aiSendEnabled": false,
+    "livePilotRuntimeEnabled": false
+  },
+  "expectedDecision": {
+    "status": "public_disabled_preview_browser_safe_supabase_read_only_client_plan_ready",
+    "nextBuild": "QL-090 — Public Disabled Preview Browser-Safe Supabase Read-Only Client Scaffold"
+  }
+}

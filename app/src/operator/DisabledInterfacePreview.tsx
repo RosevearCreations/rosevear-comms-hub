@@ -32,30 +32,30 @@ const brandSamples: Record<PreviewBrandId, PreviewBrand> = {
   rosie: {
     name: 'Rosie Dazzlers',
     context: 'Mobile detailing',
-    count: '4 open',
+    count: '4 planned reads',
     headline: 'Rosie Dazzlers communication cockpit',
     conversations: [
       {
         id: 'rosie-ceramic-quote',
         title: 'Ceramic quote follow-up',
-        status: 'Readiness reviewed',
-        summary: 'Synthetic ceramic coating follow-up with deployment-readiness and weather-safe scheduling context.',
+        status: 'Read-only plan',
+        summary: 'Synthetic ceramic coating follow-up that may later be hydrated from a public read-only Supabase sample source.',
         draft: 'Draft-only sample: confirm vehicle size, explain prep expectations, and offer a weather-safe booking window.',
         timeline: [
-          { title: 'Synthetic inquiry received', detail: 'Hard-coded website quote sample enters the local-only preview.' },
-          { title: 'QL-088 readiness reviewed', detail: 'Cloudflare Worker and Supabase scaffold checks are visible before live integrations.' },
-          { title: 'Runtime stays locked', detail: 'No SMS, call, provider, archive, or retention action is available.', locked: true }
+          { title: 'Synthetic inquiry remains local', detail: 'QL-089 still loads hard-coded samples only; no Supabase client is instantiated.' },
+          { title: 'Safe future source planned', detail: 'Future reads are limited to public synthetic view/function outputs, never live customer records.' },
+          { title: 'Runtime stays locked', detail: 'No SMS, call, provider, archive, retention, or write action is available.', locked: true }
         ]
       },
       {
         id: 'rosie-missed-call',
         title: 'Missed-call callback sample',
-        status: 'Readiness reviewed',
-        summary: 'Synthetic missed-call card for a detailing appointment after work hours.',
+        status: 'Read-only plan',
+        summary: 'Synthetic missed-call card that defines fallback copy for when Supabase env values or read access are unavailable.',
         draft: 'Draft-only sample: acknowledge the missed call, ask for vehicle size, and suggest AM/PM availability.',
         timeline: [
-          { title: 'Sample selected', detail: 'No phone provider event or call log is loaded.' },
-          { title: 'Infrastructure check visible', detail: 'The preview shows Cloudflare and Supabase readiness without connecting live messaging.' },
+          { title: 'Sample selected', detail: 'No phone provider event, call log, or customer phone data is loaded.' },
+          { title: 'Fallback planned', detail: 'Missing env variables or failed reads must fall back to hard-coded samples and visible disabled-state messaging.' },
           { title: 'Call action locked', detail: 'The public preview cannot place calls or register callbacks.', locked: true }
         ]
       }
@@ -64,30 +64,30 @@ const brandSamples: Record<PreviewBrandId, PreviewBrand> = {
   devil: {
     name: 'Devil n Dove',
     context: 'Maker shop',
-    count: '2 open',
+    count: '2 planned reads',
     headline: 'Devil n Dove communication cockpit',
     conversations: [
       {
         id: 'devil-custom-order',
         title: 'Custom order clarification sample',
-        status: 'Readiness reviewed',
-        summary: 'Synthetic custom-order question about colour, sizing, and personalization.',
+        status: 'Read-only plan',
+        summary: 'Synthetic custom-order question planned for safe public read-only sample hydration after QL-089.',
         draft: 'Draft-only sample: confirm colour, size, personalization limits, and expected making time.',
         timeline: [
-          { title: 'Custom request selected', detail: 'Hard-coded maker-shop sample opens in the browser preview.' },
-          { title: 'QL-088 review active', detail: 'The preview confirms the app can move toward browser-safe read-only Supabase testing next.' },
+          { title: 'Custom request remains synthetic', detail: 'Hard-coded maker-shop sample opens in the browser preview.' },
+          { title: 'Read-only contract planned', detail: 'Future Supabase access is restricted to public synthetic sample outputs only.' },
           { title: 'Provider delivery locked', detail: 'No Etsy, SMS, email, callback, or provider account is connected.', locked: true }
         ]
       },
       {
         id: 'devil-maker-story',
         title: 'Maker story question sample',
-        status: 'Readiness reviewed',
-        summary: 'Synthetic shopper asks about the Devil n Dove meaning and materials.',
+        status: 'Read-only plan',
+        summary: 'Synthetic shopper asks about the Devil n Dove meaning and materials; QL-089 defines how it may be safely read later.',
         draft: 'Draft-only sample: explain the Devil barriers / Dove hope theme and invite a specific product question.',
         timeline: [
           { title: 'Story sample selected', detail: 'Synthetic brand-story prompt is loaded from local constants.' },
-          { title: 'Readiness boundary reviewed', detail: 'The Safety tab names Cloudflare, Supabase, and locked runtime boundaries.' },
+          { title: 'Read-only boundary planned', detail: 'Only public anon-key safe sample reads are eligible for future implementation.' },
           { title: 'AI and send locked', detail: 'No AI reply generation or provider send path is enabled.', locked: true }
         ]
       }
@@ -96,17 +96,31 @@ const brandSamples: Record<PreviewBrandId, PreviewBrand> = {
 };
 
 const detailTabs: Array<{ id: DetailTabId; title: string; detail: string }> = [
-  { id: 'overview', title: 'Overview', detail: 'Selected summary, status, and readiness outcome.' },
+  { id: 'overview', title: 'Overview', detail: 'Selected summary, status, and QL-089 planning outcome.' },
   { id: 'draft', title: 'Draft', detail: 'Draft-only response copy with no send or AI generation.' },
   { id: 'timeline', title: 'Timeline', detail: 'Synthetic timeline events grouped into a focused local view.' },
-  { id: 'safety', title: 'Safety', detail: 'Locked actions, source restrictions, and disabled runtime reminders.' }
+  { id: 'safety', title: 'Safety', detail: 'Supabase read-only limits, fallbacks, and locked runtime reminders.' }
+];
+
+const plannedReadOnlySources = [
+  'public.ql_public_synthetic_conversations view or RPC output containing only synthetic sample rows',
+  'public.ql_public_system_status view or ql-status function output with non-secret project readiness data',
+  'No public reads from contacts, conversations, messages, phone_calls, sms_messages, consent_logs, app_admins, audit_events, archives, or retention tables',
+  'Anon-key reads only after RLS and explicit public-safe policies are reviewed in a later build'
+];
+
+const fallbackPlan = [
+  'If VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY is missing, keep hard-coded samples and show a disabled Supabase badge.',
+  'If a read request fails, keep hard-coded samples and show a non-blocking read-only unavailable message.',
+  'If a read returns unexpected columns or real-customer-like content, reject it and keep the local samples.',
+  'Never auto-send, auto-draft from AI, persist, archive, retain, or mutate data from the browser preview.'
 ];
 
 const readinessChecks = [
-  'Cloudflare Worker static-assets deployment is expected from the connected GitHub repo on main.',
-  'Cloudflare production checks must report Workers Builds: rosevear-comms-hub as successful before the Worker target is trusted.',
-  'Supabase GitHub integration should find the root supabase/ folder, migration, config, and ql-status function scaffold.',
-  'Next safe application step is browser-safe Supabase read-only client planning after infrastructure checks are green.'
+  'QL-089 plans browser-safe Supabase reads but does not instantiate a Supabase client yet.',
+  'Allowed future reads must use public anon-key boundaries and synthetic-only view/function outputs.',
+  'Environment-variable and failed-read fallbacks must preserve the existing hard-coded local preview.',
+  'QL-090 may scaffold the read-only client only after this plan, RLS boundaries, and fallback rules are accepted.'
 ];
 
 const disabledActions = [
@@ -135,7 +149,7 @@ function renderDetailTabContent(activeTabId: DetailTabId, activeBrand: PreviewBr
         <p className="interface-preview-eyebrow">Draft-only reply</p>
         <h4>{activeConversation.title}</h4>
         <p>{activeConversation.draft}</p>
-        <div className="interface-preview-tab-note locked">QL-088: the draft area remains staged copy only, not a live send action.</div>
+        <div className="interface-preview-tab-note locked">QL-089: this remains staged copy only. No Supabase read, AI generation, or send action runs.</div>
       </div>
     );
   }
@@ -160,12 +174,12 @@ function renderDetailTabContent(activeTabId: DetailTabId, activeBrand: PreviewBr
   if (activeTabId === 'safety') {
     return (
       <div className="interface-preview-tab-body safety">
-        <p className="interface-preview-eyebrow">Safety and live-readiness review</p>
+        <p className="interface-preview-eyebrow">Safety and read-only planning</p>
         <h4>Runtime remains controlled</h4>
         <ul className="interface-preview-check-list">
           <li>Selected brand: {activeBrand.name}; selected sample: {activeConversation.title}.</li>
+          <li>Supabase target remains {supabaseProjectUrl}, but QL-089 does not instantiate a browser client.</li>
           <li>Cloudflare target: {cloudflareWorkerTarget}; expected check: {cloudflareWorkerCheck}.</li>
-          <li>Supabase target: {supabaseProjectUrl}; integration target: {supabaseIntegrationTarget}.</li>
           <li>Phone/SMS providers, recordings, live customer records, archive writes, retention writes, and live pilot runtime remain locked.</li>
         </ul>
       </div>
@@ -174,7 +188,7 @@ function renderDetailTabContent(activeTabId: DetailTabId, activeBrand: PreviewBr
 
   return (
     <div className="interface-preview-tab-body overview">
-      <p className="interface-preview-eyebrow">QL-088 readiness outcome</p>
+      <p className="interface-preview-eyebrow">QL-089 read-only plan outcome</p>
       <h4>{activeConversation.title}</h4>
       <p>{activeConversation.summary}</p>
       <dl className="interface-preview-tab-facts">
@@ -187,8 +201,8 @@ function renderDetailTabContent(activeTabId: DetailTabId, activeBrand: PreviewBr
           <dd>{activeBrand.name}</dd>
         </div>
         <div>
-          <dt>Source</dt>
-          <dd>Hard-coded synthetic sample</dd>
+          <dt>Current source</dt>
+          <dd>Hard-coded synthetic sample only</dd>
         </div>
       </dl>
     </div>
@@ -212,17 +226,17 @@ export function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-088</small>
+        <small>QL-089</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-088 public disabled preview Cloudflare and Supabase live readiness review">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-089 public disabled preview browser-safe Supabase read-only client plan">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-088 Public disabled preview Cloudflare and Supabase live readiness review</p>
-              <h2>Cloudflare and Supabase readiness review</h2>
+              <p className="interface-preview-eyebrow">QL-089 Public disabled preview browser-safe Supabase read-only client plan</p>
+              <h2>Supabase read-only client plan</h2>
               <p>
-                This build verifies the connected Cloudflare Worker deployment path and Supabase GitHub integration scaffold before any browser-safe read-only application integration begins.
+                This build plans a future browser-safe Supabase read-only client while keeping the current public preview local, synthetic, and non-mutating.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -231,7 +245,7 @@ export function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            QL-088 is an infrastructure-readiness review only. SMS, calls, provider callbacks, recordings, AI send, archives, retention writes, live customer access, and live pilot runtime stay disabled.
+            QL-089 is a planning build only. It does not add a Supabase client, anon key use, database reads, writes, SMS, calls, provider callbacks, recordings, AI send, archives, retention writes, live customer access, or live pilot runtime.
           </div>
 
           <div className="interface-preview-review-grid">
@@ -239,13 +253,13 @@ export function DisabledInterfacePreview() {
               <p className="interface-preview-eyebrow">GitHub Pages production preview</p>
               <h3>Current public preview</h3>
               <code className="interface-preview-link">{targetPreviewUrl}</code>
-              <p>GitHub Pages remains a green public preview while Cloudflare Worker deployment is verified.</p>
+              <p>The public preview remains hard-coded and synthetic until QL-090 is explicitly approved.</p>
             </article>
             <article className="interface-preview-link-card">
-              <p className="interface-preview-eyebrow">Cloudflare connected target</p>
-              <h3>Worker static-assets check</h3>
-              <code className="interface-preview-link">{cloudflareWorkerTarget}</code>
-              <p>The trusted signal is the GitHub check named {cloudflareWorkerCheck} on the final main commit.</p>
+              <p className="interface-preview-eyebrow">Supabase future target</p>
+              <h3>Read-only planning target</h3>
+              <code className="interface-preview-link">{supabaseProjectUrl}</code>
+              <p>{supabaseIntegrationTarget}. Future browser reads must use anon-key-safe synthetic outputs only.</p>
             </article>
           </div>
 
@@ -268,24 +282,24 @@ export function DisabledInterfacePreview() {
                   >
                     <span>{brand.name}</span>
                     <small>{brand.context} · {brand.count}</small>
-                    <em>Readiness reviewed</em>
+                    <em>Read-only plan only</em>
                   </button>
                 );
               })}
               <div className="interface-preview-safe-card">
                 <strong>Active sample</strong>
                 <span>{activeConversation.title}</span>
-                <small>Hard-coded sample; no live account access</small>
+                <small>Hard-coded sample; no Supabase read yet</small>
               </div>
             </aside>
 
             <main className="interface-preview-workspace">
               <div className="interface-preview-topline">
                 <div>
-                  <p className="interface-preview-eyebrow">Synthetic detail-tabs readiness review</p>
+                  <p className="interface-preview-eyebrow">Browser-safe read-only planning</p>
                   <h3>{activeBrand.headline}</h3>
                 </div>
-                <span>Readiness review / Cloudflare check / Supabase scaffold / live comms locked</span>
+                <span>Planning only / anon-key boundary / synthetic reads / live comms locked</span>
               </div>
 
               <section className="interface-preview-card">
@@ -342,8 +356,32 @@ export function DisabledInterfacePreview() {
 
               <section className="interface-preview-card">
                 <div className="interface-preview-section-title">
-                  <p className="interface-preview-eyebrow">Live-readiness checks</p>
-                  <HelpMarker label="Cloudflare and Supabase are verified before safe browser-read work" />
+                  <p className="interface-preview-eyebrow">Allowed future read sources</p>
+                  <HelpMarker label="QL-089 plans future reads but does not perform them" />
+                </div>
+                <ul className="interface-preview-check-list">
+                  {plannedReadOnlySources.map((source) => (
+                    <li key={source}>{source}</li>
+                  ))}
+                </ul>
+              </section>
+
+              <section className="interface-preview-card">
+                <div className="interface-preview-section-title">
+                  <p className="interface-preview-eyebrow">Fallback rules</p>
+                  <HelpMarker label="Fallbacks protect the public preview from unsafe data exposure" />
+                </div>
+                <ul className="interface-preview-check-list">
+                  {fallbackPlan.map((rule) => (
+                    <li key={rule}>{rule}</li>
+                  ))}
+                </ul>
+              </section>
+
+              <section className="interface-preview-card">
+                <div className="interface-preview-section-title">
+                  <p className="interface-preview-eyebrow">Planning checks</p>
+                  <HelpMarker label="QL-089 must be green before QL-090 scaffold work" />
                 </div>
                 <ul className="interface-preview-check-list">
                   {readinessChecks.map((check) => (

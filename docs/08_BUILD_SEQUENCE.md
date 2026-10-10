@@ -55,10 +55,29 @@ Result:
 
 ## QL-089 — Public Disabled Preview Browser-Safe Supabase Read-Only Client Plan
 
+Status: complete.
+
+Result:
+
+- Updated the floating interface preview to show QL-089 browser-safe Supabase read-only client planning state.
+- Confirmed QL-089 is plan-only and does not instantiate a Supabase browser client.
+- Confirmed no `VITE_SUPABASE_URL` or `VITE_SUPABASE_ANON_KEY` is consumed by runtime code in this build.
+- Identified allowed future read-only sources: synthetic public conversation view/RPC output, synthetic public status view/RPC output, and the existing `ql-status` style function output.
+- Blocked browser reads from contacts, conversations, messages, phone calls, SMS messages, consent logs, app admins, audit events, archives, retention records, provider payloads, and live customer records.
+- Defined fallback behavior for missing environment variables, failed reads, and unexpected remote payloads.
+- Added QL-089 readiness guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotPublicDisabledPreviewBrowserSafeSupabaseReadOnlyClientPlan.ts`.
+- Added QL-089 contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-public-disabled-preview-browser-safe-supabase-read-only-client-plan.example.json`.
+- Added source documentation, build record, ops checklist, remote-operator note, and telephony boundary note.
+- Decided the next safe application step is a browser-safe Supabase read-only client scaffold that falls back to local samples by default.
+- Kept provider callbacks, live phone webhooks, SMS sending, call runtime, call recording, AI auto-send, live customer reads/writes, provider delivery, archive writes, retention writes, provider account connection, provider live-number attachment, callback registration, and live pilot runtime disabled.
+
+## QL-090 — Public Disabled Preview Browser-Safe Supabase Read-Only Client Scaffold
+
 Goal:
 
-- Plan a browser-safe Supabase read-only client integration using public anon-key boundaries only.
-- Identify the exact read-only synthetic tables/views/function outputs that may be exposed safely.
+- Scaffold a browser-safe Supabase read-only client without enabling any mutation path.
+- Use public anon-key boundaries only.
+- Read only from synthetic public-safe view/function outputs approved by QL-089.
+- Keep hard-coded local samples as the default fallback when env variables are missing, reads fail, or payloads are unexpected.
 - Keep live customer data, provider payloads, SMS/call events, archives, retention records, and live pilot runtime out of scope.
-- Define UI fallbacks when Supabase is unavailable or environment variables are missing.
-- Decide the implementation gate for a future QL-090 browser-safe Supabase read-only client scaffold.
+- Verify App CI, Supabase Preview, Cloudflare Worker build, and any public preview deployment checks before promotion.
