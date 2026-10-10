@@ -1,0 +1,38 @@
+{
+  "build": "QL-087",
+  "status": "ready_for_safe_testing",
+  "cloudflare": {
+    "account": "jfrosevear@gmail.com",
+    "workerName": "rosevear-comms-hub",
+    "workerUrl": "https://rosevear-comms-hub.jfrosevear.workers.dev/",
+    "staticAssetsConfig": "wrangler.jsonc",
+    "assetsDirectory": "./app/dist",
+    "notFoundHandling": "single-page-application"
+  },
+  "supabase": {
+    "projectRef": "gxujcwpktaickcgzyvnu",
+    "projectUrl": "https://gxujcwpktaickcgzyvnu.supabase.co",
+    "workingDirectory": ".",
+    "productionBranch": "main",
+    "folder": "supabase/",
+    "migration": "supabase/migrations/20261010154500_ql087_app_foundation.sql",
+    "statusFunction": "supabase/functions/ql-status/index.ts"
+  },
+  "allowedTesting": [
+    "Cloudflare static asset deployment",
+    "Supabase synthetic read-only seed table deployment",
+    "Supabase ql-status Edge Function reachability check"
+  ],
+  "blockedRuntime": [
+    "provider callbacks",
+    "live phone webhooks",
+    "SMS sending",
+    "call runtime",
+    "recordings",
+    "AI auto-send",
+    "live customer records",
+    "archive writes",
+    "retention writes",
+    "live pilot runtime"
+  ]
+}
