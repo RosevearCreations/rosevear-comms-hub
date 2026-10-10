@@ -78,30 +78,32 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-071 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Plan — complete.
 - QL-072 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Enablement Gate — complete.
 - QL-073 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Verification — complete.
+- QL-074 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Visual Review — complete.
 
-## QL-074 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Visual Review
+## QL-075 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Feedback Intake
 
 Status: complete.
 
 Result:
 
-- Updated the floating interface preview to show QL-074 public disabled preview visual-review state.
-- Added public disabled preview visual review guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotPublicDisabledPreviewVisualReview.ts`.
-- Added public disabled preview visual review contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-public-disabled-preview-visual-review.example.json`.
-- Added source-of-truth doc at `docs/87_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_PUBLIC_DISABLED_PREVIEW_VISUAL_REVIEW.md`.
+- Updated the floating interface preview to show QL-075 public disabled preview feedback-intake state.
+- Added feedback prompts for public URL load, first impression, brand switching, operator queue, customer timeline, disabled controls, help text, and next interactive surface.
+- Added feedback-intake guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotPublicDisabledPreviewFeedbackIntake.ts`.
+- Added feedback-intake contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-public-disabled-preview-feedback-intake.example.json`.
+- Added source-of-truth doc at `docs/88_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_PUBLIC_DISABLED_PREVIEW_FEEDBACK_INTAKE.md`.
 - Added build record, ops checklist, remote-operator note, and telephony boundary note.
-- Confirmed the public visual review target remains `https://rosevearcreations.github.io/rosevear-comms-hub/`.
-- Confirmed the static build path remains `/rosevear-comms-hub/`.
-- Confirmed the Pages workflow must either deploy static assets when `ENABLE_GITHUB_PAGES_DISABLED_PREVIEW=true` or skip safely behind the gate.
-- Confirmed a skipped Pages workflow is safe but does not provide a human visual review surface.
+- Confirmed the public feedback URL remains `https://rosevearcreations.github.io/rosevear-comms-hub/`.
+- Confirmed the Pages workflow should deploy only when `ENABLE_GITHUB_PAGES_DISABLED_PREVIEW=true` is visible as a repository Actions variable.
+- Confirmed a skipped Pages workflow remains safe but limits QL-075 to deployment-gap feedback only.
 - Confirmed browser output must not include service-role keys, provider credentials, callback tokens, live phone numbers, live message bodies, transcripts, recordings, or live customer data.
 - Kept provider callbacks, live phone webhooks, SMS sending, call runtime, call recording, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, Supabase migrations, Supabase Edge Functions, Vercel, Cloudflare Pages, and live pilot runtime disabled.
 
-## QL-075 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Feedback Intake
+## QL-076 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Feedback Review
 
 Goal:
 
-- Capture operator feedback after the public disabled preview visual review.
-- If the public preview is not live, keep the feedback intake blocked on correcting the GitHub Pages repository variable and rerunning the workflow.
-- Convert visual feedback into next layout, navigation, label, accessibility, and help-system improvements.
+- Review feedback captured from the public disabled preview.
+- If the public preview is live, convert operator notes into prioritized interface refinements.
+- If the public preview is not live, isolate the GitHub Pages variable/deployment gap and keep feedback focused on deployment recovery.
+- Prepare next improvements for layout, labels, brand switching, inbox cards, timeline, help text, and disabled action clarity.
 - Keep all Phone/SMS, provider, callback, recording, AI send, persistence, archive, retention, and live pilot controls disabled unless a later build explicitly proves and enables a controlled path.
