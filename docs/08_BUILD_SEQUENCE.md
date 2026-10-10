@@ -4,43 +4,41 @@ This file tracks the completed Quo-lite build path and the next queued build.
 
 ## Completed builds
 
-- QL-001 through QL-080 — complete. Earlier completed-build details are preserved in the repository history.
-- QL-081 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview First Safe Interaction Review — complete.
+- QL-001 through QL-081 — complete. Earlier completed-build details are preserved in the repository history.
 - QL-082 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Synthetic Conversation Selector Plan — complete.
 - QL-083 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Synthetic Conversation Selector Implementation — complete.
+- QL-084 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Synthetic Conversation Selector Review — complete.
 
-## QL-084 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Synthetic Conversation Selector Review
+## QL-085 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Synthetic Conversation Detail Tabs Plan
 
 Status: complete.
 
 Result:
 
-- Updated the floating interface preview to show QL-084 public disabled preview synthetic conversation selector review state.
+- Updated the floating interface preview to show QL-085 public disabled preview synthetic conversation detail tabs plan state.
 - Kept the public review URL visible: `https://rosevearcreations.github.io/rosevear-comms-hub/`.
 - Kept the Vite base path: `/rosevear-comms-hub/`.
 - Kept the browser-local Rosie Dazzlers / Devil n Dove brand switcher live.
 - Kept the hard-coded synthetic conversation selector live for each active brand.
-- Reviewed three Rosie Dazzlers sample conversations: ceramic quote follow-up, missed-call callback, and weather-safe reschedule.
-- Reviewed three Devil n Dove sample conversations: custom order clarification, maker story question, and workshop material question.
-- Confirmed selected brand and selected conversation remain browser-local React state only.
-- Confirmed the selector changes only synthetic summary, draft-only copy, review labels, and timeline content.
-- Confirmed selector state resets on page reload because it is not persisted.
-- Confirmed locked live action controls remain disabled after brand and conversation switching.
-- Confirmed selector data does not come from Supabase rows, provider inbox imports, live customer records, SMS/call history, recordings, transcripts, archive records, retention records, AI replies, or callback payloads.
-- Added selector review guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotPublicDisabledPreviewSyntheticConversationSelectorReview.ts`.
-- Added selector review contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-public-disabled-preview-synthetic-conversation-selector-review.example.json`.
-- Added source-of-truth doc at `docs/97_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_PUBLIC_DISABLED_PREVIEW_SYNTHETIC_CONVERSATION_SELECTOR_REVIEW.md`.
+- Planned four future detail tabs: Overview, Draft, Timeline, and Safety.
+- Confirmed QL-085 plans tabs only; it does not implement tab switching yet.
+- Confirmed any future tab state must be browser-local React state only.
+- Confirmed future tab content must reuse hard-coded synthetic conversation fields only.
+- Confirmed tabs must not fetch Supabase rows, provider inboxes, SMS/call history, recordings, transcripts, archives, retention records, live customer records, callback payloads, or AI replies.
+- Added detail-tabs plan guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotPublicDisabledPreviewSyntheticConversationDetailTabsPlan.ts`.
+- Added detail-tabs plan contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-public-disabled-preview-synthetic-conversation-detail-tabs-plan.example.json`.
+- Added source-of-truth doc at `docs/98_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_PUBLIC_DISABLED_PREVIEW_SYNTHETIC_CONVERSATION_DETAIL_TABS_PLAN.md`.
 - Added build record, ops checklist, remote-operator note, and telephony boundary note.
-- Confirmed QL-084 can approve only QL-085 public disabled preview synthetic conversation detail tabs plan.
+- Confirmed QL-085 can approve only QL-086 public disabled preview synthetic conversation detail tabs implementation.
 - Kept provider callbacks, live phone webhooks, SMS sending, call runtime, call recording, AI auto-send, persistence writes, live customer reads, live customer writes, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, Supabase runtime reads/writes, Supabase migrations, Supabase Edge Functions, Vercel, Cloudflare Pages, and live pilot runtime disabled.
 
-## QL-085 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Synthetic Conversation Detail Tabs Plan
+## QL-086 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Synthetic Conversation Detail Tabs Implementation
 
 Goal:
 
-- Plan browser-local detail tabs for the selected synthetic conversation.
-- Keep tabs hard-coded, synthetic, and public disabled preview only.
-- Consider tabs for summary, draft-only reply, synthetic history, and review notes.
+- Implement browser-local detail-tab switching for the selected synthetic conversation.
+- Use only hard-coded synthetic conversation fields.
 - Store active tab selection in React state only.
-- Do not connect providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, Supabase runtime changes, or live pilot runtime.
+- Keep brand switching and conversation selection browser-local.
+- Keep all tab content disconnected from providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, Supabase runtime changes, and live pilot runtime.
 - Verify App scaffold CI and GitHub Pages Disabled Preview deployment remain green on `main`.

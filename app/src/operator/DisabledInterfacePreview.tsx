@@ -9,17 +9,11 @@ type SyntheticConversation = {
   title: string;
   status: string;
   summary: string;
-  detail: string;
   draft: string;
   timeline: Array<{ title: string; detail: string; locked?: boolean }>;
 };
 
-const targetPreviewUrl = 'https://rosevearcreations.github.io/rosevear-comms-hub/';
-const viteBasePath = '/rosevear-comms-hub/';
-
-const brandOrder: PreviewBrandId[] = ['rosie', 'devil'];
-
-const brandSamples: Record<PreviewBrandId, {
+type PreviewBrand = {
   name: string;
   context: string;
   sample: string;
@@ -28,7 +22,13 @@ const brandSamples: Record<PreviewBrandId, {
   description: string;
   queueCards: Array<{ label: string; value: string; detail: string; help: string; tone: QueueTone }>;
   conversations: SyntheticConversation[];
-}> = {
+};
+
+const targetPreviewUrl = 'https://rosevearcreations.github.io/rosevear-comms-hub/';
+const viteBasePath = '/rosevear-comms-hub/';
+const brandOrder: PreviewBrandId[] = ['rosie', 'devil'];
+
+const brandSamples: Record<PreviewBrandId, PreviewBrand> = {
   rosie: {
     name: 'Rosie Dazzlers',
     context: 'Mobile detailing',
@@ -63,13 +63,12 @@ const brandSamples: Record<PreviewBrandId, {
       {
         id: 'rosie-ceramic-quote',
         title: 'Ceramic quote follow-up',
-        status: 'Review passed',
+        status: 'Needs review',
         summary: 'A synthetic customer asks whether a ceramic coating quote includes paint prep and safe weather timing.',
-        detail: 'Review confirms the selector changes only local preview context and does not read or write a real customer record.',
         draft: 'Draft-only sample: confirm vehicle size, explain prep expectations, and offer a weather-safe booking window.',
         timeline: [
-          { title: 'Synthetic inquiry selected', detail: 'Website quote sample opens from hard-coded local data.' },
-          { title: 'Ceramic context reviewed', detail: 'Vehicle size, prep, and coating notes remain synthetic preview copy.' },
+          { title: 'Synthetic inquiry received', detail: 'Website quote sample enters the local-only Rosie Dazzlers selector.' },
+          { title: 'Ceramic context reviewed', detail: 'Preview shows where vehicle size, prep, and coating notes could appear later.' },
           { title: 'Draft response staged', detail: 'No SMS, email, provider, persistence, or live customer path is used.' },
           { title: 'Send controls locked', detail: 'The selector changes preview context only; delivery remains disabled.', locked: true }
         ]
@@ -77,9 +76,8 @@ const brandSamples: Record<PreviewBrandId, {
       {
         id: 'rosie-missed-call',
         title: 'Missed-call callback sample',
-        status: 'Review passed',
+        status: 'Callback sample',
         summary: 'A synthetic missed-call card asks for a detailing appointment after work hours.',
-        detail: 'Review confirms this card is not telephony-backed and has no callback URL, call log, recording, or transcript source.',
         draft: 'Draft-only sample: acknowledge the missed call, ask for vehicle size, and suggest AM/PM availability.',
         timeline: [
           { title: 'Missed-call sample selected', detail: 'No phone provider event or call log is loaded.' },
@@ -91,10 +89,9 @@ const brandSamples: Record<PreviewBrandId, {
       {
         id: 'rosie-weather-reschedule',
         title: 'Weather-safe reschedule sample',
-        status: 'Review passed',
+        status: 'Winter-safe sample',
         summary: 'A synthetic customer asks whether a cold-weather service should be rescheduled.',
-        detail: 'Review confirms seasonal guidance is hard-coded and disconnected from bookings, live messages, or customer records.',
-        draft: 'Draft-only sample: explain temperature limits, offer the next safe window, and keep the booking action locked.',
+        draft: 'Draft-only sample: explain temperature limits, offer the next safe window, and keep booking locked.',
         timeline: [
           { title: 'Weather sample opened', detail: 'Synthetic cold-weather constraint is shown as local preview data.' },
           { title: 'Service limit note reviewed', detail: 'Preview explains how an operator could phrase a reschedule later.' },
@@ -138,9 +135,8 @@ const brandSamples: Record<PreviewBrandId, {
       {
         id: 'devil-custom-order',
         title: 'Custom order clarification sample',
-        status: 'Review passed',
+        status: 'Needs maker detail',
         summary: 'A synthetic customer asks about colour, sizing, and whether a custom polymer clay item can be personalized.',
-        detail: 'Review confirms the selector does not pull Etsy, email, live shop data, or customer records.',
         draft: 'Draft-only sample: confirm colour, size, personalization limits, and expected making time.',
         timeline: [
           { title: 'Custom request selected', detail: 'Hard-coded maker-shop sample opens in the browser preview.' },
@@ -152,9 +148,8 @@ const brandSamples: Record<PreviewBrandId, {
       {
         id: 'devil-maker-story',
         title: 'Maker story question sample',
-        status: 'Review passed',
+        status: 'Story sample',
         summary: 'A synthetic shopper asks about the meaning behind Devil n Dove and the materials used.',
-        detail: 'Review confirms brand-story context is hard-coded and not generated by AI or pulled from live product data.',
         draft: 'Draft-only sample: explain the Devil barriers / Dove hope theme and invite a specific product question.',
         timeline: [
           { title: 'Story question selected', detail: 'Synthetic brand-story prompt is loaded from local constants.' },
@@ -166,9 +161,8 @@ const brandSamples: Record<PreviewBrandId, {
       {
         id: 'devil-workshop-materials',
         title: 'Workshop material sample',
-        status: 'Review passed',
+        status: 'Materials sample',
         summary: 'A synthetic customer asks whether a piece can use stainless, clay, resin, or a mixed-material finish.',
-        detail: 'Review confirms material clarification does not read inventory, customer records, or live product data.',
         draft: 'Draft-only sample: ask which finish they prefer and explain that final material availability needs later review.',
         timeline: [
           { title: 'Material sample opened', detail: 'Synthetic workshop context appears in the selector.' },
@@ -181,41 +175,30 @@ const brandSamples: Record<PreviewBrandId, {
   }
 };
 
-const selectorReviewFindings = [
+const plannedDetailTabs = [
   {
-    title: 'Interaction is understandable',
-    detail: 'Brand selection and conversation selection both visibly change the operator context without needing live data.'
+    title: 'Overview tab',
+    detail: 'Show selected synthetic summary, status, brand context, and why the sample needs operator review.'
   },
   {
-    title: 'State remains browser-local',
-    detail: 'The chosen brand and conversation are stored in React state only and reset with a page reload.'
+    title: 'Draft tab',
+    detail: 'Show draft-only response copy without send, AI generation, provider delivery, or persistence.'
   },
   {
-    title: 'Sample scope is safe',
-    detail: 'Only summary text, draft-only copy, and timeline content change when the selector is used.'
+    title: 'Timeline tab',
+    detail: 'Group the existing synthetic timeline into an intentional detail view without reading call or message history.'
   },
   {
-    title: 'Locked actions stay locked',
-    detail: 'Provider, Phone/SMS, AI, archive, retention, persistence, and live pilot actions remain visibly disabled.'
+    title: 'Safety tab',
+    detail: 'Keep the locked actions, source restrictions, and runtime-disabled reminders visible beside every sample.'
   }
 ];
 
-const nextSafeInteractionRules = [
-  'May add browser-local conversation detail tabs for notes, draft, and history.',
-  'May add synthetic-only confidence labels and review badges.',
-  'Must not read Supabase rows, provider inboxes, live customers, recordings, transcripts, archives, or retention records.',
-  'Must not send SMS, place calls, generate AI replies, register callbacks, or start live pilot runtime.'
-];
-
-const rejectedEscalations = [
-  'Live Supabase conversation rows',
-  'Provider inbox imports',
-  'Phone/SMS message history',
-  'Call recordings or transcripts',
-  'Real customer search',
-  'AI-generated replies',
-  'Archive or retention records',
-  'Callback verification payloads'
+const planningChecks = [
+  'Tabs will be planned only; no tab click implementation in QL-085.',
+  'Future tab state must remain browser-local React state only.',
+  'Tab content must reuse hard-coded synthetic conversation fields only.',
+  'No tab can fetch Supabase rows, provider inboxes, SMS/call history, recordings, transcripts, archives, retention records, or AI replies.'
 ];
 
 const disabledActions = [
@@ -237,13 +220,14 @@ function HelpMarker({ label }: { label: string }) {
   );
 }
 
-function DisabledInterfacePreview() {
+export function DisabledInterfacePreview() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeBrandId, setActiveBrandId] = useState<PreviewBrandId>('rosie');
   const [activeConversationByBrand, setActiveConversationByBrand] = useState<Record<PreviewBrandId, string>>({
     rosie: 'rosie-ceramic-quote',
     devil: 'devil-custom-order'
   });
+
   const activeBrand = brandSamples[activeBrandId];
   const activeConversation = activeBrand.conversations.find((conversation) => conversation.id === activeConversationByBrand[activeBrandId]) ?? activeBrand.conversations[0];
 
@@ -252,17 +236,17 @@ function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-084</small>
+        <small>QL-085</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-084 public disabled preview synthetic conversation selector review">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-085 public disabled preview synthetic conversation detail tabs plan">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-084 Public disabled preview synthetic conversation selector review</p>
-              <h2>Synthetic conversation selector review</h2>
+              <p className="interface-preview-eyebrow">QL-085 Public disabled preview synthetic conversation detail tabs plan</p>
+              <h2>Synthetic conversation detail tabs plan</h2>
               <p>
-                This build reviews the QL-083 selector implementation. The brand switcher and conversation selector stay active, but both remain hard-coded, synthetic, browser-local, and disconnected from every live Phone/SMS, provider, Supabase, AI, persistence, archive, retention, and live pilot path.
+                This build plans the next browser-safe refinement: a future local-only tab set for the selected synthetic conversation. The current brand switcher and conversation selector remain active; the tabs are planned only and do not unlock runtime paths.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -271,7 +255,7 @@ function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            Review only. QL-084 confirms the selector is useful and safe, but it does not connect providers, fetch live messages, enable callbacks, send SMS, place calls, persist data, archive records, generate AI replies, or start live pilot runtime.
+            Browser-local preview only. QL-085 does not implement tab switching, connect providers, fetch live messages, enable callbacks, send SMS, place calls, persist data, archive records, generate AI replies, or start live pilot runtime.
           </div>
 
           <div className="interface-preview-review-grid">
@@ -280,14 +264,14 @@ function DisabledInterfacePreview() {
               <h3>GitHub Pages disabled preview</h3>
               <code className="interface-preview-link">{targetPreviewUrl}</code>
               <p>
-                The public preview remains served from GitHub Pages with the <code>{viteBasePath}</code> base path. QL-084 keeps the local selector live for review.
+                The public preview remains served from GitHub Pages with the <code>{viteBasePath}</code> base path. QL-085 keeps the existing selector live and plans the future detail-tab shape.
               </p>
             </article>
             <article className="interface-preview-card interface-preview-next-step">
-              <p className="interface-preview-eyebrow">QL-084 decision</p>
-              <h3>Selector passes safe-interaction review</h3>
+              <p className="interface-preview-eyebrow">QL-085 plan</p>
+              <h3>Plan tabs before implementing them</h3>
               <p>
-                The selector is suitable for continued public-preview refinement because it only swaps hard-coded sample context in browser-local state.
+                The next implementation may add local tabs for overview, draft, timeline, and safety. Each tab must use only the selected hard-coded synthetic conversation.
               </p>
             </article>
           </div>
@@ -316,33 +300,27 @@ function DisabledInterfacePreview() {
                 );
               })}
               <div className="interface-preview-safe-card">
-                <strong>Review result</strong>
-                <span>Selector stays safe</span>
-                <small>Hard-coded samples; no persistence or live account access</small>
+                <strong>Active sample</strong>
+                <span>{activeConversation.title}</span>
+                <small>Hard-coded sample; no persistence or live account access</small>
               </div>
             </aside>
 
             <main className="interface-preview-workspace">
               <div className="interface-preview-topline">
                 <div>
-                  <p className="interface-preview-eyebrow">Selector review view</p>
+                  <p className="interface-preview-eyebrow">Synthetic selector view</p>
                   <h3>{activeBrand.headline}</h3>
                 </div>
-                <span>Reviewed / synthetic / local state only</span>
+                <span>Planning / synthetic / local state only</span>
               </div>
 
-              <article className="interface-preview-card interface-preview-local-state-card">
-                <div className="interface-preview-card-heading">
-                  <span>{activeBrand.name} selector review</span>
-                  <HelpMarker label="QL-084 reviews the local selector without changing runtime boundaries" />
-                </div>
-                <p>{activeBrand.description}</p>
-              </article>
+              <p className="interface-preview-muted">{activeBrand.description}</p>
 
-              <div className="interface-preview-grid refined-cards">
+              <div className="interface-preview-queue-grid">
                 {activeBrand.queueCards.map((card) => (
-                  <article className={`interface-preview-card ${card.tone}`} key={card.label}>
-                    <div className="interface-preview-card-heading">
+                  <article className={`interface-preview-queue-card ${card.tone}`} key={card.label}>
+                    <div className="interface-preview-section-title">
                       <span>{card.label}</span>
                       <HelpMarker label={card.help} />
                     </div>
@@ -352,115 +330,90 @@ function DisabledInterfacePreview() {
                 ))}
               </div>
 
-              <div className="interface-preview-detail-grid">
-                <article className="interface-preview-card timeline refined-timeline">
-                  <div className="interface-preview-card-heading">
-                    <p className="interface-preview-eyebrow">Synthetic conversations</p>
-                    <HelpMarker label="Conversation buttons switch hard-coded samples only" />
-                  </div>
-                  <h4>Selector remains active for review</h4>
-                  <ol>
-                    {activeBrand.conversations.map((conversation) => {
-                      const isActive = conversation.id === activeConversation.id;
-                      return (
-                        <li key={conversation.id}>
-                          <button
-                            type="button"
-                            className={isActive ? 'interface-preview-brand active interactive' : 'interface-preview-brand interactive'}
-                            aria-pressed={isActive}
-                            onClick={() => setActiveConversationByBrand((current) => ({ ...current, [activeBrandId]: conversation.id }))}
-                          >
-                            <span>{conversation.title}</span>
-                            <small>{conversation.status}</small>
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ol>
-                </article>
-
-                <article className="interface-preview-card controls">
-                  <div className="interface-preview-card-heading">
-                    <p className="interface-preview-eyebrow">Selected sample review</p>
-                    <HelpMarker label="Selected sample changes preview text only" />
-                  </div>
-                  <h4>{activeConversation.title}</h4>
-                  <p>{activeConversation.summary}</p>
-                  <small>{activeConversation.detail}</small>
-                  <div className="interface-preview-warning">{activeConversation.draft}</div>
-                </article>
-              </div>
-
-              <div className="interface-preview-detail-grid">
-                <article className="interface-preview-card timeline refined-timeline">
-                  <div className="interface-preview-card-heading">
-                    <p className="interface-preview-eyebrow">Synthetic timeline</p>
-                    <HelpMarker label="Timeline is derived from hard-coded local sample data" />
-                  </div>
-                  <ol>
-                    {activeConversation.timeline.map((item) => (
-                      <li className={item.locked ? 'locked-step' : undefined} key={item.title}>
-                        <strong>{item.title}</strong>
-                        <span>{item.detail}</span>
-                      </li>
-                    ))}
-                  </ol>
-                </article>
-
-                <article className="interface-preview-card controls">
-                  <div className="interface-preview-card-heading">
-                    <p className="interface-preview-eyebrow">Locked controls</p>
-                    <HelpMarker label="Controls remain locked after selector review" />
-                  </div>
-                  <div className="interface-preview-action-grid">
-                    {disabledActions.map((action) => (
-                      <button type="button" disabled key={action}>
-                        {action} locked
+              <section className="interface-preview-card">
+                <div className="interface-preview-section-title">
+                  <p className="interface-preview-eyebrow">Synthetic conversation selector</p>
+                  <HelpMarker label="Conversation selector remains hard-coded and browser-local" />
+                </div>
+                <div className="interface-preview-selector-list">
+                  {activeBrand.conversations.map((conversation) => {
+                    const isSelected = conversation.id === activeConversation.id;
+                    return (
+                      <button
+                        type="button"
+                        className={isSelected ? 'interface-preview-selector active' : 'interface-preview-selector'}
+                        aria-pressed={isSelected}
+                        onClick={() => setActiveConversationByBrand((current) => ({ ...current, [activeBrandId]: conversation.id }))}
+                        key={conversation.id}
+                      >
+                        <span>{conversation.title}</span>
+                        <small>{conversation.status}</small>
                       </button>
-                    ))}
-                  </div>
-                  <p className="interface-preview-control-note">
-                    The selector review approves local preview interaction only. It does not unlock any live action button.
-                  </p>
-                </article>
+                    );
+                  })}
+                </div>
+              </section>
+
+              <section className="interface-preview-card">
+                <div className="interface-preview-section-title">
+                  <p className="interface-preview-eyebrow">Selected synthetic conversation</p>
+                  <HelpMarker label="Current selector output remains synthetic preview text only" />
+                </div>
+                <h4>{activeConversation.title}</h4>
+                <p>{activeConversation.summary}</p>
+                <div className="interface-preview-draft-box">
+                  <strong>Current draft-only copy</strong>
+                  <span>{activeConversation.draft}</span>
+                </div>
+              </section>
+
+              <section className="interface-preview-card">
+                <div className="interface-preview-section-title">
+                  <p className="interface-preview-eyebrow">Planned detail tabs</p>
+                  <HelpMarker label="QL-085 plans the tabs only; QL-086 may implement local tab state" />
+                </div>
+                <div className="interface-preview-selector-list">
+                  {plannedDetailTabs.map((tab) => (
+                    <button className="interface-preview-selector" type="button" disabled key={tab.title}>
+                      <span>{tab.title}</span>
+                      <small>{tab.detail}</small>
+                    </button>
+                  ))}
+                </div>
+              </section>
+
+              <section className="interface-preview-card">
+                <div className="interface-preview-section-title">
+                  <p className="interface-preview-eyebrow">Planning checks</p>
+                  <HelpMarker label="These checks become the gate for implementing detail tabs safely" />
+                </div>
+                <ul className="interface-preview-check-list">
+                  {planningChecks.map((check) => (
+                    <li key={check}>{check}</li>
+                  ))}
+                </ul>
+              </section>
+
+              <section className="interface-preview-timeline">
+                {activeConversation.timeline.map((event) => (
+                  <article className={event.locked ? 'locked' : ''} key={event.title}>
+                    <strong>{event.title}</strong>
+                    <p>{event.detail}</p>
+                  </article>
+                ))}
+              </section>
+
+              <div className="interface-preview-actions" aria-label="Locked live actions">
+                {disabledActions.map((action) => (
+                  <button disabled type="button" key={action}>
+                    {action} locked
+                  </button>
+                ))}
               </div>
             </main>
-          </div>
-
-          <div className="interface-preview-columns">
-            <article className="interface-preview-card interface-preview-wide-card">
-              <h3>QL-084 review findings</h3>
-              <div className="interface-preview-help-grid">
-                {selectorReviewFindings.map((item) => (
-                  <div className="interface-preview-help-card" key={item.title}>
-                    <HelpMarker label={`${item.title} review finding`} />
-                    <strong>{item.title}</strong>
-                    <p>{item.detail}</p>
-                  </div>
-                ))}
-              </div>
-            </article>
-            <article className="interface-preview-card interface-preview-wide-card interface-preview-interactions">
-              <h3>Next safe interaction rules</h3>
-              <div className="interface-preview-pill-list">
-                {nextSafeInteractionRules.map((rule) => (
-                  <span key={rule}>{rule}</span>
-                ))}
-              </div>
-            </article>
-            <article className="interface-preview-card interface-preview-wide-card interface-preview-interactions">
-              <h3>Still rejected as selector sources</h3>
-              <div className="interface-preview-pill-list">
-                {rejectedEscalations.map((source) => (
-                  <span key={source}>{source}</span>
-                ))}
-              </div>
-            </article>
           </div>
         </div>
       )}
     </section>
   );
 }
-
-export { DisabledInterfacePreview };
