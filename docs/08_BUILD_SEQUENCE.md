@@ -80,31 +80,32 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-073 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Verification — complete.
 - QL-074 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Visual Review — complete.
 - QL-075 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Feedback Intake — complete.
+- QL-076 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Feedback Review — complete.
 
-## QL-076 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Feedback Review
+## QL-077 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Refinement Plan
 
 Status: complete.
 
 Result:
 
-- Updated the floating interface preview to show QL-076 public disabled preview feedback-review state.
+- Updated the floating interface preview to show QL-077 public disabled preview refinement-plan state.
 - Kept the public review URL visible: `https://rosevearcreations.github.io/rosevear-comms-hub/`.
-- Added feedback-review findings for direction, brand switching, operator flow, locked controls, help-system placement, and first safe interaction.
-- Added feedback-review decision rules for classifying feedback and blocking runtime changes.
-- Added feedback-review guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotPublicDisabledPreviewFeedbackReview.ts`.
-- Added feedback-review contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-public-disabled-preview-feedback-review.example.json`.
-- Added source-of-truth doc at `docs/89_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_PUBLIC_DISABLED_PREVIEW_FEEDBACK_REVIEW.md`.
+- Added refinement priorities for layout clarity, brand switching context, inbox card readability, customer timeline readability, disabled action clarity, help-system placement, accessibility and responsiveness, and first browser-safe interaction.
+- Added QL-077 decision rules that permit only static public-preview refinement planning.
+- Added refinement-plan guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotPublicDisabledPreviewRefinementPlan.ts`.
+- Added refinement-plan contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-public-disabled-preview-refinement-plan.example.json`.
+- Added source-of-truth doc at `docs/90_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_PUBLIC_DISABLED_PREVIEW_REFINEMENT_PLAN.md`.
 - Added build record, ops checklist, remote-operator note, and telephony boundary note.
-- Confirmed feedback can be classified into layout, navigation, labels, help system, accessibility, brand switching, operator queue, customer timeline, disabled-control clarity, and next interactive surface.
-- Confirmed QL-076 can approve only QL-077 public disabled preview refinement planning.
+- Confirmed the first future interaction must use synthetic sample data or browser-local state only until a later build proves a safe backend boundary.
+- Confirmed GitHub Pages remains the current public disabled preview host.
 - Kept provider callbacks, live phone webhooks, SMS sending, call runtime, call recording, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, Supabase migrations, Supabase Edge Functions, Vercel, Cloudflare Pages, and live pilot runtime disabled.
 
-## QL-077 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Refinement Plan
+## QL-078 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Refinement Implementation
 
 Goal:
 
-- Convert QL-076 feedback review findings into a prioritized public preview refinement plan.
-- Plan layout, labels, brand switching, inbox cards, timeline, disabled-control clarity, circled-i help placement, and accessibility improvements.
-- Identify the first browser-safe interactive surface to build next without provider, callback, SMS, call, recording, AI send, persistence, archive, retention, or live pilot runtime.
+- Implement the QL-077 public disabled preview refinement plan in the static GitHub Pages preview.
+- Improve layout clarity, brand switching context, inbox cards, customer timeline wording, disabled-control clarity, circled-i help placement, and accessibility/responsiveness.
+- Add at most one browser-safe synthetic/local-only interaction if it can be implemented without provider, callback, SMS, call, recording, AI send, persistence, archive, retention, Supabase runtime, or live pilot behavior.
 - Keep the GitHub Pages disabled preview deployable and public-safe.
 - Keep all Phone/SMS, provider, callback, recording, AI send, persistence, archive, retention, Supabase runtime, and live pilot controls disabled unless a later build explicitly proves and enables a controlled path.
