@@ -1,0 +1,59 @@
+{
+  "buildId": "QL-079",
+  "title": "Public Disabled Preview First Safe Interaction Plan",
+  "publicPreviewUrl": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+  "selectedInteraction": {
+    "id": "sample-brand-switcher",
+    "label": "Sample brand switcher",
+    "decision": "approve_first_safe_interaction_implementation",
+    "implementationBuild": "QL-080-public-disabled-preview-first-safe-interaction-implementation",
+    "reason": "The sample brand switcher proves useful operator context while staying browser-local and synthetic-data-only."
+  },
+  "candidateDecisions": [
+    {
+      "id": "sample-brand-switcher",
+      "decision": "selected_first",
+      "browserLocalOnly": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "id": "synthetic-conversation-selector",
+      "decision": "second_candidate",
+      "browserLocalOnly": true,
+      "syntheticDataOnly": true
+    },
+    {
+      "id": "browser-local-feedback-checklist",
+      "decision": "review_aid_only",
+      "browserLocalOnly": true,
+      "syntheticDataOnly": true
+    }
+  ],
+  "acceptanceChecksForNextBuild": [
+    "Use only hard-coded synthetic preview data or browser-local state.",
+    "Do not import or initialize the Supabase client.",
+    "Do not read or write persistence, archive, retention, or live customer records.",
+    "Do not expose provider credentials, service-role keys, callback tokens, live phone numbers, message bodies, transcripts, or recordings.",
+    "Do not enable SMS sending, call runtime, recording, AI send, provider delivery, callback registration, or live pilot behavior.",
+    "Keep every live action visibly locked and inert while allowing the selected safe UI interaction."
+  ],
+  "runtimeBoundary": {
+    "providerCallbacksEnabled": false,
+    "livePhoneWebhooksEnabled": false,
+    "smsSendingEnabled": false,
+    "callRuntimeEnabled": false,
+    "recordingEnabled": false,
+    "aiSendEnabled": false,
+    "persistenceWritesEnabled": false,
+    "liveCustomerAccessEnabled": false,
+    "archiveWritesEnabled": false,
+    "retentionWritesEnabled": false,
+    "supabaseRuntimeChanged": false,
+    "supabaseMigrationAdded": false,
+    "supabaseEdgeFunctionAdded": false,
+    "vercelAdded": false,
+    "cloudflarePagesAdded": false,
+    "livePilotRuntimeEnabled": false
+  },
+  "approvedNextBuild": "QL-080 — Public Disabled Preview First Safe Interaction Implementation"
+}

@@ -21,82 +21,68 @@ const brandPanels = [
   }
 ];
 
-const refinedQueueCards = [
+const plannedInteractionCandidates = [
   {
-    label: 'Needs reply',
-    value: '4',
-    detail: 'Website + missed-call follow-ups',
-    help: 'Prioritizes visible work only; no real message send is connected.',
-    tone: 'priority'
+    title: 'Sample brand switcher',
+    decision: 'Approve as the first interaction to implement next',
+    reason: 'It is useful, understandable, and can run entirely from synthetic data in browser-local state.',
+    safety: 'No provider, Supabase runtime, persistence writes, live customer records, SMS, calls, callbacks, archive, retention, or AI send.'
   },
   {
-    label: 'Draft follow-ups',
-    value: '2',
-    detail: 'Operator review before sending later',
-    help: 'Draft-only means the preview can show intent without provider delivery.',
-    tone: 'safe'
+    title: 'Synthetic conversation selector',
+    decision: 'Keep as second interaction candidate',
+    reason: 'It can help prove the cockpit flow after brand switching is clear.',
+    safety: 'Synthetic-only conversation cards; no real message bodies, phone numbers, transcripts, or customer records.'
   },
   {
-    label: 'Phone/SMS runtime',
-    value: 'OFF',
-    detail: 'Controls visible, locked, and inert',
-    help: 'Runtime remains blocked for calls, SMS, callbacks, recordings, and AI send.',
-    tone: 'locked'
+    title: 'Local feedback checklist',
+    decision: 'Keep as review aid, not first interaction',
+    reason: 'Useful for visual review but less important than proving brand context first.',
+    safety: 'Browser-local only and not submitted anywhere.'
   }
 ];
 
-const timelineSteps = [
+const interactionAcceptanceChecks = [
+  'Uses only hard-coded synthetic preview data or browser-local state.',
+  'Does not import or initialize the Supabase client.',
+  'Does not read or write persistence, archive, retention, or live customer tables.',
+  'Does not expose provider credentials, service-role keys, callback tokens, live phone numbers, message bodies, transcripts, or recordings.',
+  'Does not enable SMS sending, call runtime, recording, AI send, provider delivery, callback registration, or live pilot behavior.',
+  'Keeps every live action visibly locked and inert while allowing the selected safe UI interaction.'
+];
+
+const implementationScope = [
   {
-    title: 'Inquiry received',
-    detail: 'Synthetic website request enters the sample queue.',
-    locked: false
+    step: '1',
+    title: 'Add browser-local active brand state',
+    detail: 'Use React state only to switch between Rosie Dazzlers and Devil n Dove sample panels.'
   },
   {
-    title: 'Internal note added',
-    detail: 'Operator can understand where a private note will appear later.',
-    locked: false
+    step: '2',
+    title: 'Swap synthetic queue content',
+    detail: 'Change visible counts, sample task labels, and timeline headings based on the active brand.'
   },
   {
-    title: 'Draft task prepared',
-    detail: 'Follow-up is staged as review-only sample data.',
-    locked: false
+    step: '3',
+    title: 'Preserve locked action controls',
+    detail: 'Keep SMS, calls, provider connection, callbacks, persistence, archive, retention, AI, and live pilot controls disabled.'
   },
   {
-    title: 'SMS/call actions locked',
-    detail: 'No provider connection, callback registration, or live customer record is used.',
-    locked: true
+    step: '4',
+    title: 'Verify static Pages deployment',
+    detail: 'Confirm App scaffold CI and GitHub Pages Disabled Preview both remain green after promotion.'
   }
 ];
 
-const helpMarkers = [
-  {
-    area: 'Brand switcher',
-    guidance: 'Explains how Rosie Dazzlers and Devil n Dove stay separated inside one shared console.'
-  },
-  {
-    area: 'Queue cards',
-    guidance: 'Explains urgency, source, draft-only state, and why visible counts are synthetic.'
-  },
-  {
-    area: 'Timeline',
-    guidance: 'Explains inquiry, note, draft task, and locked communication action order.'
-  },
-  {
-    area: 'Disabled controls',
-    guidance: 'Explains why live SMS, calls, callbacks, AI, archive, retention, and persistence remain off.'
-  },
-  {
-    area: 'Deployment status',
-    guidance: 'Explains the GitHub Pages preview and public-safe browser boundary.'
-  }
-];
-
-const firstSafeInteractionOptions = [
-  'Sample brand switcher',
-  'Synthetic conversation selector',
-  'Local task filter',
-  'Preview layout preference',
-  'Browser-local feedback checklist'
+const rejectedFirstInteractions = [
+  'Real SMS draft send',
+  'Call test button',
+  'Provider connect flow',
+  'Callback verification route',
+  'Supabase-backed inbox reads',
+  'Live customer search',
+  'Archive or retention action',
+  'AI reply generation'
 ];
 
 const disabledActions = [
@@ -126,17 +112,17 @@ function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-078</small>
+        <small>QL-079</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-078 public disabled preview refinement implementation">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-079 public disabled preview first safe interaction plan">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-078 Public disabled preview refinement implementation</p>
-              <h2>Quo-lite public preview refinements</h2>
+              <p className="interface-preview-eyebrow">QL-079 Public disabled preview first safe interaction plan</p>
+              <h2>First safe interaction plan</h2>
               <p>
-                This build implements the safe public-preview refinements planned in QL-077: clearer layout sections, visible circled-i help markers, refined brand and queue context, a more readable synthetic timeline, and first safe interaction candidates.
+                This build chooses the first browser-safe public preview interaction to implement next. The selected path is a sample brand switcher using synthetic data and browser-local React state only, while every Phone/SMS, provider, Supabase runtime, persistence, archive, retention, AI, and live pilot path remains blocked.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -145,7 +131,7 @@ function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            Static public preview only. Phone/SMS providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, Supabase runtime changes, and live pilot runtime remain OFF.
+            Interaction plan only. QL-079 does not enable the interaction yet and does not connect providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, Supabase runtime changes, or live pilot runtime.
           </div>
 
           <div className="interface-preview-review-grid">
@@ -154,14 +140,14 @@ function DisabledInterfacePreview() {
               <h3>GitHub Pages disabled preview</h3>
               <code className="interface-preview-link">{targetPreviewUrl}</code>
               <p>
-                The preview remains served from GitHub Pages with the <code>{viteBasePath}</code> base path. The browser bundle stays public-safe and runtime-disabled.
+                The public preview remains served from GitHub Pages with the <code>{viteBasePath}</code> base path. QL-079 plans the first local-only interaction for the same public-safe surface.
               </p>
             </article>
             <article className="interface-preview-card interface-preview-next-step">
-              <p className="interface-preview-eyebrow">QL-078 refinement result</p>
-              <h3>Usability refined before live integration</h3>
+              <p className="interface-preview-eyebrow">QL-079 decision</p>
+              <h3>Implement brand switching next</h3>
               <p>
-                The page now gives a clearer first impression and prepares for a future browser-safe interaction using synthetic sample data or local state only.
+                The first safe interaction should be a browser-local brand switcher that changes synthetic preview content between Rosie Dazzlers and Devil n Dove without backend or provider access.
               </p>
             </article>
           </div>
@@ -169,8 +155,8 @@ function DisabledInterfacePreview() {
           <div className="interface-preview-shell refined" aria-label="Static operator dashboard mockup">
             <aside className="interface-preview-sidebar">
               <div className="interface-preview-section-title">
-                <p className="interface-preview-eyebrow">Brands</p>
-                <HelpMarker label="Brand switcher guidance" />
+                <p className="interface-preview-eyebrow">Planned interaction</p>
+                <HelpMarker label="First safe interaction guidance" />
               </div>
               {brandPanels.map((brand) => (
                 <button type="button" className={brand.active ? 'interface-preview-brand active' : 'interface-preview-brand'} disabled key={brand.name}>
@@ -181,45 +167,59 @@ function DisabledInterfacePreview() {
               ))}
               <div className="interface-preview-safe-card">
                 <strong>Preview status</strong>
-                <span>Refinement implemented</span>
-                <small>Static Pages preview; live controls locked</small>
+                <span>Interaction planned</span>
+                <small>Next build may make these sample brand buttons locally interactive</small>
               </div>
             </aside>
 
             <main className="interface-preview-workspace">
               <div className="interface-preview-topline">
                 <div>
-                  <p className="interface-preview-eyebrow">Operator queue</p>
-                  <h3>Today’s communication cockpit</h3>
+                  <p className="interface-preview-eyebrow">Safe interaction boundary</p>
+                  <h3>Browser-local brand switching</h3>
                 </div>
-                <span>Static / disabled / refined</span>
+                <span>Plan only / synthetic / local state</span>
               </div>
 
               <div className="interface-preview-grid refined-cards">
-                {refinedQueueCards.map((card) => (
-                  <article className={`interface-preview-card ${card.tone}`} key={card.label}>
-                    <div className="interface-preview-card-heading">
-                      <span>{card.label}</span>
-                      <HelpMarker label={card.help} />
-                    </div>
-                    <strong>{card.value}</strong>
-                    <small>{card.detail}</small>
-                  </article>
-                ))}
+                <article className="interface-preview-card safe">
+                  <div className="interface-preview-card-heading">
+                    <span>Selected first interaction</span>
+                    <HelpMarker label="Selected interaction" />
+                  </div>
+                  <strong>Brand</strong>
+                  <small>Switch Rosie Dazzlers / Devil n Dove synthetic panels</small>
+                </article>
+                <article className="interface-preview-card priority">
+                  <div className="interface-preview-card-heading">
+                    <span>Data source</span>
+                    <HelpMarker label="Synthetic data only" />
+                  </div>
+                  <strong>Local</strong>
+                  <small>Hard-coded sample records or React state only</small>
+                </article>
+                <article className="interface-preview-card locked">
+                  <div className="interface-preview-card-heading">
+                    <span>Runtime status</span>
+                    <HelpMarker label="Runtime remains locked" />
+                  </div>
+                  <strong>OFF</strong>
+                  <small>Live SMS, calls, callbacks, Supabase runtime, and provider delivery blocked</small>
+                </article>
               </div>
 
               <div className="interface-preview-detail-grid">
                 <article className="interface-preview-card timeline refined-timeline">
                   <div className="interface-preview-card-heading">
-                    <p className="interface-preview-eyebrow">Customer timeline</p>
-                    <HelpMarker label="Timeline guidance" />
+                    <p className="interface-preview-eyebrow">Implementation plan</p>
+                    <HelpMarker label="Implementation steps" />
                   </div>
-                  <h4>Example: ceramic quote follow-up</h4>
+                  <h4>Next safe interaction implementation path</h4>
                   <ol>
-                    {timelineSteps.map((step) => (
-                      <li key={step.title} className={step.locked ? 'locked-step' : undefined}>
-                        <strong>{step.title}</strong>
-                        <span>{step.detail}</span>
+                    {implementationScope.map((item) => (
+                      <li key={item.step}>
+                        <strong>{item.step}. {item.title}</strong>
+                        <span>{item.detail}</span>
                       </li>
                     ))}
                   </ol>
@@ -227,8 +227,8 @@ function DisabledInterfacePreview() {
 
                 <article className="interface-preview-card controls">
                   <div className="interface-preview-card-heading">
-                    <p className="interface-preview-eyebrow">Disabled controls</p>
-                    <HelpMarker label="Disabled control guidance" />
+                    <p className="interface-preview-eyebrow">Locked controls</p>
+                    <HelpMarker label="Controls remain locked" />
                   </div>
                   <div className="interface-preview-action-grid">
                     {disabledActions.map((action) => (
@@ -238,7 +238,7 @@ function DisabledInterfacePreview() {
                     ))}
                   </div>
                   <p className="interface-preview-control-note">
-                    All buttons are visible to show the future operator surface, but they are intentionally inert in the public preview.
+                    The first safe interaction may change sample UI context only. It must not unlock any live action button.
                   </p>
                 </article>
               </div>
@@ -247,24 +247,33 @@ function DisabledInterfacePreview() {
 
           <div className="interface-preview-columns">
             <article className="interface-preview-card interface-preview-wide-card">
-              <h3>Implemented QL-078 refinements</h3>
+              <h3>QL-079 candidate decision</h3>
               <div className="interface-preview-help-grid">
-                {helpMarkers.map((marker) => (
-                  <div className="interface-preview-help-card" key={marker.area}>
-                    <HelpMarker label={`${marker.area} help`} />
-                    <strong>{marker.area}</strong>
-                    <p>{marker.guidance}</p>
+                {plannedInteractionCandidates.map((candidate) => (
+                  <div className="interface-preview-help-card" key={candidate.title}>
+                    <HelpMarker label={`${candidate.title} decision`} />
+                    <strong>{candidate.title}</strong>
+                    <p><b>{candidate.decision}.</b> {candidate.reason}</p>
+                    <p>{candidate.safety}</p>
                   </div>
                 ))}
               </div>
             </article>
+            <article className="interface-preview-card interface-preview-wide-card">
+              <h3>Acceptance checks for the next build</h3>
+              <ol>
+                {interactionAcceptanceChecks.map((check) => (
+                  <li key={check}>{check}</li>
+                ))}
+              </ol>
+            </article>
             <article className="interface-preview-card interface-preview-wide-card interface-preview-interactions">
-              <h3>First browser-safe interaction candidates</h3>
+              <h3>Rejected as first interactions</h3>
               <p>
-                These are still candidates only. A later build can implement one using synthetic sample data or browser-local state, without provider, Supabase runtime, or live customer data.
+                These are intentionally rejected for the first public preview interaction because they touch provider, backend, live customer, or delivery risk.
               </p>
               <div className="interface-preview-pill-list">
-                {firstSafeInteractionOptions.map((option) => (
+                {rejectedFirstInteractions.map((option) => (
                   <span key={option}>{option}</span>
                 ))}
               </div>
