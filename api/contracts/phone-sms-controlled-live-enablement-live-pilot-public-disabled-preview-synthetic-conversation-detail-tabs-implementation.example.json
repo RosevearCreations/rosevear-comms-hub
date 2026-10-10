@@ -1,0 +1,91 @@
+{
+  "buildId": "QL-086",
+  "name": "Public Disabled Preview Synthetic Conversation Detail Tabs Implementation",
+  "publicPreview": {
+    "url": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+    "viteBasePath": "/rosevear-comms-hub/",
+    "staticPublicPreview": true,
+    "browserOutputSafe": true
+  },
+  "supabase": {
+    "projectName": "rosevearcreations",
+    "projectUrl": "https://gxujcwpktaickcgzyvnu.supabase.co",
+    "recordedAsFutureDatabaseAndFunctionsTarget": true,
+    "runtimeReadsEnabled": false,
+    "runtimeWritesEnabled": false,
+    "migrationAdded": false,
+    "edgeFunctionAdded": false
+  },
+  "implementedTabs": [
+    {
+      "id": "overview",
+      "label": "Overview",
+      "source": "selected hard-coded synthetic conversation summary/status/brand only"
+    },
+    {
+      "id": "draft",
+      "label": "Draft",
+      "source": "selected hard-coded synthetic conversation draft only"
+    },
+    {
+      "id": "timeline",
+      "label": "Timeline",
+      "source": "selected hard-coded synthetic conversation timeline only"
+    },
+    {
+      "id": "safety",
+      "label": "Safety",
+      "source": "static locked-runtime explanation only"
+    }
+  ],
+  "stateModel": {
+    "brandSwitchState": "browser-local React state only",
+    "conversationSelectorState": "browser-local React state only",
+    "detailTabState": "browser-local React state only",
+    "persistence": false,
+    "reloadResetsPreviewState": true
+  },
+  "runtimeBoundary": {
+    "providerCallbacksEnabled": false,
+    "livePhoneWebhooksEnabled": false,
+    "smsSendingEnabled": false,
+    "callRuntimeEnabled": false,
+    "recordingRuntimeEnabled": false,
+    "aiReplyGenerationEnabled": false,
+    "aiSendEnabled": false,
+    "persistenceWritesEnabled": false,
+    "liveCustomerReadsEnabled": false,
+    "liveCustomerWritesEnabled": false,
+    "archiveWritesEnabled": false,
+    "retentionWritesEnabled": false,
+    "providerInboxReadsEnabled": false,
+    "callbackPayloadReadsEnabled": false,
+    "livePilotRuntimeEnabled": false
+  },
+  "browserSafety": {
+    "allowed": [
+      "hard-coded Rosie Dazzlers sample conversations",
+      "hard-coded Devil n Dove sample conversations",
+      "browser-local brand switch state",
+      "browser-local conversation selector state",
+      "browser-local active detail tab state",
+      "static locked-action labels"
+    ],
+    "disallowed": [
+      "Supabase runtime rows",
+      "Supabase writes",
+      "Supabase migrations",
+      "Supabase Edge Functions",
+      "provider inbox imports",
+      "live customer records",
+      "SMS or call history",
+      "recordings",
+      "transcripts",
+      "archives",
+      "retention records",
+      "AI replies",
+      "callback payloads"
+    ]
+  },
+  "nextBuild": "QL-087-public-disabled-preview-synthetic-conversation-detail-tabs-review"
+}
