@@ -1,0 +1,52 @@
+{
+  "build": "QL-077",
+  "scope": "public_disabled_preview_refinement_plan_only",
+  "decision": "approve_static_public_preview_refinement_plan",
+  "status": "public_disabled_preview_refinement_plan_ready",
+  "publicPreviewUrl": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+  "evidence": {
+    "publicPreviewDeploymentGreen": true,
+    "appCiGreen": true,
+    "pagesWorkflowGreen": true,
+    "browserBundlePublicOnly": true
+  },
+  "approvedRefinements": [
+    "layout_clarity",
+    "brand_switching_context",
+    "inbox_card_readability",
+    "customer_timeline_readability",
+    "disabled_action_clarity",
+    "help_system_placement",
+    "accessibility_and_responsiveness",
+    "first_browser_safe_interaction"
+  ],
+  "plannedOutcomes": [
+    "Make the public preview easier to scan without adding runtime behavior.",
+    "Show Rosie Dazzlers and Devil n Dove as separate brand inboxes in one console.",
+    "Improve static queue cards with clearer urgency, source, and draft-only labels.",
+    "Refine the sample timeline so locked SMS and call actions are easier to understand.",
+    "Make every locked action explain why it is disabled and what later proof is required.",
+    "Plan circled-i help notes near key static console regions.",
+    "Improve keyboard, small-screen, and readable-label planning before interaction.",
+    "Pick a future synthetic-only interaction such as local brand switching or task filtering."
+  ],
+  "blockedRuntime": {
+    "providerCallbacksEnabled": false,
+    "livePhoneWebhooksEnabled": false,
+    "smsSendingEnabled": false,
+    "callRuntimeEnabled": false,
+    "recordingEnabled": false,
+    "aiAutoSendEnabled": false,
+    "persistenceWritesEnabled": false,
+    "liveCustomerReadsEnabled": false,
+    "liveCustomerWritesEnabled": false,
+    "archiveWritesEnabled": false,
+    "retentionPolicyWritesEnabled": false,
+    "supabaseMigrationAdded": false,
+    "supabaseEdgeFunctionAdded": false,
+    "vercelAdded": false,
+    "cloudflarePagesAdded": false,
+    "livePilotRuntimeEnabled": false
+  },
+  "nextBuild": "QL-078-public-disabled-preview-refinement-implementation"
+}
