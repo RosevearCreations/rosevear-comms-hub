@@ -1,0 +1,52 @@
+{
+  "build": "QL-084",
+  "name": "Public Disabled Preview Synthetic Conversation Selector Review",
+  "previewUrl": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+  "implementationUnderReview": "QL-083 synthetic conversation selector",
+  "reviewStatus": "passed",
+  "reviewFindings": [
+    "Brand switching remains browser-local and synthetic.",
+    "Conversation selection remains hard-coded and browser-local.",
+    "Selection changes only synthetic summary, draft-only copy, and timeline content.",
+    "Selected state resets on reload because it is held in React state only.",
+    "Locked live controls remain visibly disabled."
+  ],
+  "approvedNextBuild": {
+    "id": "QL-085",
+    "title": "Public Disabled Preview Synthetic Conversation Detail Tabs Plan",
+    "scope": "Plan browser-local detail tabs for synthetic sample conversations only."
+  },
+  "allowedSources": [
+    "Hard-coded sample conversation constants",
+    "Browser-local React state"
+  ],
+  "forbiddenSources": [
+    "Live Supabase conversation rows",
+    "Provider inbox imports",
+    "Phone/SMS message history",
+    "Call recordings or transcripts",
+    "Live customer records",
+    "AI-generated replies",
+    "Archive records",
+    "Retention records",
+    "Callback verification payloads"
+  ],
+  "runtimeBoundary": {
+    "providerCallbacksEnabled": false,
+    "livePhoneWebhooksEnabled": false,
+    "smsSendingEnabled": false,
+    "callRuntimeEnabled": false,
+    "recordingEnabled": false,
+    "aiSendEnabled": false,
+    "persistenceWritesEnabled": false,
+    "liveCustomerAccessEnabled": false,
+    "archiveWritesEnabled": false,
+    "retentionWritesEnabled": false,
+    "supabaseRuntimeChangesEnabled": false,
+    "supabaseMigrationsEnabled": false,
+    "supabaseEdgeFunctionsEnabled": false,
+    "vercelEnabled": false,
+    "cloudflarePagesEnabled": false,
+    "livePilotRuntimeEnabled": false
+  }
+}
