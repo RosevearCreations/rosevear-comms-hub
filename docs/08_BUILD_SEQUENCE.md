@@ -77,32 +77,31 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-070 — Phone/SMS Controlled Live Enablement Live-Pilot Disabled Interface Preview Review — complete.
 - QL-071 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Plan — complete.
 - QL-072 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Enablement Gate — complete.
+- QL-073 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Verification — complete.
 
-## QL-073 — Phone/SMS Controlled Live Enablement Live-Pilot GitHub Pages Disabled Preview Deployment Verification
+## QL-074 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Visual Review
 
 Status: complete.
 
 Result:
 
-- Updated the floating interface preview to show QL-073 deployment-verification state.
-- Added deployment-verification guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotGithubPagesDisabledPreviewDeploymentVerification.ts`.
-- Added deployment-verification contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-github-pages-disabled-preview-deployment-verification.example.json`.
-- Added source-of-truth doc at `docs/86_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_GITHUB_PAGES_DISABLED_PREVIEW_DEPLOYMENT_VERIFICATION.md`.
-- Added build record, ops checklist, remote-operator checklist, and telephony boundary note.
-- Confirmed verification must observe the normal App scaffold CI on `main`.
-- Confirmed verification must observe the GitHub Pages Disabled Preview workflow on the `main` push.
-- Confirmed the target public review URL remains `https://rosevearcreations.github.io/rosevear-comms-hub/`.
+- Updated the floating interface preview to show QL-074 public disabled preview visual-review state.
+- Added public disabled preview visual review guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotPublicDisabledPreviewVisualReview.ts`.
+- Added public disabled preview visual review contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-public-disabled-preview-visual-review.example.json`.
+- Added source-of-truth doc at `docs/87_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_PUBLIC_DISABLED_PREVIEW_VISUAL_REVIEW.md`.
+- Added build record, ops checklist, remote-operator note, and telephony boundary note.
+- Confirmed the public visual review target remains `https://rosevearcreations.github.io/rosevear-comms-hub/`.
 - Confirmed the static build path remains `/rosevear-comms-hub/`.
-- Confirmed the Pages workflow is valid only when it deploys static review assets or safely skips behind `ENABLE_GITHUB_PAGES_DISABLED_PREVIEW`.
+- Confirmed the Pages workflow must either deploy static assets when `ENABLE_GITHUB_PAGES_DISABLED_PREVIEW=true` or skip safely behind the gate.
+- Confirmed a skipped Pages workflow is safe but does not provide a human visual review surface.
 - Confirmed browser output must not include service-role keys, provider credentials, callback tokens, live phone numbers, live message bodies, transcripts, recordings, or live customer data.
 - Kept provider callbacks, live phone webhooks, SMS sending, call runtime, call recording, AI auto-send, persistence writes, live customer reads, live customer writes, dry-run execution, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, Supabase migrations, Supabase Edge Functions, Vercel, Cloudflare Pages, and live pilot runtime disabled.
 
-## QL-074 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Visual Review
+## QL-075 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Feedback Intake
 
 Goal:
 
-- Review the public GitHub Pages disabled preview if QL-073 confirms a successful static Pages deployment.
-- If QL-073 observes a safe skip, keep the next action focused on correcting the external GitHub Pages/variable setting before visual review.
-- Confirm the public static preview communicates the correct Quo-lite direction for Rosie Dazzlers and Devil n Dove.
-- Confirm all Phone/SMS, provider, callback, recording, AI send, persistence, archive, retention, and live pilot controls remain disabled in the public preview.
-- Capture operator feedback for layout, labels, brand switching, disabled action clarity, help text, and next interaction areas.
+- Capture operator feedback after the public disabled preview visual review.
+- If the public preview is not live, keep the feedback intake blocked on correcting the GitHub Pages repository variable and rerunning the workflow.
+- Convert visual feedback into next layout, navigation, label, accessibility, and help-system improvements.
+- Keep all Phone/SMS, provider, callback, recording, AI send, persistence, archive, retention, and live pilot controls disabled unless a later build explicitly proves and enables a controlled path.
