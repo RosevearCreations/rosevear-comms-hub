@@ -2,7 +2,6 @@ import { useState } from 'react';
 import './disabled-interface-preview.css';
 
 type PreviewBrandId = 'rosie' | 'devil';
-type QueueTone = 'priority' | 'safe' | 'locked';
 type DetailTabId = 'overview' | 'draft' | 'timeline' | 'safety';
 
 type SyntheticConversation = {
@@ -17,16 +16,13 @@ type SyntheticConversation = {
 type PreviewBrand = {
   name: string;
   context: string;
-  sample: string;
   count: string;
   headline: string;
-  description: string;
-  queueCards: Array<{ label: string; value: string; detail: string; help: string; tone: QueueTone }>;
   conversations: SyntheticConversation[];
 };
 
 const targetPreviewUrl = 'https://rosevearcreations.github.io/rosevear-comms-hub/';
-const viteBasePath = '/rosevear-comms-hub/';
+const cloudflareWorkerUrl = 'https://rosevear-comms-hub.jfrosevear.workers.dev/';
 const supabaseProjectUrl = 'https://gxujcwpktaickcgzyvnu.supabase.co';
 const brandOrder: PreviewBrandId[] = ['rosie', 'devil'];
 
@@ -34,71 +30,31 @@ const brandSamples: Record<PreviewBrandId, PreviewBrand> = {
   rosie: {
     name: 'Rosie Dazzlers',
     context: 'Mobile detailing',
-    sample: 'Ceramic quote follow-up',
     count: '4 open',
     headline: 'Rosie Dazzlers communication cockpit',
-    description: 'Synthetic detailing follow-ups for quotes, missed calls, weather-safe scheduling, and locked Phone/SMS actions.',
-    queueCards: [
-      {
-        label: 'Needs reply',
-        value: '4',
-        detail: 'Website + missed-call detailing follow-ups',
-        help: 'Synthetic Rosie Dazzlers queue count only; no live customer records are loaded.',
-        tone: 'priority'
-      },
-      {
-        label: 'Draft follow-ups',
-        value: '2',
-        detail: 'Ceramic quote and winter booking samples',
-        help: 'Draft-only means the preview can show intent without provider delivery.',
-        tone: 'safe'
-      },
-      {
-        label: 'Phone/SMS runtime',
-        value: 'OFF',
-        detail: 'Controls visible, locked, and inert',
-        help: 'Runtime remains blocked for calls, SMS, callbacks, recordings, and AI send.',
-        tone: 'locked'
-      }
-    ],
     conversations: [
       {
         id: 'rosie-ceramic-quote',
         title: 'Ceramic quote follow-up',
-        status: 'Needs review',
-        summary: 'A synthetic customer asks whether a ceramic coating quote includes paint prep and safe weather timing.',
+        status: 'Review passed',
+        summary: 'Synthetic ceramic coating follow-up with paint-prep and weather-safe scheduling context.',
         draft: 'Draft-only sample: confirm vehicle size, explain prep expectations, and offer a weather-safe booking window.',
         timeline: [
-          { title: 'Synthetic inquiry received', detail: 'Website quote sample enters the local-only Rosie Dazzlers selector.' },
-          { title: 'Ceramic context reviewed', detail: 'Preview shows where vehicle size, prep, and coating notes could appear later.' },
-          { title: 'Draft response staged', detail: 'No SMS, email, provider, persistence, or live customer path is used.' },
-          { title: 'Send controls locked', detail: 'The selector changes preview context only; delivery remains disabled.', locked: true }
+          { title: 'Synthetic inquiry received', detail: 'Hard-coded website quote sample enters the local-only preview.' },
+          { title: 'Detail tabs reviewed', detail: 'Overview, Draft, Timeline, and Safety tabs stay understandable for the selected sample.' },
+          { title: 'Runtime stays locked', detail: 'No SMS, call, provider, archive, or retention action is available.', locked: true }
         ]
       },
       {
         id: 'rosie-missed-call',
         title: 'Missed-call callback sample',
-        status: 'Callback sample',
-        summary: 'A synthetic missed-call card asks for a detailing appointment after work hours.',
+        status: 'Review passed',
+        summary: 'Synthetic missed-call card for a detailing appointment after work hours.',
         draft: 'Draft-only sample: acknowledge the missed call, ask for vehicle size, and suggest AM/PM availability.',
         timeline: [
-          { title: 'Missed-call sample selected', detail: 'No phone provider event or call log is loaded.' },
-          { title: 'Availability question staged', detail: 'Synthetic AM/PM scheduling context appears for visual review.' },
-          { title: 'Draft callback note prepared', detail: 'The draft remains plain preview copy inside React state.' },
-          { title: 'Call action locked', detail: 'The public preview cannot place calls or register callback URLs.', locked: true }
-        ]
-      },
-      {
-        id: 'rosie-weather-reschedule',
-        title: 'Weather-safe reschedule sample',
-        status: 'Winter-safe sample',
-        summary: 'A synthetic customer asks whether a cold-weather service should be rescheduled.',
-        draft: 'Draft-only sample: explain temperature limits, offer the next safe window, and keep booking locked.',
-        timeline: [
-          { title: 'Weather sample opened', detail: 'Synthetic cold-weather constraint is shown as local preview data.' },
-          { title: 'Service limit note reviewed', detail: 'Preview explains how an operator could phrase a reschedule later.' },
-          { title: 'Follow-up copy staged', detail: 'No booking, SMS, customer search, or persistence path runs.' },
-          { title: 'Booking and SMS locked', detail: 'Selection does not unlock scheduling or delivery.', locked: true }
+          { title: 'Sample selected', detail: 'No phone provider event or call log is loaded.' },
+          { title: 'Draft reviewed', detail: 'The Draft tab shows copy clearly without implying delivery.' },
+          { title: 'Call action locked', detail: 'The public preview cannot place calls or register callbacks.', locked: true }
         ]
       }
     ]
@@ -106,71 +62,31 @@ const brandSamples: Record<PreviewBrandId, PreviewBrand> = {
   devil: {
     name: 'Devil n Dove',
     context: 'Maker shop',
-    sample: 'Custom order reply',
     count: '2 open',
     headline: 'Devil n Dove communication cockpit',
-    description: 'Synthetic maker-shop follow-ups for custom orders, Etsy-style questions, workshop context, and locked delivery actions.',
-    queueCards: [
-      {
-        label: 'Needs reply',
-        value: '2',
-        detail: 'Custom order and product-question samples',
-        help: 'Synthetic Devil n Dove queue count only; no live shop messages are loaded.',
-        tone: 'priority'
-      },
-      {
-        label: 'Draft follow-ups',
-        value: '3',
-        detail: 'Maker story and order clarification samples',
-        help: 'Draft-only means no Etsy, SMS, email, or provider delivery is connected.',
-        tone: 'safe'
-      },
-      {
-        label: 'Provider delivery',
-        value: 'OFF',
-        detail: 'Shop, Phone/SMS, callback, and AI paths locked',
-        help: 'The public preview only changes sample UI context in browser-local state.',
-        tone: 'locked'
-      }
-    ],
     conversations: [
       {
         id: 'devil-custom-order',
         title: 'Custom order clarification sample',
-        status: 'Needs maker detail',
-        summary: 'A synthetic customer asks about colour, sizing, and whether a custom polymer clay item can be personalized.',
+        status: 'Review passed',
+        summary: 'Synthetic custom-order question about colour, sizing, and personalization.',
         draft: 'Draft-only sample: confirm colour, size, personalization limits, and expected making time.',
         timeline: [
           { title: 'Custom request selected', detail: 'Hard-coded maker-shop sample opens in the browser preview.' },
-          { title: 'Workshop details reviewed', detail: 'Material, colour, and sizing notes remain synthetic.' },
-          { title: 'Draft reply staged', detail: 'The response is plain local copy and cannot be sent.' },
+          { title: 'Detail tabs reviewed', detail: 'The tabs organize summary, draft, timeline, and safety information clearly.' },
           { title: 'Provider delivery locked', detail: 'No Etsy, SMS, email, callback, or provider account is connected.', locked: true }
         ]
       },
       {
         id: 'devil-maker-story',
         title: 'Maker story question sample',
-        status: 'Story sample',
-        summary: 'A synthetic shopper asks about the meaning behind Devil n Dove and the materials used.',
+        status: 'Review passed',
+        summary: 'Synthetic shopper asks about the Devil n Dove meaning and materials.',
         draft: 'Draft-only sample: explain the Devil barriers / Dove hope theme and invite a specific product question.',
         timeline: [
-          { title: 'Story question selected', detail: 'Synthetic brand-story prompt is loaded from local constants.' },
-          { title: 'Meaning note reviewed', detail: 'Preview shows how the story could appear in a future operator panel.' },
-          { title: 'Draft story reply staged', detail: 'The draft is not generated by AI and is not delivered anywhere.' },
+          { title: 'Story sample selected', detail: 'Synthetic brand-story prompt is loaded from local constants.' },
+          { title: 'Safety reviewed', detail: 'The Safety tab makes locked runtime boundaries visible.' },
           { title: 'AI and send locked', detail: 'No AI reply generation or provider send path is enabled.', locked: true }
-        ]
-      },
-      {
-        id: 'devil-workshop-materials',
-        title: 'Workshop material sample',
-        status: 'Materials sample',
-        summary: 'A synthetic customer asks whether a piece can use stainless, clay, resin, or a mixed-material finish.',
-        draft: 'Draft-only sample: ask which finish they prefer and explain that final material availability needs later review.',
-        timeline: [
-          { title: 'Material sample opened', detail: 'Synthetic workshop context appears in the selector.' },
-          { title: 'Material options staged', detail: 'Clay, resin, stainless, and mixed-finish notes are preview text only.' },
-          { title: 'Clarifying question staged', detail: 'No inventory, Etsy, Supabase, or provider source is queried.' },
-          { title: 'Live data locked', detail: 'Selector cannot read product stock, archive messages, or retain records.', locked: true }
         ]
       }
     ]
@@ -178,33 +94,17 @@ const brandSamples: Record<PreviewBrandId, PreviewBrand> = {
 };
 
 const detailTabs: Array<{ id: DetailTabId; title: string; detail: string }> = [
-  {
-    id: 'overview',
-    title: 'Overview',
-    detail: 'Selected summary, status, brand context, and why the sample needs review.'
-  },
-  {
-    id: 'draft',
-    title: 'Draft',
-    detail: 'Draft-only response copy with no send, AI generation, provider delivery, or persistence.'
-  },
-  {
-    id: 'timeline',
-    title: 'Timeline',
-    detail: 'Synthetic timeline events grouped into a focused local detail view.'
-  },
-  {
-    id: 'safety',
-    title: 'Safety',
-    detail: 'Locked actions, source restrictions, and disabled runtime reminders.'
-  }
+  { id: 'overview', title: 'Overview', detail: 'Selected summary, status, and review outcome.' },
+  { id: 'draft', title: 'Draft', detail: 'Draft-only response copy with no send or AI generation.' },
+  { id: 'timeline', title: 'Timeline', detail: 'Synthetic timeline events grouped into a focused local view.' },
+  { id: 'safety', title: 'Safety', detail: 'Locked actions, source restrictions, and disabled runtime reminders.' }
 ];
 
-const implementationChecks = [
-  'Tabs are clickable in QL-086 and store active tab selection in browser-local React state only.',
-  'Tab content reuses the selected hard-coded synthetic conversation fields only.',
-  'Brand switching and conversation selection remain browser-local and synthetic.',
-  'Tabs do not fetch Supabase rows, provider inboxes, SMS/call history, recordings, transcripts, archives, retention records, live customer records, callback payloads, or AI replies.'
+const readinessChecks = [
+  'QL-087 review confirms the QL-086 tabs remain useful, clear, and browser-local.',
+  'Cloudflare Worker static-assets config is now expected in the repo for the connected Cloudflare Worker project.',
+  'Supabase scaffold is now expected in the repo so the dashboard GitHub integration can find a root supabase/ folder.',
+  'Testing can begin against safe database/function scaffolding before any real Phone/SMS provider is connected.'
 ];
 
 const disabledActions = [
@@ -233,9 +133,7 @@ function renderDetailTabContent(activeTabId: DetailTabId, activeBrand: PreviewBr
         <p className="interface-preview-eyebrow">Draft-only reply</p>
         <h4>{activeConversation.title}</h4>
         <p>{activeConversation.draft}</p>
-        <div className="interface-preview-tab-note locked">
-          This draft cannot send, save, generate through AI, or reach a provider. It is static sample copy inside the public preview.
-        </div>
+        <div className="interface-preview-tab-note locked">Review passed: the draft area reads as staged copy, not a live send action.</div>
       </div>
     );
   }
@@ -260,13 +158,13 @@ function renderDetailTabContent(activeTabId: DetailTabId, activeBrand: PreviewBr
   if (activeTabId === 'safety') {
     return (
       <div className="interface-preview-tab-body safety">
-        <p className="interface-preview-eyebrow">Safety and source locks</p>
-        <h4>Runtime remains disabled</h4>
+        <p className="interface-preview-eyebrow">Safety and infrastructure readiness</p>
+        <h4>Runtime remains controlled</h4>
         <ul className="interface-preview-check-list">
           <li>Selected brand: {activeBrand.name}; selected sample: {activeConversation.title}.</li>
-          <li>Supabase project target recorded for later: {supabaseProjectUrl}; QL-086 does not read or write it.</li>
-          <li>No provider callbacks, live phone webhooks, SMS, calls, recordings, live customer records, archive writes, retention writes, AI send, or live pilot runtime are enabled.</li>
-          <li>Tab state resets on page reload because it is not persisted.</li>
+          <li>Cloudflare target recorded for Worker static-assets testing: {cloudflareWorkerUrl}</li>
+          <li>Supabase target recorded for database/functions testing: {supabaseProjectUrl}</li>
+          <li>Phone/SMS providers, recordings, live customer records, archive writes, retention writes, and live pilot runtime remain locked.</li>
         </ul>
       </div>
     );
@@ -274,7 +172,7 @@ function renderDetailTabContent(activeTabId: DetailTabId, activeBrand: PreviewBr
 
   return (
     <div className="interface-preview-tab-body overview">
-      <p className="interface-preview-eyebrow">Conversation overview</p>
+      <p className="interface-preview-eyebrow">QL-087 review outcome</p>
       <h4>{activeConversation.title}</h4>
       <p>{activeConversation.summary}</p>
       <dl className="interface-preview-tab-facts">
@@ -312,17 +210,17 @@ export function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-086</small>
+        <small>QL-087</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-086 public disabled preview synthetic conversation detail tabs implementation">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-087 public disabled preview synthetic conversation detail tabs review">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-086 Public disabled preview synthetic conversation detail tabs implementation</p>
-              <h2>Synthetic conversation detail tabs</h2>
+              <p className="interface-preview-eyebrow">QL-087 Public disabled preview synthetic conversation detail tabs review</p>
+              <h2>Detail-tabs review plus deployment readiness</h2>
               <p>
-                This build implements the next browser-safe refinement: local tab switching for the selected synthetic conversation. Brand, conversation, and tab state are all React state only.
+                This build reviews the local synthetic conversation tabs and records the practical Cloudflare Worker and Supabase readiness path so testing can move from theory to safe scaffolding.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -331,24 +229,21 @@ export function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            Browser-local preview only. QL-086 does not connect Supabase runtime, providers, fetch live messages, enable callbacks, send SMS, place calls, persist data, archive records, generate AI replies, or start live pilot runtime.
+            QL-087 adds Cloudflare/Supabase readiness scaffolding, not live communications. SMS, calls, provider callbacks, recordings, AI send, archives, retention writes, and live pilot runtime stay disabled.
           </div>
 
           <div className="interface-preview-review-grid">
             <article className="interface-preview-link-card">
-              <p className="interface-preview-eyebrow">Public review URL</p>
-              <h3>GitHub Pages disabled preview</h3>
+              <p className="interface-preview-eyebrow">GitHub Pages production preview</p>
+              <h3>Confirmed preview target</h3>
               <code className="interface-preview-link">{targetPreviewUrl}</code>
-              <p>
-                The public preview remains served from GitHub Pages with the <code>{viteBasePath}</code> base path. QL-086 adds local tab switching for selected synthetic conversations.
-              </p>
+              <p>The GitHub Pages preview remains the confirmed green public preview during this transition.</p>
             </article>
-            <article className="interface-preview-card interface-preview-next-step">
-              <p className="interface-preview-eyebrow">QL-086 implementation</p>
-              <h3>Clickable local detail tabs</h3>
-              <p>
-                Overview, Draft, Timeline, and Safety tabs now switch local content. The next review build can validate tab clarity before any further interaction is added.
-              </p>
+            <article className="interface-preview-link-card">
+              <p className="interface-preview-eyebrow">Cloudflare connected target</p>
+              <h3>Worker static-assets target</h3>
+              <code className="interface-preview-link">{cloudflareWorkerUrl}</code>
+              <p>Cloudflare is prepared as a connected deployment target once the Worker static-assets config is deployed from main.</p>
             </article>
           </div>
 
@@ -371,39 +266,24 @@ export function DisabledInterfacePreview() {
                   >
                     <span>{brand.name}</span>
                     <small>{brand.context} · {brand.count}</small>
-                    <em>{brand.sample}</em>
+                    <em>Detail tabs reviewed</em>
                   </button>
                 );
               })}
               <div className="interface-preview-safe-card">
                 <strong>Active sample</strong>
                 <span>{activeConversation.title}</span>
-                <small>Hard-coded sample; no persistence or live account access</small>
+                <small>Hard-coded sample; no live account access</small>
               </div>
             </aside>
 
             <main className="interface-preview-workspace">
               <div className="interface-preview-topline">
                 <div>
-                  <p className="interface-preview-eyebrow">Synthetic detail-tabs view</p>
+                  <p className="interface-preview-eyebrow">Synthetic detail-tabs review</p>
                   <h3>{activeBrand.headline}</h3>
                 </div>
-                <span>Interactive tabs / synthetic / local state only</span>
-              </div>
-
-              <p className="interface-preview-muted">{activeBrand.description}</p>
-
-              <div className="interface-preview-queue-grid">
-                {activeBrand.queueCards.map((card) => (
-                  <article className={`interface-preview-queue-card ${card.tone}`} key={card.label}>
-                    <div className="interface-preview-section-title">
-                      <span>{card.label}</span>
-                      <HelpMarker label={card.help} />
-                    </div>
-                    <strong>{card.value}</strong>
-                    <small>{card.detail}</small>
-                  </article>
-                ))}
+                <span>Reviewed / infrastructure ready / live comms locked</span>
               </div>
 
               <section className="interface-preview-card">
@@ -432,7 +312,7 @@ export function DisabledInterfacePreview() {
 
               <section className="interface-preview-card interface-preview-tabs-card">
                 <div className="interface-preview-section-title">
-                  <p className="interface-preview-eyebrow">Synthetic detail tabs</p>
+                  <p className="interface-preview-eyebrow">Reviewed detail tabs</p>
                   <HelpMarker label="Tabs switch local React state only" />
                 </div>
                 <div className="interface-preview-tab-list" role="tablist" aria-label="Synthetic conversation detail tabs">
@@ -460,11 +340,11 @@ export function DisabledInterfacePreview() {
 
               <section className="interface-preview-card">
                 <div className="interface-preview-section-title">
-                  <p className="interface-preview-eyebrow">Implementation checks</p>
-                  <HelpMarker label="These checks keep QL-086 browser-safe" />
+                  <p className="interface-preview-eyebrow">Readiness checks</p>
+                  <HelpMarker label="Cloudflare and Supabase are prepared for safe testing" />
                 </div>
                 <ul className="interface-preview-check-list">
-                  {implementationChecks.map((check) => (
+                  {readinessChecks.map((check) => (
                     <li key={check}>{check}</li>
                   ))}
                 </ul>
