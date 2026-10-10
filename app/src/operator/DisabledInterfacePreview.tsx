@@ -63,82 +63,43 @@ const brandSamples: Record<PreviewBrandId, {
       {
         id: 'rosie-ceramic-quote',
         title: 'Ceramic quote follow-up',
-        status: 'Needs review',
+        status: 'Review passed',
         summary: 'A synthetic customer asks whether a ceramic coating quote includes paint prep and safe weather timing.',
-        detail: 'This sample lets the operator inspect a possible quote follow-up without reading or writing a real customer record.',
+        detail: 'Review confirms the selector changes only local preview context and does not read or write a real customer record.',
         draft: 'Draft-only sample: confirm vehicle size, explain prep expectations, and offer a weather-safe booking window.',
         timeline: [
-          {
-            title: 'Synthetic inquiry received',
-            detail: 'Website quote sample enters the local-only Rosie Dazzlers selector.'
-          },
-          {
-            title: 'Ceramic context reviewed',
-            detail: 'Preview shows where vehicle size, prep, and coating notes could appear later.'
-          },
-          {
-            title: 'Draft response staged',
-            detail: 'No SMS, email, provider, persistence, or live customer path is used.'
-          },
-          {
-            title: 'Send controls locked',
-            detail: 'The selector changes preview context only; delivery remains disabled.',
-            locked: true
-          }
+          { title: 'Synthetic inquiry selected', detail: 'Website quote sample opens from hard-coded local data.' },
+          { title: 'Ceramic context reviewed', detail: 'Vehicle size, prep, and coating notes remain synthetic preview copy.' },
+          { title: 'Draft response staged', detail: 'No SMS, email, provider, persistence, or live customer path is used.' },
+          { title: 'Send controls locked', detail: 'The selector changes preview context only; delivery remains disabled.', locked: true }
         ]
       },
       {
         id: 'rosie-missed-call',
         title: 'Missed-call callback sample',
-        status: 'Callback sample',
+        status: 'Review passed',
         summary: 'A synthetic missed-call card asks for a detailing appointment after work hours.',
-        detail: 'This sample previews what a missed-call conversation could look like without telephony, transcripts, or callbacks.',
+        detail: 'Review confirms this card is not telephony-backed and has no callback URL, call log, recording, or transcript source.',
         draft: 'Draft-only sample: acknowledge the missed call, ask for vehicle size, and suggest AM/PM availability.',
         timeline: [
-          {
-            title: 'Missed-call sample selected',
-            detail: 'No phone provider event or call log is loaded.'
-          },
-          {
-            title: 'Availability question staged',
-            detail: 'Synthetic AM/PM scheduling context appears for visual review.'
-          },
-          {
-            title: 'Draft callback note prepared',
-            detail: 'The draft remains plain preview copy inside React state.'
-          },
-          {
-            title: 'Call action locked',
-            detail: 'The public preview cannot place calls or register callback URLs.',
-            locked: true
-          }
+          { title: 'Missed-call sample selected', detail: 'No phone provider event or call log is loaded.' },
+          { title: 'Availability question staged', detail: 'Synthetic AM/PM scheduling context appears for visual review.' },
+          { title: 'Draft callback note prepared', detail: 'The draft remains plain preview copy inside React state.' },
+          { title: 'Call action locked', detail: 'The public preview cannot place calls or register callback URLs.', locked: true }
         ]
       },
       {
         id: 'rosie-weather-reschedule',
         title: 'Weather-safe reschedule sample',
-        status: 'Winter-safe sample',
+        status: 'Review passed',
         summary: 'A synthetic customer asks whether a cold-weather service should be rescheduled.',
-        detail: 'This sample previews seasonal service guidance while keeping the selector disconnected from bookings and live messages.',
+        detail: 'Review confirms seasonal guidance is hard-coded and disconnected from bookings, live messages, or customer records.',
         draft: 'Draft-only sample: explain temperature limits, offer the next safe window, and keep the booking action locked.',
         timeline: [
-          {
-            title: 'Weather sample opened',
-            detail: 'Synthetic cold-weather constraint is shown as local preview data.'
-          },
-          {
-            title: 'Service limit note reviewed',
-            detail: 'Preview explains how an operator could phrase a reschedule later.'
-          },
-          {
-            title: 'Follow-up copy staged',
-            detail: 'No booking, SMS, customer search, or persistence path runs.'
-          },
-          {
-            title: 'Booking and SMS locked',
-            detail: 'Selection does not unlock scheduling or delivery.',
-            locked: true
-          }
+          { title: 'Weather sample opened', detail: 'Synthetic cold-weather constraint is shown as local preview data.' },
+          { title: 'Service limit note reviewed', detail: 'Preview explains how an operator could phrase a reschedule later.' },
+          { title: 'Follow-up copy staged', detail: 'No booking, SMS, customer search, or persistence path runs.' },
+          { title: 'Booking and SMS locked', detail: 'Selection does not unlock scheduling or delivery.', locked: true }
         ]
       }
     ]
@@ -177,104 +138,76 @@ const brandSamples: Record<PreviewBrandId, {
       {
         id: 'devil-custom-order',
         title: 'Custom order clarification sample',
-        status: 'Needs maker detail',
+        status: 'Review passed',
         summary: 'A synthetic customer asks about colour, sizing, and whether a custom polymer clay item can be personalized.',
-        detail: 'This sample lets the operator review custom-order context without pulling from Etsy, email, live shop data, or customer records.',
+        detail: 'Review confirms the selector does not pull Etsy, email, live shop data, or customer records.',
         draft: 'Draft-only sample: confirm colour, size, personalization limits, and expected making time.',
         timeline: [
-          {
-            title: 'Custom request selected',
-            detail: 'Hard-coded maker-shop sample opens in the browser preview.'
-          },
-          {
-            title: 'Workshop details reviewed',
-            detail: 'Material, colour, and sizing notes remain synthetic.'
-          },
-          {
-            title: 'Draft reply staged',
-            detail: 'The response is plain local copy and cannot be sent.'
-          },
-          {
-            title: 'Provider delivery locked',
-            detail: 'No Etsy, SMS, email, callback, or provider account is connected.',
-            locked: true
-          }
+          { title: 'Custom request selected', detail: 'Hard-coded maker-shop sample opens in the browser preview.' },
+          { title: 'Workshop details reviewed', detail: 'Material, colour, and sizing notes remain synthetic.' },
+          { title: 'Draft reply staged', detail: 'The response is plain local copy and cannot be sent.' },
+          { title: 'Provider delivery locked', detail: 'No Etsy, SMS, email, callback, or provider account is connected.', locked: true }
         ]
       },
       {
         id: 'devil-maker-story',
         title: 'Maker story question sample',
-        status: 'Story sample',
+        status: 'Review passed',
         summary: 'A synthetic shopper asks about the meaning behind Devil n Dove and the materials used.',
-        detail: 'This sample previews brand-story context without AI generation, live product lookup, or provider delivery.',
+        detail: 'Review confirms brand-story context is hard-coded and not generated by AI or pulled from live product data.',
         draft: 'Draft-only sample: explain the Devil barriers / Dove hope theme and invite a specific product question.',
         timeline: [
-          {
-            title: 'Story question selected',
-            detail: 'Synthetic brand-story prompt is loaded from local constants.'
-          },
-          {
-            title: 'Meaning note reviewed',
-            detail: 'Preview shows how the story could appear in a future operator panel.'
-          },
-          {
-            title: 'Draft story reply staged',
-            detail: 'The draft is not generated by AI and is not delivered anywhere.'
-          },
-          {
-            title: 'AI and send locked',
-            detail: 'No AI reply generation or provider send path is enabled.',
-            locked: true
-          }
+          { title: 'Story question selected', detail: 'Synthetic brand-story prompt is loaded from local constants.' },
+          { title: 'Meaning note reviewed', detail: 'Preview shows how the story could appear in a future operator panel.' },
+          { title: 'Draft story reply staged', detail: 'The draft is not generated by AI and is not delivered anywhere.' },
+          { title: 'AI and send locked', detail: 'No AI reply generation or provider send path is enabled.', locked: true }
         ]
       },
       {
         id: 'devil-workshop-materials',
         title: 'Workshop material sample',
-        status: 'Materials sample',
+        status: 'Review passed',
         summary: 'A synthetic customer asks whether a piece can use stainless, clay, resin, or a mixed-material finish.',
-        detail: 'This sample previews material clarification without inventory reads, customer records, or live product data.',
+        detail: 'Review confirms material clarification does not read inventory, customer records, or live product data.',
         draft: 'Draft-only sample: ask which finish they prefer and explain that final material availability needs later review.',
         timeline: [
-          {
-            title: 'Material sample opened',
-            detail: 'Synthetic workshop context appears in the selector.'
-          },
-          {
-            title: 'Material options staged',
-            detail: 'Clay, resin, stainless, and mixed-finish notes are preview text only.'
-          },
-          {
-            title: 'Clarifying question staged',
-            detail: 'No inventory, Etsy, Supabase, or provider source is queried.'
-          },
-          {
-            title: 'Live data locked',
-            detail: 'Selector cannot read product stock, archive messages, or retain records.',
-            locked: true
-          }
+          { title: 'Material sample opened', detail: 'Synthetic workshop context appears in the selector.' },
+          { title: 'Material options staged', detail: 'Clay, resin, stainless, and mixed-finish notes are preview text only.' },
+          { title: 'Clarifying question staged', detail: 'No inventory, Etsy, Supabase, or provider source is queried.' },
+          { title: 'Live data locked', detail: 'Selector cannot read product stock, archive messages, or retain records.', locked: true }
         ]
       }
     ]
   }
 };
 
-const selectorImplementationChecks = [
+const selectorReviewFindings = [
   {
-    title: 'Selector is live in preview',
-    detail: 'Conversation buttons now switch hard-coded sample detail, draft copy, and timeline content.'
+    title: 'Interaction is understandable',
+    detail: 'Brand selection and conversation selection both visibly change the operator context without needing live data.'
   },
   {
-    title: 'State remains local',
-    detail: 'The selected brand and conversation are stored only in React state for the current browser session.'
+    title: 'State remains browser-local',
+    detail: 'The chosen brand and conversation are stored in React state only and reset with a page reload.'
   },
   {
-    title: 'Selector stays read-only',
-    detail: 'Selection changes preview text only and cannot save, fetch, send, call, archive, retain, or deliver anything.'
+    title: 'Sample scope is safe',
+    detail: 'Only summary text, draft-only copy, and timeline content change when the selector is used.'
+  },
+  {
+    title: 'Locked actions stay locked',
+    detail: 'Provider, Phone/SMS, AI, archive, retention, persistence, and live pilot actions remain visibly disabled.'
   }
 ];
 
-const rejectedSelectorSources = [
+const nextSafeInteractionRules = [
+  'May add browser-local conversation detail tabs for notes, draft, and history.',
+  'May add synthetic-only confidence labels and review badges.',
+  'Must not read Supabase rows, provider inboxes, live customers, recordings, transcripts, archives, or retention records.',
+  'Must not send SMS, place calls, generate AI replies, register callbacks, or start live pilot runtime.'
+];
+
+const rejectedEscalations = [
   'Live Supabase conversation rows',
   'Provider inbox imports',
   'Phone/SMS message history',
@@ -319,17 +252,17 @@ function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-083</small>
+        <small>QL-084</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-083 public disabled preview synthetic conversation selector implementation">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-084 public disabled preview synthetic conversation selector review">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-083 Public disabled preview synthetic conversation selector implementation</p>
-              <h2>Synthetic conversation selector</h2>
+              <p className="interface-preview-eyebrow">QL-084 Public disabled preview synthetic conversation selector review</p>
+              <h2>Synthetic conversation selector review</h2>
               <p>
-                This build implements the next safe public-preview interaction. The selector switches among hard-coded sample conversations for the active brand using browser-local React state only while every Phone/SMS, provider, Supabase runtime, persistence, archive, retention, AI, and live pilot path remains blocked.
+                This build reviews the QL-083 selector implementation. The brand switcher and conversation selector stay active, but both remain hard-coded, synthetic, browser-local, and disconnected from every live Phone/SMS, provider, Supabase, AI, persistence, archive, retention, and live pilot path.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -338,7 +271,7 @@ function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            Browser-local preview only. QL-083 does not connect providers, fetch live messages, enable callbacks, send SMS, place calls, persist data, archive records, generate AI replies, or start live pilot runtime.
+            Review only. QL-084 confirms the selector is useful and safe, but it does not connect providers, fetch live messages, enable callbacks, send SMS, place calls, persist data, archive records, generate AI replies, or start live pilot runtime.
           </div>
 
           <div className="interface-preview-review-grid">
@@ -347,14 +280,14 @@ function DisabledInterfacePreview() {
               <h3>GitHub Pages disabled preview</h3>
               <code className="interface-preview-link">{targetPreviewUrl}</code>
               <p>
-                The public preview remains served from GitHub Pages with the <code>{viteBasePath}</code> base path. QL-083 keeps brand switching live and adds browser-local sample conversation selection.
+                The public preview remains served from GitHub Pages with the <code>{viteBasePath}</code> base path. QL-084 keeps the local selector live for review.
               </p>
             </article>
             <article className="interface-preview-card interface-preview-next-step">
-              <p className="interface-preview-eyebrow">QL-083 implementation</p>
-              <h3>Hard-coded selector is active</h3>
+              <p className="interface-preview-eyebrow">QL-084 decision</p>
+              <h3>Selector passes safe-interaction review</h3>
               <p>
-                The active conversation changes the summary, draft, and timeline inside this public preview only. It does not query Supabase, provider inboxes, customer records, call history, archives, retention records, or AI.
+                The selector is suitable for continued public-preview refinement because it only swaps hard-coded sample context in browser-local state.
               </p>
             </article>
           </div>
@@ -383,27 +316,27 @@ function DisabledInterfacePreview() {
                 );
               })}
               <div className="interface-preview-safe-card">
-                <strong>Active sample</strong>
-                <span>{activeConversation.title}</span>
-                <small>Hard-coded sample; no persistence or live account access</small>
+                <strong>Review result</strong>
+                <span>Selector stays safe</span>
+                <small>Hard-coded samples; no persistence or live account access</small>
               </div>
             </aside>
 
             <main className="interface-preview-workspace">
               <div className="interface-preview-topline">
                 <div>
-                  <p className="interface-preview-eyebrow">Synthetic selector view</p>
+                  <p className="interface-preview-eyebrow">Selector review view</p>
                   <h3>{activeBrand.headline}</h3>
                 </div>
-                <span>Implemented / synthetic / local state only</span>
+                <span>Reviewed / synthetic / local state only</span>
               </div>
 
               <article className="interface-preview-card interface-preview-local-state-card">
                 <div className="interface-preview-card-heading">
-                  <span>{activeBrand.name} · {activeConversation.status}</span>
-                  <HelpMarker label="The selected conversation only affects hard-coded preview content" />
+                  <span>{activeBrand.name} selector review</span>
+                  <HelpMarker label="QL-084 reviews the local selector without changing runtime boundaries" />
                 </div>
-                <p>{activeConversation.summary}</p>
+                <p>{activeBrand.description}</p>
               </article>
 
               <div className="interface-preview-grid refined-cards">
@@ -419,68 +352,65 @@ function DisabledInterfacePreview() {
                 ))}
               </div>
 
-              <div className="interface-preview-detail-grid selector-layout">
-                <article className="interface-preview-card conversation-selector">
+              <div className="interface-preview-detail-grid">
+                <article className="interface-preview-card timeline refined-timeline">
                   <div className="interface-preview-card-heading">
                     <p className="interface-preview-eyebrow">Synthetic conversations</p>
-                    <HelpMarker label="Buttons switch local hard-coded samples only" />
+                    <HelpMarker label="Conversation buttons switch hard-coded samples only" />
                   </div>
-                  <div className="interface-preview-conversation-list" role="list" aria-label={`${activeBrand.name} synthetic conversations`}>
+                  <h4>Selector remains active for review</h4>
+                  <ol>
                     {activeBrand.conversations.map((conversation) => {
                       const isActive = conversation.id === activeConversation.id;
                       return (
-                        <button
-                          type="button"
-                          key={conversation.id}
-                          className={isActive ? 'interface-preview-conversation active' : 'interface-preview-conversation'}
-                          aria-pressed={isActive}
-                          onClick={() => setActiveConversationByBrand((current) => ({
-                            ...current,
-                            [activeBrandId]: conversation.id
-                          }))}
-                        >
-                          <span>{conversation.title}</span>
-                          <small>{conversation.status}</small>
-                        </button>
+                        <li key={conversation.id}>
+                          <button
+                            type="button"
+                            className={isActive ? 'interface-preview-brand active interactive' : 'interface-preview-brand interactive'}
+                            aria-pressed={isActive}
+                            onClick={() => setActiveConversationByBrand((current) => ({ ...current, [activeBrandId]: conversation.id }))}
+                          >
+                            <span>{conversation.title}</span>
+                            <small>{conversation.status}</small>
+                          </button>
+                        </li>
                       );
                     })}
-                  </div>
-                  <p className="interface-preview-control-note">
-                    Switching conversations updates this preview only. The selection resets with browser state and is not saved.
-                  </p>
+                  </ol>
                 </article>
 
-                <article className="interface-preview-card timeline refined-timeline">
+                <article className="interface-preview-card controls">
                   <div className="interface-preview-card-heading">
-                    <p className="interface-preview-eyebrow">Selected sample timeline</p>
-                    <HelpMarker label="Timeline changes with the selected hard-coded sample" />
+                    <p className="interface-preview-eyebrow">Selected sample review</p>
+                    <HelpMarker label="Selected sample changes preview text only" />
                   </div>
                   <h4>{activeConversation.title}</h4>
-                  <p>{activeConversation.detail}</p>
+                  <p>{activeConversation.summary}</p>
+                  <small>{activeConversation.detail}</small>
+                  <div className="interface-preview-warning">{activeConversation.draft}</div>
+                </article>
+              </div>
+
+              <div className="interface-preview-detail-grid">
+                <article className="interface-preview-card timeline refined-timeline">
+                  <div className="interface-preview-card-heading">
+                    <p className="interface-preview-eyebrow">Synthetic timeline</p>
+                    <HelpMarker label="Timeline is derived from hard-coded local sample data" />
+                  </div>
                   <ol>
                     {activeConversation.timeline.map((item) => (
-                      <li key={item.title} className={item.locked ? 'locked-step' : undefined}>
+                      <li className={item.locked ? 'locked-step' : undefined} key={item.title}>
                         <strong>{item.title}</strong>
                         <span>{item.detail}</span>
                       </li>
                     ))}
                   </ol>
                 </article>
-              </div>
-
-              <div className="interface-preview-detail-grid">
-                <article className="interface-preview-card interface-preview-draft-card">
-                  <div className="interface-preview-card-heading">
-                    <p className="interface-preview-eyebrow">Draft-only sample copy</p>
-                    <HelpMarker label="Draft copy is hard-coded and cannot be sent" />
-                  </div>
-                  <p>{activeConversation.draft}</p>
-                </article>
 
                 <article className="interface-preview-card controls">
                   <div className="interface-preview-card-heading">
                     <p className="interface-preview-eyebrow">Locked controls</p>
-                    <HelpMarker label="Controls remain locked while selector interaction works" />
+                    <HelpMarker label="Controls remain locked after selector review" />
                   </div>
                   <div className="interface-preview-action-grid">
                     {disabledActions.map((action) => (
@@ -490,7 +420,7 @@ function DisabledInterfacePreview() {
                     ))}
                   </div>
                   <p className="interface-preview-control-note">
-                    The selector changes sample UI context only. It does not unlock delivery, telephony, callback, archive, retention, AI, or live pilot controls.
+                    The selector review approves local preview interaction only. It does not unlock any live action button.
                   </p>
                 </article>
               </div>
@@ -499,11 +429,11 @@ function DisabledInterfacePreview() {
 
           <div className="interface-preview-columns">
             <article className="interface-preview-card interface-preview-wide-card">
-              <h3>QL-083 implementation checks</h3>
+              <h3>QL-084 review findings</h3>
               <div className="interface-preview-help-grid">
-                {selectorImplementationChecks.map((item) => (
+                {selectorReviewFindings.map((item) => (
                   <div className="interface-preview-help-card" key={item.title}>
-                    <HelpMarker label={`${item.title} selector implementation`} />
+                    <HelpMarker label={`${item.title} review finding`} />
                     <strong>{item.title}</strong>
                     <p>{item.detail}</p>
                   </div>
@@ -511,12 +441,17 @@ function DisabledInterfacePreview() {
               </div>
             </article>
             <article className="interface-preview-card interface-preview-wide-card interface-preview-interactions">
-              <h3>Still rejected selector sources</h3>
-              <p>
-                QL-083 explicitly keeps sources locked when they introduce provider, backend, live customer, delivery, archive, retention, AI, or live-pilot risk.
-              </p>
+              <h3>Next safe interaction rules</h3>
               <div className="interface-preview-pill-list">
-                {rejectedSelectorSources.map((source) => (
+                {nextSafeInteractionRules.map((rule) => (
+                  <span key={rule}>{rule}</span>
+                ))}
+              </div>
+            </article>
+            <article className="interface-preview-card interface-preview-wide-card interface-preview-interactions">
+              <h3>Still rejected as selector sources</h3>
+              <div className="interface-preview-pill-list">
+                {rejectedEscalations.map((source) => (
                   <span key={source}>{source}</span>
                 ))}
               </div>
