@@ -1,0 +1,69 @@
+{
+  "build": "QL-076",
+  "name": "Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Feedback Review",
+  "scope": "public_disabled_preview_feedback_review_only",
+  "publicPreviewUrl": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+  "viteBasePath": "/rosevear-comms-hub/",
+  "decision": "approve_public_preview_refinement_planning",
+  "approvedNextBuild": "QL-077-public-disabled-preview-refinement-plan",
+  "environment": {
+    "pagesWorkflowObserved": true,
+    "pagesWorkflowDeployed": true,
+    "appCiGreen": true,
+    "pagesCiGreen": true,
+    "staticBuildOnly": true,
+    "providerCallbacksEnabled": false,
+    "phoneWebhooksEnabled": false,
+    "smsSendingEnabled": false,
+    "callRuntimeEnabled": false,
+    "recordingEnabled": false,
+    "aiSendEnabled": false,
+    "persistenceWritesEnabled": false,
+    "liveCustomerDataEnabled": false,
+    "archiveWritesEnabled": false,
+    "retentionWritesEnabled": false,
+    "supabaseMigrationAdded": false,
+    "supabaseEdgeFunctionAdded": false,
+    "livePilotRuntimeEnabled": false
+  },
+  "feedbackThemes": [
+    "layout",
+    "navigation",
+    "labels",
+    "help_system",
+    "accessibility",
+    "brand_switching",
+    "operator_queue",
+    "customer_timeline",
+    "disabled_control_clarity",
+    "next_interactive_surface"
+  ],
+  "feedbackEvidenceLabels": [
+    "synthetic-redacted-public-feedback-layout",
+    "synthetic-redacted-public-feedback-labels",
+    "synthetic-redacted-public-feedback-help-system",
+    "synthetic-redacted-public-feedback-next-interaction"
+  ],
+  "blockedRuntimeChanges": [],
+  "safetyBoundary": {
+    "providerCallbacksAllowed": false,
+    "livePhoneWebhooksAllowed": false,
+    "smsSendingAllowed": false,
+    "callRuntimeAllowed": false,
+    "recordingAllowed": false,
+    "aiSendAllowed": false,
+    "persistenceWritesAllowed": false,
+    "liveCustomerDataAllowed": false,
+    "archiveWritesAllowed": false,
+    "retentionWritesAllowed": false,
+    "supabaseMigrationAllowed": false,
+    "supabaseEdgeFunctionAllowed": false,
+    "livePilotRuntimeAllowed": false
+  },
+  "reviewRules": [
+    "Review public feedback only after the Pages workflow deploys successfully.",
+    "Convert feedback into layout, navigation, label, help-system, accessibility, brand-switching, inbox, timeline, disabled-control, and next-interactive-surface priorities.",
+    "Do not approve provider callbacks, phone webhooks, SMS sending, call runtime, recording, AI send, persistence writes, live customer data, archive writes, retention writes, Supabase migrations, Supabase Edge Functions, or live pilot runtime.",
+    "Queue QL-077 for public disabled preview refinement planning."
+  ]
+}
