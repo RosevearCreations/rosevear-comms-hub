@@ -138,7 +138,9 @@
 .interface-preview-interactions p,
 .interface-preview-control-note,
 .interface-preview-help-card p,
-.interface-preview-local-state-card p {
+.interface-preview-local-state-card p,
+.interface-preview-draft-card p,
+.interface-preview-card.timeline p {
   color: #475569;
   line-height: 1.55;
   margin: 0;
@@ -203,7 +205,8 @@
   line-height: 1;
 }
 
-.interface-preview-brand {
+.interface-preview-brand,
+.interface-preview-conversation {
   display: grid;
   gap: 5px;
   border: 1px solid transparent;
@@ -215,20 +218,24 @@
   font-weight: 900;
 }
 
-.interface-preview-brand.interactive {
+.interface-preview-brand.interactive,
+.interface-preview-conversation {
   cursor: pointer;
   transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
 }
 
 .interface-preview-brand.interactive:hover,
-.interface-preview-brand.interactive:focus-visible {
+.interface-preview-brand.interactive:focus-visible,
+.interface-preview-conversation:hover,
+.interface-preview-conversation:focus-visible {
   border-color: #2563eb;
   box-shadow: 0 10px 20px rgba(37, 99, 235, 0.16);
   outline: none;
   transform: translateY(-1px);
 }
 
-.interface-preview-brand.active {
+.interface-preview-brand.active,
+.interface-preview-conversation.active {
   background: #dbeafe;
   border-color: #60a5fa;
   color: #1d4ed8;
@@ -236,6 +243,7 @@
 
 .interface-preview-brand small,
 .interface-preview-brand em,
+.interface-preview-conversation small,
 .interface-preview-safe-card small,
 .interface-preview-card small,
 .interface-preview-card li,
@@ -283,6 +291,10 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.interface-preview-detail-grid.selector-layout {
+  grid-template-columns: minmax(240px, 0.72fr) minmax(300px, 1.28fr);
+}
+
 .interface-preview-card {
   display: grid;
   gap: 8px;
@@ -292,6 +304,12 @@
 .interface-preview-local-state-card {
   border-color: #bae6fd;
   background: #f0f9ff;
+}
+
+.interface-preview-draft-card,
+.interface-preview-conversation.active {
+  border-color: #bfdbfe;
+  background: #eff6ff;
 }
 
 .interface-preview-wide-card {
@@ -321,6 +339,15 @@
 .interface-preview-card.locked {
   border-color: #fed7aa;
   background: #fff7ed;
+}
+
+.interface-preview-conversation-list {
+  display: grid;
+  gap: 10px;
+}
+
+.interface-preview-conversation span {
+  font-weight: 950;
 }
 
 .interface-preview-card.timeline ol,
@@ -360,7 +387,7 @@
 }
 
 .interface-preview-help-grid {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .interface-preview-help-card {
@@ -391,6 +418,7 @@
   .interface-preview-shell,
   .interface-preview-grid,
   .interface-preview-detail-grid,
+  .interface-preview-detail-grid.selector-layout,
   .interface-preview-columns,
   .interface-preview-review-grid,
   .interface-preview-help-grid {
