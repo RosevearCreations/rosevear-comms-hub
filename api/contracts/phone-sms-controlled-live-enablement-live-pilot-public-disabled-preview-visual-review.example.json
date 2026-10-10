@@ -1,0 +1,59 @@
+{
+  "build": "QL-074",
+  "title": "Public Disabled Preview Visual Review",
+  "scope": "public_disabled_preview_visual_review_only",
+  "targetPublicUrl": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+  "viteBasePath": "/rosevear-comms-hub/",
+  "expectedMainVerification": {
+    "appCiGreen": true,
+    "pagesWorkflowObserved": true,
+    "pagesWorkflowConclusion": "success_or_safe_skip",
+    "publicPreviewLoaded": "true_when_pages_gate_deploys",
+    "safeSkipAccepted": "true_when_enablement_variable_is_absent_or_not_true"
+  },
+  "visualReviewRegions": [
+    "brand_switcher",
+    "operator_queue",
+    "customer_timeline",
+    "disabled_phone_sms_controls",
+    "safe_status_cards",
+    "public_review_url_notice",
+    "visual_review_checklist"
+  ],
+  "browserSafetyBoundary": {
+    "allowedPublicVariables": [
+      "VITE_SUPABASE_URL",
+      "VITE_SUPABASE_ANON_KEY"
+    ],
+    "serverOnlySecrets": [
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "PHONE_SMS_PROVIDER_API_KEY",
+      "PHONE_SMS_PROVIDER_API_SECRET",
+      "PHONE_SMS_WEBHOOK_SIGNING_SECRET",
+      "PHONE_SMS_CALLBACK_TOKEN"
+    ],
+    "mustNotAppearInBrowser": [
+      "provider_credentials",
+      "service_role_keys",
+      "callback_tokens",
+      "live_phone_numbers",
+      "live_message_bodies",
+      "transcripts",
+      "recordings",
+      "live_customer_data"
+    ]
+  },
+  "runtimeBoundary": {
+    "providerCallbacksEnabled": false,
+    "livePhoneWebhooksEnabled": false,
+    "smsSendingEnabled": false,
+    "callRuntimeEnabled": false,
+    "recordingEnabled": false,
+    "aiAutoSendEnabled": false,
+    "persistenceWritesEnabled": false,
+    "archiveWritesEnabled": false,
+    "retentionWritesEnabled": false,
+    "livePilotRuntimeEnabled": false
+  },
+  "requiredNextBuild": "QL-075-phone-sms-controlled-live-enablement-live-pilot-public-disabled-preview-feedback-intake"
+}
