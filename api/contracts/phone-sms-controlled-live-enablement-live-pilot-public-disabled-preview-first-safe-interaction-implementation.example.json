@@ -1,0 +1,49 @@
+{
+  "build": "QL-080",
+  "scope": "public_disabled_preview_first_safe_interaction_implementation_only",
+  "publicPreviewUrl": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+  "implementedInteraction": {
+    "id": "sample_brand_switcher",
+    "mode": "browser_local_react_state_only",
+    "brands": ["Rosie Dazzlers", "Devil n Dove"],
+    "dataSources": ["hard-coded synthetic preview data", "browser-local React state"],
+    "persistsData": false,
+    "fetchesLiveData": false,
+    "sendsMessages": false,
+    "startsCalls": false,
+    "connectsProvider": false,
+    "usesSupabaseRuntime": false,
+    "usesAiSend": false
+  },
+  "verification": {
+    "appCiRequired": true,
+    "pagesBuildRequired": true,
+    "pagesDeployRequired": true,
+    "publicUrlMustRemain": "https://rosevearcreations.github.io/rosevear-comms-hub/"
+  },
+  "blockedRuntimePaths": [
+    "provider callbacks",
+    "live phone webhooks",
+    "SMS sending",
+    "call runtime",
+    "call recording",
+    "AI send",
+    "provider delivery",
+    "callback registration",
+    "provider account connection",
+    "provider live-number attachment",
+    "Supabase runtime reads",
+    "Supabase runtime writes",
+    "Supabase migrations",
+    "Supabase Edge Functions",
+    "persistence writes",
+    "live customer reads",
+    "live customer writes",
+    "archive writes",
+    "retention policy writes",
+    "Vercel hosting changes",
+    "Cloudflare Pages changes",
+    "live pilot runtime"
+  ],
+  "approvedNextBuild": "QL-081-public-disabled-preview-first-safe-interaction-review"
+}
