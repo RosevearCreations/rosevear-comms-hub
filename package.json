@@ -1,0 +1,14 @@
+{
+  "name": "rosevear-comms-hub",
+  "version": "0.0.0-ql087",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npm --prefix app install && npm --prefix app run build",
+    "deploy": "wrangler deploy",
+    "cloudflare:deploy": "npm run build && wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.40.0"
+  }
+}
