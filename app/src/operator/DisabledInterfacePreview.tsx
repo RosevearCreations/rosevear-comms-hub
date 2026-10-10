@@ -3,6 +3,8 @@ import './disabled-interface-preview.css';
 
 type PreviewBrandId = 'rosie' | 'devil';
 
+type QueueTone = 'priority' | 'safe' | 'locked';
+
 const targetPreviewUrl = 'https://rosevearcreations.github.io/rosevear-comms-hub/';
 const viteBasePath = '/rosevear-comms-hub/';
 
@@ -15,7 +17,7 @@ const brandSamples: Record<PreviewBrandId, {
   count: string;
   headline: string;
   description: string;
-  queueCards: Array<{ label: string; value: string; detail: string; help: string; tone: 'priority' | 'safe' | 'locked' }>;
+  queueCards: Array<{ label: string; value: string; detail: string; help: string; tone: QueueTone }>;
   timeline: Array<{ title: string; detail: string; locked?: boolean }>;
 }> = {
   rosie: {
@@ -120,14 +122,30 @@ const brandSamples: Record<PreviewBrandId, {
   }
 };
 
-const implementedChecks = [
-  'Brand buttons now switch between Rosie Dazzlers and Devil n Dove sample panels.',
-  'The interaction uses React state only inside the public preview component.',
-  'All queue cards, timeline text, and summary copy remain hard-coded synthetic preview data.',
-  'No Supabase client import, provider connection, persistence write, live customer read, SMS send, call runtime, AI send, archive write, retention write, or live pilot path is added.'
+const reviewFindings = [
+  {
+    title: 'Interaction is useful',
+    detail: 'The switcher proves the public preview can respond to operator input without leaving the browser.'
+  },
+  {
+    title: 'Boundary remains clear',
+    detail: 'The active brand changes only synthetic queue cards, timeline copy, and review text.'
+  },
+  {
+    title: 'Next safe step identified',
+    detail: 'The next interaction can be a synthetic conversation selector if it remains browser-local.'
+  }
 ];
 
-const remainingLockedPaths = [
+const reviewChecks = [
+  'Rosie Dazzlers and Devil n Dove brand buttons are clickable in the public preview.',
+  'The selected brand is stored only in local React state for the current browser session.',
+  'The visible queue, timeline, and help text swap synthetic content only.',
+  'No Supabase client import, provider connection, persistence write, live customer read, SMS send, call runtime, AI send, archive write, retention write, or live pilot path was introduced.',
+  'Locked action controls remain disabled after switching brands.'
+];
+
+const stillLockedPaths = [
   'Real SMS draft send',
   'Call test button',
   'Provider connect flow',
@@ -167,17 +185,17 @@ function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-080</small>
+        <small>QL-081</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-080 public disabled preview first safe interaction implementation">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-081 public disabled preview first safe interaction review">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-080 Public disabled preview first safe interaction implementation</p>
-              <h2>Browser-local brand switcher implemented</h2>
+              <p className="interface-preview-eyebrow">QL-081 Public disabled preview first safe interaction review</p>
+              <h2>Brand switcher review</h2>
               <p>
-                This build implements the first safe public-preview interaction selected in QL-079. The Rosie Dazzlers / Devil n Dove switcher changes only synthetic browser-local preview content while every Phone/SMS, provider, Supabase runtime, persistence, archive, retention, AI, and live pilot path remains blocked.
+                This build reviews the first safe interaction delivered in QL-080. The Rosie Dazzlers / Devil n Dove switcher remains browser-local, synthetic, and review-only while every Phone/SMS, provider, Supabase runtime, persistence, archive, retention, AI, and live pilot path remains blocked.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -186,7 +204,7 @@ function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            Browser-local interaction only. QL-080 does not connect providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, Supabase runtime changes, or live pilot runtime.
+            Review only. QL-081 does not connect providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, Supabase runtime changes, or live pilot runtime.
           </div>
 
           <div className="interface-preview-review-grid">
@@ -195,14 +213,14 @@ function DisabledInterfacePreview() {
               <h3>GitHub Pages disabled preview</h3>
               <code className="interface-preview-link">{targetPreviewUrl}</code>
               <p>
-                The public preview remains served from GitHub Pages with the <code>{viteBasePath}</code> base path. The first interaction runs inside the browser bundle only.
+                The public preview remains served from GitHub Pages with the <code>{viteBasePath}</code> base path. QL-081 confirms the first interaction is safe enough to keep and review.
               </p>
             </article>
             <article className="interface-preview-card interface-preview-next-step">
-              <p className="interface-preview-eyebrow">QL-080 result</p>
-              <h3>Local brand switching is now clickable</h3>
+              <p className="interface-preview-eyebrow">QL-081 finding</p>
+              <h3>Brand switching passes review</h3>
               <p>
-                Select Rosie Dazzlers or Devil n Dove to swap synthetic queue cards and timeline context. Nothing is saved, fetched, sent, called, archived, or delivered.
+                The interaction is useful because it proves a browser-only control can change context without fetching, saving, sending, calling, archiving, or delivering anything.
               </p>
             </article>
           </div>
@@ -210,8 +228,8 @@ function DisabledInterfacePreview() {
           <div className="interface-preview-shell refined" aria-label="Static operator dashboard mockup">
             <aside className="interface-preview-sidebar">
               <div className="interface-preview-section-title">
-                <p className="interface-preview-eyebrow">Browser-local brands</p>
-                <HelpMarker label="Brand switcher is local state only" />
+                <p className="interface-preview-eyebrow">Reviewed interaction</p>
+                <HelpMarker label="Brand switcher remains local state only" />
               </div>
               {brandOrder.map((brandId) => {
                 const brand = brandSamples[brandId];
@@ -231,19 +249,19 @@ function DisabledInterfacePreview() {
                 );
               })}
               <div className="interface-preview-safe-card">
-                <strong>Active synthetic brand</strong>
+                <strong>Review status</strong>
                 <span>{activeBrand.name}</span>
-                <small>Stored only in React state for this browser session</small>
+                <small>Local state only; no persistence or live account access</small>
               </div>
             </aside>
 
             <main className="interface-preview-workspace">
               <div className="interface-preview-topline">
                 <div>
-                  <p className="interface-preview-eyebrow">Safe interaction live in preview</p>
+                  <p className="interface-preview-eyebrow">Safe interaction under review</p>
                   <h3>{activeBrand.headline}</h3>
                 </div>
-                <span>Interactive / synthetic / local state</span>
+                <span>Reviewed / synthetic / local state</span>
               </div>
 
               <article className="interface-preview-card interface-preview-local-state-card">
@@ -306,9 +324,21 @@ function DisabledInterfacePreview() {
 
           <div className="interface-preview-columns">
             <article className="interface-preview-card interface-preview-wide-card">
-              <h3>QL-080 implementation checks</h3>
+              <h3>QL-081 review findings</h3>
+              <div className="interface-preview-help-grid">
+                {reviewFindings.map((finding) => (
+                  <div className="interface-preview-help-card" key={finding.title}>
+                    <HelpMarker label={`${finding.title} review`} />
+                    <strong>{finding.title}</strong>
+                    <p>{finding.detail}</p>
+                  </div>
+                ))}
+              </div>
+            </article>
+            <article className="interface-preview-card interface-preview-wide-card">
+              <h3>Review checks passed</h3>
               <ol>
-                {implementedChecks.map((check) => (
+                {reviewChecks.map((check) => (
                   <li key={check}>{check}</li>
                 ))}
               </ol>
@@ -319,7 +349,7 @@ function DisabledInterfacePreview() {
                 These remain locked because they touch provider, backend, live customer, delivery, archive, retention, AI, or live-pilot risk.
               </p>
               <div className="interface-preview-pill-list">
-                {remainingLockedPaths.map((option) => (
+                {stillLockedPaths.map((option) => (
                   <span key={option}>{option}</span>
                 ))}
               </div>
