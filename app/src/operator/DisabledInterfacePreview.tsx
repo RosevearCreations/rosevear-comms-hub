@@ -4,35 +4,35 @@ import './disabled-interface-preview.css';
 const targetPreviewUrl = 'https://rosevearcreations.github.io/rosevear-comms-hub/';
 const viteBasePath = '/rosevear-comms-hub/';
 
-const previewModules = [
+const visualReviewModules = [
   {
-    title: 'Unified inbox',
-    body: 'Brand-aware conversations for Rosie Dazzlers and Devil n Dove with contact, intake, and task context in one static review surface.',
-    status: 'Ready for review'
+    title: 'Unified inbox surface',
+    body: 'Brand-aware conversation cards for Rosie Dazzlers and Devil n Dove remain visible so the public preview can be judged directionally.',
+    status: 'Visual review'
   },
   {
     title: 'Operator command centre',
-    body: 'Phone/SMS action areas stay visible for workflow review, but every live control remains disabled.',
+    body: 'Phone/SMS action areas remain visible for workflow review, while every live control is disabled and cannot send or call.',
     status: 'Locked'
   },
   {
-    title: 'GitHub Pages verification',
-    body: `QL-073 verifies whether the gated Pages workflow deploys the static app with the ${viteBasePath} base path or safely skips when the enablement variable is absent.`,
-    status: 'Verification active'
+    title: 'GitHub Pages public preview',
+    body: `QL-074 reviews the public static preview at ${targetPreviewUrl} with the ${viteBasePath} base path when the Pages gate deploys.`,
+    status: 'Public check'
   },
   {
-    title: 'Provider boundary',
-    body: 'Provider credentials, callback tokens, service-role keys, live numbers, webhooks, and live customer records remain server-only later.',
-    status: 'Server-only later'
+    title: 'Safety boundary',
+    body: 'Provider credentials, callback tokens, service-role keys, live numbers, webhooks, message bodies, transcripts, recordings, and live customer records remain excluded from browser output.',
+    status: 'Protected'
   }
 ];
 
-const verificationSteps = [
-  'Confirm the normal app CI still passes install, check, and build on main.',
-  'Confirm the GitHub Pages disabled preview workflow either deploys when ENABLE_GITHUB_PAGES_DISABLED_PREVIEW=true or skips safely when the variable is absent.',
-  'Confirm the target public review URL remains https://rosevearcreations.github.io/rosevear-comms-hub/.',
+const visualReviewChecks = [
+  'Open the public URL after the final main push and confirm whether the GitHub Pages workflow deployed or safely skipped.',
+  'Confirm the preview shell is visually usable: brand switcher, operator queue, customer timeline, disabled controls, and status cards are visible.',
+  'Confirm the review page clearly says it is static, disabled, and not a live Phone/SMS pilot.',
   'Confirm the static build uses npm run pages:build and Vite base path /rosevear-comms-hub/.',
-  'Confirm browser output remains static and does not contain provider credentials, service-role keys, callback tokens, live phone data, live message bodies, transcripts, recordings, or live customer data.',
+  'Confirm browser output does not contain provider credentials, service-role keys, callback tokens, live phone data, live message bodies, transcripts, recordings, or live customer data.',
   'Confirm SMS, calls, callbacks, recording, AI send, persistence writes, archive writes, retention writes, and live pilot runtime remain disabled.'
 ];
 
@@ -55,17 +55,17 @@ function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-073</small>
+        <small>QL-074</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-073 GitHub Pages disabled preview deployment verification">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-074 public disabled preview visual review">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-073 GitHub Pages disabled preview deployment verification</p>
-              <h2>Quo-lite static review link verification</h2>
+              <p className="interface-preview-eyebrow">QL-074 Public disabled preview visual review</p>
+              <h2>Quo-lite public static preview visual check</h2>
               <p>
-                This build verifies the disabled GitHub Pages preview deployment path while keeping the app static, browser-safe, and locked. It proves whether the Pages workflow deploys or safely skips based on the repository variable.
+                This build reviews the public GitHub Pages disabled preview experience. It keeps the interface static and browser-safe while making the Quo-lite direction visible for visual review.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -74,23 +74,23 @@ function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            Verification only. Phone/SMS providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, and live pilot runtime remain OFF.
+            Visual review only. Phone/SMS providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, and live pilot runtime remain OFF.
           </div>
 
           <div className="interface-preview-review-grid">
             <article className="interface-preview-link-card">
-              <p className="interface-preview-eyebrow">Public review URL under verification</p>
+              <p className="interface-preview-eyebrow">Public review URL</p>
               <h3>GitHub Pages disabled preview</h3>
               <code className="interface-preview-link">{targetPreviewUrl}</code>
               <p>
-                QL-073 verifies this URL after the workflow runs. A successful Pages deployment requires GitHub Pages Source = GitHub Actions and ENABLE_GITHUB_PAGES_DISABLED_PREVIEW=true.
+                QL-074 verifies this as the public visual review target. It loads only after the Pages workflow deploys with GitHub Pages Source set to GitHub Actions and ENABLE_GITHUB_PAGES_DISABLED_PREVIEW=true.
               </p>
             </article>
             <article className="interface-preview-card interface-preview-next-step">
-              <p className="interface-preview-eyebrow">QL-073 decision</p>
-              <h3>Deployment path verification, not live feature enablement</h3>
+              <p className="interface-preview-eyebrow">QL-074 decision</p>
+              <h3>Review the look and direction, not live operations</h3>
               <p>
-                The verification proves the static preview path without enabling provider callbacks, SMS, calls, AI sends, persistence writes, or live pilot behavior.
+                The public preview can confirm whether the dashboard direction feels right without enabling provider callbacks, SMS, calls, AI sends, persistence writes, or live pilot behavior.
               </p>
             </article>
           </div>
@@ -107,9 +107,9 @@ function DisabledInterfacePreview() {
                 <small>Maker shop inbox</small>
               </button>
               <div className="interface-preview-safe-card">
-                <strong>Deployment status</strong>
-                <span>Pages verification</span>
-                <small>Static workflow checked; live controls locked</small>
+                <strong>Preview status</strong>
+                <span>Public visual review</span>
+                <small>Static Pages preview; live controls locked</small>
               </div>
             </aside>
 
@@ -119,7 +119,7 @@ function DisabledInterfacePreview() {
                   <p className="interface-preview-eyebrow">Operator queue</p>
                   <h3>Today’s communication cockpit</h3>
                 </div>
-                <span>Static / disabled / verifying Pages</span>
+                <span>Static / disabled / visual review</span>
               </div>
 
               <div className="interface-preview-grid">
@@ -167,7 +167,7 @@ function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-module-grid">
-            {previewModules.map((module) => (
+            {visualReviewModules.map((module) => (
               <article className="interface-preview-module" key={module.title}>
                 <span>{module.status}</span>
                 <h4>{module.title}</h4>
@@ -178,9 +178,9 @@ function DisabledInterfacePreview() {
 
           <div className="interface-preview-columns">
             <article className="interface-preview-card interface-preview-wide-card">
-              <h3>QL-073 verification checklist</h3>
+              <h3>QL-074 visual review checklist</h3>
               <ol>
-                {verificationSteps.map((step) => (
+                {visualReviewChecks.map((step) => (
                   <li key={step}>{step}</li>
                 ))}
               </ol>
