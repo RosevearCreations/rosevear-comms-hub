@@ -4,21 +4,21 @@ import './disabled-interface-preview.css';
 const targetPreviewUrl = 'https://rosevearcreations.github.io/rosevear-comms-hub/';
 const viteBasePath = '/rosevear-comms-hub/';
 
-const feedbackModules = [
+const feedbackReviewModules = [
   {
-    title: 'First-look feedback',
-    body: 'Capture whether the public disabled preview immediately communicates the shared Quo-lite direction for Rosie Dazzlers and Devil n Dove.',
-    status: 'Feedback intake'
+    title: 'Public preview load review',
+    body: `Confirm the GitHub Pages disabled preview remains reachable at ${targetPreviewUrl} after the QL-076 promotion and still uses the ${viteBasePath} base path.`,
+    status: 'Review live URL'
   },
   {
-    title: 'Operator workflow clarity',
-    body: 'Review whether inbox, queue, customer timeline, draft-only actions, and disabled controls are clear enough for future daily use.',
-    status: 'Review needed'
+    title: 'Feedback themes',
+    body: 'Convert first-look notes into layout, navigation, labels, help-system, accessibility, brand-switching, inbox-card, and timeline improvements.',
+    status: 'Triage'
   },
   {
-    title: 'GitHub Pages publication',
-    body: `QL-075 expects the corrected variable to let the Pages workflow publish ${targetPreviewUrl} using the ${viteBasePath} base path.`,
-    status: 'Verify live URL'
+    title: 'Next interactive surface',
+    body: 'Identify the safest first interaction to build next without enabling provider delivery, callbacks, live phone data, persistence writes, or live pilot runtime.',
+    status: 'Prioritize'
   },
   {
     title: 'Safety boundary',
@@ -27,13 +27,39 @@ const feedbackModules = [
   }
 ];
 
-const feedbackPrompts = [
-  'Does the public preview load at the GitHub Pages URL after the final main push?',
-  'Can you quickly tell this is a shared communications hub for Rosie Dazzlers and Devil n Dove?',
-  'Are the brand switcher, operator queue, customer timeline, disabled controls, and status cards easy to understand?',
-  'Do the labels make it obvious that SMS, calls, provider connections, callbacks, recordings, AI send, persistence, archive, retention, and live pilot runtime are disabled?',
-  'What should be changed first: layout, labels, colours, help text, brand switching, inbox cards, timeline, or next-action panels?',
-  'What is missing before we build the first real interactive console screen?'
+const feedbackReviewFindings = [
+  {
+    label: 'Direction',
+    prompt: 'Does the public preview clearly feel like a shared communication hub rather than a generic dashboard?'
+  },
+  {
+    label: 'Brand switching',
+    prompt: 'Can Rosie Dazzlers and Devil n Dove be understood as separate brand inboxes sharing one operator cockpit?'
+  },
+  {
+    label: 'Operator flow',
+    prompt: 'Are the queue, timeline, draft-only actions, and disabled controls understandable in one pass?'
+  },
+  {
+    label: 'Locked controls',
+    prompt: 'Is it obvious that Phone/SMS, provider setup, callbacks, recording, AI send, persistence, archive, retention, and live pilot runtime are off?'
+  },
+  {
+    label: 'Help system',
+    prompt: 'Where should the first circled-i help notes appear: brand switcher, queue, timeline, controls, status, or setup checklist?'
+  },
+  {
+    label: 'First safe interaction',
+    prompt: 'What should become clickable first: brand switcher, sample conversation, task filter, layout preference, feedback form, or setup checklist?'
+  }
+];
+
+const feedbackReviewDecisions = [
+  'Classify feedback as layout, label, navigation, help, accessibility, brand context, inbox clarity, timeline clarity, disabled-control clarity, or next-interaction readiness.',
+  'Keep the public preview static until a later build deliberately introduces a browser-safe interactive surface.',
+  'Treat any request for real SMS, live calls, callbacks, provider connection, recording, AI send, persistence writes, or live pilot behavior as out of scope for QL-076.',
+  'Use QL-077 for prioritized public preview refinement planning before building more interaction.',
+  'Keep the GitHub Pages preview deployable with the existing gated workflow and public-safe browser bundle.'
 ];
 
 const disabledActions = [
@@ -55,17 +81,17 @@ function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-075</small>
+        <small>QL-076</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-075 public disabled preview feedback intake">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-076 public disabled preview feedback review">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-075 Public disabled preview feedback intake</p>
-              <h2>Quo-lite public preview feedback capture</h2>
+              <p className="interface-preview-eyebrow">QL-076 Public disabled preview feedback review</p>
+              <h2>Quo-lite public preview feedback review</h2>
               <p>
-                This build turns the disabled public preview into a feedback intake checkpoint. It asks what looks right, what feels wrong, and what should become interactive next while keeping all live Phone/SMS paths disabled.
+                This build reviews the feedback intake from the live public disabled preview and turns it into safe next-step priorities. It still does not enable provider callbacks, SMS, calls, AI send, persistence, archive, retention, or live pilot runtime.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -74,7 +100,7 @@ function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            Feedback intake only. Phone/SMS providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, and live pilot runtime remain OFF.
+            Feedback review only. The public preview may be live, but Phone/SMS providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, and live pilot runtime remain OFF.
           </div>
 
           <div className="interface-preview-review-grid">
@@ -83,14 +109,14 @@ function DisabledInterfacePreview() {
               <h3>GitHub Pages disabled preview</h3>
               <code className="interface-preview-link">{targetPreviewUrl}</code>
               <p>
-                QL-075 verifies whether the corrected ENABLE_GITHUB_PAGES_DISABLED_PREVIEW variable lets the static disabled preview deploy. Once live, use this URL for first feedback notes.
+                QL-076 keeps this as the live public feedback-review target. Use it to decide which labels, layouts, help notes, and first safe interactions should be refined next.
               </p>
             </article>
             <article className="interface-preview-card interface-preview-next-step">
-              <p className="interface-preview-eyebrow">QL-075 decision</p>
-              <h3>Capture feedback before adding real interaction</h3>
+              <p className="interface-preview-eyebrow">QL-076 decision</p>
+              <h3>Review feedback before adding more interaction</h3>
               <p>
-                The goal is to collect layout, wording, workflow, and priority feedback before any provider callbacks, SMS, calls, AI sends, persistence writes, or live pilot behavior are enabled.
+                The next work should improve the visible public preview and select a browser-safe first interaction, not enable provider callbacks, SMS, calls, AI sends, persistence writes, or live pilot behavior.
               </p>
             </article>
           </div>
@@ -108,7 +134,7 @@ function DisabledInterfacePreview() {
               </button>
               <div className="interface-preview-safe-card">
                 <strong>Preview status</strong>
-                <span>Feedback intake</span>
+                <span>Feedback review</span>
                 <small>Static Pages preview; live controls locked</small>
               </div>
             </aside>
@@ -119,7 +145,7 @@ function DisabledInterfacePreview() {
                   <p className="interface-preview-eyebrow">Operator queue</p>
                   <h3>Today’s communication cockpit</h3>
                 </div>
-                <span>Static / disabled / feedback intake</span>
+                <span>Static / disabled / feedback review</span>
               </div>
 
               <div className="interface-preview-grid">
@@ -167,7 +193,7 @@ function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-module-grid">
-            {feedbackModules.map((module) => (
+            {feedbackReviewModules.map((module) => (
               <article className="interface-preview-module" key={module.title}>
                 <span>{module.status}</span>
                 <h4>{module.title}</h4>
@@ -178,10 +204,20 @@ function DisabledInterfacePreview() {
 
           <div className="interface-preview-columns">
             <article className="interface-preview-card interface-preview-wide-card">
-              <h3>QL-075 feedback prompts</h3>
+              <h3>QL-076 feedback review findings</h3>
               <ol>
-                {feedbackPrompts.map((step) => (
-                  <li key={step}>{step}</li>
+                {feedbackReviewFindings.map((finding) => (
+                  <li key={finding.label}>
+                    <strong>{finding.label}:</strong> {finding.prompt}
+                  </li>
+                ))}
+              </ol>
+            </article>
+            <article className="interface-preview-card interface-preview-wide-card">
+              <h3>QL-076 decision rules</h3>
+              <ol>
+                {feedbackReviewDecisions.map((decision) => (
+                  <li key={decision}>{decision}</li>
                 ))}
               </ol>
             </article>
