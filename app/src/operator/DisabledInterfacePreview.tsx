@@ -2,7 +2,6 @@ import { useState } from 'react';
 import './disabled-interface-preview.css';
 
 type PreviewBrandId = 'rosie' | 'devil';
-
 type QueueTone = 'priority' | 'safe' | 'locked';
 
 const targetPreviewUrl = 'https://rosevearcreations.github.io/rosevear-comms-hub/';
@@ -122,38 +121,37 @@ const brandSamples: Record<PreviewBrandId, {
   }
 };
 
-const reviewFindings = [
+const selectorPlan = [
   {
-    title: 'Interaction is useful',
-    detail: 'The switcher proves the public preview can respond to operator input without leaving the browser.'
+    title: 'Selector remains synthetic',
+    detail: 'The next interaction may choose between two or three hard-coded conversation examples for the active brand only.'
   },
   {
-    title: 'Boundary remains clear',
-    detail: 'The active brand changes only synthetic queue cards, timeline copy, and review text.'
+    title: 'Selector remains browser-local',
+    detail: 'The chosen sample conversation should be stored in React state only and reset when the page reloads.'
   },
   {
-    title: 'Next safe step identified',
-    detail: 'The next interaction can be a synthetic conversation selector if it remains browser-local.'
+    title: 'Selector stays read-only',
+    detail: 'Conversation selection may update preview text and timeline context, but it must not save, fetch, send, call, archive, or deliver anything.'
   }
 ];
 
-const reviewChecks = [
-  'Rosie Dazzlers and Devil n Dove brand buttons are clickable in the public preview.',
-  'The selected brand is stored only in local React state for the current browser session.',
-  'The visible queue, timeline, and help text swap synthetic content only.',
-  'No Supabase client import, provider connection, persistence write, live customer read, SMS send, call runtime, AI send, archive write, retention write, or live pilot path was introduced.',
-  'Locked action controls remain disabled after switching brands.'
+const selectorCandidates = [
+  'Quote follow-up sample',
+  'Missed-call callback sample',
+  'Custom order clarification sample',
+  'Workshop detail question sample'
 ];
 
-const stillLockedPaths = [
-  'Real SMS draft send',
-  'Call test button',
-  'Provider connect flow',
-  'Callback verification route',
-  'Supabase-backed inbox reads',
-  'Live customer search',
-  'Archive or retention action',
-  'AI reply generation'
+const rejectedSelectorSources = [
+  'Live Supabase conversation rows',
+  'Provider inbox imports',
+  'Phone/SMS message history',
+  'Call recordings or transcripts',
+  'Real customer search',
+  'AI-generated replies',
+  'Archive or retention records',
+  'Callback verification payloads'
 ];
 
 const disabledActions = [
@@ -185,17 +183,17 @@ function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-081</small>
+        <small>QL-082</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-081 public disabled preview first safe interaction review">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-082 public disabled preview synthetic conversation selector plan">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-081 Public disabled preview first safe interaction review</p>
-              <h2>Brand switcher review</h2>
+              <p className="interface-preview-eyebrow">QL-082 Public disabled preview synthetic conversation selector plan</p>
+              <h2>Synthetic conversation selector plan</h2>
               <p>
-                This build reviews the first safe interaction delivered in QL-080. The Rosie Dazzlers / Devil n Dove switcher remains browser-local, synthetic, and review-only while every Phone/SMS, provider, Supabase runtime, persistence, archive, retention, AI, and live pilot path remains blocked.
+                This build plans the next safe public-preview interaction after the reviewed brand switcher. The next selector may switch among hard-coded sample conversations for the active brand, but every Phone/SMS, provider, Supabase runtime, persistence, archive, retention, AI, and live pilot path remains blocked.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -204,7 +202,7 @@ function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            Review only. QL-081 does not connect providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, Supabase runtime changes, or live pilot runtime.
+            Planning only. QL-082 does not implement conversation selection, connect providers, fetch live messages, enable callbacks, send SMS, place calls, persist data, archive records, generate AI replies, or start live pilot runtime.
           </div>
 
           <div className="interface-preview-review-grid">
@@ -213,14 +211,14 @@ function DisabledInterfacePreview() {
               <h3>GitHub Pages disabled preview</h3>
               <code className="interface-preview-link">{targetPreviewUrl}</code>
               <p>
-                The public preview remains served from GitHub Pages with the <code>{viteBasePath}</code> base path. QL-081 confirms the first interaction is safe enough to keep and review.
+                The public preview remains served from GitHub Pages with the <code>{viteBasePath}</code> base path. QL-082 keeps the current brand switcher live and plans the next safe local-only control.
               </p>
             </article>
             <article className="interface-preview-card interface-preview-next-step">
-              <p className="interface-preview-eyebrow">QL-081 finding</p>
-              <h3>Brand switching passes review</h3>
+              <p className="interface-preview-eyebrow">QL-082 decision</p>
+              <h3>Plan a synthetic conversation selector next</h3>
               <p>
-                The interaction is useful because it proves a browser-only control can change context without fetching, saving, sending, calling, archiving, or delivering anything.
+                The selector should be limited to hard-coded examples and browser-local React state. It should help review operator flow without introducing live inbox, provider, SMS, call, Supabase, AI, archive, or retention risk.
               </p>
             </article>
           </div>
@@ -228,7 +226,7 @@ function DisabledInterfacePreview() {
           <div className="interface-preview-shell refined" aria-label="Static operator dashboard mockup">
             <aside className="interface-preview-sidebar">
               <div className="interface-preview-section-title">
-                <p className="interface-preview-eyebrow">Reviewed interaction</p>
+                <p className="interface-preview-eyebrow">Existing safe interaction</p>
                 <HelpMarker label="Brand switcher remains local state only" />
               </div>
               {brandOrder.map((brandId) => {
@@ -249,25 +247,25 @@ function DisabledInterfacePreview() {
                 );
               })}
               <div className="interface-preview-safe-card">
-                <strong>Review status</strong>
-                <span>{activeBrand.name}</span>
-                <small>Local state only; no persistence or live account access</small>
+                <strong>Next planned local control</strong>
+                <span>Synthetic conversation selector</span>
+                <small>Not implemented in QL-082; planned for browser-local state only</small>
               </div>
             </aside>
 
             <main className="interface-preview-workspace">
               <div className="interface-preview-topline">
                 <div>
-                  <p className="interface-preview-eyebrow">Safe interaction under review</p>
+                  <p className="interface-preview-eyebrow">Selector planning view</p>
                   <h3>{activeBrand.headline}</h3>
                 </div>
-                <span>Reviewed / synthetic / local state</span>
+                <span>Plan / synthetic / local state only</span>
               </div>
 
               <article className="interface-preview-card interface-preview-local-state-card">
                 <div className="interface-preview-card-heading">
-                  <span>{activeBrand.name} selected</span>
-                  <HelpMarker label="The selected brand only affects synthetic preview content" />
+                  <span>{activeBrand.name} stays selected by local state</span>
+                  <HelpMarker label="QL-082 keeps brand switching live while planning conversation selection" />
                 </div>
                 <p>{activeBrand.description}</p>
               </article>
@@ -288,15 +286,15 @@ function DisabledInterfacePreview() {
               <div className="interface-preview-detail-grid">
                 <article className="interface-preview-card timeline refined-timeline">
                   <div className="interface-preview-card-heading">
-                    <p className="interface-preview-eyebrow">Synthetic timeline</p>
-                    <HelpMarker label="Timeline changes with selected sample brand" />
+                    <p className="interface-preview-eyebrow">Planned selector candidates</p>
+                    <HelpMarker label="Candidates are labels for hard-coded sample conversations only" />
                   </div>
-                  <h4>{activeBrand.sample}</h4>
+                  <h4>Conversation selector planning</h4>
                   <ol>
-                    {activeBrand.timeline.map((item) => (
-                      <li key={item.title} className={item.locked ? 'locked-step' : undefined}>
-                        <strong>{item.title}</strong>
-                        <span>{item.detail}</span>
+                    {selectorCandidates.map((candidate) => (
+                      <li key={candidate}>
+                        <strong>{candidate}</strong>
+                        <span>Candidate only; no live inbox, provider, SMS, call, Supabase, AI, archive, or retention source.</span>
                       </li>
                     ))}
                   </ol>
@@ -305,7 +303,7 @@ function DisabledInterfacePreview() {
                 <article className="interface-preview-card controls">
                   <div className="interface-preview-card-heading">
                     <p className="interface-preview-eyebrow">Locked controls</p>
-                    <HelpMarker label="Controls remain locked even while brand switching works" />
+                    <HelpMarker label="Controls remain locked while selector planning proceeds" />
                   </div>
                   <div className="interface-preview-action-grid">
                     {disabledActions.map((action) => (
@@ -315,7 +313,7 @@ function DisabledInterfacePreview() {
                     ))}
                   </div>
                   <p className="interface-preview-control-note">
-                    Brand switching changes sample UI context only. It does not unlock any live action button.
+                    The future selector may choose synthetic sample copy only. It must not unlock any live action button.
                   </p>
                 </article>
               </div>
@@ -324,33 +322,25 @@ function DisabledInterfacePreview() {
 
           <div className="interface-preview-columns">
             <article className="interface-preview-card interface-preview-wide-card">
-              <h3>QL-081 review findings</h3>
+              <h3>QL-082 selector plan</h3>
               <div className="interface-preview-help-grid">
-                {reviewFindings.map((finding) => (
-                  <div className="interface-preview-help-card" key={finding.title}>
-                    <HelpMarker label={`${finding.title} review`} />
-                    <strong>{finding.title}</strong>
-                    <p>{finding.detail}</p>
+                {selectorPlan.map((item) => (
+                  <div className="interface-preview-help-card" key={item.title}>
+                    <HelpMarker label={`${item.title} selector planning`} />
+                    <strong>{item.title}</strong>
+                    <p>{item.detail}</p>
                   </div>
                 ))}
               </div>
             </article>
-            <article className="interface-preview-card interface-preview-wide-card">
-              <h3>Review checks passed</h3>
-              <ol>
-                {reviewChecks.map((check) => (
-                  <li key={check}>{check}</li>
-                ))}
-              </ol>
-            </article>
             <article className="interface-preview-card interface-preview-wide-card interface-preview-interactions">
-              <h3>Still rejected from the public preview interaction path</h3>
+              <h3>Rejected selector sources</h3>
               <p>
-                These remain locked because they touch provider, backend, live customer, delivery, archive, retention, AI, or live-pilot risk.
+                QL-082 explicitly rejects sources that would introduce provider, backend, live customer, delivery, archive, retention, AI, or live-pilot risk.
               </p>
               <div className="interface-preview-pill-list">
-                {stillLockedPaths.map((option) => (
-                  <span key={option}>{option}</span>
+                {rejectedSelectorSources.map((source) => (
+                  <span key={source}>{source}</span>
                 ))}
               </div>
             </article>

@@ -1,0 +1,59 @@
+{
+  "buildId": "QL-082",
+  "scope": "public_disabled_preview_synthetic_conversation_selector_plan_only",
+  "publicPreviewUrl": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+  "viteBasePath": "/rosevear-comms-hub/",
+  "ql081ReviewComplete": true,
+  "plannedInteraction": {
+    "name": "Synthetic conversation selector",
+    "implementedInThisBuild": false,
+    "approvedNextBuild": "QL-083-public-disabled-preview-synthetic-conversation-selector-implementation",
+    "stateBoundary": "browser-local React state only",
+    "dataBoundary": "hard-coded synthetic samples only",
+    "resetBoundary": "browser reload resets selection"
+  },
+  "allowedSelectorCandidates": [
+    "Rosie Dazzlers quote follow-up sample",
+    "Rosie Dazzlers missed-call callback sample",
+    "Devil n Dove custom order clarification sample",
+    "Devil n Dove workshop detail question sample"
+  ],
+  "forbiddenSources": [
+    "Supabase conversation rows",
+    "provider inbox imports",
+    "live customer records",
+    "SMS message history",
+    "call recordings",
+    "transcripts",
+    "archive records",
+    "retention records",
+    "AI generated replies",
+    "callback payloads"
+  ],
+  "disabledRuntimeBoundary": {
+    "providerCallbacks": false,
+    "livePhoneWebhooks": false,
+    "smsSending": false,
+    "callRuntime": false,
+    "recording": false,
+    "aiSend": false,
+    "persistenceWrites": false,
+    "liveCustomerReads": false,
+    "liveCustomerWrites": false,
+    "archiveWrites": false,
+    "retentionWrites": false,
+    "supabaseRuntimeReads": false,
+    "supabaseRuntimeWrites": false,
+    "supabaseMigration": false,
+    "supabaseEdgeFunction": false,
+    "providerAccountConnection": false,
+    "liveNumberAttachment": false,
+    "callbackRegistration": false,
+    "livePilotRuntime": false
+  },
+  "result": {
+    "safeToPlan": true,
+    "safeToImplementNext": true,
+    "safeToEnableLiveRuntime": false
+  }
+}
