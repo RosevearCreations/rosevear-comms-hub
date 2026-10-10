@@ -4,21 +4,21 @@ import './disabled-interface-preview.css';
 const targetPreviewUrl = 'https://rosevearcreations.github.io/rosevear-comms-hub/';
 const viteBasePath = '/rosevear-comms-hub/';
 
-const visualReviewModules = [
+const feedbackModules = [
   {
-    title: 'Unified inbox surface',
-    body: 'Brand-aware conversation cards for Rosie Dazzlers and Devil n Dove remain visible so the public preview can be judged directionally.',
-    status: 'Visual review'
+    title: 'First-look feedback',
+    body: 'Capture whether the public disabled preview immediately communicates the shared Quo-lite direction for Rosie Dazzlers and Devil n Dove.',
+    status: 'Feedback intake'
   },
   {
-    title: 'Operator command centre',
-    body: 'Phone/SMS action areas remain visible for workflow review, while every live control is disabled and cannot send or call.',
-    status: 'Locked'
+    title: 'Operator workflow clarity',
+    body: 'Review whether inbox, queue, customer timeline, draft-only actions, and disabled controls are clear enough for future daily use.',
+    status: 'Review needed'
   },
   {
-    title: 'GitHub Pages public preview',
-    body: `QL-074 reviews the public static preview at ${targetPreviewUrl} with the ${viteBasePath} base path when the Pages gate deploys.`,
-    status: 'Public check'
+    title: 'GitHub Pages publication',
+    body: `QL-075 expects the corrected variable to let the Pages workflow publish ${targetPreviewUrl} using the ${viteBasePath} base path.`,
+    status: 'Verify live URL'
   },
   {
     title: 'Safety boundary',
@@ -27,13 +27,13 @@ const visualReviewModules = [
   }
 ];
 
-const visualReviewChecks = [
-  'Open the public URL after the final main push and confirm whether the GitHub Pages workflow deployed or safely skipped.',
-  'Confirm the preview shell is visually usable: brand switcher, operator queue, customer timeline, disabled controls, and status cards are visible.',
-  'Confirm the review page clearly says it is static, disabled, and not a live Phone/SMS pilot.',
-  'Confirm the static build uses npm run pages:build and Vite base path /rosevear-comms-hub/.',
-  'Confirm browser output does not contain provider credentials, service-role keys, callback tokens, live phone data, live message bodies, transcripts, recordings, or live customer data.',
-  'Confirm SMS, calls, callbacks, recording, AI send, persistence writes, archive writes, retention writes, and live pilot runtime remain disabled.'
+const feedbackPrompts = [
+  'Does the public preview load at the GitHub Pages URL after the final main push?',
+  'Can you quickly tell this is a shared communications hub for Rosie Dazzlers and Devil n Dove?',
+  'Are the brand switcher, operator queue, customer timeline, disabled controls, and status cards easy to understand?',
+  'Do the labels make it obvious that SMS, calls, provider connections, callbacks, recordings, AI send, persistence, archive, retention, and live pilot runtime are disabled?',
+  'What should be changed first: layout, labels, colours, help text, brand switching, inbox cards, timeline, or next-action panels?',
+  'What is missing before we build the first real interactive console screen?'
 ];
 
 const disabledActions = [
@@ -55,17 +55,17 @@ function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-074</small>
+        <small>QL-075</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-074 public disabled preview visual review">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-075 public disabled preview feedback intake">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-074 Public disabled preview visual review</p>
-              <h2>Quo-lite public static preview visual check</h2>
+              <p className="interface-preview-eyebrow">QL-075 Public disabled preview feedback intake</p>
+              <h2>Quo-lite public preview feedback capture</h2>
               <p>
-                This build reviews the public GitHub Pages disabled preview experience. It keeps the interface static and browser-safe while making the Quo-lite direction visible for visual review.
+                This build turns the disabled public preview into a feedback intake checkpoint. It asks what looks right, what feels wrong, and what should become interactive next while keeping all live Phone/SMS paths disabled.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -74,7 +74,7 @@ function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            Visual review only. Phone/SMS providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, and live pilot runtime remain OFF.
+            Feedback intake only. Phone/SMS providers, callbacks, live SMS, calls, recordings, AI send, persistence writes, live customer access, archive writes, retention writes, and live pilot runtime remain OFF.
           </div>
 
           <div className="interface-preview-review-grid">
@@ -83,14 +83,14 @@ function DisabledInterfacePreview() {
               <h3>GitHub Pages disabled preview</h3>
               <code className="interface-preview-link">{targetPreviewUrl}</code>
               <p>
-                QL-074 verifies this as the public visual review target. It loads only after the Pages workflow deploys with GitHub Pages Source set to GitHub Actions and ENABLE_GITHUB_PAGES_DISABLED_PREVIEW=true.
+                QL-075 verifies whether the corrected ENABLE_GITHUB_PAGES_DISABLED_PREVIEW variable lets the static disabled preview deploy. Once live, use this URL for first feedback notes.
               </p>
             </article>
             <article className="interface-preview-card interface-preview-next-step">
-              <p className="interface-preview-eyebrow">QL-074 decision</p>
-              <h3>Review the look and direction, not live operations</h3>
+              <p className="interface-preview-eyebrow">QL-075 decision</p>
+              <h3>Capture feedback before adding real interaction</h3>
               <p>
-                The public preview can confirm whether the dashboard direction feels right without enabling provider callbacks, SMS, calls, AI sends, persistence writes, or live pilot behavior.
+                The goal is to collect layout, wording, workflow, and priority feedback before any provider callbacks, SMS, calls, AI sends, persistence writes, or live pilot behavior are enabled.
               </p>
             </article>
           </div>
@@ -108,7 +108,7 @@ function DisabledInterfacePreview() {
               </button>
               <div className="interface-preview-safe-card">
                 <strong>Preview status</strong>
-                <span>Public visual review</span>
+                <span>Feedback intake</span>
                 <small>Static Pages preview; live controls locked</small>
               </div>
             </aside>
@@ -119,7 +119,7 @@ function DisabledInterfacePreview() {
                   <p className="interface-preview-eyebrow">Operator queue</p>
                   <h3>Today’s communication cockpit</h3>
                 </div>
-                <span>Static / disabled / visual review</span>
+                <span>Static / disabled / feedback intake</span>
               </div>
 
               <div className="interface-preview-grid">
@@ -167,7 +167,7 @@ function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-module-grid">
-            {visualReviewModules.map((module) => (
+            {feedbackModules.map((module) => (
               <article className="interface-preview-module" key={module.title}>
                 <span>{module.status}</span>
                 <h4>{module.title}</h4>
@@ -178,9 +178,9 @@ function DisabledInterfacePreview() {
 
           <div className="interface-preview-columns">
             <article className="interface-preview-card interface-preview-wide-card">
-              <h3>QL-074 visual review checklist</h3>
+              <h3>QL-075 feedback prompts</h3>
               <ol>
-                {visualReviewChecks.map((step) => (
+                {feedbackPrompts.map((step) => (
                   <li key={step}>{step}</li>
                 ))}
               </ol>

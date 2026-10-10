@@ -1,0 +1,45 @@
+{
+  "buildId": "QL-075",
+  "name": "Public Disabled Preview Feedback Intake",
+  "publicPreviewUrl": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+  "expectedVariable": {
+    "name": "ENABLE_GITHUB_PAGES_DISABLED_PREVIEW",
+    "value": "true",
+    "scope": "repository Actions variable"
+  },
+  "decision": "capture_public_disabled_preview_feedback",
+  "feedbackTopics": [
+    "public_url_load",
+    "first_impression",
+    "brand_switcher",
+    "operator_queue",
+    "customer_timeline",
+    "disabled_controls_clarity",
+    "help_text",
+    "next_interactive_surface"
+  ],
+  "runtimeBoundary": {
+    "providerCallbacksEnabled": false,
+    "phoneWebhooksEnabled": false,
+    "smsSendingEnabled": false,
+    "callRuntimeEnabled": false,
+    "recordingEnabled": false,
+    "aiAutoSendEnabled": false,
+    "persistenceWritesEnabled": false,
+    "liveCustomerAccessEnabled": false,
+    "archiveWritesEnabled": false,
+    "retentionWritesEnabled": false,
+    "livePilotRuntimeEnabled": false
+  },
+  "browserSafety": {
+    "serviceRoleKeysAllowed": false,
+    "providerCredentialsAllowed": false,
+    "callbackTokensAllowed": false,
+    "livePhoneNumbersAllowed": false,
+    "liveMessageBodiesAllowed": false,
+    "transcriptsAllowed": false,
+    "recordingsAllowed": false,
+    "liveCustomerDataAllowed": false
+  },
+  "nextBuild": "QL-076-public-disabled-preview-feedback-review"
+}
