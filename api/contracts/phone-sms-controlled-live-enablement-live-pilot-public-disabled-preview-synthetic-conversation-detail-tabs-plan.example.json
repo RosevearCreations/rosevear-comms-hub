@@ -1,0 +1,48 @@
+{
+  "build": "QL-085",
+  "title": "Public Disabled Preview Synthetic Conversation Detail Tabs Plan",
+  "publicPreview": {
+    "targetPreviewUrl": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+    "viteBasePath": "/rosevear-comms-hub/",
+    "pagesWorkflowConclusion": "success",
+    "publicPreviewLoaded": true
+  },
+  "approvedInteractionState": {
+    "brandSwitcherBrowserLocal": true,
+    "syntheticConversationSelectorBrowserLocal": true,
+    "selectedBrandStoredOnlyInReactState": true,
+    "selectedConversationStoredOnlyInReactState": true,
+    "persistsAcrossRefresh": false
+  },
+  "detailTabsPlan": {
+    "detailTabsPlannedOnly": true,
+    "plannedTabs": [
+      "Overview",
+      "Draft",
+      "Timeline",
+      "Safety"
+    ],
+    "implementationDeferredTo": "QL-086 — Public Disabled Preview Synthetic Conversation Detail Tabs Implementation",
+    "usesHardCodedSyntheticConversationsOnly": true,
+    "tabClickBehaviorImplemented": false,
+    "futureTabStateSource": "browser-local React state only"
+  },
+  "blockedSources": {
+    "supabaseConversationRowsEnabled": false,
+    "providerInboxImportsEnabled": false,
+    "liveCustomerRecordsEnabled": false,
+    "smsOrCallHistoryEnabled": false,
+    "recordingsOrTranscriptsEnabled": false,
+    "aiReplyGenerationEnabled": false,
+    "persistenceWritesEnabled": false,
+    "archiveWritesEnabled": false,
+    "retentionWritesEnabled": false,
+    "providerCallbacksEnabled": false,
+    "livePilotRuntimeEnabled": false
+  },
+  "expectedDecision": {
+    "status": "public_disabled_preview_synthetic_conversation_detail_tabs_plan_ready",
+    "approved": true,
+    "nextQueuedBuild": "QL-086 — Public Disabled Preview Synthetic Conversation Detail Tabs Implementation"
+  }
+}
