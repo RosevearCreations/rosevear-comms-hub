@@ -83,34 +83,37 @@ This file tracks the completed Quo-lite build path and the next queued build.
 - QL-076 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Feedback Review — complete.
 - QL-077 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Refinement Plan — complete.
 - QL-078 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview Refinement Implementation — complete.
+- QL-079 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview First Safe Interaction Plan — complete.
 
-## QL-079 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview First Safe Interaction Plan
+## QL-080 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview First Safe Interaction Implementation
 
 Status: complete.
 
 Result:
 
-- Updated the floating interface preview to show QL-079 public disabled preview first-safe-interaction planning state.
+- Updated the floating interface preview to show QL-080 public disabled preview first-safe-interaction implementation state.
 - Kept the public review URL visible: `https://rosevearcreations.github.io/rosevear-comms-hub/`.
 - Kept the Vite base path: `/rosevear-comms-hub/`.
-- Compared browser-safe public preview interaction candidates.
-- Selected the sample brand switcher as the first safe interaction to implement next.
-- Confirmed the interaction must use synthetic data and browser-local React state only.
-- Confirmed the interaction may change sample Rosie Dazzlers and Devil n Dove preview panels only.
-- Rejected real SMS draft send, call test button, provider connect flow, callback verification route, Supabase-backed inbox reads, live customer search, archive or retention action, and AI reply generation as first interactions.
-- Added first-safe-interaction guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotPublicDisabledPreviewFirstSafeInteractionPlan.ts`.
-- Added first-safe-interaction contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-public-disabled-preview-first-safe-interaction-plan.example.json`.
-- Added source-of-truth doc at `docs/92_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_PUBLIC_DISABLED_PREVIEW_FIRST_SAFE_INTERACTION_PLAN.md`.
+- Implemented the QL-079 selected first safe interaction: browser-local sample brand switching.
+- Added clickable Rosie Dazzlers and Devil n Dove sample brand buttons.
+- Used React state only to hold the active synthetic brand.
+- Swapped synthetic queue cards, sample timeline text, and explanatory copy by active brand.
+- Added active/hover/focus styling for the browser-local brand switcher.
+- Added local-state status copy so reviewers know nothing is saved, fetched, sent, called, archived, or delivered.
+- Kept all live action buttons disabled and labelled locked.
+- Added implementation guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotPublicDisabledPreviewFirstSafeInteractionImplementation.ts`.
+- Added implementation contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-public-disabled-preview-first-safe-interaction-implementation.example.json`.
+- Added source-of-truth doc at `docs/93_PHONE_SMS_CONTROLLED_LIVE_ENABLEMENT_LIVE_PILOT_PUBLIC_DISABLED_PREVIEW_FIRST_SAFE_INTERACTION_IMPLEMENTATION.md`.
 - Added build record, ops checklist, remote-operator note, and telephony boundary note.
-- Confirmed QL-079 can approve only QL-080 public disabled preview first safe interaction implementation.
-- Kept provider callbacks, live phone webhooks, SMS sending, call runtime, call recording, AI auto-send, persistence writes, live customer reads, live customer writes, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, Supabase migrations, Supabase Edge Functions, Vercel, Cloudflare Pages, and live pilot runtime disabled.
+- Confirmed QL-080 can approve only QL-081 public disabled preview first safe interaction review.
+- Kept provider callbacks, live phone webhooks, SMS sending, call runtime, call recording, AI auto-send, persistence writes, live customer reads, live customer writes, provider delivery, archive writes, retention policy writes, provider account connection, provider live-number attachment, callback registration, Supabase runtime reads/writes, Supabase migrations, Supabase Edge Functions, Vercel, Cloudflare Pages, and live pilot runtime disabled.
 
-## QL-080 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview First Safe Interaction Implementation
+## QL-081 — Phone/SMS Controlled Live Enablement Live-Pilot Public Disabled Preview First Safe Interaction Review
 
 Goal:
 
-- Implement the QL-079 selected first safe interaction: a browser-local sample brand switcher.
-- Use hard-coded synthetic preview data and React state only.
-- Allow the public disabled preview to switch between Rosie Dazzlers and Devil n Dove sample panels without backend or provider access.
-- Keep all Phone/SMS, provider, callback, recording, AI send, persistence, archive, retention, Supabase runtime, and live pilot controls disabled unless a later build explicitly proves and enables a controlled path.
-- Verify the App scaffold CI and GitHub Pages Disabled Preview build/deploy remain green on main.
+- Review the QL-080 browser-local sample brand switcher in the public disabled preview.
+- Confirm Rosie Dazzlers and Devil n Dove switching is understandable and useful.
+- Confirm the interaction changes only hard-coded synthetic preview data and browser-local state.
+- Confirm all Phone/SMS, provider, callback, recording, AI send, persistence, archive, retention, Supabase runtime, and live pilot controls remain disabled.
+- Decide whether the next safe public-preview interaction should be a synthetic conversation selector or another browser-local review aid.
