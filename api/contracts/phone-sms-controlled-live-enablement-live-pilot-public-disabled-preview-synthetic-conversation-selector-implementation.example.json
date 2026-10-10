@@ -1,0 +1,26 @@
+{
+  "buildId": "QL-083",
+  "publicPreviewUrl": "https://rosevearcreations.github.io/rosevear-comms-hub/",
+  "pagesDeployGreen": true,
+  "appCiGreen": true,
+  "brandSwitcherEnabled": true,
+  "conversationSelectorEnabled": true,
+  "dataSource": "hard-coded-synthetic",
+  "stateScope": "browser-local-react-state",
+  "readsSupabase": false,
+  "writesPersistence": false,
+  "usesProviderInbox": false,
+  "usesLiveCustomers": false,
+  "sendsSms": false,
+  "placesCalls": false,
+  "registersCallbacks": false,
+  "usesAiGeneration": false,
+  "writesArchive": false,
+  "writesRetention": false,
+  "enablesLivePilot": false,
+  "expectedResult": {
+    "approved": true,
+    "status": "approved-public-disabled-preview-selector",
+    "nextAllowedBuild": "QL-084 — Public Disabled Preview Synthetic Conversation Selector Review"
+  }
+}
