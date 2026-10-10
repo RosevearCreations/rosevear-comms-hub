@@ -22,8 +22,10 @@ type PreviewBrand = {
 };
 
 const targetPreviewUrl = 'https://rosevearcreations.github.io/rosevear-comms-hub/';
-const cloudflareWorkerUrl = 'https://rosevear-comms-hub.jfrosevear.workers.dev/';
+const cloudflareWorkerTarget = 'Connected Cloudflare Worker project for devilndovelive@gmail.com';
+const cloudflareWorkerCheck = 'Workers Builds: rosevear-comms-hub';
 const supabaseProjectUrl = 'https://gxujcwpktaickcgzyvnu.supabase.co';
+const supabaseIntegrationTarget = 'Repository RosevearCreations/rosevear-comms-hub · working directory . · production branch main';
 const brandOrder: PreviewBrandId[] = ['rosie', 'devil'];
 
 const brandSamples: Record<PreviewBrandId, PreviewBrand> = {
@@ -36,24 +38,24 @@ const brandSamples: Record<PreviewBrandId, PreviewBrand> = {
       {
         id: 'rosie-ceramic-quote',
         title: 'Ceramic quote follow-up',
-        status: 'Review passed',
-        summary: 'Synthetic ceramic coating follow-up with paint-prep and weather-safe scheduling context.',
+        status: 'Readiness reviewed',
+        summary: 'Synthetic ceramic coating follow-up with deployment-readiness and weather-safe scheduling context.',
         draft: 'Draft-only sample: confirm vehicle size, explain prep expectations, and offer a weather-safe booking window.',
         timeline: [
           { title: 'Synthetic inquiry received', detail: 'Hard-coded website quote sample enters the local-only preview.' },
-          { title: 'Detail tabs reviewed', detail: 'Overview, Draft, Timeline, and Safety tabs stay understandable for the selected sample.' },
+          { title: 'QL-088 readiness reviewed', detail: 'Cloudflare Worker and Supabase scaffold checks are visible before live integrations.' },
           { title: 'Runtime stays locked', detail: 'No SMS, call, provider, archive, or retention action is available.', locked: true }
         ]
       },
       {
         id: 'rosie-missed-call',
         title: 'Missed-call callback sample',
-        status: 'Review passed',
+        status: 'Readiness reviewed',
         summary: 'Synthetic missed-call card for a detailing appointment after work hours.',
         draft: 'Draft-only sample: acknowledge the missed call, ask for vehicle size, and suggest AM/PM availability.',
         timeline: [
           { title: 'Sample selected', detail: 'No phone provider event or call log is loaded.' },
-          { title: 'Draft reviewed', detail: 'The Draft tab shows copy clearly without implying delivery.' },
+          { title: 'Infrastructure check visible', detail: 'The preview shows Cloudflare and Supabase readiness without connecting live messaging.' },
           { title: 'Call action locked', detail: 'The public preview cannot place calls or register callbacks.', locked: true }
         ]
       }
@@ -68,24 +70,24 @@ const brandSamples: Record<PreviewBrandId, PreviewBrand> = {
       {
         id: 'devil-custom-order',
         title: 'Custom order clarification sample',
-        status: 'Review passed',
+        status: 'Readiness reviewed',
         summary: 'Synthetic custom-order question about colour, sizing, and personalization.',
         draft: 'Draft-only sample: confirm colour, size, personalization limits, and expected making time.',
         timeline: [
           { title: 'Custom request selected', detail: 'Hard-coded maker-shop sample opens in the browser preview.' },
-          { title: 'Detail tabs reviewed', detail: 'The tabs organize summary, draft, timeline, and safety information clearly.' },
+          { title: 'QL-088 review active', detail: 'The preview confirms the app can move toward browser-safe read-only Supabase testing next.' },
           { title: 'Provider delivery locked', detail: 'No Etsy, SMS, email, callback, or provider account is connected.', locked: true }
         ]
       },
       {
         id: 'devil-maker-story',
         title: 'Maker story question sample',
-        status: 'Review passed',
+        status: 'Readiness reviewed',
         summary: 'Synthetic shopper asks about the Devil n Dove meaning and materials.',
         draft: 'Draft-only sample: explain the Devil barriers / Dove hope theme and invite a specific product question.',
         timeline: [
           { title: 'Story sample selected', detail: 'Synthetic brand-story prompt is loaded from local constants.' },
-          { title: 'Safety reviewed', detail: 'The Safety tab makes locked runtime boundaries visible.' },
+          { title: 'Readiness boundary reviewed', detail: 'The Safety tab names Cloudflare, Supabase, and locked runtime boundaries.' },
           { title: 'AI and send locked', detail: 'No AI reply generation or provider send path is enabled.', locked: true }
         ]
       }
@@ -94,17 +96,17 @@ const brandSamples: Record<PreviewBrandId, PreviewBrand> = {
 };
 
 const detailTabs: Array<{ id: DetailTabId; title: string; detail: string }> = [
-  { id: 'overview', title: 'Overview', detail: 'Selected summary, status, and review outcome.' },
+  { id: 'overview', title: 'Overview', detail: 'Selected summary, status, and readiness outcome.' },
   { id: 'draft', title: 'Draft', detail: 'Draft-only response copy with no send or AI generation.' },
   { id: 'timeline', title: 'Timeline', detail: 'Synthetic timeline events grouped into a focused local view.' },
   { id: 'safety', title: 'Safety', detail: 'Locked actions, source restrictions, and disabled runtime reminders.' }
 ];
 
 const readinessChecks = [
-  'QL-087 review confirms the QL-086 tabs remain useful, clear, and browser-local.',
-  'Cloudflare Worker static-assets config is now expected in the repo for the connected Cloudflare Worker project.',
-  'Supabase scaffold is now expected in the repo so the dashboard GitHub integration can find a root supabase/ folder.',
-  'Testing can begin against safe database/function scaffolding before any real Phone/SMS provider is connected.'
+  'Cloudflare Worker static-assets deployment is expected from the connected GitHub repo on main.',
+  'Cloudflare production checks must report Workers Builds: rosevear-comms-hub as successful before the Worker target is trusted.',
+  'Supabase GitHub integration should find the root supabase/ folder, migration, config, and ql-status function scaffold.',
+  'Next safe application step is browser-safe Supabase read-only client planning after infrastructure checks are green.'
 ];
 
 const disabledActions = [
@@ -133,7 +135,7 @@ function renderDetailTabContent(activeTabId: DetailTabId, activeBrand: PreviewBr
         <p className="interface-preview-eyebrow">Draft-only reply</p>
         <h4>{activeConversation.title}</h4>
         <p>{activeConversation.draft}</p>
-        <div className="interface-preview-tab-note locked">Review passed: the draft area reads as staged copy, not a live send action.</div>
+        <div className="interface-preview-tab-note locked">QL-088: the draft area remains staged copy only, not a live send action.</div>
       </div>
     );
   }
@@ -158,12 +160,12 @@ function renderDetailTabContent(activeTabId: DetailTabId, activeBrand: PreviewBr
   if (activeTabId === 'safety') {
     return (
       <div className="interface-preview-tab-body safety">
-        <p className="interface-preview-eyebrow">Safety and infrastructure readiness</p>
+        <p className="interface-preview-eyebrow">Safety and live-readiness review</p>
         <h4>Runtime remains controlled</h4>
         <ul className="interface-preview-check-list">
           <li>Selected brand: {activeBrand.name}; selected sample: {activeConversation.title}.</li>
-          <li>Cloudflare target recorded for Worker static-assets testing: {cloudflareWorkerUrl}</li>
-          <li>Supabase target recorded for database/functions testing: {supabaseProjectUrl}</li>
+          <li>Cloudflare target: {cloudflareWorkerTarget}; expected check: {cloudflareWorkerCheck}.</li>
+          <li>Supabase target: {supabaseProjectUrl}; integration target: {supabaseIntegrationTarget}.</li>
           <li>Phone/SMS providers, recordings, live customer records, archive writes, retention writes, and live pilot runtime remain locked.</li>
         </ul>
       </div>
@@ -172,7 +174,7 @@ function renderDetailTabContent(activeTabId: DetailTabId, activeBrand: PreviewBr
 
   return (
     <div className="interface-preview-tab-body overview">
-      <p className="interface-preview-eyebrow">QL-087 review outcome</p>
+      <p className="interface-preview-eyebrow">QL-088 readiness outcome</p>
       <h4>{activeConversation.title}</h4>
       <p>{activeConversation.summary}</p>
       <dl className="interface-preview-tab-facts">
@@ -210,17 +212,17 @@ export function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-087</small>
+        <small>QL-088</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-087 public disabled preview synthetic conversation detail tabs review">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-088 public disabled preview Cloudflare and Supabase live readiness review">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-087 Public disabled preview synthetic conversation detail tabs review</p>
-              <h2>Detail-tabs review plus deployment readiness</h2>
+              <p className="interface-preview-eyebrow">QL-088 Public disabled preview Cloudflare and Supabase live readiness review</p>
+              <h2>Cloudflare and Supabase readiness review</h2>
               <p>
-                This build reviews the local synthetic conversation tabs and records the practical Cloudflare Worker and Supabase readiness path so testing can move from theory to safe scaffolding.
+                This build verifies the connected Cloudflare Worker deployment path and Supabase GitHub integration scaffold before any browser-safe read-only application integration begins.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -229,21 +231,21 @@ export function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            QL-087 adds Cloudflare/Supabase readiness scaffolding, not live communications. SMS, calls, provider callbacks, recordings, AI send, archives, retention writes, and live pilot runtime stay disabled.
+            QL-088 is an infrastructure-readiness review only. SMS, calls, provider callbacks, recordings, AI send, archives, retention writes, live customer access, and live pilot runtime stay disabled.
           </div>
 
           <div className="interface-preview-review-grid">
             <article className="interface-preview-link-card">
               <p className="interface-preview-eyebrow">GitHub Pages production preview</p>
-              <h3>Confirmed preview target</h3>
+              <h3>Current public preview</h3>
               <code className="interface-preview-link">{targetPreviewUrl}</code>
-              <p>The GitHub Pages preview remains the confirmed green public preview during this transition.</p>
+              <p>GitHub Pages remains a green public preview while Cloudflare Worker deployment is verified.</p>
             </article>
             <article className="interface-preview-link-card">
               <p className="interface-preview-eyebrow">Cloudflare connected target</p>
-              <h3>Worker static-assets target</h3>
-              <code className="interface-preview-link">{cloudflareWorkerUrl}</code>
-              <p>Cloudflare is prepared as a connected deployment target once the Worker static-assets config is deployed from main.</p>
+              <h3>Worker static-assets check</h3>
+              <code className="interface-preview-link">{cloudflareWorkerTarget}</code>
+              <p>The trusted signal is the GitHub check named {cloudflareWorkerCheck} on the final main commit.</p>
             </article>
           </div>
 
@@ -266,7 +268,7 @@ export function DisabledInterfacePreview() {
                   >
                     <span>{brand.name}</span>
                     <small>{brand.context} · {brand.count}</small>
-                    <em>Detail tabs reviewed</em>
+                    <em>Readiness reviewed</em>
                   </button>
                 );
               })}
@@ -280,10 +282,10 @@ export function DisabledInterfacePreview() {
             <main className="interface-preview-workspace">
               <div className="interface-preview-topline">
                 <div>
-                  <p className="interface-preview-eyebrow">Synthetic detail-tabs review</p>
+                  <p className="interface-preview-eyebrow">Synthetic detail-tabs readiness review</p>
                   <h3>{activeBrand.headline}</h3>
                 </div>
-                <span>Reviewed / infrastructure ready / live comms locked</span>
+                <span>Readiness review / Cloudflare check / Supabase scaffold / live comms locked</span>
               </div>
 
               <section className="interface-preview-card">
@@ -340,8 +342,8 @@ export function DisabledInterfacePreview() {
 
               <section className="interface-preview-card">
                 <div className="interface-preview-section-title">
-                  <p className="interface-preview-eyebrow">Readiness checks</p>
-                  <HelpMarker label="Cloudflare and Supabase are prepared for safe testing" />
+                  <p className="interface-preview-eyebrow">Live-readiness checks</p>
+                  <HelpMarker label="Cloudflare and Supabase are verified before safe browser-read work" />
                 </div>
                 <ul className="interface-preview-check-list">
                   {readinessChecks.map((check) => (
