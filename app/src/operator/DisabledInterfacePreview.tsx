@@ -3,6 +3,7 @@ import './disabled-interface-preview.css';
 
 type PreviewBrandId = 'rosie' | 'devil';
 type QueueTone = 'priority' | 'safe' | 'locked';
+type DetailTabId = 'overview' | 'draft' | 'timeline' | 'safety';
 
 type SyntheticConversation = {
   id: string;
@@ -26,6 +27,7 @@ type PreviewBrand = {
 
 const targetPreviewUrl = 'https://rosevearcreations.github.io/rosevear-comms-hub/';
 const viteBasePath = '/rosevear-comms-hub/';
+const supabaseProjectUrl = 'https://gxujcwpktaickcgzyvnu.supabase.co';
 const brandOrder: PreviewBrandId[] = ['rosie', 'devil'];
 
 const brandSamples: Record<PreviewBrandId, PreviewBrand> = {
@@ -175,30 +177,34 @@ const brandSamples: Record<PreviewBrandId, PreviewBrand> = {
   }
 };
 
-const plannedDetailTabs = [
+const detailTabs: Array<{ id: DetailTabId; title: string; detail: string }> = [
   {
-    title: 'Overview tab',
-    detail: 'Show selected synthetic summary, status, brand context, and why the sample needs operator review.'
+    id: 'overview',
+    title: 'Overview',
+    detail: 'Selected summary, status, brand context, and why the sample needs review.'
   },
   {
-    title: 'Draft tab',
-    detail: 'Show draft-only response copy without send, AI generation, provider delivery, or persistence.'
+    id: 'draft',
+    title: 'Draft',
+    detail: 'Draft-only response copy with no send, AI generation, provider delivery, or persistence.'
   },
   {
-    title: 'Timeline tab',
-    detail: 'Group the existing synthetic timeline into an intentional detail view without reading call or message history.'
+    id: 'timeline',
+    title: 'Timeline',
+    detail: 'Synthetic timeline events grouped into a focused local detail view.'
   },
   {
-    title: 'Safety tab',
-    detail: 'Keep the locked actions, source restrictions, and runtime-disabled reminders visible beside every sample.'
+    id: 'safety',
+    title: 'Safety',
+    detail: 'Locked actions, source restrictions, and disabled runtime reminders.'
   }
 ];
 
-const planningChecks = [
-  'Tabs will be planned only; no tab click implementation in QL-085.',
-  'Future tab state must remain browser-local React state only.',
-  'Tab content must reuse hard-coded synthetic conversation fields only.',
-  'No tab can fetch Supabase rows, provider inboxes, SMS/call history, recordings, transcripts, archives, retention records, or AI replies.'
+const implementationChecks = [
+  'Tabs are clickable in QL-086 and store active tab selection in browser-local React state only.',
+  'Tab content reuses the selected hard-coded synthetic conversation fields only.',
+  'Brand switching and conversation selection remain browser-local and synthetic.',
+  'Tabs do not fetch Supabase rows, provider inboxes, SMS/call history, recordings, transcripts, archives, retention records, live customer records, callback payloads, or AI replies.'
 ];
 
 const disabledActions = [
@@ -220,9 +226,79 @@ function HelpMarker({ label }: { label: string }) {
   );
 }
 
+function renderDetailTabContent(activeTabId: DetailTabId, activeBrand: PreviewBrand, activeConversation: SyntheticConversation) {
+  if (activeTabId === 'draft') {
+    return (
+      <div className="interface-preview-tab-body draft">
+        <p className="interface-preview-eyebrow">Draft-only reply</p>
+        <h4>{activeConversation.title}</h4>
+        <p>{activeConversation.draft}</p>
+        <div className="interface-preview-tab-note locked">
+          This draft cannot send, save, generate through AI, or reach a provider. It is static sample copy inside the public preview.
+        </div>
+      </div>
+    );
+  }
+
+  if (activeTabId === 'timeline') {
+    return (
+      <div className="interface-preview-tab-body timeline">
+        <p className="interface-preview-eyebrow">Synthetic timeline</p>
+        <h4>{activeConversation.title}</h4>
+        <ol>
+          {activeConversation.timeline.map((event) => (
+            <li className={event.locked ? 'locked-step' : ''} key={event.title}>
+              <strong>{event.title}</strong>
+              <span>{event.detail}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    );
+  }
+
+  if (activeTabId === 'safety') {
+    return (
+      <div className="interface-preview-tab-body safety">
+        <p className="interface-preview-eyebrow">Safety and source locks</p>
+        <h4>Runtime remains disabled</h4>
+        <ul className="interface-preview-check-list">
+          <li>Selected brand: {activeBrand.name}; selected sample: {activeConversation.title}.</li>
+          <li>Supabase project target recorded for later: {supabaseProjectUrl}; QL-086 does not read or write it.</li>
+          <li>No provider callbacks, live phone webhooks, SMS, calls, recordings, live customer records, archive writes, retention writes, AI send, or live pilot runtime are enabled.</li>
+          <li>Tab state resets on page reload because it is not persisted.</li>
+        </ul>
+      </div>
+    );
+  }
+
+  return (
+    <div className="interface-preview-tab-body overview">
+      <p className="interface-preview-eyebrow">Conversation overview</p>
+      <h4>{activeConversation.title}</h4>
+      <p>{activeConversation.summary}</p>
+      <dl className="interface-preview-tab-facts">
+        <div>
+          <dt>Status</dt>
+          <dd>{activeConversation.status}</dd>
+        </div>
+        <div>
+          <dt>Brand</dt>
+          <dd>{activeBrand.name}</dd>
+        </div>
+        <div>
+          <dt>Source</dt>
+          <dd>Hard-coded synthetic sample</dd>
+        </div>
+      </dl>
+    </div>
+  );
+}
+
 export function DisabledInterfacePreview() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeBrandId, setActiveBrandId] = useState<PreviewBrandId>('rosie');
+  const [activeDetailTabId, setActiveDetailTabId] = useState<DetailTabId>('overview');
   const [activeConversationByBrand, setActiveConversationByBrand] = useState<Record<PreviewBrandId, string>>({
     rosie: 'rosie-ceramic-quote',
     devil: 'devil-custom-order'
@@ -236,17 +312,17 @@ export function DisabledInterfacePreview() {
       <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
-        <small>QL-085</small>
+        <small>QL-086</small>
       </button>
 
       {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-085 public disabled preview synthetic conversation detail tabs plan">
+        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-086 public disabled preview synthetic conversation detail tabs implementation">
           <div className="interface-preview-header">
             <div>
-              <p className="interface-preview-eyebrow">QL-085 Public disabled preview synthetic conversation detail tabs plan</p>
-              <h2>Synthetic conversation detail tabs plan</h2>
+              <p className="interface-preview-eyebrow">QL-086 Public disabled preview synthetic conversation detail tabs implementation</p>
+              <h2>Synthetic conversation detail tabs</h2>
               <p>
-                This build plans the next browser-safe refinement: a future local-only tab set for the selected synthetic conversation. The current brand switcher and conversation selector remain active; the tabs are planned only and do not unlock runtime paths.
+                This build implements the next browser-safe refinement: local tab switching for the selected synthetic conversation. Brand, conversation, and tab state are all React state only.
               </p>
             </div>
             <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
@@ -255,7 +331,7 @@ export function DisabledInterfacePreview() {
           </div>
 
           <div className="interface-preview-warning">
-            Browser-local preview only. QL-085 does not implement tab switching, connect providers, fetch live messages, enable callbacks, send SMS, place calls, persist data, archive records, generate AI replies, or start live pilot runtime.
+            Browser-local preview only. QL-086 does not connect Supabase runtime, providers, fetch live messages, enable callbacks, send SMS, place calls, persist data, archive records, generate AI replies, or start live pilot runtime.
           </div>
 
           <div className="interface-preview-review-grid">
@@ -264,14 +340,14 @@ export function DisabledInterfacePreview() {
               <h3>GitHub Pages disabled preview</h3>
               <code className="interface-preview-link">{targetPreviewUrl}</code>
               <p>
-                The public preview remains served from GitHub Pages with the <code>{viteBasePath}</code> base path. QL-085 keeps the existing selector live and plans the future detail-tab shape.
+                The public preview remains served from GitHub Pages with the <code>{viteBasePath}</code> base path. QL-086 adds local tab switching for selected synthetic conversations.
               </p>
             </article>
             <article className="interface-preview-card interface-preview-next-step">
-              <p className="interface-preview-eyebrow">QL-085 plan</p>
-              <h3>Plan tabs before implementing them</h3>
+              <p className="interface-preview-eyebrow">QL-086 implementation</p>
+              <h3>Clickable local detail tabs</h3>
               <p>
-                The next implementation may add local tabs for overview, draft, timeline, and safety. Each tab must use only the selected hard-coded synthetic conversation.
+                Overview, Draft, Timeline, and Safety tabs now switch local content. The next review build can validate tab clarity before any further interaction is added.
               </p>
             </article>
           </div>
@@ -309,10 +385,10 @@ export function DisabledInterfacePreview() {
             <main className="interface-preview-workspace">
               <div className="interface-preview-topline">
                 <div>
-                  <p className="interface-preview-eyebrow">Synthetic selector view</p>
+                  <p className="interface-preview-eyebrow">Synthetic detail-tabs view</p>
                   <h3>{activeBrand.headline}</h3>
                 </div>
-                <span>Planning / synthetic / local state only</span>
+                <span>Interactive tabs / synthetic / local state only</span>
               </div>
 
               <p className="interface-preview-muted">{activeBrand.description}</p>
@@ -354,53 +430,44 @@ export function DisabledInterfacePreview() {
                 </div>
               </section>
 
-              <section className="interface-preview-card">
+              <section className="interface-preview-card interface-preview-tabs-card">
                 <div className="interface-preview-section-title">
-                  <p className="interface-preview-eyebrow">Selected synthetic conversation</p>
-                  <HelpMarker label="Current selector output remains synthetic preview text only" />
+                  <p className="interface-preview-eyebrow">Synthetic detail tabs</p>
+                  <HelpMarker label="Tabs switch local React state only" />
                 </div>
-                <h4>{activeConversation.title}</h4>
-                <p>{activeConversation.summary}</p>
-                <div className="interface-preview-draft-box">
-                  <strong>Current draft-only copy</strong>
-                  <span>{activeConversation.draft}</span>
+                <div className="interface-preview-tab-list" role="tablist" aria-label="Synthetic conversation detail tabs">
+                  {detailTabs.map((tab) => {
+                    const isSelected = tab.id === activeDetailTabId;
+                    return (
+                      <button
+                        className={isSelected ? 'interface-preview-tab active' : 'interface-preview-tab'}
+                        type="button"
+                        role="tab"
+                        aria-selected={isSelected}
+                        onClick={() => setActiveDetailTabId(tab.id)}
+                        key={tab.id}
+                      >
+                        <span>{tab.title}</span>
+                        <small>{tab.detail}</small>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="interface-preview-tab-panel" role="tabpanel">
+                  {renderDetailTabContent(activeDetailTabId, activeBrand, activeConversation)}
                 </div>
               </section>
 
               <section className="interface-preview-card">
                 <div className="interface-preview-section-title">
-                  <p className="interface-preview-eyebrow">Planned detail tabs</p>
-                  <HelpMarker label="QL-085 plans the tabs only; QL-086 may implement local tab state" />
-                </div>
-                <div className="interface-preview-selector-list">
-                  {plannedDetailTabs.map((tab) => (
-                    <button className="interface-preview-selector" type="button" disabled key={tab.title}>
-                      <span>{tab.title}</span>
-                      <small>{tab.detail}</small>
-                    </button>
-                  ))}
-                </div>
-              </section>
-
-              <section className="interface-preview-card">
-                <div className="interface-preview-section-title">
-                  <p className="interface-preview-eyebrow">Planning checks</p>
-                  <HelpMarker label="These checks become the gate for implementing detail tabs safely" />
+                  <p className="interface-preview-eyebrow">Implementation checks</p>
+                  <HelpMarker label="These checks keep QL-086 browser-safe" />
                 </div>
                 <ul className="interface-preview-check-list">
-                  {planningChecks.map((check) => (
+                  {implementationChecks.map((check) => (
                     <li key={check}>{check}</li>
                   ))}
                 </ul>
-              </section>
-
-              <section className="interface-preview-timeline">
-                {activeConversation.timeline.map((event) => (
-                  <article className={event.locked ? 'locked' : ''} key={event.title}>
-                    <strong>{event.title}</strong>
-                    <p>{event.detail}</p>
-                  </article>
-                ))}
               </section>
 
               <div className="interface-preview-actions" aria-label="Locked live actions">

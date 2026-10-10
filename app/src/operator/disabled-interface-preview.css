@@ -140,7 +140,9 @@
 .interface-preview-help-card p,
 .interface-preview-local-state-card p,
 .interface-preview-draft-card p,
-.interface-preview-card.timeline p {
+.interface-preview-card.timeline p,
+.interface-preview-tab-body p,
+.interface-preview-tab-body li {
   color: #475569;
   line-height: 1.55;
   margin: 0;
@@ -206,7 +208,9 @@
 }
 
 .interface-preview-brand,
-.interface-preview-conversation {
+.interface-preview-conversation,
+.interface-preview-selector,
+.interface-preview-tab {
   display: grid;
   gap: 5px;
   border: 1px solid transparent;
@@ -219,7 +223,9 @@
 }
 
 .interface-preview-brand.interactive,
-.interface-preview-conversation {
+.interface-preview-conversation,
+.interface-preview-selector:not(:disabled),
+.interface-preview-tab {
   cursor: pointer;
   transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
 }
@@ -227,7 +233,11 @@
 .interface-preview-brand.interactive:hover,
 .interface-preview-brand.interactive:focus-visible,
 .interface-preview-conversation:hover,
-.interface-preview-conversation:focus-visible {
+.interface-preview-conversation:focus-visible,
+.interface-preview-selector:not(:disabled):hover,
+.interface-preview-selector:not(:disabled):focus-visible,
+.interface-preview-tab:hover,
+.interface-preview-tab:focus-visible {
   border-color: #2563eb;
   box-shadow: 0 10px 20px rgba(37, 99, 235, 0.16);
   outline: none;
@@ -235,7 +245,9 @@
 }
 
 .interface-preview-brand.active,
-.interface-preview-conversation.active {
+.interface-preview-conversation.active,
+.interface-preview-selector.active,
+.interface-preview-tab.active {
   background: #dbeafe;
   border-color: #60a5fa;
   color: #1d4ed8;
@@ -244,6 +256,8 @@
 .interface-preview-brand small,
 .interface-preview-brand em,
 .interface-preview-conversation small,
+.interface-preview-selector small,
+.interface-preview-tab small,
 .interface-preview-safe-card small,
 .interface-preview-card small,
 .interface-preview-card li,
@@ -280,6 +294,12 @@
   padding: 7px 10px;
   font-size: 12px;
   font-weight: 900;
+}
+
+.interface-preview-muted {
+  margin: 0;
+  color: #475569;
+  line-height: 1.55;
 }
 
 .interface-preview-grid {
@@ -341,15 +361,129 @@
   background: #fff7ed;
 }
 
-.interface-preview-conversation-list {
+.interface-preview-conversation-list,
+.interface-preview-selector-list,
+.interface-preview-tab-list,
+.interface-preview-queue-grid {
   display: grid;
   gap: 10px;
 }
 
-.interface-preview-conversation span {
+.interface-preview-queue-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.interface-preview-queue-card {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid #dbe3ee;
+  background: #fff;
+}
+
+.interface-preview-queue-card strong {
+  font-size: 28px;
+}
+
+.interface-preview-queue-card.priority {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+.interface-preview-queue-card.safe {
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.interface-preview-queue-card.locked {
+  border-color: #fed7aa;
+  background: #fff7ed;
+}
+
+.interface-preview-conversation span,
+.interface-preview-selector span,
+.interface-preview-tab span {
   font-weight: 950;
 }
 
+.interface-preview-selector:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.interface-preview-tabs-card {
+  border-color: #bfdbfe;
+  background: #f8fbff;
+}
+
+.interface-preview-tab-list {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.interface-preview-tab {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.interface-preview-tab.active {
+  background: #dbeafe;
+  border-color: #2563eb;
+}
+
+.interface-preview-tab-panel {
+  border-radius: 18px;
+  border: 1px solid #bfdbfe;
+  background: #fff;
+  padding: 18px;
+}
+
+.interface-preview-tab-body {
+  display: grid;
+  gap: 12px;
+}
+
+.interface-preview-tab-note {
+  border-radius: 14px;
+  padding: 12px;
+  font-weight: 850;
+}
+
+.interface-preview-tab-note.locked {
+  border: 1px solid #fed7aa;
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.interface-preview-tab-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.interface-preview-tab-facts div {
+  border: 1px solid #dbe3ee;
+  border-radius: 14px;
+  padding: 12px;
+  background: #f8fafc;
+}
+
+.interface-preview-tab-facts dt {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.interface-preview-tab-facts dd {
+  margin: 4px 0 0;
+  color: #0f172a;
+  font-weight: 900;
+}
+
+.interface-preview-tab-body.timeline ol,
 .interface-preview-card.timeline ol,
 .interface-preview-card ol {
   margin: 8px 0 0;
@@ -357,27 +491,39 @@
   line-height: 1.6;
 }
 
+.interface-preview-tab-body.timeline li,
 .interface-preview-card.timeline li {
   margin-bottom: 10px;
 }
 
+.interface-preview-tab-body.timeline li strong,
 .interface-preview-card.timeline li strong {
   display: block;
   font-size: 15px;
 }
 
+.interface-preview-tab-body.timeline li.locked-step strong,
 .interface-preview-card.timeline li.locked-step strong {
   color: #9a3412;
 }
 
+.interface-preview-check-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+}
+
 .interface-preview-action-grid,
-.interface-preview-pill-list {
+.interface-preview-pill-list,
+.interface-preview-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.interface-preview-action-grid button {
+.interface-preview-action-grid button,
+.interface-preview-actions button {
   border: 1px solid #cbd5e1;
   border-radius: 999px;
   background: #f8fafc;
@@ -421,7 +567,10 @@
   .interface-preview-detail-grid.selector-layout,
   .interface-preview-columns,
   .interface-preview-review-grid,
-  .interface-preview-help-grid {
+  .interface-preview-help-grid,
+  .interface-preview-queue-grid,
+  .interface-preview-tab-list,
+  .interface-preview-tab-facts {
     grid-template-columns: 1fr;
   }
 
