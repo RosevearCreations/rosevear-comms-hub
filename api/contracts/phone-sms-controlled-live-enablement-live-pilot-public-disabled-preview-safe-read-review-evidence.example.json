@@ -1,0 +1,47 @@
+{
+  "build": "QL-094",
+  "title": "Public Disabled Preview Safe Read Review and Evidence",
+  "status": "review_evidence_only",
+  "reviewedBuild": "QL-093",
+  "expectedProjectUrl": "https://gxujcwpktaickcgzyvnu.supabase.co",
+  "approvedReadTargets": [
+    "public.ql_public_synthetic_conversations",
+    "public.ql_public_system_status"
+  ],
+  "evidenceSurfaces": {
+    "displayOnly": true,
+    "rowCounts": [
+      "selected-brand conversation rows",
+      "system status rows",
+      "rejected rows",
+      "runtime lockouts"
+    ],
+    "sourceLabels": [
+      "local_fallback",
+      "validated_supabase",
+      "partial_supabase_with_fallback"
+    ],
+    "rawPayloadExposure": "blocked"
+  },
+  "unchangedGates": [
+    "VITE_SUPABASE_URL must match https://gxujcwpktaickcgzyvnu.supabase.co",
+    "VITE_SUPABASE_ANON_KEY must exist",
+    "VITE_QL_ENABLE_SUPABASE_READS must be exactly true",
+    "auth persistence remains disabled",
+    "auto refresh remains disabled",
+    "URL session detection remains disabled",
+    "browser writes remain disabled"
+  ],
+  "blockedRuntime": [
+    "live customer reads",
+    "provider payload reads",
+    "SMS or call runtime",
+    "browser writes",
+    "archive writes",
+    "retention writes",
+    "AI generation or send",
+    "callback registration",
+    "live pilot runtime"
+  ],
+  "nextQueuedBuild": "QL-095 — Public Disabled Preview Safe Read Operator Acceptance Plan"
+}
