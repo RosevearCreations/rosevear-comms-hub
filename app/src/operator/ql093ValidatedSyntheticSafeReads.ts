@@ -11,6 +11,8 @@ import type { BrandId } from '../types';
 export type Ql093ReadSource = 'local_fallback' | 'validated_supabase' | 'partial_supabase_with_fallback';
 export type Ql093PreviewRowSource = 'local_fallback' | 'validated_supabase';
 
+type CleanStringResult = { ok: true; value: string } | { ok: false; reason: string };
+
 export type Ql093SyntheticConversationPreview = {
   id: string;
   brandId: BrandId;
@@ -173,7 +175,7 @@ function hasOnlyAllowedKeys(row: Record<string, unknown>, allowedKeys: readonly 
   return null;
 }
 
-function cleanString(value: unknown, field: string, maxLength: number): { ok: true; value: string } | { ok: false; reason: string } {
+function cleanString(value: unknown, field: string, maxLength: number): CleanStringResult {
   if (typeof value !== 'string') {
     return { ok: false, reason: `${field} is not a string` };
   }
@@ -191,7 +193,7 @@ function cleanString(value: unknown, field: string, maxLength: number): { ok: tr
   return { ok: true, value: trimmed };
 }
 
-function cleanSyntheticId(value: unknown, field: string): { ok: true; value: string } | { ok: false; reason: string } {
+function cleanSyntheticId(value: unknown, field: string): CleanStringResult {
   const cleaned = cleanString(value, field, 80);
 
   if (!cleaned.ok) {
@@ -205,7 +207,7 @@ function cleanSyntheticId(value: unknown, field: string): { ok: true; value: str
   return cleaned;
 }
 
-function cleanDateString(value: unknown, field: string): { ok: true; value: string } | { ok: false; reason: string } {
+function cleanDateString(value: unknown, field: string): CleanStringResult {
   const cleaned = cleanString(value, field, 80);
 
   if (!cleaned.ok) {
@@ -217,6 +219,10 @@ function cleanDateString(value: unknown, field: string): { ok: true; value: stri
   }
 
   return cleaned;
+}
+
+function requireClean(result: CleanStringResult): string | null {
+  return result.ok ? null : result.reason;
 }
 
 function validateConversationRow(
@@ -238,11 +244,14 @@ function validateConversationRow(
   const summary = cleanString(raw.summary, 'summary', 520);
   const draft = cleanString(raw.draft, 'draft', 720);
   const createdAt = cleanDateString(raw.created_at, 'created_at');
+  const firstFailure = [id, brandRaw, brandName, title, status, summary, draft, createdAt].map(requireClean).find(Boolean);
 
-  const firstFailure = [id, brandRaw, brandName, title, status, summary, draft, createdAt].find((result) => !result.ok);
+  if (firstFailure) {
+    return { ok: false, reason: firstFailure };
+  }
 
-  if (firstFailure && !firstFailure.ok) {
-    return { ok: false, reason: firstFailure.reason };
+  if (!id.ok || !brandRaw.ok || !brandName.ok || !title.ok || !status.ok || !summary.ok || !draft.ok || !createdAt.ok) {
+    return { ok: false, reason: 'conversation row failed validation' };
   }
 
   const brandId = mapBrandId(brandRaw.value);
@@ -292,10 +301,14 @@ function validateSystemStatusRow(
   const status = cleanString(raw.status, 'status', 20);
   const detail = cleanString(raw.detail, 'detail', 420);
   const createdAt = cleanDateString(raw.created_at, 'created_at');
-  const firstFailure = [id, label, status, detail, createdAt].find((result) => !result.ok);
+  const firstFailure = [id, label, status, detail, createdAt].map(requireClean).find(Boolean);
 
-  if (firstFailure && !firstFailure.ok) {
-    return { ok: false, reason: firstFailure.reason };
+  if (firstFailure) {
+    return { ok: false, reason: firstFailure };
+  }
+
+  if (!id.ok || !label.ok || !status.ok || !detail.ok || !createdAt.ok) {
+    return { ok: false, reason: 'system status row failed validation' };
   }
 
   if (!allowedSystemStatuses.includes(status.value as (typeof allowedSystemStatuses)[number])) {
