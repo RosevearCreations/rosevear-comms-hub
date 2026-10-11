@@ -106,15 +106,34 @@ Result:
 - Added QL-091 review guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotPublicDisabledPreviewBrowserSafeSupabaseReadOnlyClientReview.ts`.
 - Added QL-091 contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-public-disabled-preview-browser-safe-supabase-read-only-client-review.example.json`.
 - Added source documentation, build record, ops checklist, remote-operator note, and telephony boundary note.
+- Added a QL-091 Cloudflare redeploy trigger note after the first QL-091 `main` promotion did not receive a Worker check-run.
+- Verified the final QL-091 production commit with App CI, Supabase Preview, and `Workers Builds: rosevear-comms-hub` green.
 - Kept provider callbacks, live phone webhooks, SMS sending, call runtime, call recording, AI auto-send, live customer reads/writes, provider delivery, archive writes, retention writes, provider account connection, provider live-number attachment, callback registration, and live pilot runtime disabled.
 
 ## QL-092 — Public Disabled Preview Browser-Safe Supabase Read-Only Client Safe Read Implementation Plan
 
+Status: complete.
+
+Result:
+
+- Planned the first visible safe-read implementation for the public disabled preview without enabling runtime Supabase hydration in this build.
+- Added app-side planning evidence at `app/src/operator/ql092SafeReadImplementationPlan.ts`.
+- Confirmed the existing QL-090/QL-091 env, expected-project, anon-key, read-enable, and fallback gates remain unchanged.
+- Confirmed future safe reads remain limited to `public.ql_public_synthetic_conversations` and `public.ql_public_system_status`.
+- Defined payload validation rules for synthetic conversation rows and system status rows before any remote data can hydrate display-only UI state.
+- Defined discard/fallback behavior for unknown brand ids, unknown sample ids, unexpected row shapes, oversized display strings, live/provider/admin/archive/retention fields, read errors, and disabled gates.
+- Added QL-092 deployment guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotPublicDisabledPreviewBrowserSafeSupabaseReadOnlyClientSafeReadImplementationPlan.ts`.
+- Added QL-092 contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-public-disabled-preview-browser-safe-supabase-read-only-client-safe-read-implementation-plan.example.json`.
+- Added source documentation, build record, ops checklist, remote-operator note, and telephony boundary note.
+- Kept provider callbacks, live phone webhooks, SMS sending, call runtime, call recording, AI auto-send, live customer reads/writes, provider delivery, archive writes, retention writes, provider account connection, provider live-number attachment, callback registration, and live pilot runtime disabled.
+
+## QL-093 — Public Disabled Preview Validated Synthetic Safe Reads Implementation
+
 Goal:
 
-- Plan the first visible safe-read implementation for the public disabled preview.
-- Keep the safe-read target limited to synthetic public views only.
-- Keep local synthetic samples as the default fallback when env variables are missing, reads fail, or payloads are unexpected.
-- Define payload validation before any remote rows can hydrate UI state.
+- Implement validated synthetic safe reads behind the existing `VITE_QL_ENABLE_SUPABASE_READS=true` gate.
+- Keep local synthetic samples as initial state and fallback state.
+- Hydrate display-only preview state only from validated rows in the two approved public synthetic views.
+- Surface active source and fallback reason without enabling browser writes or live communications.
 - Keep live customer data, provider payloads, SMS/call events, archives, retention records, writes, AI send, and live pilot runtime out of scope.
 - Verify App CI, Supabase Preview, Cloudflare Worker build, and any public preview deployment checks before promotion.
