@@ -5,6 +5,7 @@ import { AdminSessionGate } from './auth/AdminSessionGate';
 import { SiteHelpSystem } from './help/SiteHelpSystem';
 import { DisabledInterfacePreview } from './operator/DisabledInterfacePreview';
 import { DisabledOperatorConsole } from './operator/DisabledOperatorConsole';
+import { Ql093SafeReadPreview } from './operator/Ql093SafeReadPreview';
 import './styles.css';
 
 const rootElement = document.getElementById('root');
@@ -19,6 +20,7 @@ ReactDOM.createRoot(rootElement).render(
       <App />
       <SiteHelpSystem />
       <DisabledInterfacePreview />
+      <Ql093SafeReadPreview />
       <DisabledOperatorConsole />
     </AdminSessionGate>
   </React.StrictMode>
