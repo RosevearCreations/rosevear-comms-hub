@@ -91,10 +91,30 @@ Result:
 
 ## QL-091 — Public Disabled Preview Browser-Safe Supabase Read-Only Client Review
 
+Status: complete.
+
+Result:
+
+- Reviewed `app/src/integrations/supabaseReadOnlyClient.ts` without enabling additional runtime behavior.
+- Added app-side review evidence at `app/src/operator/ql091ReadOnlyClientReview.ts` so the public-preview app build path validates the review boundary.
+- Confirmed browser client creation remains disabled unless `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and `VITE_QL_ENABLE_SUPABASE_READS=true` are all present.
+- Confirmed `VITE_SUPABASE_URL` must match `https://gxujcwpktaickcgzyvnu.supabase.co` before any client can be created.
+- Confirmed auth persistence, auto refresh, and URL session detection remain disabled for the preview client.
+- Confirmed allowed read-only sources remain limited to `public.ql_public_synthetic_conversations` and `public.ql_public_system_status`.
+- Confirmed blocked browser sources still include contacts, conversations, messages, phone calls, SMS messages, provider payloads, consent logs, app admins, audit events, archives, and retention records.
+- Confirmed fallback behavior remains local synthetic samples whenever env gates, project gate, read policy, or payload checks fail.
+- Added QL-091 review guard at `api/deployment/phoneSmsControlledLiveEnablementLivePilotPublicDisabledPreviewBrowserSafeSupabaseReadOnlyClientReview.ts`.
+- Added QL-091 contract fixture at `api/contracts/phone-sms-controlled-live-enablement-live-pilot-public-disabled-preview-browser-safe-supabase-read-only-client-review.example.json`.
+- Added source documentation, build record, ops checklist, remote-operator note, and telephony boundary note.
+- Kept provider callbacks, live phone webhooks, SMS sending, call runtime, call recording, AI auto-send, live customer reads/writes, provider delivery, archive writes, retention writes, provider account connection, provider live-number attachment, callback registration, and live pilot runtime disabled.
+
+## QL-092 — Public Disabled Preview Browser-Safe Supabase Read-Only Client Safe Read Implementation Plan
+
 Goal:
 
-- Review the QL-090 read-only client scaffold behavior in the public disabled preview.
-- Confirm missing-env and disabled-read-flag fallback messaging is clear.
-- Confirm allowed read targets remain synthetic public views only.
-- Confirm unexpected project URLs, live/customer/provider/admin/archive/retention sources, writes, and live pilot runtime remain blocked.
+- Plan the first visible safe-read implementation for the public disabled preview.
+- Keep the safe-read target limited to synthetic public views only.
+- Keep local synthetic samples as the default fallback when env variables are missing, reads fail, or payloads are unexpected.
+- Define payload validation before any remote rows can hydrate UI state.
+- Keep live customer data, provider payloads, SMS/call events, archives, retention records, writes, AI send, and live pilot runtime out of scope.
 - Verify App CI, Supabase Preview, Cloudflare Worker build, and any public preview deployment checks before promotion.
