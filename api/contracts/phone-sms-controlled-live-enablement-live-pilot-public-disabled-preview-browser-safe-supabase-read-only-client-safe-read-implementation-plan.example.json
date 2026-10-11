@@ -1,0 +1,60 @@
+{
+  "build": "QL-092",
+  "title": "Public Disabled Preview Browser-Safe Supabase Read-Only Client Safe Read Implementation Plan",
+  "status": "plan_only",
+  "expectedProjectUrl": "https://gxujcwpktaickcgzyvnu.supabase.co",
+  "allowedReadTargets": [
+    "public.ql_public_synthetic_conversations",
+    "public.ql_public_system_status"
+  ],
+  "requiredEnvGates": [
+    "VITE_SUPABASE_URL",
+    "VITE_SUPABASE_ANON_KEY",
+    "VITE_QL_ENABLE_SUPABASE_READS=true"
+  ],
+  "safeReadImplementationPlan": {
+    "defaultSource": "local synthetic fallback samples",
+    "remoteSource": "validated Supabase synthetic public views only",
+    "hydrationMode": "display-only public disabled preview state",
+    "failureMode": "fallback_without_mutation"
+  },
+  "payloadValidation": {
+    "conversationRows": [
+      "id:string",
+      "brand_id:string",
+      "brand_name:string",
+      "title:string",
+      "status:string",
+      "summary:string",
+      "draft:string",
+      "created_at:string"
+    ],
+    "systemStatusRows": [
+      "id:string",
+      "label:string",
+      "status:ready|blocked|planned",
+      "detail:string",
+      "created_at:string"
+    ],
+    "discardWhen": [
+      "unknown brand id",
+      "unknown sample id",
+      "unexpected payload shape",
+      "oversized display strings",
+      "provider/customer/admin/archive/retention fields are present",
+      "source is not one of the allowed public synthetic views"
+    ]
+  },
+  "blockedRuntime": [
+    "live customer reads",
+    "provider payload reads",
+    "SMS or call runtime",
+    "browser writes",
+    "archive writes",
+    "retention writes",
+    "AI send",
+    "callback registration",
+    "live pilot runtime"
+  ],
+  "nextQueuedBuild": "QL-093 — Public Disabled Preview Validated Synthetic Safe Reads Implementation"
+}
