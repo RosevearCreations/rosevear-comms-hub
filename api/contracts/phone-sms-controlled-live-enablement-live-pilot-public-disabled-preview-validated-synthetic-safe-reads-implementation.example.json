@@ -1,0 +1,75 @@
+{
+  "build": "QL-093",
+  "title": "Public Disabled Preview Validated Synthetic Safe Reads Implementation",
+  "status": "implemented_display_only",
+  "expectedProjectUrl": "https://gxujcwpktaickcgzyvnu.supabase.co",
+  "requiredEnvGates": [
+    "VITE_SUPABASE_URL",
+    "VITE_SUPABASE_ANON_KEY",
+    "VITE_QL_ENABLE_SUPABASE_READS=true"
+  ],
+  "allowedReadTargets": [
+    "public.ql_public_synthetic_conversations",
+    "public.ql_public_system_status"
+  ],
+  "displayHydration": {
+    "defaultSource": "local synthetic fallback samples",
+    "remoteSource": "validated Supabase synthetic public views only",
+    "hydrationMode": "display-only public disabled preview state",
+    "mutationMode": "none"
+  },
+  "conversationValidation": {
+    "requiredFields": [
+      "id",
+      "brand_id",
+      "brand_name",
+      "title",
+      "status",
+      "summary",
+      "draft",
+      "created_at"
+    ],
+    "approvedBrandAliases": [
+      "rosie",
+      "rosiedazzlers",
+      "devil",
+      "devilndove"
+    ],
+    "discardWhen": [
+      "unknown brand id",
+      "row does not match selected preview brand",
+      "unexpected field exists",
+      "blocked live/private field exists",
+      "id is malformed",
+      "string is empty or oversized",
+      "created_at is not parseable",
+      "status implies live SMS/call/provider/callback/archive/retention/send runtime"
+    ]
+  },
+  "systemStatusValidation": {
+    "requiredFields": [
+      "id",
+      "label",
+      "status",
+      "detail",
+      "created_at"
+    ],
+    "allowedStatuses": [
+      "ready",
+      "blocked",
+      "planned"
+    ]
+  },
+  "blockedRuntime": [
+    "live customer reads",
+    "provider payload reads",
+    "SMS or call runtime",
+    "browser writes",
+    "archive writes",
+    "retention writes",
+    "AI generation or send",
+    "callback registration",
+    "live pilot runtime"
+  ],
+  "nextQueuedBuild": "QL-094 — Public Disabled Preview Safe Read Review and Evidence"
+}
