@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { BrandId } from '../types';
+import { buildQl094SafeReadReviewEvidence } from './ql094SafeReadReviewEvidence';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -20,19 +21,32 @@ function formatSource(source: Ql093SafeReadResult['source']): string {
   return source.replaceAll('_', ' ');
 }
 
+function evidencePillClass(status: 'pass' | 'review' | 'blocked'): string {
+  if (status === 'pass') {
+    return 'ql093-pill ready';
+  }
+
+  if (status === 'blocked') {
+    return 'ql093-pill blocked';
+  }
+
+  return 'ql093-pill planned';
+}
+
 export function Ql093SafeReadPreview() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedBrandId, setSelectedBrandId] = useState<BrandId>('rosiedazzlers');
   const [isLoading, setIsLoading] = useState(false);
   const [safeReadResult, setSafeReadResult] = useState<Ql093SafeReadResult>(() =>
-    getLocalFallbackSafeReadResult('rosiedazzlers', 'QL-093 initial local fallback before the async safe-read check runs.')
+    getLocalFallbackSafeReadResult('rosiedazzlers', 'QL-094 initial local fallback before the async safe-read evidence check runs.')
   );
+  const ql094Evidence = buildQl094SafeReadReviewEvidence(safeReadResult);
 
   useEffect(() => {
     let cancelled = false;
     setIsLoading(true);
     setSafeReadResult(
-      getLocalFallbackSafeReadResult(selectedBrandId, `QL-093 safe-read check starting for ${getBrandLabel(selectedBrandId)}.`)
+      getLocalFallbackSafeReadResult(selectedBrandId, `QL-094 safe-read evidence check starting for ${getBrandLabel(selectedBrandId)}.`)
     );
 
     loadValidatedSyntheticSafeReads(selectedBrandId)
@@ -46,7 +60,7 @@ export function Ql093SafeReadPreview() {
           setSafeReadResult(
             getLocalFallbackSafeReadResult(
               selectedBrandId,
-              error instanceof Error ? error.message : 'QL-093 safe-read check failed and stayed on local fallback.'
+              error instanceof Error ? error.message : 'QL-094 safe-read evidence check failed and stayed on local fallback.'
             )
           );
         }
@@ -63,24 +77,24 @@ export function Ql093SafeReadPreview() {
   }, [selectedBrandId]);
 
   return (
-    <section className={isOpen ? 'ql093-safe-read-preview open' : 'ql093-safe-read-preview'} aria-label="QL-093 safe-read preview">
+    <section className={isOpen ? 'ql093-safe-read-preview open' : 'ql093-safe-read-preview'} aria-label="QL-094 safe-read review evidence">
       <button className="ql093-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-093</small>
+        <small>QL-094</small>
       </button>
 
       {isOpen && (
-        <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-093 validated synthetic safe reads">
+        <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-094 safe-read review and evidence">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-093 Public disabled preview</p>
-              <h2>Validated synthetic safe reads</h2>
+              <p className="ql093-eyebrow">QL-094 Public disabled preview</p>
+              <h2>Safe-read review and evidence</h2>
               <p>
-                Browser reads stay behind the existing Supabase URL, anon-key, and explicit read-enable gates. Remote rows can only replace local fallback cards after QL-093 validation.
+                The QL-094 review reuses the QL-093 validated safe-read path, records display-only evidence, and confirms the public preview still cannot write data or run live phone/SMS/AI actions.
               </p>
             </div>
-            <button className="ql093-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close QL-093 safe-read preview">
+            <button className="ql093-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close QL-094 safe-read review">
               ×
             </button>
           </div>
@@ -104,7 +118,7 @@ export function Ql093SafeReadPreview() {
             </div>
           </div>
 
-          <div className="ql093-brand-row" aria-label="QL-093 brand filter">
+          <div className="ql093-brand-row" aria-label="QL-094 brand filter">
             {brandOptions.map((brand) => (
               <button
                 className={selectedBrandId === brand.id ? 'active' : ''}
@@ -121,6 +135,71 @@ export function Ql093SafeReadPreview() {
           {safeReadResult.fallbackReason && <p className="ql093-notice">{safeReadResult.fallbackReason}</p>}
 
           <div className="ql093-grid">
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading">
+                <div>
+                  <p className="ql093-eyebrow">QL-094 review evidence</p>
+                  <h3>Safe-read evidence summary</h3>
+                </div>
+                <span>{ql094Evidence.build}</span>
+              </div>
+              <div className="ql093-status-strip">
+                <div>
+                  <span>Conversation rows</span>
+                  <strong>{ql094Evidence.rowCounts.conversationRows}</strong>
+                </div>
+                <div>
+                  <span>Status rows</span>
+                  <strong>{ql094Evidence.rowCounts.systemStatusRows}</strong>
+                </div>
+                <div>
+                  <span>Rejected rows</span>
+                  <strong>{ql094Evidence.rowCounts.rejectedRows}</strong>
+                </div>
+                <div>
+                  <span>Lockouts</span>
+                  <strong>{ql094Evidence.rowCounts.runtimeLockouts}</strong>
+                </div>
+              </div>
+              <ul className="ql093-status-list">
+                {ql094Evidence.evidenceItems.map((item) => (
+                  <li key={item.id}>
+                    <strong>{item.label}</strong>
+                    <span className={evidencePillClass(item.status)}>{item.status}</span>
+                    <p>{item.detail}</p>
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading compact">
+                <div>
+                  <p className="ql093-eyebrow">Evidence boundary</p>
+                  <h3>Approved sources and blocked runtime</h3>
+                </div>
+                <span>{ql094Evidence.reviewedBuild}</span>
+              </div>
+              <div className="ql093-grid">
+                <div>
+                  <p className="ql093-muted">Approved read targets</p>
+                  <ul className="ql093-check-list">
+                    {ql094Evidence.approvedReadTargets.map((target) => (
+                      <li key={target}>{target}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p className="ql093-muted">Still blocked</p>
+                  <ul className="ql093-check-list">
+                    {ql094Evidence.blockedRuntime.map((runtime) => (
+                      <li key={runtime}>{runtime}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </article>
+
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
                 <div>
@@ -196,7 +275,12 @@ export function Ql093SafeReadPreview() {
                   <li key={lockout}>{lockout}</li>
                 ))}
               </ul>
-              <p className="ql093-muted">Last checked: {new Date(safeReadResult.generatedAt).toLocaleString()}</p>
+              <ul className="ql093-check-list">
+                {ql094Evidence.reviewerNotes.map((note) => (
+                  <li key={note}>{note}</li>
+                ))}
+              </ul>
+              <p className="ql093-muted">Last checked: {new Date(ql094Evidence.generatedAt).toLocaleString()}</p>
             </article>
           </div>
         </div>
