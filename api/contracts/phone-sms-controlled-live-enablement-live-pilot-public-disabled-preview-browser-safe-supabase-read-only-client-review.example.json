@@ -1,0 +1,54 @@
+{
+  "buildId": "QL-091",
+  "name": "Public Disabled Preview Browser-Safe Supabase Read-Only Client Review",
+  "supabase": {
+    "expectedProjectUrl": "https://gxujcwpktaickcgzyvnu.supabase.co",
+    "clientScaffold": "app/src/integrations/supabaseReadOnlyClient.ts",
+    "clientCreation": {
+      "requiresViteSupabaseUrl": true,
+      "requiresViteSupabaseAnonKey": true,
+      "requiresExplicitReadEnableFlag": "VITE_QL_ENABLE_SUPABASE_READS=true",
+      "blocksUnexpectedProjectUrl": true,
+      "authPersistenceDisabled": true,
+      "autoRefreshDisabled": true,
+      "detectSessionInUrlDisabled": true
+    },
+    "allowedReadOnlySources": [
+      "public.ql_public_synthetic_conversations",
+      "public.ql_public_system_status"
+    ],
+    "blockedBrowserSources": [
+      "contacts",
+      "conversations",
+      "messages",
+      "phone_calls",
+      "sms_messages",
+      "provider_payloads",
+      "consent_logs",
+      "app_admins",
+      "audit_events",
+      "archives",
+      "retention_records"
+    ],
+    "fallback": {
+      "missingEnv": "local synthetic samples remain active",
+      "disabledReadFlag": "local synthetic samples remain active",
+      "unexpectedProject": "client creation blocked before read attempt",
+      "readError": "local synthetic samples remain active",
+      "unexpectedPayload": "reject payload and keep local synthetic samples"
+    }
+  },
+  "runtimeBoundary": {
+    "databaseWritesEnabled": false,
+    "liveCustomerReadsEnabled": false,
+    "providerPayloadReadsEnabled": false,
+    "phoneSmsRuntimeEnabled": false,
+    "callbackRegistrationEnabled": false,
+    "archiveWritesEnabled": false,
+    "retentionWritesEnabled": false,
+    "aiSendEnabled": false,
+    "livePilotRuntimeEnabled": false
+  },
+  "reviewOutcome": "approved_for_review_only",
+  "nextBuild": "QL-092-public-disabled-preview-browser-safe-supabase-read-only-client-safe-read-implementation-plan"
+}
