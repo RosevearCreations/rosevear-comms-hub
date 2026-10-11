@@ -1,0 +1,36 @@
+{
+  "build": "QL-095",
+  "title": "Public Disabled Preview Safe Read Operator Acceptance Plan",
+  "acceptanceMode": "operator_plan_only",
+  "reviewedBuild": "QL-094",
+  "expectedProjectUrl": "https://gxujcwpktaickcgzyvnu.supabase.co",
+  "approvedReadTargets": [
+    "public.ql_public_synthetic_conversations",
+    "public.ql_public_system_status"
+  ],
+  "operatorAcceptanceQuestions": [
+    "Can the operator see the selected brand context without seeing live customer/contact/provider payload?",
+    "Does the operator understand whether the run is local fallback, validated synthetic Supabase, or mixed fallback?",
+    "Are rejected rows explained without exposing raw private data?",
+    "Can the operator clearly see that this is not a live communications release?",
+    "Has the operator recorded acceptance outside the browser before any future live-read or live-send build is considered?"
+  ],
+  "blockedRuntime": [
+    "browser writes",
+    "acceptance persistence",
+    "live customer reads",
+    "provider payload reads",
+    "Phone/SMS callbacks",
+    "SMS sending",
+    "live calls",
+    "recordings",
+    "archives",
+    "consent writes",
+    "audit writes",
+    "retention writes",
+    "AI generation or send",
+    "callback registration",
+    "live pilot runtime"
+  ],
+  "nextQueuedBuild": "QL-096 — Public Disabled Preview Safe Read Operator Acceptance Review"
+}
