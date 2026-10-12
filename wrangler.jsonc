@@ -4,6 +4,7 @@
   // QL-093: no-behavior Cloudflare Worker redeploy trigger for validated synthetic safe reads production promotion.
   // QL-094: no-behavior Cloudflare Worker redeploy trigger for safe-read review evidence production promotion.
   // QL-095: no-behavior Cloudflare Worker redeploy trigger for operator acceptance plan production promotion.
+  // QL-096: no-behavior Cloudflare Worker redeploy trigger for operator acceptance review production promotion.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
