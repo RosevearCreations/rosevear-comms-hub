@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { BrandId } from '../types';
 import { buildQl094SafeReadReviewEvidence } from './ql094SafeReadReviewEvidence';
 import { buildQl095SafeReadOperatorAcceptancePlan } from './ql095SafeReadOperatorAcceptance';
+import { buildQl096SafeReadOperatorAcceptanceReview } from './ql096SafeReadOperatorAcceptanceReview';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -39,16 +40,17 @@ export function Ql093SafeReadPreview() {
   const [selectedBrandId, setSelectedBrandId] = useState<BrandId>('rosiedazzlers');
   const [isLoading, setIsLoading] = useState(false);
   const [safeReadResult, setSafeReadResult] = useState<Ql093SafeReadResult>(() =>
-    getLocalFallbackSafeReadResult('rosiedazzlers', 'QL-095 initial local fallback before the async safe-read operator acceptance check runs.')
+    getLocalFallbackSafeReadResult('rosiedazzlers', 'QL-096 initial local fallback before the async safe-read operator acceptance review runs.')
   );
   const ql094Evidence = buildQl094SafeReadReviewEvidence(safeReadResult);
   const ql095AcceptancePlan = buildQl095SafeReadOperatorAcceptancePlan(ql094Evidence);
+  const ql096AcceptanceReview = buildQl096SafeReadOperatorAcceptanceReview(ql095AcceptancePlan);
 
   useEffect(() => {
     let cancelled = false;
     setIsLoading(true);
     setSafeReadResult(
-      getLocalFallbackSafeReadResult(selectedBrandId, `QL-095 operator acceptance safe-read check starting for ${getBrandLabel(selectedBrandId)}.`)
+      getLocalFallbackSafeReadResult(selectedBrandId, `QL-096 operator acceptance review safe-read check starting for ${getBrandLabel(selectedBrandId)}.`)
     );
 
     loadValidatedSyntheticSafeReads(selectedBrandId)
@@ -62,7 +64,7 @@ export function Ql093SafeReadPreview() {
           setSafeReadResult(
             getLocalFallbackSafeReadResult(
               selectedBrandId,
-              error instanceof Error ? error.message : 'QL-095 safe-read operator acceptance check failed and stayed on local fallback.'
+              error instanceof Error ? error.message : 'QL-096 safe-read operator acceptance review failed and stayed on local fallback.'
             )
           );
         }
@@ -79,24 +81,24 @@ export function Ql093SafeReadPreview() {
   }, [selectedBrandId]);
 
   return (
-    <section className={isOpen ? 'ql093-safe-read-preview open' : 'ql093-safe-read-preview'} aria-label="QL-095 safe-read operator acceptance plan">
+    <section className={isOpen ? 'ql093-safe-read-preview open' : 'ql093-safe-read-preview'} aria-label="QL-096 safe-read operator acceptance review">
       <button className="ql093-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-095</small>
+        <small>QL-096</small>
       </button>
 
       {isOpen && (
-        <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-095 safe-read operator acceptance plan">
+        <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-096 safe-read operator acceptance review">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-095 Public disabled preview</p>
-              <h2>Safe-read operator acceptance plan</h2>
+              <p className="ql093-eyebrow">QL-096 Public disabled preview</p>
+              <h2>Safe-read operator acceptance review</h2>
               <p>
-                The QL-095 plan gives the operator a display-only acceptance checklist for the QL-094 safe-read evidence. It does not store sign-off, write data, expose live payloads, or enable Phone/SMS/AI runtime paths.
+                The QL-096 review checks the QL-095 operator acceptance plan and keeps the preview display-only. It does not store sign-off, expose live payloads, write Supabase data, or enable Phone/SMS/AI runtime paths.
               </p>
             </div>
-            <button className="ql093-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close QL-095 safe-read operator acceptance plan">
+            <button className="ql093-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close QL-096 safe-read operator acceptance review">
               ×
             </button>
           </div>
@@ -120,7 +122,7 @@ export function Ql093SafeReadPreview() {
             </div>
           </div>
 
-          <div className="ql093-brand-row" aria-label="QL-095 brand filter">
+          <div className="ql093-brand-row" aria-label="QL-096 brand filter">
             {brandOptions.map((brand) => (
               <button
                 className={selectedBrandId === brand.id ? 'active' : ''}
@@ -140,8 +142,48 @@ export function Ql093SafeReadPreview() {
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
                 <div>
-                  <p className="ql093-eyebrow">QL-095 operator acceptance</p>
-                  <h3>Acceptance plan summary</h3>
+                  <p className="ql093-eyebrow">QL-096 operator acceptance review</p>
+                  <h3>Review summary</h3>
+                </div>
+                <span>{ql096AcceptanceReview.build}</span>
+              </div>
+              <div className="ql093-status-strip">
+                <div>
+                  <span>Review mode</span>
+                  <strong>{ql096AcceptanceReview.reviewMode.replaceAll('_', ' ')}</strong>
+                </div>
+                <div>
+                  <span>Outcome</span>
+                  <strong>{ql096AcceptanceReview.reviewOutcome.replaceAll('_', ' ')}</strong>
+                </div>
+                <div>
+                  <span>Passed</span>
+                  <strong>{ql096AcceptanceReview.checkpointSummary.passed}</strong>
+                </div>
+                <div>
+                  <span>Needs review</span>
+                  <strong>{ql096AcceptanceReview.checkpointSummary.review}</strong>
+                </div>
+              </div>
+              <p className="ql093-notice">{ql096AcceptanceReview.reviewWarning}</p>
+              <ul className="ql093-status-list">
+                {ql096AcceptanceReview.reviewCheckpoints.map((checkpoint) => (
+                  <li key={checkpoint.id}>
+                    <strong>{checkpoint.label}</strong>
+                    <span className={evidencePillClass(checkpoint.status)}>{checkpoint.status}</span>
+                    <p>{checkpoint.reviewFinding}</p>
+                    <small>{checkpoint.operatorDecision}</small>
+                    <p className="ql093-muted">Boundary: {checkpoint.evidenceBoundary}</p>
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading">
+                <div>
+                  <p className="ql093-eyebrow">QL-095 operator acceptance plan</p>
+                  <h3>Acceptance plan under review</h3>
                 </div>
                 <span>{ql095AcceptancePlan.build}</span>
               </div>
@@ -163,7 +205,6 @@ export function Ql093SafeReadPreview() {
                   <strong>{ql095AcceptancePlan.reviewedBuild}</strong>
                 </div>
               </div>
-              <p className="ql093-notice">{ql095AcceptancePlan.operatorWarning}</p>
               <ul className="ql093-status-list">
                 {ql095AcceptancePlan.acceptanceItems.map((item) => (
                   <li key={item.id}>
@@ -175,6 +216,34 @@ export function Ql093SafeReadPreview() {
                   </li>
                 ))}
               </ul>
+            </article>
+
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading compact">
+                <div>
+                  <p className="ql093-eyebrow">QL-096 retained boundary</p>
+                  <h3>Review boundaries and blocked runtime</h3>
+                </div>
+                <span>{ql096AcceptanceReview.selectedBrandLabel}</span>
+              </div>
+              <div className="ql093-grid">
+                <div>
+                  <p className="ql093-muted">Review boundaries</p>
+                  <ul className="ql093-check-list">
+                    {ql096AcceptanceReview.retainedBoundaries.map((boundary) => (
+                      <li key={boundary}>{boundary}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p className="ql093-muted">Still blocked</p>
+                  <ul className="ql093-check-list">
+                    {ql096AcceptanceReview.blockedRuntime.map((runtime) => (
+                      <li key={runtime}>{runtime}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </article>
 
             <article className="ql093-card wide">
@@ -212,62 +281,6 @@ export function Ql093SafeReadPreview() {
                   </li>
                 ))}
               </ul>
-            </article>
-
-            <article className="ql093-card wide">
-              <div className="ql093-card-heading compact">
-                <div>
-                  <p className="ql093-eyebrow">Acceptance boundary</p>
-                  <h3>Data boundaries and blocked runtime</h3>
-                </div>
-                <span>{ql095AcceptancePlan.selectedBrandLabel}</span>
-              </div>
-              <div className="ql093-grid">
-                <div>
-                  <p className="ql093-muted">Acceptance data boundaries</p>
-                  <ul className="ql093-check-list">
-                    {ql095AcceptancePlan.dataBoundaries.map((boundary) => (
-                      <li key={boundary}>{boundary}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <p className="ql093-muted">Still blocked</p>
-                  <ul className="ql093-check-list">
-                    {ql095AcceptancePlan.blockedRuntime.map((runtime) => (
-                      <li key={runtime}>{runtime}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </article>
-
-            <article className="ql093-card wide">
-              <div className="ql093-card-heading compact">
-                <div>
-                  <p className="ql093-eyebrow">Evidence boundary</p>
-                  <h3>Approved sources and blocked runtime</h3>
-                </div>
-                <span>{ql094Evidence.reviewedBuild}</span>
-              </div>
-              <div className="ql093-grid">
-                <div>
-                  <p className="ql093-muted">Approved read targets</p>
-                  <ul className="ql093-check-list">
-                    {ql094Evidence.approvedReadTargets.map((target) => (
-                      <li key={target}>{target}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <p className="ql093-muted">Still blocked</p>
-                  <ul className="ql093-check-list">
-                    {ql094Evidence.blockedRuntime.map((runtime) => (
-                      <li key={runtime}>{runtime}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
             </article>
 
             <article className="ql093-card wide">
@@ -350,7 +363,8 @@ export function Ql093SafeReadPreview() {
                   <li key={note}>{note}</li>
                 ))}
               </ul>
-              <p className="ql093-muted">Last checked: {new Date(ql095AcceptancePlan.generatedAt).toLocaleString()}</p>
+              <p className="ql093-muted">Last checked: {new Date(ql096AcceptanceReview.generatedAt).toLocaleString()}</p>
+              <p className="ql093-muted">Next queued: {ql096AcceptanceReview.nextQueuedBuild}</p>
             </article>
           </div>
         </div>

@@ -1,0 +1,27 @@
+{
+  "build": "QL-096",
+  "title": "Public Disabled Preview Safe Read Operator Acceptance Review",
+  "reviewMode": "display_only_operator_review",
+  "reviewedBuild": "QL-095",
+  "expectedProjectUrl": "https://gxujcwpktaickcgzyvnu.supabase.co",
+  "approvedReadTargets": [
+    "public.ql_public_synthetic_conversations",
+    "public.ql_public_system_status"
+  ],
+  "reviewCheckpoints": [
+    "QL-095 acceptance plan availability",
+    "safe-read source and row evidence review",
+    "runtime lockout evidence review",
+    "manual sign-off boundary review",
+    "next-build gate review"
+  ],
+  "retainedBoundaries": [
+    "display-only browser review",
+    "no acceptance persistence",
+    "no live customer/contact/provider payload reads",
+    "no browser writes or Supabase mutations",
+    "no Phone/SMS callbacks, outbound messages, recordings, archives, consent, audit, admin, or retention writes",
+    "no AI generation, AI sending, provider delivery, callback registration, or live pilot runtime"
+  ],
+  "nextQueuedBuild": "QL-097 — Public Disabled Preview Safe Read Operator Acceptance Evidence Ledger Plan"
+}
