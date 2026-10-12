@@ -1,0 +1,34 @@
+{
+  "build": "QL-100",
+  "title": "Public Disabled Preview Safe Read Operator Acceptance Evidence Ledger Resolution Review",
+  "reviewMode": "display_only_resolution_review",
+  "ledgerWriteStatus": "not_implemented",
+  "reviewedBuild": "QL-099",
+  "expectedProjectUrl": "https://gxujcwpktaickcgzyvnu.supabase.co",
+  "approvedReadTargets": [
+    "public.ql_public_synthetic_conversations",
+    "public.ql_public_system_status"
+  ],
+  "reviewItems": [
+    "review QL-099 resolution mode and write status",
+    "review resolution items for blocked or open decisions",
+    "review approved proof fields and rejected private fields",
+    "review deferred write gate",
+    "review runtime lockouts and safe-read evidence"
+  ],
+  "deferredWriteRequirements": [
+    "no Supabase schema, migration, RPC, insert, update, delete, or storage upload",
+    "no browser submit, local persistence, acceptance save, provider call, Phone/SMS send, or callback registration",
+    "future persistence must be planned and reviewed separately"
+  ],
+  "blockedRuntime": [
+    "browser writes and acceptance persistence",
+    "live customer/contact/provider reads",
+    "Phone/SMS callbacks and sending",
+    "recordings, archives, consent, audit, admin, and retention writes",
+    "AI generation or send",
+    "callback registration",
+    "live pilot runtime"
+  ],
+  "nextQueuedBuild": "QL-101 — Public Disabled Preview Safe Read Operator Acceptance Evidence Ledger Persistence Plan"
+}
