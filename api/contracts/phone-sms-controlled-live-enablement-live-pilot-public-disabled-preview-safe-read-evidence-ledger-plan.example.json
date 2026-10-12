@@ -1,0 +1,49 @@
+{
+  "build": "QL-097",
+  "title": "Public Disabled Preview Safe Read Operator Acceptance Evidence Ledger Plan",
+  "ledgerMode": "plan_only_no_persistence",
+  "storageStatus": "not_persisted",
+  "plannedFromBuild": "QL-096",
+  "expectedProjectUrl": "https://gxujcwpktaickcgzyvnu.supabase.co",
+  "approvedReadTargets": [
+    "public.ql_public_synthetic_conversations",
+    "public.ql_public_system_status"
+  ],
+  "proposedLedgerFields": [
+    "ledger_build",
+    "reviewed_build",
+    "selected_brand_label",
+    "active_source_label",
+    "review_outcome",
+    "conversation_row_count",
+    "system_status_row_count",
+    "rejected_row_count",
+    "runtime_lockout_count",
+    "checkpoint_summary",
+    "blocked_runtime_summary",
+    "manual_acceptance_reference",
+    "created_at"
+  ],
+  "excludedFields": [
+    "customer_name",
+    "customer_phone",
+    "customer_email",
+    "provider_payload",
+    "raw_rejected_row",
+    "message_body",
+    "call_recording_url",
+    "sms_mms_content",
+    "archive_payload",
+    "audit_payload"
+  ],
+  "blockedRuntime": [
+    "browser writes and acceptance persistence",
+    "live customer/contact/provider reads",
+    "Phone/SMS callbacks and sending",
+    "recordings, archives, consent, audit, admin, and retention writes",
+    "AI generation or send",
+    "callback registration",
+    "live pilot runtime"
+  ],
+  "nextQueuedBuild": "QL-098 — Public Disabled Preview Safe Read Operator Acceptance Evidence Ledger Review"
+}
