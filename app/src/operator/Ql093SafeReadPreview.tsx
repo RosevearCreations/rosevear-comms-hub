@@ -5,6 +5,7 @@ import { buildQl095SafeReadOperatorAcceptancePlan } from './ql095SafeReadOperato
 import { buildQl096SafeReadOperatorAcceptanceReview } from './ql096SafeReadOperatorAcceptanceReview';
 import { buildQl097SafeReadOperatorAcceptanceEvidenceLedgerPlan } from './ql097SafeReadOperatorAcceptanceEvidenceLedgerPlan';
 import { buildQl098SafeReadOperatorAcceptanceEvidenceLedgerReview } from './ql098SafeReadOperatorAcceptanceEvidenceLedgerReview';
+import { buildQl099SafeReadOperatorAcceptanceEvidenceLedgerResolutionPlan } from './ql099SafeReadOperatorAcceptanceEvidenceLedgerResolutionPlan';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -42,7 +43,7 @@ export function Ql093SafeReadPreview() {
   const [selectedBrandId, setSelectedBrandId] = useState<BrandId>('rosiedazzlers');
   const [isLoading, setIsLoading] = useState(false);
   const [safeReadResult, setSafeReadResult] = useState<Ql093SafeReadResult>(() =>
-    getLocalFallbackSafeReadResult('rosiedazzlers', 'QL-098 initial local fallback before the async evidence-ledger review check runs.')
+    getLocalFallbackSafeReadResult('rosiedazzlers', 'QL-099 initial local fallback before the async evidence-ledger resolution-plan check runs.')
   );
 
   const ql094Evidence = buildQl094SafeReadReviewEvidence(safeReadResult);
@@ -50,12 +51,13 @@ export function Ql093SafeReadPreview() {
   const ql096AcceptanceReview = buildQl096SafeReadOperatorAcceptanceReview(ql095AcceptancePlan);
   const ql097LedgerPlan = buildQl097SafeReadOperatorAcceptanceEvidenceLedgerPlan(ql096AcceptanceReview);
   const ql098LedgerReview = buildQl098SafeReadOperatorAcceptanceEvidenceLedgerReview(ql097LedgerPlan);
+  const ql099ResolutionPlan = buildQl099SafeReadOperatorAcceptanceEvidenceLedgerResolutionPlan(ql098LedgerReview);
 
   useEffect(() => {
     let cancelled = false;
     setIsLoading(true);
     setSafeReadResult(
-      getLocalFallbackSafeReadResult(selectedBrandId, `QL-098 evidence-ledger review safe-read check starting for ${getBrandLabel(selectedBrandId)}.`)
+      getLocalFallbackSafeReadResult(selectedBrandId, `QL-099 evidence-ledger resolution-plan safe-read check starting for ${getBrandLabel(selectedBrandId)}.`)
     );
 
     loadValidatedSyntheticSafeReads(selectedBrandId)
@@ -69,7 +71,7 @@ export function Ql093SafeReadPreview() {
           setSafeReadResult(
             getLocalFallbackSafeReadResult(
               selectedBrandId,
-              error instanceof Error ? error.message : 'QL-098 evidence-ledger review check failed and stayed on local fallback.'
+              error instanceof Error ? error.message : 'QL-099 evidence-ledger resolution-plan check failed and stayed on local fallback.'
             )
           );
         }
@@ -86,24 +88,24 @@ export function Ql093SafeReadPreview() {
   }, [selectedBrandId]);
 
   return (
-    <section className={isOpen ? 'ql093-safe-read-preview open' : 'ql093-safe-read-preview'} aria-label="QL-098 safe-read evidence-ledger review">
+    <section className={isOpen ? 'ql093-safe-read-preview open' : 'ql093-safe-read-preview'} aria-label="QL-099 safe-read evidence-ledger resolution plan">
       <button className="ql093-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-098</small>
+        <small>QL-099</small>
       </button>
 
       {isOpen && (
-        <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-098 safe-read evidence-ledger review">
+        <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-099 safe-read evidence-ledger resolution plan">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-098 Public disabled preview</p>
-              <h2>Safe-read evidence-ledger review</h2>
+              <p className="ql093-eyebrow">QL-099 Public disabled preview</p>
+              <h2>Safe-read evidence-ledger resolution plan</h2>
               <p>
-                QL-098 reviews the QL-097 evidence-ledger plan and keeps the preview display-only. It does not store acceptance, write Supabase data, call providers, enable Phone/SMS, create callbacks, write archives/audits/retention, or run AI delivery paths.
+                QL-099 resolves the QL-098 review into a gated, display-only plan. It does not create a ledger, store acceptance, write Supabase data, call providers, enable Phone/SMS, create callbacks, write archives/audits/retention, or run AI delivery paths.
               </p>
             </div>
-            <button className="ql093-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close QL-098 safe-read evidence-ledger review">
+            <button className="ql093-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close QL-099 safe-read evidence-ledger resolution plan">
               ×
             </button>
           </div>
@@ -127,7 +129,7 @@ export function Ql093SafeReadPreview() {
             </div>
           </div>
 
-          <div className="ql093-brand-row" aria-label="QL-098 brand filter">
+          <div className="ql093-brand-row" aria-label="QL-099 brand filter">
             {brandOptions.map((brand) => (
               <button className={selectedBrandId === brand.id ? 'active' : ''} key={brand.id} onClick={() => setSelectedBrandId(brand.id)} type="button">
                 <span>{brand.label}</span>
@@ -142,8 +144,76 @@ export function Ql093SafeReadPreview() {
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
                 <div>
-                  <p className="ql093-eyebrow">QL-098 evidence-ledger review</p>
-                  <h3>Review summary</h3>
+                  <p className="ql093-eyebrow">QL-099 evidence-ledger resolution plan</p>
+                  <h3>Resolution summary</h3>
+                </div>
+                <span>{ql099ResolutionPlan.build}</span>
+              </div>
+              <div className="ql093-status-strip">
+                <div>
+                  <span>Resolution mode</span>
+                  <strong>{ql099ResolutionPlan.resolutionMode.replaceAll('_', ' ')}</strong>
+                </div>
+                <div>
+                  <span>Outcome</span>
+                  <strong>{ql099ResolutionPlan.resolutionOutcome.replaceAll('_', ' ')}</strong>
+                </div>
+                <div>
+                  <span>Write status</span>
+                  <strong>{ql099ResolutionPlan.ledgerWriteStatus.replaceAll('_', ' ')}</strong>
+                </div>
+                <div>
+                  <span>Passed</span>
+                  <strong>{ql099ResolutionPlan.resolutionSummary.passed}</strong>
+                </div>
+              </div>
+              <p className="ql093-notice">{ql099ResolutionPlan.reviewWarning}</p>
+              <ul className="ql093-status-list">
+                {ql099ResolutionPlan.resolutionItems.map((item) => (
+                  <li key={item.id}>
+                    <strong>{item.label}</strong>
+                    <span className={evidencePillClass(item.status)}>{item.status}</span>
+                    <p>{item.resolutionFinding}</p>
+                    <small>{item.requiredResolution}</small>
+                    <p className="ql093-muted">Boundary: {item.noWriteBoundary}</p>
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading compact">
+                <div>
+                  <p className="ql093-eyebrow">Resolution steps</p>
+                  <h3>Deferred before any future write proposal</h3>
+                </div>
+                <span>{ql099ResolutionPlan.resolvedFromBuild}</span>
+              </div>
+              <div className="ql093-grid">
+                <div>
+                  <p className="ql093-muted">Proposed resolution steps</p>
+                  <ul className="ql093-check-list">
+                    {ql099ResolutionPlan.proposedResolutionSteps.map((step) => (
+                      <li key={step}>{step}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p className="ql093-muted">Deferred write requirements</p>
+                  <ul className="ql093-check-list warning">
+                    {ql099ResolutionPlan.deferredWriteRequirements.map((requirement) => (
+                      <li key={requirement}>{requirement}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading">
+                <div>
+                  <p className="ql093-eyebrow">QL-098 evidence-ledger review retained</p>
+                  <h3>Review under resolution</h3>
                 </div>
                 <span>{ql098LedgerReview.build}</span>
               </div>
@@ -165,7 +235,6 @@ export function Ql093SafeReadPreview() {
                   <strong>{ql098LedgerReview.reviewSummary.review}</strong>
                 </div>
               </div>
-              <p className="ql093-notice">{ql098LedgerReview.reviewWarning}</p>
               <ul className="ql093-status-list">
                 {ql098LedgerReview.reviewItems.map((item) => (
                   <li key={item.id}>
@@ -180,10 +249,38 @@ export function Ql093SafeReadPreview() {
             </article>
 
             <article className="ql093-card wide">
+              <div className="ql093-card-heading compact">
+                <div>
+                  <p className="ql093-eyebrow">Resolved field boundary</p>
+                  <h3>Approved proof fields and rejected private fields</h3>
+                </div>
+                <span>{ql099ResolutionPlan.selectedBrandLabel}</span>
+              </div>
+              <div className="ql093-grid">
+                <div>
+                  <p className="ql093-muted">Approved proof fields for later review only</p>
+                  <ul className="ql093-check-list">
+                    {ql099ResolutionPlan.approvedProofFields.map((field) => (
+                      <li key={field}>{field}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p className="ql093-muted">Rejected private fields</p>
+                  <ul className="ql093-check-list warning">
+                    {ql099ResolutionPlan.rejectedPrivateFields.map((field) => (
+                      <li key={field}>{field}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <article className="ql093-card wide">
               <div className="ql093-card-heading">
                 <div>
-                  <p className="ql093-eyebrow">QL-097 evidence ledger plan</p>
-                  <h3>Plan under review</h3>
+                  <p className="ql093-eyebrow">QL-097 evidence ledger plan retained</p>
+                  <h3>Plan still display-only</h3>
                 </div>
                 <span>{ql097LedgerPlan.build}</span>
               </div>
@@ -205,83 +302,6 @@ export function Ql093SafeReadPreview() {
                   <strong>{ql097LedgerPlan.ledgerEntrySummary.planned}</strong>
                 </div>
               </div>
-              <ul className="ql093-status-list">
-                {ql097LedgerPlan.ledgerEntries.map((entry) => (
-                  <li key={entry.id}>
-                    <strong>{entry.label}</strong>
-                    <span className={evidencePillClass(entry.status)}>{entry.status}</span>
-                    <p>{entry.ledgerIntent}</p>
-                    <small>Would record: {entry.evidenceToRecord.join(', ')}</small>
-                    <p className="ql093-muted">Must exclude: {entry.excludedData.join(', ')}</p>
-                  </li>
-                ))}
-              </ul>
-            </article>
-
-            <article className="ql093-card wide">
-              <div className="ql093-card-heading compact">
-                <div>
-                  <p className="ql093-eyebrow">Reviewed field boundary</p>
-                  <h3>Approved proof fields and rejected private fields</h3>
-                </div>
-                <span>{ql098LedgerReview.selectedBrandLabel}</span>
-              </div>
-              <div className="ql093-grid">
-                <div>
-                  <p className="ql093-muted">Approved proof fields for future planning</p>
-                  <ul className="ql093-check-list">
-                    {ql098LedgerReview.approvedProofFields.map((field) => (
-                      <li key={field}>{field}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <p className="ql093-muted">Rejected private fields</p>
-                  <ul className="ql093-check-list warning">
-                    {ql098LedgerReview.rejectedPrivateFields.map((field) => (
-                      <li key={field}>{field}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </article>
-
-            <article className="ql093-card wide">
-              <div className="ql093-card-heading">
-                <div>
-                  <p className="ql093-eyebrow">QL-096 review retained</p>
-                  <h3>Operator acceptance review summary</h3>
-                </div>
-                <span>{ql096AcceptanceReview.build}</span>
-              </div>
-              <div className="ql093-status-strip">
-                <div>
-                  <span>Review mode</span>
-                  <strong>{ql096AcceptanceReview.reviewMode.replaceAll('_', ' ')}</strong>
-                </div>
-                <div>
-                  <span>Outcome</span>
-                  <strong>{ql096AcceptanceReview.reviewOutcome.replaceAll('_', ' ')}</strong>
-                </div>
-                <div>
-                  <span>Passed</span>
-                  <strong>{ql096AcceptanceReview.checkpointSummary.passed}</strong>
-                </div>
-                <div>
-                  <span>Needs review</span>
-                  <strong>{ql096AcceptanceReview.checkpointSummary.review}</strong>
-                </div>
-              </div>
-              <ul className="ql093-status-list">
-                {ql096AcceptanceReview.reviewCheckpoints.map((checkpoint) => (
-                  <li key={checkpoint.id}>
-                    <strong>{checkpoint.label}</strong>
-                    <span className={evidencePillClass(checkpoint.status)}>{checkpoint.status}</span>
-                    <p>{checkpoint.reviewFinding}</p>
-                    <small>{checkpoint.operatorDecision}</small>
-                  </li>
-                ))}
-              </ul>
             </article>
 
             <article className="ql093-card wide">
@@ -349,16 +369,16 @@ export function Ql093SafeReadPreview() {
             <article className="ql093-card wide">
               <div className="ql093-card-heading compact">
                 <div>
-                  <p className="ql093-eyebrow">Runtime and review boundary</p>
+                  <p className="ql093-eyebrow">Runtime and resolution boundary</p>
                   <h3>Still disabled</h3>
                 </div>
                 <span>{safeReadResult.build}</span>
               </div>
               <div className="ql093-grid">
                 <div>
-                  <p className="ql093-muted">QL-098 retained boundaries</p>
+                  <p className="ql093-muted">QL-099 retained boundaries</p>
                   <ul className="ql093-check-list">
-                    {ql098LedgerReview.retainedBoundaries.map((boundary) => (
+                    {ql099ResolutionPlan.retainedBoundaries.map((boundary) => (
                       <li key={boundary}>{boundary}</li>
                     ))}
                   </ul>
@@ -366,14 +386,14 @@ export function Ql093SafeReadPreview() {
                 <div>
                   <p className="ql093-muted">Blocked runtime</p>
                   <ul className="ql093-check-list">
-                    {ql098LedgerReview.blockedRuntime.map((runtime) => (
+                    {ql099ResolutionPlan.blockedRuntime.map((runtime) => (
                       <li key={runtime}>{runtime}</li>
                     ))}
                   </ul>
                 </div>
               </div>
-              <p className="ql093-muted">Last checked: {new Date(ql098LedgerReview.generatedAt).toLocaleString()}</p>
-              <p className="ql093-muted">Next queued: {ql098LedgerReview.nextQueuedBuild}</p>
+              <p className="ql093-muted">Last checked: {new Date(ql099ResolutionPlan.generatedAt).toLocaleString()}</p>
+              <p className="ql093-muted">Next queued: {ql099ResolutionPlan.nextQueuedBuild}</p>
             </article>
           </div>
         </div>
