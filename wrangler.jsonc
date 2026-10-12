@@ -9,6 +9,7 @@
   // QL-098: no-behavior Cloudflare Worker redeploy trigger for evidence ledger review production promotion.
   // QL-099: no-behavior Cloudflare Worker redeploy trigger for evidence ledger resolution plan production promotion.
   // QL-100: no-behavior Cloudflare Worker redeploy trigger for evidence ledger resolution review production promotion.
+  // QL-101: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence plan production promotion.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
