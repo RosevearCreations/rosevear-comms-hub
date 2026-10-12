@@ -1,0 +1,36 @@
+{
+  "build": "QL-103",
+  "title": "Public Disabled Preview Safe Read Operator Acceptance Evidence Ledger Persistence Implementation Plan",
+  "plannedFromBuild": "QL-102",
+  "implementationPlanMode": "plan_only_no_implementation",
+  "ledgerWriteStatus": "planned_not_implemented",
+  "candidateSchemaStatus": "planned_not_implemented",
+  "endpointImplementationStatus": "not_implemented",
+  "browserWriteStatus": "disabled",
+  "approvedReadTargets": [
+    "public.ql_public_synthetic_conversations",
+    "public.ql_public_system_status"
+  ],
+  "implementationPlanScope": [
+    "bounded candidate schema draft",
+    "future disabled-by-default write route contract",
+    "future browser operator acceptance flow",
+    "retention and cleanup plan",
+    "rollback and disable plan",
+    "owner approval plan"
+  ],
+  "blocked": {
+    "schemaCreation": true,
+    "ledgerWrites": true,
+    "apiWriteRoutes": true,
+    "browserAcceptanceSave": true,
+    "supabaseMutations": true,
+    "liveCustomerProviderReads": true,
+    "phoneSmsRuntime": true,
+    "callbacks": true,
+    "archiveConsentAuditRetentionWrites": true,
+    "aiGenerationSend": true,
+    "livePilotRuntime": true
+  },
+  "nextQueuedBuild": "QL-104 — Public Disabled Preview Safe Read Operator Acceptance Evidence Ledger Persistence Implementation Plan Review"
+}
