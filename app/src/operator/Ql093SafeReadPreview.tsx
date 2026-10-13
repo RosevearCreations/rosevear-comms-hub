@@ -15,6 +15,7 @@ import { buildQl105SafeReadOperatorAcceptanceEvidenceLedgerPersistenceImplementa
 import { buildQl106SafeReadOperatorAcceptanceEvidenceLedgerPersistenceImplementationDraftPlan } from './ql106SafeReadOperatorAcceptanceEvidenceLedgerPersistenceImplementationDraftPlan';
 import { buildQl107SafeReadOperatorAcceptanceEvidenceLedgerPersistenceImplementationDraftReview } from './ql107SafeReadOperatorAcceptanceEvidenceLedgerPersistenceImplementationDraftReview';
 import { buildQl108SafeReadOperatorAcceptanceEvidenceLedgerPersistenceBoundedImplementationDecisionPlanning } from './ql108SafeReadOperatorAcceptanceEvidenceLedgerPersistenceBoundedImplementationDecisionPlanning';
+import { buildQl109SafeReadOperatorAcceptanceEvidenceLedgerPersistenceBoundedImplementationDecisionPlanningReview } from './ql109SafeReadOperatorAcceptanceEvidenceLedgerPersistenceBoundedImplementationDecisionPlanningReview';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -39,14 +40,12 @@ function evidencePillClass(status: 'pass' | 'review' | 'blocked'): string {
   if (status === 'pass') {
     return 'ql093-pill ready';
   }
+
   if (status === 'blocked') {
     return 'ql093-pill blocked';
   }
-  return 'ql093-pill planned';
-}
 
-function renderList(items: readonly string[]) {
-  return items.map((item) => <li key={item}>{item}</li>);
+  return 'ql093-pill planned';
 }
 
 export function Ql093SafeReadPreview() {
@@ -54,7 +53,7 @@ export function Ql093SafeReadPreview() {
   const [selectedBrandId, setSelectedBrandId] = useState<BrandId>('rosiedazzlers');
   const [isLoading, setIsLoading] = useState(false);
   const [safeReadResult, setSafeReadResult] = useState<Ql093SafeReadResult>(() =>
-    getLocalFallbackSafeReadResult('rosiedazzlers', 'QL-108 initial local fallback before the async bounded decision-planning check runs.')
+    getLocalFallbackSafeReadResult('rosiedazzlers', 'QL-109 initial local fallback before the async decision-planning review check runs.')
   );
 
   const ql094Evidence = buildQl094SafeReadReviewEvidence(safeReadResult);
@@ -72,12 +71,13 @@ export function Ql093SafeReadPreview() {
   const ql106DraftPlan = buildQl106SafeReadOperatorAcceptanceEvidenceLedgerPersistenceImplementationDraftPlan(ql105ReadinessDecision);
   const ql107DraftReview = buildQl107SafeReadOperatorAcceptanceEvidenceLedgerPersistenceImplementationDraftReview(ql106DraftPlan);
   const ql108DecisionPlanning = buildQl108SafeReadOperatorAcceptanceEvidenceLedgerPersistenceBoundedImplementationDecisionPlanning(ql107DraftReview);
+  const ql109DecisionPlanningReview = buildQl109SafeReadOperatorAcceptanceEvidenceLedgerPersistenceBoundedImplementationDecisionPlanningReview(ql108DecisionPlanning);
 
   useEffect(() => {
     let cancelled = false;
     setIsLoading(true);
     setSafeReadResult(
-      getLocalFallbackSafeReadResult(selectedBrandId, `QL-108 bounded implementation decision-planning safe-read check starting for ${getBrandLabel(selectedBrandId)}.`)
+      getLocalFallbackSafeReadResult(selectedBrandId, `QL-109 decision-planning review safe-read check starting for ${getBrandLabel(selectedBrandId)}.`)
     );
 
     loadValidatedSyntheticSafeReads(selectedBrandId)
@@ -91,7 +91,7 @@ export function Ql093SafeReadPreview() {
           setSafeReadResult(
             getLocalFallbackSafeReadResult(
               selectedBrandId,
-              error instanceof Error ? error.message : 'QL-108 decision-planning check failed and stayed on local fallback.'
+              error instanceof Error ? error.message : 'QL-109 decision-planning review check failed and stayed on local fallback.'
             )
           );
         }
@@ -108,26 +108,26 @@ export function Ql093SafeReadPreview() {
   }, [selectedBrandId]);
 
   return (
-    <section className={isOpen ? 'ql093-safe-read-preview open' : 'ql093-safe-read-preview'} aria-label="QL-108 safe-read bounded implementation decision planning">
+    <section className={isOpen ? 'ql093-safe-read-preview open' : 'ql093-safe-read-preview'} aria-label="QL-109 safe-read bounded implementation decision-planning review">
       <button className="ql093-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-108</small>
+        <small>QL-109</small>
       </button>
 
       {isOpen && (
-        <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-108 safe-read bounded implementation decision planning">
+        <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-109 safe-read bounded implementation decision-planning review">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-108 Public disabled preview</p>
-              <h2>Safe-read evidence-ledger persistence bounded implementation decision planning</h2>
+              <p className="ql093-eyebrow">QL-109 Public disabled preview</p>
+              <h2>Bounded implementation decision-planning review</h2>
               <p>
-                QL-108 plans the criteria for a later bounded implementation decision review. It still does not create schema, create a ledger,
+                QL-109 reviews the QL-108 bounded implementation decision-planning package. It still does not create schema, create a ledger,
                 store acceptance, write Supabase data, call providers, enable Phone/SMS, create callbacks, write archives/audits/retention,
                 or run AI delivery paths.
               </p>
             </div>
-            <button className="ql093-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close QL-108 decision planning">
+            <button className="ql093-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close QL-109 decision-planning review">
               ×
             </button>
           </div>
@@ -151,7 +151,7 @@ export function Ql093SafeReadPreview() {
             </div>
           </div>
 
-          <div className="ql093-brand-row" aria-label="QL-108 brand filter">
+          <div className="ql093-brand-row" aria-label="QL-109 brand filter">
             {brandOptions.map((brand) => (
               <button className={selectedBrandId === brand.id ? 'active' : ''} key={brand.id} onClick={() => setSelectedBrandId(brand.id)} type="button">
                 <span>{brand.label}</span>
@@ -166,37 +166,37 @@ export function Ql093SafeReadPreview() {
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
                 <div>
-                  <p className="ql093-eyebrow">QL-108 decision planning</p>
-                  <h3>Bounded implementation decision plan</h3>
+                  <p className="ql093-eyebrow">QL-109 decision-planning review</p>
+                  <h3>Review summary</h3>
                 </div>
-                <span>{ql108DecisionPlanning.build}</span>
+                <span>{ql109DecisionPlanningReview.build}</span>
               </div>
               <div className="ql093-status-strip">
                 <div>
-                  <span>Planning mode</span>
-                  <strong>{ql108DecisionPlanning.planningMode.replaceAll('_', ' ')}</strong>
+                  <span>Review mode</span>
+                  <strong>{ql109DecisionPlanningReview.reviewMode.replaceAll('_', ' ')}</strong>
                 </div>
                 <div>
                   <span>Outcome</span>
-                  <strong>{ql108DecisionPlanning.planningOutcome.replaceAll('_', ' ')}</strong>
+                  <strong>{ql109DecisionPlanningReview.reviewOutcome.replaceAll('_', ' ')}</strong>
                 </div>
                 <div>
                   <span>Implementation</span>
-                  <strong>{ql108DecisionPlanning.implementationPermission.replaceAll('_', ' ')}</strong>
+                  <strong>{ql109DecisionPlanningReview.implementationPermission.replaceAll('_', ' ')}</strong>
                 </div>
                 <div>
-                  <span>Browser writes</span>
-                  <strong>{ql108DecisionPlanning.browserWriteStatus}</strong>
+                  <span>Candidate</span>
+                  <strong>{ql109DecisionPlanningReview.implementationCandidateStatus.replaceAll('_', ' ')}</strong>
                 </div>
               </div>
-              <p className="ql093-notice">{ql108DecisionPlanning.planningWarning}</p>
+              <p className="ql093-notice">{ql109DecisionPlanningReview.reviewWarning}</p>
               <ul className="ql093-status-list">
-                {ql108DecisionPlanning.decisionItems.map((item) => (
+                {ql109DecisionPlanningReview.reviewItems.map((item) => (
                   <li key={item.id}>
                     <strong>{item.label}</strong>
                     <span className={evidencePillClass(item.status)}>{item.status}</span>
-                    <p>{item.planningFinding}</p>
-                    <small>{item.decisionRequirement}</small>
+                    <p>{item.reviewFinding}</p>
+                    <small>{item.requiredDisposition}</small>
                     <p className="ql093-muted">Boundary: {item.noWriteBoundary}</p>
                   </li>
                 ))}
@@ -206,19 +206,27 @@ export function Ql093SafeReadPreview() {
             <article className="ql093-card wide">
               <div className="ql093-card-heading compact">
                 <div>
-                  <p className="ql093-eyebrow">Decision criteria</p>
-                  <h3>Required approvals and decision evidence</h3>
+                  <p className="ql093-eyebrow">Reviewed QL-108 package</p>
+                  <h3>Decision-planning criteria remain text-only</h3>
                 </div>
-                <span>{ql108DecisionPlanning.boundedDecisionStatus.replaceAll('_', ' ')}</span>
+                <span>{ql108DecisionPlanning.build}</span>
               </div>
               <div className="ql093-grid">
                 <div>
-                  <p className="ql093-muted">Bounded implementation principles</p>
-                  <ul className="ql093-check-list">{renderList(ql108DecisionPlanning.boundedImplementationDecisionPrinciples)}</ul>
+                  <p className="ql093-muted">Bounded decision principles</p>
+                  <ul className="ql093-check-list">
+                    {ql109DecisionPlanningReview.reviewedDecisionPrinciples.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
                 </div>
                 <div>
-                  <p className="ql093-muted">Required pre-implementation approvals</p>
-                  <ul className="ql093-check-list warning">{renderList(ql108DecisionPlanning.requiredPreImplementationApprovals)}</ul>
+                  <p className="ql093-muted">Owner approvals required before later work</p>
+                  <ul className="ql093-check-list warning">
+                    {ql109DecisionPlanningReview.reviewedPreImplementationApprovals.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </article>
@@ -226,32 +234,20 @@ export function Ql093SafeReadPreview() {
             <article className="ql093-card wide">
               <div className="ql093-grid">
                 <div>
-                  <p className="ql093-muted">Required decision evidence</p>
-                  <ul className="ql093-check-list">{renderList(ql108DecisionPlanning.requiredDecisionEvidence)}</ul>
+                  <p className="ql093-muted">Decision evidence reviewed</p>
+                  <ul className="ql093-check-list">
+                    {ql109DecisionPlanningReview.reviewedDecisionEvidence.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
                 </div>
                 <div>
-                  <p className="ql093-muted">Required failure dispositions</p>
-                  <ul className="ql093-check-list warning">{renderList(ql108DecisionPlanning.requiredFailureDispositions)}</ul>
-                </div>
-              </div>
-            </article>
-
-            <article className="ql093-card wide">
-              <div className="ql093-card-heading compact">
-                <div>
-                  <p className="ql093-eyebrow">Non-negotiable boundaries</p>
-                  <h3>No-write runtime remains locked</h3>
-                </div>
-                <span>{ql108DecisionPlanning.implementationCandidateStatus.replaceAll('_', ' ')}</span>
-              </div>
-              <div className="ql093-grid">
-                <div>
-                  <p className="ql093-muted">Implementation boundaries</p>
-                  <ul className="ql093-check-list warning">{renderList(ql108DecisionPlanning.nonNegotiableImplementationBoundaries)}</ul>
-                </div>
-                <div>
-                  <p className="ql093-muted">Runtime remains blocked</p>
-                  <ul className="ql093-check-list warning">{renderList(ql108DecisionPlanning.retainedNoWriteRuntime)}</ul>
+                  <p className="ql093-muted">Failure dispositions reviewed</p>
+                  <ul className="ql093-check-list warning">
+                    {ql109DecisionPlanningReview.reviewedFailureDispositions.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </article>
@@ -259,55 +255,59 @@ export function Ql093SafeReadPreview() {
             <article className="ql093-card wide">
               <div className="ql093-card-heading compact">
                 <div>
-                  <p className="ql093-eyebrow">Field boundary</p>
-                  <h3>Candidate evidence fields remain separated from private fields</h3>
+                  <p className="ql093-eyebrow">Next gated planning step</p>
+                  <h3>Future implementation planning remains blocked until separately reviewed</h3>
                 </div>
-                <span>{ql108DecisionPlanning.selectedBrandLabel}</span>
+                <span>{ql109DecisionPlanningReview.reviewOutcome.replaceAll('_', ' ')}</span>
               </div>
+              <ul className="ql093-check-list warning">
+                {ql109DecisionPlanningReview.nextImplementationPlanningGates.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </article>
+
+            <article className="ql093-card wide">
               <div className="ql093-grid">
                 <div>
-                  <p className="ql093-muted">Candidate ledger fields for later review</p>
-                  <ul className="ql093-check-list">{renderList(ql108DecisionPlanning.candidateLedgerFields)}</ul>
+                  <p className="ql093-muted">Candidate ledger fields for later planning only</p>
+                  <ul className="ql093-check-list">
+                    {ql109DecisionPlanningReview.candidateLedgerFields.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
                 </div>
                 <div>
-                  <p className="ql093-muted">Rejected private fields</p>
-                  <ul className="ql093-check-list warning">{renderList(ql108DecisionPlanning.rejectedPrivateFields)}</ul>
+                  <p className="ql093-muted">Rejected private fields remain excluded</p>
+                  <ul className="ql093-check-list warning">
+                    {ql109DecisionPlanningReview.rejectedPrivateFields.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </article>
 
             <article className="ql093-card wide">
-              <div className="ql093-card-heading">
+              <div className="ql093-card-heading compact">
                 <div>
-                  <p className="ql093-eyebrow">QL-107 retained input</p>
-                  <h3>Implementation draft review retained</h3>
+                  <p className="ql093-eyebrow">Retained boundary</p>
+                  <h3>No-write runtime locks</h3>
                 </div>
-                <span>{ql107DraftReview.build}</span>
+                <span>{ql109DecisionPlanningReview.nextQueuedBuild}</span>
               </div>
-              <div className="ql093-status-strip">
-                <div>
-                  <span>Review outcome</span>
-                  <strong>{ql107DraftReview.reviewOutcome.replaceAll('_', ' ')}</strong>
-                </div>
-                <div>
-                  <span>Permission</span>
-                  <strong>{ql107DraftReview.implementationPermission.replaceAll('_', ' ')}</strong>
-                </div>
-                <div>
-                  <span>Passed</span>
-                  <strong>{ql107DraftReview.reviewSummary.passed}</strong>
-                </div>
-                <div>
-                  <span>Next</span>
-                  <strong>{ql108DecisionPlanning.nextQueuedBuild}</strong>
-                </div>
-              </div>
+              <ul className="ql093-check-list warning">
+                {ql109DecisionPlanningReview.retainedNoWriteRuntime.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <ul className="ql093-check-list">
+                {ql109DecisionPlanningReview.retainedBoundaries.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
             </article>
           </div>
-
-          <p className="ql093-footer-note">
-            Last checked {new Date(ql108DecisionPlanning.generatedAt).toLocaleString()} · Source {ql108DecisionPlanning.sourceLabel} · Next queued {ql108DecisionPlanning.nextQueuedBuild}
-          </p>
         </div>
       )}
     </section>
