@@ -1,0 +1,30 @@
+{
+  "build": "QL-105",
+  "title": "Public Disabled Preview Safe Read Operator Acceptance Evidence Ledger Persistence Implementation Readiness Decision",
+  "decisionMode": "display_only_readiness_decision",
+  "decidedFromBuild": "QL-104",
+  "readinessDecision": "ready_to_draft_persistence_implementation_under_new_review",
+  "implementationPermission": "not_granted",
+  "ledgerWriteStatus": "planned_not_implemented",
+  "candidateSchemaStatus": "planned_not_implemented",
+  "endpointImplementationStatus": "not_implemented",
+  "browserWriteStatus": "disabled",
+  "allowedNextStep": "Draft a later display-only persistence implementation plan under a separate reviewed build.",
+  "forbiddenInQl105": [
+    "schema",
+    "migration",
+    "table",
+    "rpc",
+    "write_route",
+    "browser_submit",
+    "supabase_mutation",
+    "phone_sms_runtime",
+    "provider_callback",
+    "archive_write",
+    "consent_write",
+    "audit_write",
+    "retention_write",
+    "ai_delivery",
+    "live_pilot_runtime"
+  ]
+}
