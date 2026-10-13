@@ -16,6 +16,7 @@
   // QL-105: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence implementation readiness decision production promotion.
   // QL-106: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence implementation draft plan production promotion.
   // QL-107: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence implementation draft review production promotion.
+  // QL-107 retry: no-behavior Cloudflare Worker redeploy trigger after the first QL-107 main merge did not post a Worker check.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
