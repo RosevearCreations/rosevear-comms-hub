@@ -22,6 +22,7 @@
   // QL-110: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation planning readiness decision production promotion.
   // QL-110 queue refresh: no-behavior trigger after the first PR-head app-build remained queued and the PR-side Worker check failed before merge.
   // QL-111: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation plan draft production promotion.
+  // QL-112: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation plan draft review production promotion.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
