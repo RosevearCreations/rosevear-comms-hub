@@ -1,0 +1,47 @@
+{
+  "build": "QL-106",
+  "title": "Public Disabled Preview Safe Read Operator Acceptance Evidence Ledger Persistence Implementation Draft Plan",
+  "draftMode": "display_only_implementation_draft_plan",
+  "implementationPermission": "not_granted",
+  "ledgerWriteStatus": "planned_not_implemented",
+  "schemaStatus": "draft_only_not_created",
+  "routeStatus": "draft_only_not_created",
+  "browserWriteStatus": "disabled",
+  "allowedReadTargets": [
+    "public.ql_public_synthetic_conversations",
+    "public.ql_public_system_status"
+  ],
+  "candidateLedgerFields": [
+    "ledger_build",
+    "reviewed_build",
+    "selected_brand_label",
+    "active_source_label",
+    "review_outcome",
+    "conversation_row_count",
+    "system_status_row_count",
+    "rejected_row_count",
+    "runtime_lockout_count",
+    "checkpoint_summary",
+    "blocked_runtime_summary",
+    "manual_acceptance_reference",
+    "created_at"
+  ],
+  "rejectedPrivateFields": [
+    "customer_name",
+    "customer_phone",
+    "customer_email",
+    "provider_payload",
+    "raw_rejected_row",
+    "message_body",
+    "call_recording_url",
+    "sms_mms_content",
+    "archive_payload",
+    "audit_payload"
+  ],
+  "draftOnlyBoundaries": [
+    "No schema, migration, table, route, browser write, Supabase mutation, Phone/SMS runtime, callback, archive, consent, audit, retention, AI delivery, or live pilot runtime is created in QL-106.",
+    "A later draft-review build must review this plan before any implementation build is considered.",
+    "Any later implementation must be disabled by default, fail closed, and pass all production gates on main."
+  ],
+  "nextQueuedBuild": "QL-107 — Public Disabled Preview Safe Read Operator Acceptance Evidence Ledger Persistence Implementation Draft Review"
+}
