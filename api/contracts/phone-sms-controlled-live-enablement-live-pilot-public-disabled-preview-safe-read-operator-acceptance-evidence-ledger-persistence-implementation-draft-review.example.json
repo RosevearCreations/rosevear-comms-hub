@@ -1,0 +1,27 @@
+{
+  "build": "QL-107",
+  "title": "Public Disabled Preview Safe Read Operator Acceptance Evidence Ledger Persistence Implementation Draft Review",
+  "reviewMode": "display_only_implementation_draft_review",
+  "reviewedBuild": "QL-106",
+  "implementationPermission": "not_granted",
+  "reviewOutcome": "ready_for_bounded_implementation_decision_planning",
+  "approvedReadTargets": [
+    "public.ql_public_synthetic_conversations",
+    "public.ql_public_system_status"
+  ],
+  "rejectedRuntime": [
+    "schema_migrations_tables_routes_browser_writes",
+    "supabase_mutations_acceptance_saves",
+    "phone_sms_callbacks_provider_runtime",
+    "archives_consent_audit_retention_ai_live_pilot"
+  ],
+  "reviewedDraftAreas": [
+    "schema_draft",
+    "write_route_draft",
+    "browser_confirmation_draft",
+    "retention_cleanup_draft",
+    "rollback_disable_draft",
+    "owner_approval_production_gates"
+  ],
+  "nextQueuedBuild": "QL-108 — Public Disabled Preview Safe Read Operator Acceptance Evidence Ledger Persistence Bounded Implementation Decision Planning"
+}
