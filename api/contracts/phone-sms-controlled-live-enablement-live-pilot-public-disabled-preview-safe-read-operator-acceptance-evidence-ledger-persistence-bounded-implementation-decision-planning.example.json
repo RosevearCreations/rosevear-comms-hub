@@ -1,0 +1,36 @@
+{
+  "build": "QL-108",
+  "title": "Public Disabled Preview Safe Read Operator Acceptance Evidence Ledger Persistence Bounded Implementation Decision Planning",
+  "planningMode": "display_only_bounded_implementation_decision_planning",
+  "reviewedBuild": "QL-107",
+  "implementationPermission": "not_granted",
+  "boundedDecisionStatus": "planning_only_no_write_authority",
+  "implementationCandidateStatus": "not_approved",
+  "allowedNextStep": "A later QL-109 review may review QL-108 decision planning before any implementation-planning build is considered.",
+  "forbiddenInQl108": [
+    "schema",
+    "migration",
+    "table",
+    "view",
+    "policy",
+    "rpc",
+    "write_route",
+    "browser_submit",
+    "supabase_mutation",
+    "phone_sms_runtime",
+    "provider_callback",
+    "archive_write",
+    "consent_write",
+    "audit_write",
+    "retention_write",
+    "ai_delivery",
+    "live_pilot_runtime"
+  ],
+  "requiredDecisionEvidence": [
+    "QL-107 review outcome is ready for bounded implementation decision planning.",
+    "No QL-107 review or blocked item remains.",
+    "Candidate ledger fields remain separated from rejected private fields.",
+    "Rollback, purge, emergency disable, owner approval, and production gates are explicitly required before later implementation work.",
+    "Phone/SMS, callbacks, providers, live reads, archives, consent, audit/admin, retention writes, AI delivery, and live pilot runtime remain disabled."
+  ]
+}
