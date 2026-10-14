@@ -25,6 +25,7 @@
   // QL-112: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation plan draft review production promotion.
   // QL-112 queue refresh: no-behavior trigger after the first PR-head app-build remained queued before merge.
   // QL-113: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation owner decision planning production promotion.
+  // QL-113 queue refresh: no-behavior trigger after the first PR-head app-build remained queued before merge.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
