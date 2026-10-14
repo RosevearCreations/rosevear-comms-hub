@@ -30,6 +30,7 @@
   // QL-115: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation owner decision readiness decision production promotion.
   // QL-116: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation owner decision readiness decision review production promotion.
   // QL-117: no-behavior Cloudflare Worker redeploy trigger for owner decision packet review planning production promotion.
+  // QL-118: no-behavior Cloudflare Worker redeploy trigger for owner decision packet review planning review production promotion.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
