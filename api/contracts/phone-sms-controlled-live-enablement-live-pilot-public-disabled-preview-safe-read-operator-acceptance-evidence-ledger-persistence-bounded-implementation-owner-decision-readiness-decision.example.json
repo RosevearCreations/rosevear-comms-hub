@@ -1,0 +1,42 @@
+{
+  "build": "QL-115",
+  "title": "Public Disabled Preview Safe Read Operator Acceptance Evidence Ledger Persistence Bounded Implementation Owner Decision Readiness Decision",
+  "mode": "display_only_bounded_implementation_owner_decision_readiness_decision",
+  "ownerDecisionStatus": "readiness_decision_only_owner_not_approved",
+  "implementationPermission": "not_granted",
+  "implementationCandidateStatus": "not_approved",
+  "ledgerWriteStatus": "planned_not_implemented",
+  "candidateSchemaStatus": "drafted_not_implemented",
+  "endpointImplementationStatus": "not_implemented",
+  "browserWriteStatus": "disabled",
+  "readinessDecision": [
+    "ql114_review_ready_for_later_owner_decision_review",
+    "implementation_permission_still_not_granted",
+    "owner_decision_review_is_display_only",
+    "private_fields_remain_rejected",
+    "future_implementation_requires_separate_owner_approved_build"
+  ],
+  "nonGoals": [
+    "no_owner_approval_capture",
+    "no_owner_decision_storage",
+    "no_persistence",
+    "no_schema_or_migration",
+    "no_write_route",
+    "no_browser_submit",
+    "no_supabase_mutation",
+    "no_phone_sms_runtime",
+    "no_callback_runtime",
+    "no_archive_audit_retention_write",
+    "no_ai_delivery",
+    "no_live_pilot_runtime"
+  ],
+  "requiredFinalGates": [
+    "pr_head_app_build_success",
+    "main_app_build_success",
+    "main_build_disabled_preview_success",
+    "main_deploy_disabled_preview_success",
+    "main_supabase_preview_success",
+    "main_workers_builds_success"
+  ],
+  "nextQueuedBuild": "QL-116 — Public Disabled Preview Safe Read Operator Acceptance Evidence Ledger Persistence Bounded Implementation Owner Decision Readiness Decision Review"
+}
