@@ -1,3 +1,4 @@
+// QL-123 deployment verification: source-only marker to run the disabled Pages preview gate on the same final main commit.
 import { useEffect, useState } from 'react';
 import type { BrandId } from '../types';
 import { buildQl094SafeReadReviewEvidence } from './ql094SafeReadReviewEvidence';
