@@ -12,7 +12,7 @@ type ReadinessItem = {
 };
 
 export type Ql123FollowUpReadinessDecision =
-  Omit<Prior, 'build' | 'title' | 'reviewedBuild' | 'ownerDecisionStatus' | 'nextQueuedBuild' | 'reviewMode' | 'reviewOutcome' | 'reviewSummary' | 'reviewItems' | 'approvedReviewScope'> & {
+  Omit<Prior, 'build' | 'title' | 'reviewedBuild' | 'ownerDecisionStatus' | 'nextQueuedBuild' | 'reviewMode' | 'reviewOutcome' | 'reviewSummary' | 'reviewItems' | 'approvedReviewScope' | 'readinessMode' | 'readinessOutcome' | 'readinessSummary' | 'readinessItems' | 'approvedReadinessScope'> & {
     build: 'QL-123';
     title: string;
     reviewedBuild: 'QL-122';
