@@ -12,7 +12,7 @@ type ReviewItem = {
 };
 
 export type Ql122SafeReadOperatorAcceptanceEvidenceLedgerPersistenceBoundedImplementationOwnerDecisionPacketReviewFollowUpPlanningReview =
-  Omit<Prior, 'build' | 'title' | 'reviewedBuild' | 'ownerDecisionStatus' | 'nextQueuedBuild'> & {
+  Omit<Prior, 'build' | 'title' | 'reviewedBuild' | 'ownerDecisionStatus' | 'nextQueuedBuild' | 'reviewMode' | 'reviewOutcome' | 'reviewSummary' | 'reviewItems' | 'approvedReviewScope'> & {
     build: 'QL-122';
     title: string;
     reviewedBuild: 'QL-121';
