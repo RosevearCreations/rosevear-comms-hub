@@ -1,4 +1,5 @@
 // QL-126 deployment verification: source-only marker to run the disabled Pages preview gate on the same final main commit.
+// QL-126 CI queue refresh: unchanged disabled preview behavior; requeue exact PR-head verification.
 import { useEffect, useState } from 'react';
 import type { BrandId } from '../types';
 import { buildQl094SafeReadReviewEvidence } from './ql094SafeReadReviewEvidence';
