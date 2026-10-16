@@ -37,6 +37,7 @@
   // QL-125: no-behavior production Worker build marker; validate on exact main SHA alongside disabled Pages.
   // QL-126: nonfunctional production Worker verification marker for read-only handoff planning review.
   // QL-127: nonfunctional production Worker redeploy marker for the safe-read handoff readiness decision.
+  // QL-128: no-behavior Cloudflare Worker trigger for exact-main handoff readiness decision review verification.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
