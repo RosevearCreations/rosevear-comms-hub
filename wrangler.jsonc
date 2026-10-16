@@ -36,6 +36,7 @@
   // QL-124: no-runtime-change deploy trigger for independent readiness review main production verification.
   // QL-125: no-behavior production Worker build marker; validate on exact main SHA alongside disabled Pages.
   // QL-126: nonfunctional production Worker verification marker for read-only handoff planning review.
+  // QL-127: nonfunctional production Worker redeploy marker for the safe-read handoff readiness decision.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
