@@ -33,6 +33,7 @@
   // QL-118: no-behavior Cloudflare Worker redeploy trigger for owner decision packet review planning review production promotion.
   // QL-119: no-behavior Cloudflare Worker redeploy trigger for owner packet review readiness decision production promotion.
   // QL-123 release verification: no-behavior production Worker rebuild. Cloudflare dev-sync checks are independent of the successful main deployment.
+  // QL-124: no-runtime-change deploy trigger for independent readiness review main production verification.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
