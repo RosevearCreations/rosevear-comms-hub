@@ -49,6 +49,7 @@
   // QL-137: nonfunctional production Workers build trigger for safe-read follow-up planning.
   // QL-138: no-runtime-change Worker build marker to verify exact-main synthetic follow-up planning review.
   // QL-139: no-runtime-change Worker check for final-main synthetic follow-up readiness decision.
+  // QL-140: no-runtime-change Worker build marker for exact-final-main readiness decision review.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
