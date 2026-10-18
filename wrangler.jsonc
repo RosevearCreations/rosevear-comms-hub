@@ -44,6 +44,7 @@
   // QL-132: no-runtime-change production Workers verification marker for follow-up readiness review.
   // QL-133: no-runtime-change production Workers verification marker for read-only follow-up planning.
   // QL-134: no-runtime-change production Workers verification marker for follow-up planning review.
+  // QL-135: no-runtime-change Worker build marker for exact main follow-up planning readiness decision.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
