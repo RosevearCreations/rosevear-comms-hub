@@ -1,6 +1,6 @@
-// QL-138 deployment verification: source-only marker to run the disabled Pages preview gate on the same final main commit.
-// QL-138 promotion CI queue refresh: no change to synthetic safe-read runtime behavior.
-// QL-138 CI queue refresh: unchanged disabled preview behavior; requeue exact PR-head verification.
+// QL-139 deployment verification: source-only marker to run the disabled Pages preview gate on the same final main commit.
+// QL-139 promotion CI queue refresh: no change to synthetic safe-read runtime behavior.
+// QL-139 CI queue refresh: unchanged disabled preview behavior; requeue exact PR-head verification.
 import { useEffect, useState } from 'react';
 import type { BrandId } from '../types';
 import { buildQl094SafeReadReviewEvidence } from './ql094SafeReadReviewEvidence';
@@ -48,6 +48,7 @@ import { buildQl135FollowUpPlanningReviewReadinessDecision } from './ql135Follow
 import { buildQl136FollowUpPlanningReadinessDecisionReview } from './ql136FollowUpPlanningReadinessDecisionReview';
 import { buildQl137HandoffReadinessReviewFollowUpPlanning } from './ql137HandoffReadinessReviewFollowUpPlanning';
 import { buildQl138HandoffReadinessFollowUpPlanningReview } from './ql138HandoffReadinessFollowUpPlanningReview';
+import { buildQl139HandoffFollowUpPlanningReadinessDecision } from './ql139HandoffFollowUpPlanningReadinessDecision';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -95,7 +96,7 @@ export function Ql093SafeReadPreview() {
   const [selectedBrandId, setSelectedBrandId] = useState<BrandId>('rosiedazzlers');
   const [isLoading, setIsLoading] = useState(false);
   const [safeReadResult, setSafeReadResult] = useState<Ql093SafeReadResult>(() =>
-    getLocalFallbackSafeReadResult('rosiedazzlers', 'QL-138 initial local fallback before the async handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review check runs.')
+    getLocalFallbackSafeReadResult('rosiedazzlers', 'QL-139 initial local fallback before the async handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision check runs.')
   );
 
   const ql094Evidence = buildQl094SafeReadReviewEvidence(safeReadResult);
@@ -143,12 +144,13 @@ export function Ql093SafeReadPreview() {
   const ql136Review = buildQl136FollowUpPlanningReadinessDecisionReview(ql135Decision);
   const ql137Plan = buildQl137HandoffReadinessReviewFollowUpPlanning(ql136Review);
   const ql138Review = buildQl138HandoffReadinessFollowUpPlanningReview(ql137Plan);
+  const ql139Decision = buildQl139HandoffFollowUpPlanningReadinessDecision(ql138Review);
 
   useEffect(() => {
     let cancelled = false;
     setIsLoading(true);
     setSafeReadResult(
-      getLocalFallbackSafeReadResult(selectedBrandId, `QL-138 handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review safe-read check starting for ${getBrandLabel(selectedBrandId)}.`)
+      getLocalFallbackSafeReadResult(selectedBrandId, `QL-139 handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision safe-read check starting for ${getBrandLabel(selectedBrandId)}.`)
     );
 
     loadValidatedSyntheticSafeReads(selectedBrandId)
@@ -162,7 +164,7 @@ export function Ql093SafeReadPreview() {
           setSafeReadResult(
             getLocalFallbackSafeReadResult(
               selectedBrandId,
-              error instanceof Error ? error.message : 'QL-138 handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review check failed and stayed on local fallback.'
+              error instanceof Error ? error.message : 'QL-139 handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision check failed and stayed on local fallback.'
             )
           );
         }
@@ -179,26 +181,26 @@ export function Ql093SafeReadPreview() {
   }, [selectedBrandId]);
 
   return (
-    <section className={isOpen ? 'ql093-safe-read-preview open' : 'ql093-safe-read-preview'} aria-label="QL-138 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review">
+    <section className={isOpen ? 'ql093-safe-read-preview open' : 'ql093-safe-read-preview'} aria-label="QL-139 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision">
       <button className="ql093-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-138</small>
+        <small>QL-139</small>
       </button>
 
       {isOpen && (
-        <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-138 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review">
+        <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-139 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-138 Public disabled preview</p>
-              <h2>Handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review</h2>
+              <p className="ql093-eyebrow">QL-139 Public disabled preview</p>
+              <h2>Handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision</h2>
               <p>
-                QL-138 independently reviews QL-137's eight synthetic/public follow-up planning gates. Passing permits only a separately scoped planning readiness decision, not activation. It still
+                QL-139 independently checks QL-138's eight read-only planning-review gates and determines readiness for QL-140 separate review only. It still
                 does not store owner decisions, approve implementation, create schema, routes, browser submits, Supabase writes, Phone/SMS runtime,
                 callbacks, archives, audits, retention, AI delivery, or live pilot behavior.
               </p>
             </div>
-            <button className="ql093-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close QL-138 handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review">
+            <button className="ql093-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close QL-139 handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision">
               ×
             </button>
           </div>
@@ -222,7 +224,7 @@ export function Ql093SafeReadPreview() {
             </div>
           </div>
 
-          <div className="ql093-brand-row" aria-label="QL-138 brand filter">
+          <div className="ql093-brand-row" aria-label="QL-139 brand filter">
             {brandOptions.map((brand) => (
               <button className={selectedBrandId === brand.id ? 'active' : ''} key={brand.id} onClick={() => setSelectedBrandId(brand.id)} type="button">
                 <span>{brand.label}</span>
@@ -237,32 +239,32 @@ export function Ql093SafeReadPreview() {
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
                 <div>
-                  <p className="ql093-eyebrow">QL-138 handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review</p>
-                  <h3>Handoff follow-up planning review outcome</h3>
+                  <p className="ql093-eyebrow">QL-139 handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision</p>
+                  <h3>Handoff follow-up planning readiness decision outcome</h3>
                 </div>
-                <span>{ql138Review.build}</span>
+                <span>{ql139Decision.build}</span>
               </div>
               <div className="ql093-status-strip">
                 <div>
-                  <span>Review mode</span>
-                  <strong>{ql138Review.handoffFollowUpPlanningReviewMode.replaceAll('_', ' ')}</strong>
+                  <span>Readiness mode</span>
+                  <strong>{ql139Decision.handoffFollowUpReadinessMode.replaceAll('_', ' ')}</strong>
                 </div>
                 <div>
                   <span>Outcome</span>
-                  <strong>{ql138Review.handoffFollowUpPlanningReviewOutcome.replaceAll('_', ' ')}</strong>
+                  <strong>{ql139Decision.handoffFollowUpReadinessOutcome.replaceAll('_', ' ')}</strong>
                 </div>
                 <div>
                   <span>Owner decision</span>
-                  <strong>{ql138Review.ownerDecisionStatus.replaceAll('_', ' ')}</strong>
+                  <strong>{ql139Decision.ownerDecisionStatus.replaceAll('_', ' ')}</strong>
                 </div>
                 <div>
                   <span>Implementation</span>
-                  <strong>{ql138Review.implementationPermission.replaceAll('_', ' ')}</strong>
+                  <strong>{ql139Decision.implementationPermission.replaceAll('_', ' ')}</strong>
                 </div>
               </div>
-              <p className="ql093-notice">{ql138Review.ownerDecisionPacketReadinessWarning}</p>
+              <p className="ql093-notice">{ql139Decision.ownerDecisionPacketReadinessWarning}</p>
               <ul className="ql093-status-list">
-                {ql138Review.handoffFollowUpPlanningReviewItems.map((item) => (
+                {ql139Decision.handoffFollowUpReadinessItems.map((item) => (
                   <li key={item.id}>
                     <strong>{item.label}</strong>
                     <span className={evidencePillClass(item.status)}>{item.status}</span>
@@ -278,17 +280,17 @@ export function Ql093SafeReadPreview() {
               <div className="ql093-grid">
                 <div>
                   <p className="ql093-eyebrow">Read-only follow-up agenda</p>
-                  {renderList(ql138Review.handoffFollowUpPlanningReviewAgenda)}
+                  {renderList(ql139Decision.handoffFollowUpReadinessAgenda)}
                   <p className="ql093-muted">Prior QL-121 agenda</p>
-                  {renderList(ql138Review.followUpAgenda)}
+                  {renderList(ql139Decision.followUpAgenda)}
                 </div>
                 <div>
                   <p className="ql093-eyebrow">Decisions still deferred</p>
-                  {renderList(ql138Review.deferredOwnerDecisions, 'ql093-check-list warning')}
+                  {renderList(ql139Decision.deferredOwnerDecisions, 'ql093-check-list warning')}
                   <p className="ql093-muted">Outstanding owner requirements</p>
-                  {renderList(ql138Review.outstandingPlanningReviewApprovals, 'ql093-check-list warning')}
+                  {renderList(ql139Decision.deferredReadinessOwnerApprovals, 'ql093-check-list warning')}
                   <p className="ql093-muted">Handoff requirements</p>
-                  {renderList(ql138Review.handoffRequirements)}
+                  {renderList(ql139Decision.handoffRequirements)}
                 </div>
               </div>
             </article>
@@ -297,11 +299,11 @@ export function Ql093SafeReadPreview() {
               <div className="ql093-grid">
                 <div>
                   <p className="ql093-muted">Review scope</p>
-                  {renderList(ql138Review.handoffFollowUpPlanningReviewScope)}
+                  {renderList(ql139Decision.handoffFollowUpReadinessScope)}
                 </div>
                 <div>
                   <p className="ql093-muted">Owner decision review prerequisites</p>
-                  {renderList(ql138Review.ownerDecisionReviewPrerequisites, 'ql093-check-list warning')}
+                  {renderList(ql139Decision.ownerDecisionReviewPrerequisites, 'ql093-check-list warning')}
                 </div>
               </div>
             </article>
@@ -310,11 +312,11 @@ export function Ql093SafeReadPreview() {
               <div className="ql093-grid">
                 <div>
                   <p className="ql093-muted">Owner decision packet for review</p>
-                  {renderList(ql138Review.ownerDecisionPacketForReview)}
+                  {renderList(ql139Decision.ownerDecisionPacketForReview)}
                 </div>
                 <div>
                   <p className="ql093-muted">Owner approval still required</p>
-                  {renderList(ql138Review.ownerDecisionApprovalStillRequired, 'ql093-check-list warning')}
+                  {renderList(ql139Decision.ownerDecisionApprovalStillRequired, 'ql093-check-list warning')}
                 </div>
               </div>
             </article>
@@ -323,11 +325,11 @@ export function Ql093SafeReadPreview() {
               <div className="ql093-grid">
                 <div>
                   <p className="ql093-muted">Read-only owner packet review agenda</p>
-                  {renderList(ql138Review.reviewedPacketReviewAgenda)}
+                  {renderList(ql139Decision.reviewedPacketReviewAgenda)}
                 </div>
                 <div>
                   <p className="ql093-muted">Owner decision questions for later review</p>
-                  {renderList(ql138Review.ownerDecisionQuestionsForReview)}
+                  {renderList(ql139Decision.ownerDecisionQuestionsForReview)}
                 </div>
               </div>
             </article>
@@ -336,11 +338,11 @@ export function Ql093SafeReadPreview() {
               <div className="ql093-grid">
                 <div>
                   <p className="ql093-muted">Capture remains unauthorized</p>
-                  {renderList(ql138Review.captureStillNotAuthorized, 'ql093-check-list warning')}
+                  {renderList(ql139Decision.captureStillNotAuthorized, 'ql093-check-list warning')}
                 </div>
                 <div>
                   <p className="ql093-muted">Readiness scope</p>
-                  {renderList(ql138Review.handoffFollowUpPlanningReviewScope)}
+                  {renderList(ql139Decision.handoffFollowUpReadinessScope)}
                 </div>
               </div>
             </article>
@@ -349,11 +351,11 @@ export function Ql093SafeReadPreview() {
               <div className="ql093-grid">
                 <div>
                   <p className="ql093-muted">Corrections required before any capture proposal</p>
-                  {renderList(ql138Review.requiredCorrectionsBeforeOwnerDecisionCapture, 'ql093-check-list warning')}
+                  {renderList(ql139Decision.requiredCorrectionsBeforeOwnerDecisionCapture, 'ql093-check-list warning')}
                 </div>
                 <div>
                   <p className="ql093-muted">Readiness scope (display only)</p>
-                  {renderList(ql138Review.handoffFollowUpPlanningReviewScope)}
+                  {renderList(ql139Decision.handoffFollowUpReadinessScope)}
                 </div>
               </div>
             </article>
@@ -362,11 +364,11 @@ export function Ql093SafeReadPreview() {
               <div className="ql093-grid">
                 <div>
                   <p className="ql093-muted">Implementation remains prohibited</p>
-                  {renderList(ql138Review.implementationStillProhibited, 'ql093-check-list warning')}
+                  {renderList(ql139Decision.implementationStillProhibited, 'ql093-check-list warning')}
                 </div>
                 <div>
                   <p className="ql093-muted">Future implementation prerequisites</p>
-                  {renderList(ql138Review.futureImplementationPrerequisites)}
+                  {renderList(ql139Decision.futureImplementationPrerequisites)}
                 </div>
               </div>
             </article>
@@ -375,11 +377,11 @@ export function Ql093SafeReadPreview() {
               <div className="ql093-grid">
                 <div>
                   <p className="ql093-muted">Candidate fields remain planning-only</p>
-                  {renderList(ql138Review.candidateLedgerFields)}
+                  {renderList(ql139Decision.candidateLedgerFields)}
                 </div>
                 <div>
                   <p className="ql093-muted">Rejected private fields remain excluded</p>
-                  {renderList(ql138Review.rejectedPrivateFields, 'ql093-check-list warning')}
+                  {renderList(ql139Decision.rejectedPrivateFields, 'ql093-check-list warning')}
                 </div>
               </div>
             </article>
@@ -390,12 +392,12 @@ export function Ql093SafeReadPreview() {
                   <p className="ql093-eyebrow">Retained boundary</p>
                   <h3>No-write runtime locks</h3>
                 </div>
-                <span>{ql138Review.nextQueuedBuild}</span>
+                <span>{ql139Decision.nextQueuedBuild}</span>
               </div>
-              {renderList(ql138Review.verificationPlanReview)}
-              {renderList(ql138Review.retainedNoWriteRuntime, 'ql093-check-list warning')}
-              {renderList(ql138Review.retainedBoundaries)}
-              {renderList(ql138Review.stopConditions, 'ql093-check-list warning')}
+              {renderList(ql139Decision.verificationPlanReview)}
+              {renderList(ql139Decision.retainedNoWriteRuntime, 'ql093-check-list warning')}
+              {renderList(ql139Decision.retainedBoundaries)}
+              {renderList(ql139Decision.stopConditions, 'ql093-check-list warning')}
             </article>
           </div>
         </div>
