@@ -42,6 +42,7 @@
   // QL-130: no-runtime-change Cloudflare Worker trigger for exact main handoff follow-up planning review verification.
   // QL-131: no-runtime-change Worker build marker for exact main readiness decision verification.
   // QL-132: no-runtime-change production Workers verification marker for follow-up readiness review.
+  // QL-133: no-runtime-change production Workers verification marker for read-only follow-up planning.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
