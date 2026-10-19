@@ -51,6 +51,7 @@ import { buildQl138HandoffReadinessFollowUpPlanningReview } from './ql138Handoff
 import { buildQl139HandoffFollowUpPlanningReadinessDecision } from './ql139HandoffFollowUpPlanningReadinessDecision';
 import { buildQl140HandoffPlanningReadinessDecisionReview } from './ql140HandoffPlanningReadinessDecisionReview';
 import { buildQl141HandoffActionMatrix } from './ql141HandoffActionMatrix';
+import { designQl142SyntheticEvidenceExport } from './ql142SyntheticEvidenceExportDesign';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -149,6 +150,7 @@ export function Ql093SafeReadPreview() {
   const ql139Decision = buildQl139HandoffFollowUpPlanningReadinessDecision(ql138Review);
   const ql140Review = buildQl140HandoffPlanningReadinessDecisionReview(ql139Decision);
   const ql141Matrix = buildQl141HandoffActionMatrix(ql140Review);
+  const ql142Design = designQl142SyntheticEvidenceExport(ql141Matrix);
 
   useEffect(() => {
     let cancelled = false;
@@ -196,7 +198,7 @@ export function Ql093SafeReadPreview() {
         <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-140 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-141 Public disabled preview</p>
+              <p className="ql093-eyebrow">QL-142 Public disabled preview</p>
               <h2>Handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review</h2>
               <p>
                 QL-140 independently reviews QL-139's eight synthetic/public readiness gates. Passing permits separately scoped read-only follow-up planning only. It still
@@ -239,6 +241,24 @@ export function Ql093SafeReadPreview() {
 
           {safeReadResult.fallbackReason && <p className="ql093-notice">{safeReadResult.fallbackReason}</p>}
 
+          <div className="ql093-grid">
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading">
+                <div>
+                  <p className="ql093-eyebrow">QL-142 synthetic-only export design</p>
+                  <h3>Evidence schema proposal — no download or transmission</h3>
+                </div>
+                <span>{ql142Design.valid ? 'Design verified' : 'Blocked'}</span>
+              </div>
+              <p className="ql093-notice">{ql142Design.warning}</p>
+              <p>Proposed filename: {ql142Design.fileNameProposal}; format: {ql142Design.format}; schema version: {ql142Design.schemaVersion}.</p>
+              <p className="ql093-muted">Allowed synthetic fields</p>
+              {renderList(ql142Design.allowedFields)}
+              <p className="ql093-muted">Excluded private fields</p>
+              {renderList(ql142Design.excludedFields, 'ql093-check-list warning')}
+              <p className="ql093-muted">Synthetic evidence sections in proposed design: {ql142Design.preview.sections.length}. Export, download and transmission are disabled.</p>
+            </article>
+          </div>
           <div className="ql093-grid">
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
