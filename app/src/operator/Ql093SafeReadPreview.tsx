@@ -50,6 +50,7 @@ import { buildQl137HandoffReadinessReviewFollowUpPlanning } from './ql137Handoff
 import { buildQl138HandoffReadinessFollowUpPlanningReview } from './ql138HandoffReadinessFollowUpPlanningReview';
 import { buildQl139HandoffFollowUpPlanningReadinessDecision } from './ql139HandoffFollowUpPlanningReadinessDecision';
 import { buildQl140HandoffPlanningReadinessDecisionReview } from './ql140HandoffPlanningReadinessDecisionReview';
+import { buildQl141HandoffActionMatrix } from './ql141HandoffActionMatrix';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -147,6 +148,7 @@ export function Ql093SafeReadPreview() {
   const ql138Review = buildQl138HandoffReadinessFollowUpPlanningReview(ql137Plan);
   const ql139Decision = buildQl139HandoffFollowUpPlanningReadinessDecision(ql138Review);
   const ql140Review = buildQl140HandoffPlanningReadinessDecisionReview(ql139Decision);
+  const ql141Matrix = buildQl141HandoffActionMatrix(ql140Review);
 
   useEffect(() => {
     let cancelled = false;
@@ -187,14 +189,14 @@ export function Ql093SafeReadPreview() {
       <button className="ql093-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-140</small>
+        <small>QL-141</small>
       </button>
 
       {isOpen && (
         <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-140 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-140 Public disabled preview</p>
+              <p className="ql093-eyebrow">QL-141 Public disabled preview</p>
               <h2>Handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review</h2>
               <p>
                 QL-140 independently reviews QL-139's eight synthetic/public readiness gates. Passing permits separately scoped read-only follow-up planning only. It still
@@ -236,6 +238,30 @@ export function Ql093SafeReadPreview() {
           </div>
 
           {safeReadResult.fallbackReason && <p className="ql093-notice">{safeReadResult.fallbackReason}</p>}
+
+          <div className="ql093-grid">
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading">
+                <div>
+                  <p className="ql093-eyebrow">QL-141 synthetic handoff action matrix</p>
+                  <h3>Next actions and blockers</h3>
+                </div>
+                <span>{ql141Matrix.build}</span>
+              </div>
+              <p className="ql093-notice">{ql141Matrix.notice}</p>
+              <p>Source integrity: {ql141Matrix.sourceValid ? 'verified' : 'blocked'} — {ql141Matrix.ready} synthetic-review actions ready, {ql141Matrix.blocked} blocked.</p>
+              <ul className="ql093-status-list">
+                {ql141Matrix.items.map((item) => (
+                  <li key={item.id}>
+                    <strong>{item.area}: {item.action}</strong>
+                    <span className={evidencePillClass(item.status === 'ready_for_synthetic_review' ? 'pass' : 'blocked')}>{item.status.replaceAll('_', ' ')}</span>
+                    <p>{item.evidence}</p>
+                    <small>{item.restriction}</small>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
 
           <div className="ql093-grid">
             <article className="ql093-card wide">
