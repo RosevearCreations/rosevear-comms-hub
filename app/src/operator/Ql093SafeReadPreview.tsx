@@ -52,6 +52,7 @@ import { buildQl139HandoffFollowUpPlanningReadinessDecision } from './ql139Hando
 import { buildQl140HandoffPlanningReadinessDecisionReview } from './ql140HandoffPlanningReadinessDecisionReview';
 import { buildQl141HandoffActionMatrix } from './ql141HandoffActionMatrix';
 import { designQl142SyntheticEvidenceExport } from './ql142SyntheticEvidenceExportDesign';
+import { reviewQl143SyntheticSchema } from './ql143SyntheticSchemaReview';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -151,6 +152,7 @@ export function Ql093SafeReadPreview() {
   const ql140Review = buildQl140HandoffPlanningReadinessDecisionReview(ql139Decision);
   const ql141Matrix = buildQl141HandoffActionMatrix(ql140Review);
   const ql142Design = designQl142SyntheticEvidenceExport(ql141Matrix);
+  const ql143Review = reviewQl143SyntheticSchema(ql142Design);
 
   useEffect(() => {
     let cancelled = false;
@@ -198,7 +200,7 @@ export function Ql093SafeReadPreview() {
         <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-140 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-142 Public disabled preview</p>
+              <p className="ql093-eyebrow">QL-143 Public disabled preview</p>
               <h2>Handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review</h2>
               <p>
                 QL-140 independently reviews QL-139's eight synthetic/public readiness gates. Passing permits separately scoped read-only follow-up planning only. It still
@@ -241,6 +243,25 @@ export function Ql093SafeReadPreview() {
 
           {safeReadResult.fallbackReason && <p className="ql093-notice">{safeReadResult.fallbackReason}</p>}
 
+          <div className="ql093-grid">
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading">
+                <div><p className="ql093-eyebrow">QL-143 schema and redaction review</p><h3>Synthetic evidence safeguards</h3></div>
+                <span>{ql143Review.outcome.replaceAll('_', ' ')}</span>
+              </div>
+              <p className="ql093-notice">{ql143Review.warning}</p>
+              <p>{ql143Review.passed} passing / {ql143Review.blocked} blocked; no real evidence export available.</p>
+              <ul className="ql093-status-list">
+                {ql143Review.checks.map((check) => (
+                  <li key={check.id}>
+                    <strong>{check.id}</strong>
+                    <span className={evidencePillClass(check.status)}>{check.status}</span>
+                    <p>{check.explanation}</p>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
           <div className="ql093-grid">
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
