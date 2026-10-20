@@ -55,6 +55,7 @@ import { designQl142SyntheticEvidenceExport } from './ql142SyntheticEvidenceExpo
 import { reviewQl143SyntheticSchema } from './ql143SyntheticSchemaReview';
 import { designQl144CorrectiveExceptions } from './ql144CorrectiveExceptions';
 import { reviewQl145CorrectiveClosure } from './ql145CorrectiveClosureReview';
+import { recheckQl146SyntheticEvidence } from './ql146SyntheticEvidenceRecheck';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -157,6 +158,7 @@ export function Ql093SafeReadPreview() {
   const ql143Review = reviewQl143SyntheticSchema(ql142Design);
   const ql144Exceptions = designQl144CorrectiveExceptions(ql143Review);
   const ql145Closure = reviewQl145CorrectiveClosure(ql144Exceptions);
+  const ql146Recheck = recheckQl146SyntheticEvidence(ql142Design, ql143Review, ql144Exceptions, ql145Closure);
 
   useEffect(() => {
     let cancelled = false;
@@ -197,14 +199,14 @@ export function Ql093SafeReadPreview() {
       <button className="ql093-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-145</small>
+        <small>QL-146</small>
       </button>
 
       {isOpen && (
         <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-140 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-145 Public disabled preview</p>
+              <p className="ql093-eyebrow">QL-146 Public disabled preview</p>
               <h2>Handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review</h2>
               <p>
                 QL-140 independently reviews QL-139's eight synthetic/public readiness gates. Passing permits separately scoped read-only follow-up planning only. It still
@@ -247,6 +249,33 @@ export function Ql093SafeReadPreview() {
 
           {safeReadResult.fallbackReason && <p className="ql093-notice">{safeReadResult.fallbackReason}</p>}
 
+          <div className="ql093-grid">
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading">
+                <div>
+                  <p className="ql093-eyebrow">QL-146 independent synthetic recheck</p>
+                  <h3>Evidence replay and exception closure readiness</h3>
+                </div>
+                <span>{ql146Recheck.outcome.replaceAll('_', ' ')}</span>
+              </div>
+              <p className="ql093-notice">{ql146Recheck.warning}</p>
+              <p>Source integrity: {ql146Recheck.sourceIntegrityVerified ? 'verified' : 'blocked'}; {ql146Recheck.summary.passed} passing and {ql146Recheck.summary.blocked} blocked gates.</p>
+              <p className="ql093-muted">Rechecked QL-143 synthetic source: {ql146Recheck.sourceChecks.passed} passed, {ql146Recheck.sourceChecks.blocked} blocked.</p>
+              {ql146Recheck.unresolvedExceptionIds.length > 0 && (
+                <p className="ql093-muted">Unresolved exception holds: {ql146Recheck.unresolvedExceptionIds.join(', ')}</p>
+              )}
+              <ul className="ql093-status-list">
+                {ql146Recheck.gates.map((gate) => (
+                  <li key={gate.id}>
+                    <strong>{gate.label}</strong>
+                    <span className={evidencePillClass(gate.status)}>{gate.status}</span>
+                    <p>Evidence: {gate.evidence}</p>
+                    <small>If blocked: {gate.responseIfBlocked}</small>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
           <div className="ql093-grid">
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
