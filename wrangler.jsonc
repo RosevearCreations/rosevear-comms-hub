@@ -54,6 +54,7 @@
   // QL-142: exact-main Worker build marker; export and provider runtime unchanged.
   // QL-143: nonfunctional production Worker check marker; export remains disabled.
   // QL-144: nonfunctional Worker verification marker; live behavior remains disabled.
+  // QL-145: no-behavior Worker verification marker; live comms and exports stay disabled.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {

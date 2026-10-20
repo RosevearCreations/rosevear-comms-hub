@@ -54,6 +54,7 @@ import { buildQl141HandoffActionMatrix } from './ql141HandoffActionMatrix';
 import { designQl142SyntheticEvidenceExport } from './ql142SyntheticEvidenceExportDesign';
 import { reviewQl143SyntheticSchema } from './ql143SyntheticSchemaReview';
 import { designQl144CorrectiveExceptions } from './ql144CorrectiveExceptions';
+import { reviewQl145CorrectiveClosure } from './ql145CorrectiveClosureReview';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -155,6 +156,7 @@ export function Ql093SafeReadPreview() {
   const ql142Design = designQl142SyntheticEvidenceExport(ql141Matrix);
   const ql143Review = reviewQl143SyntheticSchema(ql142Design);
   const ql144Exceptions = designQl144CorrectiveExceptions(ql143Review);
+  const ql145Closure = reviewQl145CorrectiveClosure(ql144Exceptions);
 
   useEffect(() => {
     let cancelled = false;
@@ -195,14 +197,14 @@ export function Ql093SafeReadPreview() {
       <button className="ql093-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-141</small>
+        <small>QL-145</small>
       </button>
 
       {isOpen && (
         <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-140 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-144 Public disabled preview</p>
+              <p className="ql093-eyebrow">QL-145 Public disabled preview</p>
               <h2>Handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review</h2>
               <p>
                 QL-140 independently reviews QL-139's eight synthetic/public readiness gates. Passing permits separately scoped read-only follow-up planning only. It still
@@ -245,6 +247,32 @@ export function Ql093SafeReadPreview() {
 
           {safeReadResult.fallbackReason && <p className="ql093-notice">{safeReadResult.fallbackReason}</p>}
 
+          <div className="ql093-grid">
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading">
+                <div>
+                  <p className="ql093-eyebrow">QL-145 synthetic closure criteria</p>
+                  <h3>Corrective review and unresolved exceptions</h3>
+                </div>
+                <span>{ql145Closure.outcome.replaceAll('_', ' ')}</span>
+              </div>
+              <p className="ql093-notice">{ql145Closure.notice}</p>
+              <p>{ql145Closure.summary.passed} passing / {ql145Closure.summary.blocked} blocked criteria. No actual exception closure, owner approval or export.</p>
+              {ql145Closure.unresolvedExceptionIds.length > 0 && (
+                <p className="ql093-muted">Unresolved exceptions: {ql145Closure.unresolvedExceptionIds.join(', ')}</p>
+              )}
+              <ul className="ql093-status-list">
+                {ql145Closure.gates.map((gate) => (
+                  <li key={gate.id}>
+                    <strong>{gate.label}</strong>
+                    <span className={evidencePillClass(gate.status)}>{gate.status}</span>
+                    <p>Evidence required: {gate.evidenceRequired}</p>
+                    <small>Next: {gate.nextAction}</small>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
           <div className="ql093-grid">
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
