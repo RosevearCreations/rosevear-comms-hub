@@ -57,6 +57,7 @@ import { designQl144CorrectiveExceptions } from './ql144CorrectiveExceptions';
 import { reviewQl145CorrectiveClosure } from './ql145CorrectiveClosureReview';
 import { recheckQl146SyntheticEvidence } from './ql146SyntheticEvidenceRecheck';
 import { reviewQl147IndependentClosure } from './ql147IndependentClosureDecision';
+import { auditQl148SyntheticClosureTrace } from './ql148SyntheticClosureAuditTrace';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -161,6 +162,7 @@ export function Ql093SafeReadPreview() {
   const ql145Closure = reviewQl145CorrectiveClosure(ql144Exceptions);
   const ql146Recheck = recheckQl146SyntheticEvidence(ql142Design, ql143Review, ql144Exceptions, ql145Closure);
   const ql147Decision = reviewQl147IndependentClosure(ql146Recheck, ql145Closure);
+  const ql148Trace = auditQl148SyntheticClosureTrace(ql146Recheck, ql147Decision);
 
   useEffect(() => {
     let cancelled = false;
@@ -201,14 +203,14 @@ export function Ql093SafeReadPreview() {
       <button className="ql093-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-147</small>
+        <small>QL-148</small>
       </button>
 
       {isOpen && (
         <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-140 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-147 Public disabled preview</p>
+              <p className="ql093-eyebrow">QL-148 Public disabled preview</p>
               <h2>Handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review</h2>
               <p>
                 QL-140 independently reviews QL-139's eight synthetic/public readiness gates. Passing permits separately scoped read-only follow-up planning only. It still
@@ -251,6 +253,41 @@ export function Ql093SafeReadPreview() {
 
           {safeReadResult.fallbackReason && <p className="ql093-notice">{safeReadResult.fallbackReason}</p>}
 
+          <div className="ql093-grid">
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading">
+                <div>
+                  <p className="ql093-eyebrow">QL-148 synthetic audit trace</p>
+                  <h3>Fourteen in-memory checks and unresolved-hold verification</h3>
+                </div>
+                <span>{ql148Trace.outcome.replaceAll('_', ' ')}</span>
+              </div>
+              <p className="ql093-notice">{ql148Trace.notice}</p>
+              <p>{ql148Trace.checksPassed} integrity checks passing / {ql148Trace.checksBlocked} blocked; {ql148Trace.trace.length} trace entries. No durable audit log or real exception closure.</p>
+              {ql148Trace.outstandingHoldIds.length > 0 && (
+                <p className="ql093-muted">Evidence holds: {ql148Trace.outstandingHoldIds.join(', ')}</p>
+              )}
+              <ul className="ql093-status-list">
+                {ql148Trace.checks.map((check) => (
+                  <li key={check.id}>
+                    <strong>{check.id}</strong>
+                    <span className={evidencePillClass(check.status)}>{check.status}</span>
+                    <p>{check.rationale}</p>
+                  </li>
+                ))}
+              </ul>
+              <p className="ql093-muted">Public/synthetic review trace (not stored)</p>
+              <ul className="ql093-status-list">
+                {ql148Trace.trace.map((entry) => (
+                  <li key={entry.id}>
+                    <strong>{entry.sourceBuild}: {entry.gateId}</strong>
+                    <span className={evidencePillClass(entry.result)}>{entry.result}</span>
+                    <p>{entry.note}</p>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
           <div className="ql093-grid">
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
