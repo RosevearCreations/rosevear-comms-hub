@@ -58,6 +58,7 @@ import { reviewQl145CorrectiveClosure } from './ql145CorrectiveClosureReview';
 import { recheckQl146SyntheticEvidence } from './ql146SyntheticEvidenceRecheck';
 import { reviewQl147IndependentClosure } from './ql147IndependentClosureDecision';
 import { auditQl148SyntheticClosureTrace } from './ql148SyntheticClosureAuditTrace';
+import { reviewQl149IndependentAuditAcceptance } from './ql149SyntheticAuditAcceptance';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -163,6 +164,7 @@ export function Ql093SafeReadPreview() {
   const ql146Recheck = recheckQl146SyntheticEvidence(ql142Design, ql143Review, ql144Exceptions, ql145Closure);
   const ql147Decision = reviewQl147IndependentClosure(ql146Recheck, ql145Closure);
   const ql148Trace = auditQl148SyntheticClosureTrace(ql146Recheck, ql147Decision);
+  const ql149Review = reviewQl149IndependentAuditAcceptance(ql148Trace, ql146Recheck, ql147Decision);
 
   useEffect(() => {
     let cancelled = false;
@@ -203,14 +205,14 @@ export function Ql093SafeReadPreview() {
       <button className="ql093-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-148</small>
+        <small>QL-149</small>
       </button>
 
       {isOpen && (
         <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-140 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-148 Public disabled preview</p>
+              <p className="ql093-eyebrow">QL-149 Public disabled preview</p>
               <h2>Handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review</h2>
               <p>
                 QL-140 independently reviews QL-139's eight synthetic/public readiness gates. Passing permits separately scoped read-only follow-up planning only. It still
@@ -253,6 +255,32 @@ export function Ql093SafeReadPreview() {
 
           {safeReadResult.fallbackReason && <p className="ql093-notice">{safeReadResult.fallbackReason}</p>}
 
+          <div className="ql093-grid">
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading">
+                <div>
+                  <p className="ql093-eyebrow">QL-149 independent synthetic acceptance review</p>
+                  <h3>Trace integrity, exception holds and non-authorization</h3>
+                </div>
+                <span>{ql149Review.outcome.replaceAll('_', ' ')}</span>
+              </div>
+              <p className="ql093-notice">{ql149Review.notice}</p>
+              <p>{ql149Review.traceEntriesInspected} synthetic trace entries reviewed; {ql149Review.summary.passed} passing and {ql149Review.summary.blocked} blocked criteria. No acceptance or closure was recorded.</p>
+              {ql149Review.unresolvedHoldIds.length > 0 && (
+                <p className="ql093-muted">Unresolved hold identifiers: {ql149Review.unresolvedHoldIds.join(', ')}</p>
+              )}
+              <ul className="ql093-status-list">
+                {ql149Review.gates.map((gate) => (
+                  <li key={gate.id}>
+                    <strong>{gate.label}</strong>
+                    <span className={evidencePillClass(gate.status)}>{gate.status}</span>
+                    <p>Evidence: {gate.evidenceRequired}</p>
+                    <small>If blocked: {gate.followUpIfBlocked}</small>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
           <div className="ql093-grid">
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
