@@ -61,6 +61,7 @@ import { auditQl148SyntheticClosureTrace } from './ql148SyntheticClosureAuditTra
 import { reviewQl149IndependentAuditAcceptance } from './ql149SyntheticAuditAcceptance';
 import { recheckQl150AcceptanceContinuity } from './ql150SyntheticAcceptanceContinuity';
 import { reviewQl151IndependentFollowUps } from './ql151SyntheticHoldContinuityFollowup';
+import { recheckQl152SyntheticFollowUpEvidence } from './ql152SyntheticFollowupEvidenceRecheck';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -169,6 +170,7 @@ export function Ql093SafeReadPreview() {
   const ql149Review = reviewQl149IndependentAuditAcceptance(ql148Trace, ql146Recheck, ql147Decision);
   const ql150Recheck = recheckQl150AcceptanceContinuity(ql149Review, ql148Trace, ql146Recheck, ql147Decision);
   const ql151FollowUp = reviewQl151IndependentFollowUps(ql150Recheck, ql149Review);
+  const ql152Recheck = recheckQl152SyntheticFollowUpEvidence(ql151FollowUp, ql150Recheck, ql149Review);
 
   useEffect(() => {
     let cancelled = false;
@@ -209,14 +211,14 @@ export function Ql093SafeReadPreview() {
       <button className="ql093-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-151</small>
+        <small>QL-152</small>
       </button>
 
       {isOpen && (
         <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-140 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-151 Public disabled preview</p>
+              <p className="ql093-eyebrow">QL-152 Public disabled preview</p>
               <h2>Handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review</h2>
               <p>
                 QL-140 independently reviews QL-139's eight synthetic/public readiness gates. Passing permits separately scoped read-only follow-up planning only. It still
@@ -259,6 +261,46 @@ export function Ql093SafeReadPreview() {
 
           {safeReadResult.fallbackReason && <p className="ql093-notice">{safeReadResult.fallbackReason}</p>}
 
+          <div className="ql093-grid">
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading">
+                <div>
+                  <p className="ql093-eyebrow">QL-152 independent synthetic follow-up recheck</p>
+                  <h3>Evidence replay and hold resolution criteria</h3>
+                </div>
+                <span>{ql152Recheck.outcome.replaceAll('_', ' ')}</span>
+              </div>
+              <p className="ql093-notice">{ql152Recheck.notice}</p>
+              <p>Source integrity: {ql152Recheck.sourceReconciled ? 'verified' : 'blocked'}; {ql152Recheck.summary.passed} passing, {ql152Recheck.summary.blocked} blocked. No actual exception closure.</p>
+              {ql152Recheck.outstandingHoldIds.length > 0 && (
+                <p className="ql093-muted">Unresolved synthetic holds: {ql152Recheck.outstandingHoldIds.join(', ')}</p>
+              )}
+              <ul className="ql093-status-list">
+                {ql152Recheck.gates.map((gate) => (
+                  <li key={gate.id}>
+                    <strong>{gate.requirement}</strong>
+                    <span className={evidencePillClass(gate.status)}>{gate.status}</span>
+                    <p>{gate.id}</p>
+                    <small>If blocked: {gate.ifBlocked}</small>
+                  </li>
+                ))}
+              </ul>
+              {ql152Recheck.resolutionCandidates.length > 0 && (
+                <>
+                  <p className="ql093-muted">Resolution evidence requirements (not actions)</p>
+                  <ul className="ql093-status-list">
+                    {ql152Recheck.resolutionCandidates.map((item) => (
+                      <li key={item.id}>
+                        <strong>{item.id}</strong>
+                        <span className={evidencePillClass('blocked')}>Hold open</span>
+                        <p>{item.evidenceRequirement}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </article>
+          </div>
           <div className="ql093-grid">
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
