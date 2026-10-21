@@ -63,6 +63,7 @@
   // QL-151: Worker build verification marker; no changes to live service permissions.
   // QL-152: source-only Worker verification trigger; actual customer/communications runtime remains disabled.
   // QL-153: exact-main Worker verification marker; public/synthetic operator preview only.
+  // QL-154: source-only exact-main Worker verification; live communications stay disabled.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
