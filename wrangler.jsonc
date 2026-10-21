@@ -59,6 +59,7 @@
   // QL-147: source-only Worker verification marker; no production behavior changes.
   // QL-148: source-only Worker verification marker; audit remains in-memory and private data excluded.
   // QL-149: no-behavior Worker check marker; no real audit, acceptance or live export.
+  // QL-150: source-only Worker verification marker; no live service or data-path changes.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
