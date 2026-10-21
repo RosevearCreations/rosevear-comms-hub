@@ -64,6 +64,7 @@ import { reviewQl151IndependentFollowUps } from './ql151SyntheticHoldContinuityF
 import { recheckQl152SyntheticFollowUpEvidence } from './ql152SyntheticFollowupEvidenceRecheck';
 import { reviewQl153SyntheticResolutionReadiness } from './ql153SyntheticResolutionReadiness';
 import { reviewQl154IndependentDecisionContinuity } from './ql154SyntheticDecisionEvidenceContinuity';
+import { reviewQl155SyntheticAuditFollowUp } from './ql155SyntheticAuditReadiness';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -175,6 +176,7 @@ export function Ql093SafeReadPreview() {
   const ql152Recheck = recheckQl152SyntheticFollowUpEvidence(ql151FollowUp, ql150Recheck, ql149Review);
   const ql153Review = reviewQl153SyntheticResolutionReadiness(ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
   const ql154Review = reviewQl154IndependentDecisionContinuity(ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
+  const ql155Review = reviewQl155SyntheticAuditFollowUp(ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
 
   useEffect(() => {
     let cancelled = false;
@@ -215,14 +217,14 @@ export function Ql093SafeReadPreview() {
       <button className="ql093-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-154</small>
+        <small>QL-155</small>
       </button>
 
       {isOpen && (
         <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-140 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-154 Public disabled preview</p>
+              <p className="ql093-eyebrow">QL-155 Public disabled preview</p>
               <h2>Handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review</h2>
               <p>
                 QL-140 independently reviews QL-139's eight synthetic/public readiness gates. Passing permits separately scoped read-only follow-up planning only. It still
@@ -265,6 +267,46 @@ export function Ql093SafeReadPreview() {
 
           {safeReadResult.fallbackReason && <p className="ql093-notice">{safeReadResult.fallbackReason}</p>}
 
+          <div className="ql093-grid">
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading">
+                <div>
+                  <p className="ql093-eyebrow">QL-155 independent synthetic audit readiness</p>
+                  <h3>Decision follow-ups, evidence continuity and exception holds</h3>
+                </div>
+                <span>{ql155Review.outcome.replaceAll('_', ' ')}</span>
+              </div>
+              <p className="ql093-notice">{ql155Review.notice}</p>
+              <p>Source integrity: {ql155Review.sourceIntegrityVerified ? 'verified' : 'blocked'}; {ql155Review.summary.passed} passing and {ql155Review.summary.blocked} blocked. No real approval, closure, or durable audit recorded.</p>
+              {ql155Review.outstandingHoldIds.length > 0 && (
+                <p className="ql093-muted">Open synthetic holds: {ql155Review.outstandingHoldIds.join(', ')}</p>
+              )}
+              <ul className="ql093-status-list">
+                {ql155Review.checks.map((check) => (
+                  <li key={check.id}>
+                    <strong>{check.requirement}</strong>
+                    <span className={evidencePillClass(check.status)}>{check.status}</span>
+                    <p>{check.id}</p>
+                    <small>If blocked: {check.followUpIfBlocked}</small>
+                  </li>
+                ))}
+              </ul>
+              {ql155Review.followUpCandidates.length > 0 && (
+                <>
+                  <p className="ql093-muted">Synthetic evidence follow-ups — not executed or persisted</p>
+                  <ul className="ql093-status-list">
+                    {ql155Review.followUpCandidates.map((item) => (
+                      <li key={item.id}>
+                        <strong>{item.id}</strong>
+                        <span className={evidencePillClass('blocked')}>Hold open</span>
+                        <p>{item.evidenceRequired}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </article>
+          </div>
           <div className="ql093-grid">
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
