@@ -69,6 +69,7 @@
   // QL-157: nonfunctional exact-final-main Worker check marker; public preview remains synthetic only.
   // QL-158: nonfunctional final-main Workers verification marker; no real escalation or live communications.
   // QL-159: source-only final-main Worker verification marker; real escalation remains disabled.
+  // QL-160: source-only Workers build verification marker; live communications still disabled.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
