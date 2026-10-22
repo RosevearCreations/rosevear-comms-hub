@@ -67,6 +67,7 @@
   // QL-155: source-only Worker verification marker; no live communications or persistence enabled.
   // QL-156: source-only Worker check marker; operator preview remains synthetic and disabled.
   // QL-157: nonfunctional exact-final-main Worker check marker; public preview remains synthetic only.
+  // QL-158: nonfunctional final-main Workers verification marker; no real escalation or live communications.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
