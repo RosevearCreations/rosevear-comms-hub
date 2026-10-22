@@ -71,6 +71,7 @@ import { reviewQl158OwnerGovernanceEscalations } from './ql158GovernanceEvidence
 import { reviewQl159SyntheticEscalationContinuity } from './ql159SyntheticEscalationResolutionContinuity';
 import { reviewQl160IndependentResolutionDecisionEvidence } from './ql160IndependentResolutionDecisionEvidence';
 import { reviewQl161OwnerDecisionPrerequisites } from './ql161OwnerDecisionPrerequisites';
+import { reviewQl162OwnerCriteriaAndHoldContinuity } from './ql162OwnerCriteriaHoldContinuity';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -189,6 +190,7 @@ export function Ql093SafeReadPreview() {
   const ql159Review = reviewQl159SyntheticEscalationContinuity(ql158Review, ql157Review, ql156Review, ql155Review, ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
   const ql160Review = reviewQl160IndependentResolutionDecisionEvidence(ql159Review, ql158Review, ql157Review, ql156Review, ql155Review, ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
   const ql161Review = reviewQl161OwnerDecisionPrerequisites(ql160Review, ql159Review, ql158Review, ql157Review, ql156Review, ql155Review, ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
+  const ql162Review = reviewQl162OwnerCriteriaAndHoldContinuity(ql161Review, ql160Review, ql159Review, ql158Review, ql157Review, ql156Review, ql155Review, ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
 
   useEffect(() => {
     let cancelled = false;
@@ -229,14 +231,14 @@ export function Ql093SafeReadPreview() {
       <button className="ql093-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-161</small>
+        <small>QL-162</small>
       </button>
 
       {isOpen && (
         <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-140 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-161 Public disabled preview</p>
+              <p className="ql093-eyebrow">QL-162 Public disabled preview</p>
               <h2>Handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review</h2>
               <p>
                 QL-140 independently reviews QL-139's eight synthetic/public readiness gates. Passing permits separately scoped read-only follow-up planning only. It still
@@ -279,6 +281,57 @@ export function Ql093SafeReadPreview() {
 
           {safeReadResult.fallbackReason && <p className="ql093-notice">{safeReadResult.fallbackReason}</p>}
 
+          <div className="ql093-grid">
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading">
+                <div>
+                  <p className="ql093-eyebrow">QL-162 independent synthetic decision criteria</p>
+                  <h3>Owner prerequisites and exception hold continuity</h3>
+                </div>
+                <span>{ql162Review.outcome.replaceAll('_', ' ')}</span>
+              </div>
+              <p className="ql093-notice">{ql162Review.notice}</p>
+              <p>Source integrity: {ql162Review.sourceIntegrityVerified ? 'verified' : 'blocked'}. {ql162Review.summary.passed} checks passing, {ql162Review.summary.blocked} blocked. No real owner approval, escalations or closures.</p>
+              {ql162Review.outstandingHoldIds.length > 0 && (
+                <p className="ql093-muted">Unresolved synthetic hold IDs: {ql162Review.outstandingHoldIds.join(', ')}</p>
+              )}
+              <ul className="ql093-status-list">
+                {ql162Review.gates.map((check) => (
+                  <li key={check.id}>
+                    <strong>{check.requirement}</strong>
+                    <span className={evidencePillClass(check.status)}>{check.status}</span>
+                    <p>{check.id}</p>
+                    <small>If blocked: {check.ifBlocked}</small>
+                  </li>
+                ))}
+              </ul>
+              <p className="ql093-muted">Owner criteria — documented and unapproved</p>
+              <ul className="ql093-status-list">
+                {ql162Review.ownerCriteria.map((criterion) => (
+                  <li key={criterion.id}>
+                    <strong>{criterion.id}</strong>
+                    <span className={evidencePillClass('review')}>Not approved</span>
+                    <p>{criterion.requirement}</p>
+                  </li>
+                ))}
+              </ul>
+              {ql162Review.followUps.length > 0 && (
+                <>
+                  <p className="ql093-muted">Exception follow-ups — display only; every hold remains open</p>
+                  <ul className="ql093-status-list">
+                    {ql162Review.followUps.map((item) => (
+                      <li key={item.holdId}>
+                        <strong>{item.holdId}</strong>
+                        <span className={evidencePillClass('blocked')}>Hold open</span>
+                        <p>{item.requiredEvidence}</p>
+                        <small>Proposed route: {item.proposedRoute.replaceAll('_', ' ')}. Independent evidence and human decision pending; no closure authorized.</small>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </article>
+          </div>
           <div className="ql093-grid">
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
