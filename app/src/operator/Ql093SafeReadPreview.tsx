@@ -3,7 +3,7 @@
 // QL-140 CI queue refresh: unchanged disabled preview behavior; requeue exact PR-head verification.
 // QL-163 exact-main verification refresh: no change to the synthetic disabled preview behavior.
 // QL-163 joint Pages/Workers receipt: synthetic review and operational restrictions unchanged.
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import type { BrandId } from '../types';
 import { buildQl094SafeReadReviewEvidence } from './ql094SafeReadReviewEvidence';
 import { buildQl095SafeReadOperatorAcceptancePlan } from './ql095SafeReadOperatorAcceptance';
@@ -119,6 +119,11 @@ function renderList(items: readonly string[], className = 'ql093-check-list') {
 
 export function Ql093SafeReadPreview() {
   const [isOpen, setIsOpen] = useState(false);
+  const panelId = useId();
+  const headingId = `${panelId}-heading`;
+  const descriptionId = `${panelId}-description`;
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const [selectedBrandId, setSelectedBrandId] = useState<BrandId>('rosiedazzlers');
   const [isLoading, setIsLoading] = useState(false);
   const [safeReadResult, setSafeReadResult] = useState<Ql093SafeReadResult>(() =>
@@ -196,6 +201,17 @@ export function Ql093SafeReadPreview() {
   const ql162Review = reviewQl162OwnerCriteriaAndHoldContinuity(ql161Review, ql160Review, ql159Review, ql158Review, ql157Review, ql156Review, ql155Review, ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
   const ql163Review = reviewQl163ExceptionOwnerDecisionBoundary(ql162Review, ql161Review, ql160Review, ql159Review, ql158Review, ql157Review, ql156Review, ql155Review, ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
 
+  // This is a non-modal review panel. Move keyboard focus into it on opening,
+  // and return focus to its trigger when it closes (including Escape).
+  useEffect(() => {
+    if (isOpen) closeRef.current?.focus();
+  }, [isOpen]);
+
+  function closePanel() {
+    setIsOpen(false);
+    toggleRef.current?.focus();
+  }
+
   useEffect(() => {
     let cancelled = false;
     setIsLoading(true);
@@ -232,27 +248,57 @@ export function Ql093SafeReadPreview() {
 
   return (
     <section className={isOpen ? 'ql093-safe-read-preview open' : 'ql093-safe-read-preview'} aria-label="Synthetic safe reads and owner decision evidence review">
-      <button className="ql093-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
+      <button
+        ref={toggleRef}
+        className="ql093-toggle"
+        onClick={() => (isOpen ? closePanel() : setIsOpen(true))}
+        type="button"
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+        aria-haspopup="dialog"
+      >
         <span aria-hidden="true">✓</span>
         Safe reads
         <small>QL-163</small>
       </button>
 
       {isOpen && (
-        <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="Synthetic owner decision evidence and safe-read review">
+        <div
+          id={panelId}
+          className="ql093-panel"
+          role="dialog"
+          aria-modal="false"
+          aria-labelledby={headingId}
+          aria-describedby={descriptionId}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              event.stopPropagation();
+              closePanel();
+            }
+          }}
+        >
           <div className="ql093-header">
             <div>
               <p className="ql093-eyebrow">QL-163 Public disabled preview</p>
-              <h2>Synthetic evidence continuity and owner authorization boundary</h2>
-              <p>
+              <h2 id={headingId}>Synthetic evidence continuity and owner authorization boundary</h2>
+              <p id={descriptionId}>
                 QL-163 independently replays the QL-162 synthetic review, keeps exception holds visible, and checks evidence requirements for each proposed follow-up.
                 It does not record owner decisions, authorize actions, write data, enable Phone/SMS or AI delivery, or activate any live pilot.
               </p>
             </div>
-            <button className="ql093-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close synthetic review panel">
-              ×
+            <button ref={closeRef} className="ql093-close" onClick={closePanel} type="button" aria-label="Close synthetic review panel">
+              <span aria-hidden="true">×</span>
             </button>
           </div>
+
+          <nav className="ql093-jump-links" aria-label="Jump to synthetic review sections">
+            <a href={`#${panelId}-current`}>Current owner safeguards</a>
+            <a href={`#${panelId}-acceptance`}>Synthetic acceptance</a>
+            <a href={`#${panelId}-locks`}>Runtime safety locks</a>
+          </nav>
+          <p className="ql093-sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {isLoading ? 'Checking the selected synthetic brand.' : `${getBrandLabel(selectedBrandId)} ${formatSource(safeReadResult.source)}. Local fixture pin ${safeReadResult.fixtureProvenance.verified ? 'verified' : 'drift blocked'}.`}
+          </p>
 
           <div className="ql093-status-strip">
             <div>
@@ -281,9 +327,9 @@ export function Ql093SafeReadPreview() {
             QL-165 synthetic fixture provenance: {safeReadResult.fixtureProvenance.setVersion} · schema {safeReadResult.fixtureProvenance.schemaVersion} · {safeReadResult.fixtureProvenance.fixtureCount} records. This confirms versioned local samples only, not real evidence or owner approval.
           </p>
 
-          <div className="ql093-brand-row" aria-label="Synthetic brand filter">
+          <div className="ql093-brand-row" role="group" aria-label="Synthetic brand filter">
             {brandOptions.map((brand) => (
-              <button className={selectedBrandId === brand.id ? 'active' : ''} key={brand.id} onClick={() => setSelectedBrandId(brand.id)} type="button">
+              <button className={selectedBrandId === brand.id ? 'active' : ''} aria-pressed={selectedBrandId === brand.id} key={brand.id} onClick={() => setSelectedBrandId(brand.id)} type="button">
                 <span>{brand.label}</span>
                 <small>{brand.help}</small>
               </button>
@@ -297,7 +343,7 @@ export function Ql093SafeReadPreview() {
               <div className="ql093-card-heading">
                 <div>
                   <p className="ql093-eyebrow">QL-163 independent synthetic exception governance</p>
-                  <h3>Owner decision evidence and follow-up authorization</h3>
+                  <h3 id={`${panelId}-current`}>Owner decision evidence and follow-up authorization</h3>
                 </div>
                 <span>{ql163Review.outcome.replaceAll('_', ' ')}</span>
               </div>
@@ -834,7 +880,7 @@ export function Ql093SafeReadPreview() {
               <div className="ql093-card-heading">
                 <div>
                   <p className="ql093-eyebrow">QL-151 independent hold-continuity review</p>
-                  <h3>Synthetic acceptance and proposed exception follow-ups</h3>
+                  <h3 id={`${panelId}-acceptance`}>Synthetic acceptance and proposed exception follow-ups</h3>
                 </div>
                 <span>{ql151FollowUp.outcome.replaceAll('_', ' ')}</span>
               </div>
@@ -1270,7 +1316,7 @@ export function Ql093SafeReadPreview() {
               <div className="ql093-card-heading compact">
                 <div>
                   <p className="ql093-eyebrow">Retained boundary</p>
-                  <h3>No-write runtime locks</h3>
+                  <h3 id={`${panelId}-locks`}>No-write runtime locks</h3>
                 </div>
                 <span>{ql140Review.nextQueuedBuild}</span>
               </div>
