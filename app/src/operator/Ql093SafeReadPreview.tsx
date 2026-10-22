@@ -72,6 +72,7 @@ import { reviewQl159SyntheticEscalationContinuity } from './ql159SyntheticEscala
 import { reviewQl160IndependentResolutionDecisionEvidence } from './ql160IndependentResolutionDecisionEvidence';
 import { reviewQl161OwnerDecisionPrerequisites } from './ql161OwnerDecisionPrerequisites';
 import { reviewQl162OwnerCriteriaAndHoldContinuity } from './ql162OwnerCriteriaHoldContinuity';
+import { reviewQl163ExceptionOwnerDecisionBoundary } from './ql163ExceptionOwnerDecisionBoundary';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -191,6 +192,7 @@ export function Ql093SafeReadPreview() {
   const ql160Review = reviewQl160IndependentResolutionDecisionEvidence(ql159Review, ql158Review, ql157Review, ql156Review, ql155Review, ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
   const ql161Review = reviewQl161OwnerDecisionPrerequisites(ql160Review, ql159Review, ql158Review, ql157Review, ql156Review, ql155Review, ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
   const ql162Review = reviewQl162OwnerCriteriaAndHoldContinuity(ql161Review, ql160Review, ql159Review, ql158Review, ql157Review, ql156Review, ql155Review, ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
+  const ql163Review = reviewQl163ExceptionOwnerDecisionBoundary(ql162Review, ql161Review, ql160Review, ql159Review, ql158Review, ql157Review, ql156Review, ql155Review, ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
 
   useEffect(() => {
     let cancelled = false;
@@ -227,26 +229,25 @@ export function Ql093SafeReadPreview() {
   }, [selectedBrandId]);
 
   return (
-    <section className={isOpen ? 'ql093-safe-read-preview open' : 'ql093-safe-read-preview'} aria-label="QL-140 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review">
+    <section className={isOpen ? 'ql093-safe-read-preview open' : 'ql093-safe-read-preview'} aria-label="Synthetic safe reads and owner decision evidence review">
       <button className="ql093-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-162</small>
+        <small>QL-163</small>
       </button>
 
       {isOpen && (
-        <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="QL-140 safe-read handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review">
+        <div className="ql093-panel" role="dialog" aria-modal="false" aria-label="Synthetic owner decision evidence and safe-read review">
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-162 Public disabled preview</p>
-              <h2>Handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review</h2>
+              <p className="ql093-eyebrow">QL-163 Public disabled preview</p>
+              <h2>Synthetic evidence continuity and owner authorization boundary</h2>
               <p>
-                QL-140 independently reviews QL-139's eight synthetic/public readiness gates. Passing permits separately scoped read-only follow-up planning only. It still
-                does not store owner decisions, approve implementation, create schema, routes, browser submits, Supabase writes, Phone/SMS runtime,
-                callbacks, archives, audits, retention, AI delivery, or live pilot behavior.
+                QL-163 independently replays the QL-162 synthetic review, keeps exception holds visible, and checks evidence requirements for each proposed follow-up.
+                It does not record owner decisions, authorize actions, write data, enable Phone/SMS or AI delivery, or activate any live pilot.
               </p>
             </div>
-            <button className="ql093-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close QL-140 handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review">
+            <button className="ql093-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close synthetic review panel">
               ×
             </button>
           </div>
@@ -270,7 +271,7 @@ export function Ql093SafeReadPreview() {
             </div>
           </div>
 
-          <div className="ql093-brand-row" aria-label="QL-140 brand filter">
+          <div className="ql093-brand-row" aria-label="Synthetic brand filter">
             {brandOptions.map((brand) => (
               <button className={selectedBrandId === brand.id ? 'active' : ''} key={brand.id} onClick={() => setSelectedBrandId(brand.id)} type="button">
                 <span>{brand.label}</span>
@@ -281,6 +282,57 @@ export function Ql093SafeReadPreview() {
 
           {safeReadResult.fallbackReason && <p className="ql093-notice">{safeReadResult.fallbackReason}</p>}
 
+          <div className="ql093-grid">
+            <article className="ql093-card wide">
+              <div className="ql093-card-heading">
+                <div>
+                  <p className="ql093-eyebrow">QL-163 independent synthetic exception governance</p>
+                  <h3>Owner decision evidence and follow-up authorization</h3>
+                </div>
+                <span>{ql163Review.outcome.replaceAll('_', ' ')}</span>
+              </div>
+              <p className="ql093-notice">{ql163Review.notice}</p>
+              <p>Source integrity: {ql163Review.sourceIntegrityVerified ? 'verified' : 'blocked'}. {ql163Review.summary.passed} checks passing, {ql163Review.summary.blocked} blocked. Follow-up authorization: <strong>not granted</strong>.</p>
+              {ql163Review.outstandingHoldIds.length > 0 && (
+                <p className="ql093-muted">Open synthetic holds: {ql163Review.outstandingHoldIds.join(', ')}</p>
+              )}
+              <ul className="ql093-status-list">
+                {ql163Review.gates.map((check) => (
+                  <li key={check.id}>
+                    <strong>{check.requirement}</strong>
+                    <span className={evidencePillClass(check.status)}>{check.status}</span>
+                    <p>{check.id}</p>
+                    <small>If blocked: {check.ifBlocked}</small>
+                  </li>
+                ))}
+              </ul>
+              <p className="ql093-muted">Owner evidence requirements — none verified or signed</p>
+              <ul className="ql093-status-list">
+                {ql163Review.ownerEvidenceRequirements.map((item) => (
+                  <li key={item.id}>
+                    <strong>{item.id}</strong>
+                    <span className={evidencePillClass('review')}>No authorization</span>
+                    <p>{item.requirement}</p>
+                  </li>
+                ))}
+              </ul>
+              {ql163Review.followUps.length > 0 && (
+                <>
+                  <p className="ql093-muted">Proposed follow-ups — held, never dispatched</p>
+                  <ul className="ql093-status-list">
+                    {ql163Review.followUps.map((item) => (
+                      <li key={item.holdId}>
+                        <strong>{item.holdId}</strong>
+                        <span className={evidencePillClass('blocked')}>Authorization held</span>
+                        <p>{item.requiredEvidence}</p>
+                        <small>Route: {item.proposedRoute.replaceAll('_', ' ')}. Origin: {item.provenance}. Separate evidence and human decision required; no dispatch or closure.</small>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </article>
+          </div>
           <div className="ql093-grid">
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
