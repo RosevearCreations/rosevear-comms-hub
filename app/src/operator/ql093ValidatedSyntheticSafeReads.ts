@@ -3,8 +3,6 @@ import {
   loadSyntheticConversationRows,
   loadSyntheticSystemStatusRows,
   type SupabaseReadOnlyClientStatus,
-  type SyntheticConversationReadRow,
-  type SyntheticSystemStatusReadRow
 } from '../integrations/supabaseReadOnlyClient';
 import type { BrandId } from '../types';
 import {
@@ -164,7 +162,11 @@ function mapBrandId(rawBrandId: string): BrandId | null {
   return approvedBrandAliases[rawBrandId.trim().toLowerCase()] ?? null;
 }
 
-function hasOnlyAllowedKeys(row: Record<string, unknown>, allowedKeys: readonly string[]): string | null {
+function hasOnlyAllowedKeys(row: unknown, allowedKeys: readonly string[]): string | null {
+  if (!row || typeof row !== 'object' || Array.isArray(row)) {
+    return 'row is not a plain synthetic record';
+  }
+
   const unexpectedKey = Object.keys(row).find((key) => !allowedKeys.includes(key));
 
   if (unexpectedKey) {
@@ -231,16 +233,16 @@ function requireClean(result: CleanStringResult): string | null {
 }
 
 function validateConversationRow(
-  row: SyntheticConversationReadRow,
+  row: unknown,
   selectedBrandId: BrandId
 ): { ok: true; value: Ql093SyntheticConversationPreview } | { ok: false; reason: string } {
-  const raw = row as unknown as Record<string, unknown>;
-  const keyFailure = hasOnlyAllowedKeys(raw, approvedConversationKeys);
+  const keyFailure = hasOnlyAllowedKeys(row, approvedConversationKeys);
 
   if (keyFailure) {
     return { ok: false, reason: keyFailure };
   }
 
+  const raw = row as Record<string, unknown>;
   const id = cleanSyntheticId(raw.id, 'conversation id');
   const brandRaw = cleanString(raw.brand_id, 'brand id', 40);
   const brandName = cleanString(raw.brand_name, 'brand name', 80);
@@ -269,6 +271,11 @@ function validateConversationRow(
     return { ok: false, reason: `brand id "${brandRaw.value}" does not match selected preview brand` };
   }
 
+  const expectedBrandName = brandId === 'rosiedazzlers' ? 'Rosie Dazzlers' : 'Devil n Dove';
+  if (brandName.value !== expectedBrandName) {
+    return { ok: false, reason: 'brand name does not match the approved brand identity' };
+  }
+
   const unsafeStatus = unsafeStatusTokens.find((token) => status.value.toLowerCase().includes(token));
 
   if (unsafeStatus) {
@@ -292,15 +299,15 @@ function validateConversationRow(
 }
 
 function validateSystemStatusRow(
-  row: SyntheticSystemStatusReadRow
+  row: unknown
 ): { ok: true; value: Ql093SyntheticSystemStatusPreview } | { ok: false; reason: string } {
-  const raw = row as unknown as Record<string, unknown>;
-  const keyFailure = hasOnlyAllowedKeys(raw, approvedSystemStatusKeys);
+  const keyFailure = hasOnlyAllowedKeys(row, approvedSystemStatusKeys);
 
   if (keyFailure) {
     return { ok: false, reason: keyFailure };
   }
 
+  const raw = row as Record<string, unknown>;
   const id = cleanSyntheticId(raw.id, 'system status id');
   const label = cleanString(raw.label, 'label', 100);
   const status = cleanString(raw.status, 'status', 20);
@@ -393,75 +400,89 @@ export function getLocalFallbackSafeReadResult(selectedBrandId: BrandId, fallbac
   });
 }
 
-export async function loadValidatedSyntheticSafeReads(selectedBrandId: BrandId): Promise<Ql093SafeReadResult> {
-  const state = getSupabaseReadOnlyClientState();
+export type Ql167SyntheticReadBatch = {
+  source: 'supabase' | 'fallback';
+  rows: unknown;
+  error?: string;
+};
 
-  if (!state.canCreateClient) {
-    return getLocalFallbackSafeReadResult(selectedBrandId, state.message);
-  }
-
+// The entire affected dataset falls back when one remote row is untrusted.
+// A valid row must never mask a cross-brand, duplicate, or malformed neighbour.
+export function reconcileQl167SyntheticReadBatches(
+  selectedBrandId: BrandId,
+  conversationRead: Ql167SyntheticReadBatch,
+  systemStatusRead: Ql167SyntheticReadBatch
+): Ql093SafeReadResult {
   const rejectedRows: string[] = [];
   const fallbackReasons: string[] = [];
-
-  const conversationRead = await loadSyntheticConversationRows().catch((error: unknown) => ({
-    source: 'fallback' as const,
-    rows: [] as SyntheticConversationReadRow[],
-    error: error instanceof Error ? error.message : 'Synthetic conversation read failed.'
-  }));
-
-  const systemStatusRead = await loadSyntheticSystemStatusRows().catch((error: unknown) => ({
-    source: 'fallback' as const,
-    rows: [] as SyntheticSystemStatusReadRow[],
-    error: error instanceof Error ? error.message : 'Synthetic system status read failed.'
-  }));
 
   let conversationRows: readonly Ql093SyntheticConversationPreview[] = fallbackRowsForBrand(selectedBrandId);
   let systemStatusRows: readonly Ql093SyntheticSystemStatusPreview[] = localFallbackSystemStatus;
   let conversationSource: Ql093PreviewRowSource = 'local_fallback';
   let systemSource: Ql093PreviewRowSource = 'local_fallback';
 
-  if (conversationRead.source === 'supabase') {
-    const validated = conversationRead.rows.flatMap((row) => {
+  if (conversationRead.source === 'supabase' && Array.isArray(conversationRead.rows) && conversationRead.rows.length <= 100) {
+    const seen = new Set<string>();
+    const validated = conversationRead.rows.flatMap((row: unknown) => {
       const result = validateConversationRow(row, selectedBrandId);
 
       if (!result.ok) {
-        rejectedRows.push(`conversation:${typeof row?.id === 'string' ? row.id : 'unknown'}:${result.reason}`);
+        rejectedRows.push(`conversation:rejected:${result.reason}`);
         return [];
       }
+
+      if (seen.has(result.value.id)) {
+        rejectedRows.push('conversation:rejected:duplicate synthetic id');
+        return [];
+      }
+      seen.add(result.value.id);
 
       return [result.value];
     });
 
-    if (validated.length > 0) {
+    if (validated.length > 0 && rejectedRows.length === 0) {
       conversationRows = validated;
       conversationSource = 'validated_supabase';
     } else {
-      fallbackReasons.push('No Supabase synthetic conversation rows passed QL-093 validation for the selected brand.');
+      fallbackReasons.push('QL-167 rejected the entire untrusted or empty synthetic conversation batch for the selected brand.');
     }
   } else {
-    fallbackReasons.push(conversationRead.error ?? 'Supabase synthetic conversation read returned fallback.');
+    fallbackReasons.push(conversationRead.source === 'supabase'
+      ? 'QL-167 rejected a malformed or oversized synthetic conversation response.'
+      : conversationRead.error ?? 'Supabase synthetic conversation read returned fallback.');
   }
 
-  if (systemStatusRead.source === 'supabase') {
-    const validated = systemStatusRead.rows.flatMap((row) => {
+  if (systemStatusRead.source === 'supabase' && Array.isArray(systemStatusRead.rows) && systemStatusRead.rows.length <= 100) {
+    const systemRejections: string[] = [];
+    const seen = new Set<string>();
+    const validated = systemStatusRead.rows.flatMap((row: unknown) => {
       const result = validateSystemStatusRow(row);
 
       if (!result.ok) {
-        rejectedRows.push(`system:${typeof row?.id === 'string' ? row.id : 'unknown'}:${result.reason}`);
+        systemRejections.push(`system:rejected:${result.reason}`);
         return [];
       }
 
+      if (seen.has(result.value.id)) {
+        systemRejections.push('system:rejected:duplicate synthetic id');
+        return [];
+      }
+      seen.add(result.value.id);
+
       return [result.value];
     });
+    rejectedRows.push(...systemRejections);
 
-    if (validated.length > 0) {
+    if (validated.length > 0 && systemRejections.length === 0) {
       systemStatusRows = validated;
       systemSource = 'validated_supabase';
     } else {
-      fallbackReasons.push('No Supabase system status rows passed QL-093 validation.');
+      fallbackReasons.push('QL-167 rejected the entire untrusted or empty synthetic system status batch.');
     }
   } else {
-    fallbackReasons.push(systemStatusRead.error ?? 'Supabase system status read returned fallback.');
+    fallbackReasons.push(systemStatusRead.source === 'supabase'
+      ? 'QL-167 rejected a malformed or oversized synthetic system status response.'
+      : systemStatusRead.error ?? 'Supabase system status read returned fallback.');
   }
 
   const source: Ql093ReadSource =
@@ -479,6 +500,27 @@ export async function loadValidatedSyntheticSafeReads(selectedBrandId: BrandId):
     rejectedRows: rejectedRows.slice(0, 12),
     fallbackReason: fallbackReasons.length > 0 ? fallbackReasons.join(' ') : undefined
   });
+}
+
+export async function loadValidatedSyntheticSafeReads(selectedBrandId: BrandId): Promise<Ql093SafeReadResult> {
+  const state = getSupabaseReadOnlyClientState();
+
+  if (!state.canCreateClient) {
+    return getLocalFallbackSafeReadResult(selectedBrandId, state.message);
+  }
+
+  const conversationRead = await loadSyntheticConversationRows(selectedBrandId).catch((error: unknown) => ({
+    source: 'fallback' as const,
+    rows: [],
+    error: error instanceof Error ? error.message : 'Synthetic conversation read failed.'
+  }));
+  const systemStatusRead = await loadSyntheticSystemStatusRows().catch((error: unknown) => ({
+    source: 'fallback' as const,
+    rows: [],
+    error: error instanceof Error ? error.message : 'Synthetic system status read failed.'
+  }));
+
+  return reconcileQl167SyntheticReadBatches(selectedBrandId, conversationRead, systemStatusRead);
 }
 
 export function getQl093SafeReadImplementationSummary(): string {
