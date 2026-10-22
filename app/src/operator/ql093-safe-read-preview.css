@@ -374,6 +374,40 @@
   color: #9a3412;
 }
 
+/* QL-168 review ordering is static evidence display, not an action queue. */
+.ql168-lanes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.ql168-lane {
+  min-width: 0;
+  padding: 14px;
+  background: #f0fdfa;
+  border: 1px solid #99f6e4;
+  border-radius: 16px;
+  overflow-wrap: anywhere;
+}
+
+.ql168-lane h4,
+.ql093-card > h4 {
+  margin: 12px 0;
+  color: #134e4a;
+  overflow-wrap: anywhere;
+}
+
+.ql168-lane h4 span {
+  font-weight: normal;
+}
+
+@media (max-width: 760px) {
+  .ql168-lanes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @media (max-width: 900px) {
   .ql093-status-strip,
   .ql093-brand-row,
