@@ -2,11 +2,11 @@
 
 This file tracks the completed Quo-lite build path and the next queued build.
 
-## Current queue (after QL-163)
+## Current queue (after QL-165)
 
 The previous sequential queue ended at QL-163. A new seven-build batch has been scoped in [QL-164–170 Required Build Queue](QL-164-170-REQUIRED_BUILD_QUEUE.md).
 
-QL-164 adds automated synthetic owner-authorization regression tests. After its promotion, the remaining scoped builds are **QL-165 through QL-170 (six)**. No build in this batch grants live communications or owner approval.
+QL-164 added automated synthetic owner-authorization regression tests. QL-165 pins six local synthetic fixtures to reviewed identities and content fingerprints, blocking drift from the preview. After QL-165 promotion, the remaining scoped builds are **QL-166 through QL-170 (five)**. No build in this batch grants live communications or owner approval.
 
 ## Completed builds
 
