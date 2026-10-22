@@ -75,6 +75,7 @@ import { reviewQl160IndependentResolutionDecisionEvidence } from './ql160Indepen
 import { reviewQl161OwnerDecisionPrerequisites } from './ql161OwnerDecisionPrerequisites';
 import { reviewQl162OwnerCriteriaAndHoldContinuity } from './ql162OwnerCriteriaHoldContinuity';
 import { reviewQl163ExceptionOwnerDecisionBoundary } from './ql163ExceptionOwnerDecisionBoundary';
+import { summarizeQl168UnresolvedHolds } from './ql168UnresolvedHoldPrioritization';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -200,6 +201,7 @@ export function Ql093SafeReadPreview() {
   const ql161Review = reviewQl161OwnerDecisionPrerequisites(ql160Review, ql159Review, ql158Review, ql157Review, ql156Review, ql155Review, ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
   const ql162Review = reviewQl162OwnerCriteriaAndHoldContinuity(ql161Review, ql160Review, ql159Review, ql158Review, ql157Review, ql156Review, ql155Review, ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
   const ql163Review = reviewQl163ExceptionOwnerDecisionBoundary(ql162Review, ql161Review, ql160Review, ql159Review, ql158Review, ql157Review, ql156Review, ql155Review, ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
+  const ql168Summary = summarizeQl168UnresolvedHolds(ql163Review);
 
   // This is a non-modal review panel. Move keyboard focus into it on opening,
   // and return focus to its trigger when it closes (including Escape).
@@ -259,7 +261,7 @@ export function Ql093SafeReadPreview() {
       >
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-163</small>
+        <small>QL-168</small>
       </button>
 
       {isOpen && (
@@ -279,10 +281,10 @@ export function Ql093SafeReadPreview() {
         >
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-163 Public disabled preview</p>
-              <h2 id={headingId}>Synthetic evidence continuity and owner authorization boundary</h2>
+              <p className="ql093-eyebrow">QL-168 Public disabled preview</p>
+              <h2 id={headingId}>Unresolved synthetic holds and evidence review order</h2>
               <p id={descriptionId}>
-                QL-163 independently replays the QL-162 synthetic review, keeps exception holds visible, and checks evidence requirements for each proposed follow-up.
+                QL-168 groups QL-163's unresolved synthetic holds by review blocker and missing owner prerequisite.
                 It does not record owner decisions, authorize actions, write data, enable Phone/SMS or AI delivery, or activate any live pilot.
               </p>
             </div>
@@ -339,11 +341,73 @@ export function Ql093SafeReadPreview() {
           {safeReadResult.fallbackReason && <p className="ql093-notice">{safeReadResult.fallbackReason}</p>}
 
           <div className="ql093-grid">
+            <article className="ql093-card wide" aria-label="QL-168 unresolved hold prioritization and evidence summary">
+              <div className="ql093-card-heading">
+                <div>
+                  <p className="ql093-eyebrow">QL-168 display-only review ordering</p>
+                  <h3 id={`${panelId}-current`}>Unresolved holds grouped by blocker and prerequisite</h3>
+                </div>
+                <span>{ql168Summary.outstandingHoldIds.length} open synthetic holds</span>
+              </div>
+              <p className="ql093-notice">{ql168Summary.notice}</p>
+              {ql168Summary.integrityWarning && <p className="ql093-notice">{ql168Summary.integrityWarning}</p>}
+              {ql168Summary.outstandingHoldIds.length === 0 && (
+                <p className="ql093-muted">No open synthetic holds in this fixture. This does not grant a real owner decision or operational permission.</p>
+              )}
+              <div className="ql168-lanes" aria-label="Synthetic review-order groups">
+                {ql168Summary.lanes.map(lane => (
+                  <section className="ql168-lane" key={lane.id} aria-label={lane.title}>
+                    <h4>Review {lane.reviewOrder}: {lane.title} <span>({lane.holdIds.length})</span></h4>
+                    <p>{lane.blocker}</p>
+                    {lane.heldEvidence.length === 0 ? (
+                      <small>No holds in this review group.</small>
+                    ) : (
+                      <ul className="ql093-status-list">
+                        {lane.heldEvidence.map(item => (
+                          <li key={item.holdId}>
+                            <strong>{item.holdId}</strong>
+                            <span className={evidencePillClass('blocked')}>Open / not authorized</span>
+                            <p>Evidence needed: {item.requiredEvidence}</p>
+                            <small>Proposed route: {item.proposedRoute.replaceAll('_', ' ')}. No actual priority, follow-up or dispatch is determined.</small>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </section>
+                ))}
+              </div>
+              <h4>Current synthetic blocker checks</h4>
+              {ql168Summary.blockedGates.length === 0 ? (
+                <p className="ql093-muted">No blocked synthetic gates; separate human authorization remains absent.</p>
+              ) : (
+                <ul className="ql093-status-list">
+                  {ql168Summary.blockedGates.map(gate => (
+                    <li key={gate.id}>
+                      <strong>{gate.requirement}</strong>
+                      <small>{gate.id}: {gate.ifBlocked}</small>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <h4>Private owner-decision prerequisites — none verified or signed</h4>
+              <ul className="ql093-status-list">
+                {ql168Summary.ownerPrerequisites.map(item => (
+                  <li key={item.id}>
+                    <strong>{item.id}</strong>
+                    <p>{item.requirement}</p>
+                    <small>{item.affectedHoldIds.length} synthetic holds affected; evidence not independently verified, human decision not recorded.</small>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
+
+          <div className="ql093-grid">
             <article className="ql093-card wide">
               <div className="ql093-card-heading">
                 <div>
                   <p className="ql093-eyebrow">QL-163 independent synthetic exception governance</p>
-                  <h3 id={`${panelId}-current`}>Owner decision evidence and follow-up authorization</h3>
+                  <h3 id={`${panelId}-ql163`}>Owner decision evidence and follow-up authorization</h3>
                 </div>
                 <span>{ql163Review.outcome.replaceAll('_', ' ')}</span>
               </div>
