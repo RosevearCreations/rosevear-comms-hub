@@ -2,6 +2,12 @@
 
 This file tracks the completed Quo-lite build path and the next queued build.
 
+## Current queue (after QL-163)
+
+The previous sequential queue ended at QL-163. A new seven-build batch has been scoped in [QL-164–170 Required Build Queue](QL-164-170-REQUIRED_BUILD_QUEUE.md).
+
+QL-164 adds automated synthetic owner-authorization regression tests. After its promotion, the remaining scoped builds are **QL-165 through QL-170 (six)**. No build in this batch grants live communications or owner approval.
+
 ## Completed builds
 
 - QL-001 through QL-083 — complete. Earlier completed-build details are preserved in the repository history.
