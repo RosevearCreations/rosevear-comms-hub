@@ -6,6 +6,36 @@
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+/* Nested grids and long synthetic IDs must never widen the fixed panel. */
+.ql093-safe-read-preview,
+.ql093-safe-read-preview *,
+.ql093-safe-read-preview *::before,
+.ql093-safe-read-preview *::after {
+  box-sizing: border-box;
+}
+
+.ql093-safe-read-preview :is(button, a):focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
+}
+
+.ql093-safe-read-preview button {
+  cursor: pointer;
+  font: inherit;
+}
+
+.ql093-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .ql093-toggle {
   display: inline-flex;
   align-items: center;
@@ -17,6 +47,7 @@
   padding: 12px 16px;
   box-shadow: 0 16px 35px rgba(6, 78, 59, 0.28);
   font-weight: 900;
+  min-height: 44px;
 }
 
 .ql093-toggle span {
@@ -51,6 +82,26 @@
   border-radius: 28px;
   box-shadow: 0 30px 90px rgba(15, 23, 42, 0.34);
   padding: 22px;
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
+  scrollbar-gutter: stable;
+}
+
+.ql093-panel :is(article, li, .ql093-header, .ql093-card-heading, .ql093-grid > *, .ql093-status-strip > div) {
+  min-width: 0;
+}
+
+.ql093-panel :is(h2, h3) {
+  overflow-wrap: anywhere;
+  line-height: 1.3;
+}
+
+.ql093-header h2 {
+  font-size: clamp(1.25rem, 2.3vw, 1.75rem);
+}
+
+.ql093-card h3 {
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
 }
 
 .ql093-header {
@@ -62,6 +113,10 @@
   color: #fff;
   border-radius: 24px;
   padding: 24px;
+}
+
+.ql093-header > div {
+  min-width: 0;
 }
 
 .ql093-header h2,
@@ -80,7 +135,7 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 12px;
-  color: #14b8a6;
+  color: #0f766e;
   font-weight: 900;
 }
 
@@ -96,6 +151,34 @@
   width: 42px;
   height: 42px;
   font-size: 26px;
+  flex: 0 0 44px;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.ql093-jump-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.ql093-jump-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid #99f6e4;
+  background: #f0fdfa;
+  color: #115e59;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ql093-panel h3[id] {
+  scroll-margin-top: 20px;
 }
 
 .ql093-status-strip,
@@ -109,7 +192,7 @@
 }
 
 .ql093-status-strip {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 185px), 1fr));
   margin: 16px 0;
 }
 
@@ -152,6 +235,7 @@
   color: #0f172a;
   display: grid;
   gap: 4px;
+  min-height: 54px;
 }
 
 .ql093-brand-row button.active {
@@ -192,6 +276,11 @@
   margin-bottom: 14px;
 }
 
+.ql093-card-heading > div {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
 .ql093-card-heading span {
   background: #d1fae5;
   color: #065f46;
@@ -199,7 +288,11 @@
   padding: 6px 10px;
   font-size: 12px;
   font-weight: 900;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  min-width: 0;
+  max-width: 100%;
+  flex: 0 1 auto;
 }
 
 .ql093-card-heading.compact {
@@ -255,7 +348,7 @@
   justify-self: start;
   border-radius: 999px;
   padding: 4px 8px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 900;
   text-transform: uppercase;
 }
@@ -295,5 +388,51 @@
 
   .ql093-header {
     display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .ql093-safe-read-preview {
+    left: 12px;
+    bottom: 12px;
+  }
+
+  .ql093-panel {
+    inset: 10px 10px 72px;
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .ql093-header {
+    padding: 16px;
+    border-radius: 16px;
+    gap: 10px;
+  }
+
+  .ql093-card {
+    padding: 12px;
+  }
+
+  .ql093-card-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ql093-status-strip,
+  .ql093-brand-row,
+  .ql093-grid {
+    gap: 10px;
+  }
+}
+
+@media (forced-colors: active) {
+  .ql093-safe-read-preview :is(button, a):focus-visible {
+    outline-color: Highlight;
+  }
+
+  .ql093-brand-row button.active,
+  .ql093-jump-links a {
+    border: 2px solid Highlight;
   }
 }
