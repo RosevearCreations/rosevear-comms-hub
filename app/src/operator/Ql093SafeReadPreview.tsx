@@ -1,6 +1,7 @@
 // QL-140 deployment verification: source-only marker to run the disabled Pages preview gate on the same final main commit.
 // QL-140 promotion CI queue refresh: no change to synthetic safe-read runtime behavior.
 // QL-140 CI queue refresh: unchanged disabled preview behavior; requeue exact PR-head verification.
+// QL-163 exact-main verification refresh: no change to the synthetic disabled preview behavior.
 import { useEffect, useState } from 'react';
 import type { BrandId } from '../types';
 import { buildQl094SafeReadReviewEvidence } from './ql094SafeReadReviewEvidence';
