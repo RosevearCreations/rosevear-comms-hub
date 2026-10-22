@@ -2,6 +2,7 @@
 // QL-140 promotion CI queue refresh: no change to synthetic safe-read runtime behavior.
 // QL-140 CI queue refresh: unchanged disabled preview behavior; requeue exact PR-head verification.
 // QL-163 exact-main verification refresh: no change to the synthetic disabled preview behavior.
+// QL-163 joint Pages/Workers receipt: synthetic review and operational restrictions unchanged.
 import { useEffect, useState } from 'react';
 import type { BrandId } from '../types';
 import { buildQl094SafeReadReviewEvidence } from './ql094SafeReadReviewEvidence';
