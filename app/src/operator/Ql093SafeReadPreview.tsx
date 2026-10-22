@@ -271,7 +271,15 @@ export function Ql093SafeReadPreview() {
               <span>Mode</span>
               <strong>{isLoading ? 'checking' : formatSource(safeReadResult.source)}</strong>
             </div>
+            <div>
+              <span>Local fixture pin</span>
+              <strong>{safeReadResult.fixtureProvenance.verified ? 'verified' : 'drift blocked'}</strong>
+            </div>
           </div>
+
+          <p className="ql093-muted">
+            QL-165 synthetic fixture provenance: {safeReadResult.fixtureProvenance.setVersion} · schema {safeReadResult.fixtureProvenance.schemaVersion} · {safeReadResult.fixtureProvenance.fixtureCount} records. This confirms versioned local samples only, not real evidence or owner approval.
+          </p>
 
           <div className="ql093-brand-row" aria-label="Synthetic brand filter">
             {brandOptions.map((brand) => (
