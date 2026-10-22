@@ -77,6 +77,7 @@
   // QL-163 joint Pages/Workers release receipt: source-only rebuild marker.
   // QL-164: automated synthetic authorization regression gate; no live provider changes.
   // QL-165: version-pinned synthetic local fixtures with fail-closed drift detection; live runtime remains disabled.
+  // QL-166: accessible synthetic operator preview; source-only Worker check marker with live runtime disabled.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
