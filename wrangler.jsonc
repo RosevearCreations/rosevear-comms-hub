@@ -73,6 +73,7 @@
   // QL-161: nonfunctional Worker release check marker; synthetic disabled preview only.
   // QL-162: exact-main Worker verification marker; no live communications enabled.
   // QL-163: source-only Worker release verification marker; follow-up authorization remains disabled.
+  // QL-163 final-main verification retry: no runtime/configuration changes after dev ref sync.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
