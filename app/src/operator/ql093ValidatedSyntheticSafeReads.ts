@@ -7,6 +7,10 @@ import {
   type SyntheticSystemStatusReadRow
 } from '../integrations/supabaseReadOnlyClient';
 import type { BrandId } from '../types';
+import {
+  verifyQl165SyntheticFixtures,
+  type Ql165FixtureVerification
+} from './ql165SyntheticFixtureProvenance';
 
 export type Ql093ReadSource = 'local_fallback' | 'validated_supabase' | 'partial_supabase_with_fallback';
 export type Ql093PreviewRowSource = 'local_fallback' | 'validated_supabase';
@@ -46,6 +50,7 @@ export type Ql093SafeReadResult = {
   rejectedRows: readonly string[];
   fallbackReason?: string;
   safetyLockouts: readonly string[];
+  fixtureProvenance: Ql165FixtureVerification;
   generatedAt: string;
 };
 
@@ -89,7 +94,7 @@ export const ql093SafetyLockouts = [
   'No AI generation, AI sending, provider delivery, or live pilot runtime is available from this build.'
 ] as const;
 
-const localFallbackConversations: readonly Ql093SyntheticConversationPreview[] = [
+export const localFallbackConversations: readonly Ql093SyntheticConversationPreview[] = [
   {
     id: 'rosie-ceramic-quote',
     brandId: 'rosiedazzlers',
@@ -136,7 +141,7 @@ const localFallbackConversations: readonly Ql093SyntheticConversationPreview[] =
   }
 ];
 
-const localFallbackSystemStatus: readonly Ql093SyntheticSystemStatusPreview[] = [
+export const localFallbackSystemStatus: readonly Ql093SyntheticSystemStatusPreview[] = [
   {
     id: 'ql093-local-fallback-active',
     label: 'Local fallback active',
@@ -341,6 +346,16 @@ function buildResult(params: {
   fallbackReason?: string;
 }): Ql093SafeReadResult {
   const state = getSupabaseReadOnlyClientState();
+  const fixtureProvenance = verifyQl165SyntheticFixtures(localFallbackConversations, localFallbackSystemStatus);
+  // Never hydrate modified or unrecognized local samples. Independently
+  // validated public Supabase rows are not local fixtures and remain subject
+  // to the separate QL-093 safe-read allowlist and brand validation.
+  const conversationRows = fixtureProvenance.verified
+    ? params.conversationRows
+    : params.conversationRows.filter(row => row.source !== 'local_fallback');
+  const systemStatusRows = fixtureProvenance.verified
+    ? params.systemStatusRows
+    : params.systemStatusRows.filter(row => row.source !== 'local_fallback');
   const sourceLabel =
     params.source === 'validated_supabase'
       ? 'Validated Supabase synthetic reads'
@@ -355,11 +370,14 @@ function buildResult(params: {
     source: params.source,
     activeSourceLabel: sourceLabel,
     readOnlyClientStatus: state.status,
-    conversationRows: params.conversationRows,
-    systemStatusRows: params.systemStatusRows,
-    rejectedRows: params.rejectedRows,
-    fallbackReason: params.fallbackReason,
+    conversationRows,
+    systemStatusRows,
+    rejectedRows: [...params.rejectedRows, ...fixtureProvenance.failures.map(reason => `ql165:${reason}`)].slice(0, 12),
+    fallbackReason: fixtureProvenance.verified
+      ? params.fallbackReason
+      : `${params.fallbackReason ?? ''} QL-165 local fixture version or content drift: local samples withheld.`.trim(),
     safetyLockouts: ql093SafetyLockouts,
+    fixtureProvenance,
     generatedAt: new Date().toISOString()
   };
 }

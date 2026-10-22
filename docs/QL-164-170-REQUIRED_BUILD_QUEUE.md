@@ -12,6 +12,6 @@ This is a newly scoped batch following QL-163. The prior build records did not c
 | QL-169 | Private Owner-Decision Prerequisite & Privacy Review | Document identity, consent, evidence, scope and human approval gaps; no implementation permission |
 | QL-170 | Release Receipt Integrity & Queue Reconciliation | Exact-main five-check evidence and next-batch planning trigger |
 
-After QL-164 promotion, **six builds remain scoped: QL-165 through QL-170**. A new planning batch is needed after QL-170, before any subsequent implementation.
+QL-164 and QL-165 are complete in this batch when their exact-main release checks pass. After QL-165 promotion, **five builds remain scoped: QL-166 through QL-170**. A new planning batch is needed after QL-170, before any subsequent implementation.
 
 Safety boundary for every build: do not enable live Phone/SMS, callbacks, provider sends, AI sends, actual owner sign-off, real hold closure, audit persistence, customer records, browser writes or new database mutations without separate explicit authorization and acceptance evidence.
