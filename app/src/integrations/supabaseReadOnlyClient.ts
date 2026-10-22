@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import type { BrandId } from '../types';
 
 export type SupabaseReadOnlyClientStatus =
   | 'disabled_missing_env'
@@ -140,9 +141,9 @@ export function createSupabaseReadOnlyClient(): SupabaseClient | null {
   });
 }
 
-export async function loadSyntheticConversationRows(): Promise<{
+export async function loadSyntheticConversationRows(selectedBrandId: BrandId): Promise<{
   source: 'supabase' | 'fallback';
-  rows: SyntheticConversationReadRow[];
+  rows: unknown;
   error?: string;
 }> {
   const client = createSupabaseReadOnlyClient();
@@ -154,19 +155,20 @@ export async function loadSyntheticConversationRows(): Promise<{
   const { data, error } = await client
     .from('ql_public_synthetic_conversations')
     .select('id,brand_id,brand_name,title,status,summary,draft,created_at')
-    .order('brand_id', { ascending: true })
+    // QL-167: scope the public synthetic read before any rows reach the browser.
+    .eq('brand_id', selectedBrandId)
     .order('id', { ascending: true });
 
   if (error) {
     return { source: 'fallback', rows: [], error: error.message };
   }
 
-  return { source: 'supabase', rows: (data ?? []) as SyntheticConversationReadRow[] };
+  return { source: 'supabase', rows: data };
 }
 
 export async function loadSyntheticSystemStatusRows(): Promise<{
   source: 'supabase' | 'fallback';
-  rows: SyntheticSystemStatusReadRow[];
+  rows: unknown;
   error?: string;
 }> {
   const client = createSupabaseReadOnlyClient();
@@ -184,5 +186,5 @@ export async function loadSyntheticSystemStatusRows(): Promise<{
     return { source: 'fallback', rows: [], error: error.message };
   }
 
-  return { source: 'supabase', rows: (data ?? []) as SyntheticSystemStatusReadRow[] };
+  return { source: 'supabase', rows: data };
 }
