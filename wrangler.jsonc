@@ -75,6 +75,7 @@
   // QL-163: source-only Worker release verification marker; follow-up authorization remains disabled.
   // QL-163 final-main verification retry: no runtime/configuration changes after dev ref sync.
   // QL-163 joint Pages/Workers release receipt: source-only rebuild marker.
+  // QL-164: automated synthetic authorization regression gate; no live provider changes.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
