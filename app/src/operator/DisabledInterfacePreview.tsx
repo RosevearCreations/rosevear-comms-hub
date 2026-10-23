@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { BrandId } from '../types';
+import { getQl173BrandConversations, migrateQl173SyntheticFixtures, QL173_FIXTURE_SET_VERSION } from '../fixtures/ql173CanonicalSynthetic';
 import {
   allowedReadOnlySources,
   blockedBrowserSources,
@@ -34,77 +35,49 @@ const cloudflareWorkerCheck = 'Workers Builds: rosevear-comms-hub';
 const supabaseProjectUrl = 'https://gxujcwpktaickcgzyvnu.supabase.co';
 const brandOrder: PreviewBrandId[] = ['rosie', 'devil'];
 
+const canonicalMigration = migrateQl173SyntheticFixtures();
+
+function previewConversations(brandId: BrandId): SyntheticConversation[] {
+  return getQl173BrandConversations(canonicalMigration, brandId).map((row) => ({
+    id: row.id,
+    title: row.subject,
+    status: 'Synthetic canonical · UNSENT',
+    summary: row.summary,
+    draft: row.draft || 'No draft was staged for this synthetic demonstration.',
+    timeline: [
+      { title: 'Versioned synthetic source', detail: `${row.provenance.sourceSetVersion} · ${row.provenance.sourceId}` },
+      { title: 'Canonical migration verified', detail: `QL-173 ${QL173_FIXTURE_SET_VERSION}; stable, brand-linked identity with source fingerprint.` },
+      { title: 'Delivery and approvals locked', detail: 'Not a real conversation, sent message, call, SMS or owner decision.', locked: true }
+    ]
+  }));
+}
+
+function sampleBrand(id: BrandId, name: string, context: string): PreviewBrand {
+  const conversations = previewConversations(id);
+  return {
+    name, context, count: canonicalMigration.verified ? `${conversations.length} checked synthetic records` : 'fixture verification blocked',
+    headline: `${name} communication cockpit`, conversations
+  };
+}
+
+// Preserve the QL-172 shared shell while replacing the duplicate sample list with
+// checked-in, provenance-verified, canonical synthetic conversation projections.
 const brandSamples: Record<PreviewBrandId, PreviewBrand> = {
-  rosie: {
-    name: 'Rosie Dazzlers',
-    context: 'Mobile detailing',
-    count: '4 scaffold reads',
-    headline: 'Rosie Dazzlers communication cockpit',
-    conversations: [
-      {
-        id: 'rosie-ceramic-quote',
-        title: 'Ceramic quote follow-up',
-        status: 'Read-only scaffolded',
-        summary: 'Synthetic ceramic coating follow-up that can now be represented by a guarded read-only Supabase scaffold.',
-        draft: 'Draft-only sample: confirm vehicle size, explain prep expectations, and offer a weather-safe booking window.',
-        timeline: [
-          { title: 'Synthetic sample remains available', detail: 'The local hard-coded sample stays as the fallback source.' },
-          { title: 'Read-only scaffold added', detail: 'QL-090 can create an anon-key client only when env values, project URL, and the read-enable flag are correct.' },
-          { title: 'Runtime stays locked', detail: 'No SMS, call, provider, archive, retention, or write action is available.', locked: true }
-        ]
-      },
-      {
-        id: 'rosie-missed-call',
-        title: 'Missed-call callback sample',
-        status: 'Read-only scaffolded',
-        summary: 'Synthetic missed-call card with safe fallbacks when Supabase env values, view access, or payload validation fail.',
-        draft: 'Draft-only sample: acknowledge the missed call, ask for vehicle size, and suggest AM/PM availability.',
-        timeline: [
-          { title: 'Sample selected', detail: 'No phone provider event, call log, or customer phone data is loaded.' },
-          { title: 'Fallback enforced', detail: 'Missing env variables or failed reads keep hard-coded samples visible.' },
-          { title: 'Call action locked', detail: 'The public preview cannot place calls or register callbacks.', locked: true }
-        ]
-      }
-    ]
-  },
-  devil: {
-    name: 'Devil n Dove',
-    context: 'Maker shop',
-    count: '2 scaffold reads',
-    headline: 'Devil n Dove communication cockpit',
-    conversations: [
-      {
-        id: 'devil-custom-order',
-        title: 'Custom order clarification sample',
-        status: 'Read-only scaffolded',
-        summary: 'Synthetic custom-order question limited to public read-only sample views in the QL-090 scaffold.',
-        draft: 'Draft-only sample: confirm colour, size, personalization limits, and expected making time.',
-        timeline: [
-          { title: 'Custom request remains synthetic', detail: 'Hard-coded maker-shop sample opens in the browser preview.' },
-          { title: 'Read-only view boundary added', detail: 'Future reads are restricted to public synthetic views only.' },
-          { title: 'Provider delivery locked', detail: 'No Etsy, SMS, email, callback, or provider account is connected.', locked: true }
-        ]
-      },
-      {
-        id: 'devil-maker-story',
-        title: 'Maker story question sample',
-        status: 'Read-only scaffolded',
-        summary: 'Synthetic shopper asks about the Devil n Dove meaning and materials; QL-090 keeps it safe through public synthetic-only reads.',
-        draft: 'Draft-only sample: explain the Devil barriers / Dove hope theme and invite a specific product question.',
-        timeline: [
-          { title: 'Story sample selected', detail: 'Synthetic brand-story prompt is loaded from local constants.' },
-          { title: 'Client gate checked', detail: 'The scaffold refuses unexpected Supabase project URLs and missing read-enable flags.' },
-          { title: 'AI and send locked', detail: 'No AI reply generation or provider send path is enabled.', locked: true }
-        ]
-      }
-    ]
-  }
+  rosie: sampleBrand('rosiedazzlers', 'Rosie Dazzlers', 'Mobile detailing'),
+  devil: sampleBrand('devilndove', 'Devil n Dove', 'Maker shop')
+};
+
+const blockedSyntheticConversation: SyntheticConversation = {
+  id: 'synthetic-fixture-review-required', title: 'Synthetic fixtures unavailable', status: 'Blocked pending fixture review',
+  summary: 'The checked-in synthetic fixture provenance or version could not be verified. No conversation data will be shown.',
+  draft: 'No draft available.',
+  timeline: [{ title: 'Fixture integrity hold', detail: 'A new reviewed build is required before synthetic previews resume.', locked: true }]
 };
 
 const detailTabs: Array<{ id: DetailTabId; title: string; detail: string }> = [
   { id: 'overview', title: 'Overview', detail: 'Selected summary, status, and QL-090 scaffold outcome.' },
   { id: 'draft', title: 'Draft', detail: 'Draft-only response copy with no send or AI generation.' },
-  { id: 'timeline', title: 'Timeline', detail: 'Synthetic timeline events grouped into a focused local view.' },
+  { id: 'timeline', title: 'Timeline', detail: 'Synthetic fixture provenance and delivery lockouts in a local view.' },
   { id: 'safety', title: 'Safety', detail: 'Read-only client gate, fallbacks, and locked runtime reminders.' }
 ];
 
@@ -112,7 +85,7 @@ const scaffoldChecks = [
   'Supabase wrapper can only create an anon-key client for the expected rosevearcreations Supabase project.',
   'Browser reads require VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, and VITE_QL_ENABLE_SUPABASE_READS=true.',
   'Read functions are limited to public.ql_public_synthetic_conversations and public.ql_public_system_status.',
-  'Hard-coded local samples remain the fallback whenever env, project, policy, or payload checks fail.'
+  'Canonical, source-pinned synthetic samples remain the local fallback whenever env, project, policy, or payload checks fail.'
 ];
 
 const disabledActions = [
@@ -153,7 +126,7 @@ function renderDetailTabContent(activeTabId: DetailTabId, activeBrand: PreviewBr
   if (activeTabId === 'timeline') {
     return (
       <div className="interface-preview-tab-body timeline">
-        <p className="interface-preview-eyebrow">Synthetic timeline</p>
+        <p className="interface-preview-eyebrow">Synthetic fixture provenance</p>
         <h4>{activeConversation.title}</h4>
         <ol>
           {activeConversation.timeline.map((event) => (
@@ -198,7 +171,7 @@ function renderDetailTabContent(activeTabId: DetailTabId, activeBrand: PreviewBr
         </div>
         <div>
           <dt>Current UI source</dt>
-          <dd>Hard-coded synthetic fallback sample</dd>
+          <dd>Versioned, canonical checked-in synthetic fixtures (QL-173)</dd>
         </div>
       </dl>
     </div>
@@ -211,13 +184,13 @@ export function DisabledInterfacePreview({ embedded = false, brandId, onBrandCha
   const activeBrandId: PreviewBrandId = brandId ? (brandId === 'rosiedazzlers' ? 'rosie' : 'devil') : localBrandId;
   const [activeDetailTabId, setActiveDetailTabId] = useState<DetailTabId>('overview');
   const [activeConversationByBrand, setActiveConversationByBrand] = useState<Record<PreviewBrandId, string>>({
-    rosie: 'rosie-ceramic-quote',
-    devil: 'devil-custom-order'
+    rosie: brandSamples.rosie.conversations[0]?.id ?? blockedSyntheticConversation.id,
+    devil: brandSamples.devil.conversations[0]?.id ?? blockedSyntheticConversation.id
   });
   const supabaseReadOnlyState = useMemo(() => getSupabaseReadOnlyClientState(), []);
 
   const activeBrand = brandSamples[activeBrandId];
-  const activeConversation = activeBrand.conversations.find((conversation) => conversation.id === activeConversationByBrand[activeBrandId]) ?? activeBrand.conversations[0];
+  const activeConversation = activeBrand.conversations.find((conversation) => conversation.id === activeConversationByBrand[activeBrandId]) ?? activeBrand.conversations[0] ?? blockedSyntheticConversation;
 
   return (
     <section className={embedded ? 'interface-preview ql172-embedded-preview open' : isOpen ? 'interface-preview open' : 'interface-preview'} aria-label="Disabled interface preview">
@@ -245,13 +218,18 @@ export function DisabledInterfacePreview({ embedded = false, brandId, onBrandCha
           <div className="interface-preview-warning">
             QL-090 adds a read-only scaffold only. Browser reads stay disabled unless the expected Supabase project URL, anon key, and explicit read-enable flag are present. SMS, calls, provider callbacks, recordings, AI send, archives, retention writes, live customer access, and live pilot runtime stay disabled.
           </div>
+          <div className="interface-preview-warning" role="status" aria-live="polite">
+            QL-173 canonical synthetic fixtures: {canonicalMigration.verified
+              ? `${QL173_FIXTURE_SET_VERSION} verified · ${canonicalMigration.snapshot.conversations.length} conversations · draft-only, no live actions.`
+              : `BLOCKED · ${canonicalMigration.issues.length} fixture-integrity issue(s). No synthetic records or drafts will be shown.`}
+          </div>
 
           <div className="interface-preview-review-grid">
             <article className="interface-preview-link-card">
               <p className="interface-preview-eyebrow">GitHub Pages production preview</p>
               <h3>Current public preview</h3>
               <code className="interface-preview-link">{targetPreviewUrl}</code>
-              <p>The public preview still renders local synthetic fallback samples unless safe read env values are explicitly configured.</p>
+              <p>The public preview renders verified QL-173 canonical synthetic fixtures. No real conversations or owner approvals are exposed.</p>
             </article>
             <article className="interface-preview-link-card">
               <p className="interface-preview-eyebrow">Supabase read-only gate</p>
@@ -287,7 +265,7 @@ export function DisabledInterfacePreview({ embedded = false, brandId, onBrandCha
               <div className="interface-preview-safe-card">
                 <strong>Active sample</strong>
                 <span>{activeConversation.title}</span>
-                <small>Fallback sample; no mutation path</small>
+                <small>Canonical synthetic fixture; no mutation path</small>
               </div>
             </aside>
 
@@ -303,7 +281,7 @@ export function DisabledInterfacePreview({ embedded = false, brandId, onBrandCha
               <section className="interface-preview-card">
                 <div className="interface-preview-section-title">
                   <p className="interface-preview-eyebrow">Synthetic conversation selector</p>
-                  <HelpMarker label="Conversation selector remains hard-coded fallback state" />
+                  <HelpMarker label="Conversation selector shows only local, QL-173 provenance-verified synthetic fixtures" />
                 </div>
                 <div className="interface-preview-selector-list">
                   {activeBrand.conversations.map((conversation) => {
