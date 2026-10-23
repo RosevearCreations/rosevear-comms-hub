@@ -46,3 +46,11 @@ This is intentional. It allows us to test the contact, conversation, message, in
 - No AI provider.
 - No call recording.
 - No external integrations.
+
+## QL-170 production receipt re-verification
+
+QL-170 introduced an independent release-receipt verifier and an explicit queue-reconciliation gate. See `../scripts/ql170-release-receipt.mjs` and `../docs/build-records/QL-170_RELEASE_RECEIPT_INTEGRITY_QUEUE_RECONCILIATION.md` for the original build evidence and disabled-preview boundaries.
+
+This documentation-only app-area update re-triggers the GitHub Pages disabled-preview workflow, which otherwise skips a change confined to `docs/`. It changes **no React, database, provider, authentication, callback, routing, or Worker runtime code**. Both brands remain a synthetic/local demonstration; actual customer data and private owner approvals are not authorized. Phone/SMS, message dispatch, call recording and any live pilot remain disabled.
+
+The historical QL-003 notes above describe only the older local inbox. The later public synthetic review panels and guarded read-only Supabase scaffold do **not** turn the app into a live communications platform.
