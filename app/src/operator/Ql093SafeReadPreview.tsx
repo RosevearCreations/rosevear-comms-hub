@@ -287,6 +287,7 @@ export function Ql093SafeReadPreview() {
               <h2 id={headingId}>Private owner-decision gaps and synthetic hold review</h2>
               <p id={descriptionId}>
                 QL-169 lists generic private owner-review and privacy safeguards above QL-168's synthetic hold summary.
+                QL-170 release receipts are checked separately against the exact GitHub main commit; this preview does not claim a live deployment result.
                 It does not collect private evidence, record decisions, authorize actions, write data, enable Phone/SMS or AI delivery, or activate any live pilot.
               </p>
             </div>
