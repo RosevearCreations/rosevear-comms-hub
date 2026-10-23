@@ -6,6 +6,7 @@ import { DisabledInterfacePreview } from './DisabledInterfacePreview';
 import { DisabledOperatorConsole } from './DisabledOperatorConsole';
 import { Ql174BrandSafeTriagePreview } from './Ql174BrandSafeTriagePreview';
 import { Ql175ContactContextPreview } from './Ql175ContactContextPreview';
+import { Ql176ConversationTimelinePreview } from './Ql176ConversationTimelinePreview';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
 import './operator-shell.css';
 
@@ -13,7 +14,7 @@ type Workspace = 'inbox' | 'samples' | 'evidence' | 'telephony';
 
 const workspaces: ReadonlyArray<{ id: Workspace; label: string; description: string }> = [
   { id: 'inbox', label: 'Local inbox', description: 'Conversations, contacts, tasks and intakes' },
-  { id: 'samples', label: 'Synthetic conversations', description: 'Brand-safe triage, contact context, consent safety, read-only threads and unsent drafts' },
+  { id: 'samples', label: 'Synthetic conversations', description: 'Brand-safe triage, contact context, channel-aware timeline and unsent drafts' },
   { id: 'evidence', label: 'Safety & hold review', description: 'Synthetic evidence and unresolved prerequisites' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Disabled provider pathways and safeguards' }
 ];
@@ -107,6 +108,7 @@ export function OperatorShell() {
             <>
               <Ql174BrandSafeTriagePreview brandId={brandId} />
               <Ql175ContactContextPreview key={brandId} brandId={brandId} />
+              <Ql176ConversationTimelinePreview key={brandId} brandId={brandId} />
               <DisabledInterfacePreview embedded brandId={brandId} onBrandChange={setBrandId} />
             </>
           )}
