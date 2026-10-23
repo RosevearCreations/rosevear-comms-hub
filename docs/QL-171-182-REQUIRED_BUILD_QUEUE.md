@@ -1,6 +1,6 @@
 # Quo-lite next required build queue — QL-171 through QL-182
 
-Status: **QL-171–174 promoted to exact-main GREEN** (QL-174 main commit `dbf776cd250a56b5191ec59141fbd93ac15833cc`); **QL-175 is the current implementation/release candidate; QL-176–182 remain queued.** QL-175 may be called GREEN only after its own exact-main application, Pages, Supabase Preview and Workers checks succeed. Publication of a roadmap never authorizes live operations.
+Status: **QL-171–175 promoted to exact-main GREEN** (QL-175 main commit `e97a8f60311b81f2f6d18271dee807776e529967`); **QL-176 is the current implementation/release candidate; QL-177–182 remain queued.** QL-176 may be called GREEN only after its own exact-main application, Pages, Supabase Preview and Workers checks succeed. Publication of a roadmap never authorizes live operations.
 
 ## Product objective
 
@@ -43,4 +43,4 @@ Current baseline to preserve and reconcile:
 
 QL-171 must precede UI refactoring; QL-173 supplies the fixture model used by QL-174–180; QL-181 records, but does **not grant**, future live-pilot authorization. Full provider provisioning, telecom integration, authenticated Supabase customer writes, actual owner decisions, real customer importing, paid numbers and live operations are **outside** QL-171–182.
 
-**Queue accounting:** 12 original builds, QL-171–182 inclusive. QL-171–174 are promoted. QL-175 contact context and consent-safe preview is this release candidate. After QL-175 is promoted, **7 follow-on builds (QL-176–182)** remain for separately requested implementation. None of these builds grant live operating authority.
+**Queue accounting:** 12 original builds, QL-171–182 inclusive. QL-171–175 are promoted. QL-176 conversation timeline and unsent draft preview is this release candidate. After QL-176 is promoted, **6 follow-on builds (QL-177–182)** remain for separately requested implementation. None of these builds grant live operating authority.
