@@ -9,6 +9,7 @@ import { Ql175ContactContextPreview } from './Ql175ContactContextPreview';
 import { Ql176ConversationTimelinePreview } from './Ql176ConversationTimelinePreview';
 import { Ql177BrandIntakeHandoffPreview } from './Ql177BrandIntakeHandoffPreview';
 import { Ql178OperatorTaskSimulation } from './Ql178OperatorTaskSimulation';
+import { Ql179PhoneSmsEventEmulator } from './Ql179PhoneSmsEventEmulator';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
 import './operator-shell.css';
 
@@ -18,7 +19,7 @@ const workspaces: ReadonlyArray<{ id: Workspace; label: string; description: str
   { id: 'inbox', label: 'Local inbox', description: 'Conversations, contacts, tasks and intakes' },
   { id: 'samples', label: 'Synthetic conversations', description: 'Brand-safe triage, unsent drafts, mock intake handoffs and follow-up tasks' },
   { id: 'evidence', label: 'Safety & hold review', description: 'Synthetic evidence and unresolved prerequisites' },
-  { id: 'telephony', label: 'Phone/SMS safety', description: 'Disabled provider pathways and safeguards' }
+  { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
 ];
 
 const firstBrand = brands.some((brand) => brand.id === import.meta.env.VITE_DEFAULT_BRAND)
@@ -117,7 +118,12 @@ export function OperatorShell() {
             </>
           )}
           {workspace === 'evidence' && <Ql093SafeReadPreview embedded brandId={brandId} onBrandChange={setBrandId} />}
-          {workspace === 'telephony' && <DisabledOperatorConsole embedded />}
+          {workspace === 'telephony' && (
+            <>
+              <Ql179PhoneSmsEventEmulator key={`phone-sms-${brandId}`} brandId={brandId} />
+              <DisabledOperatorConsole embedded />
+            </>
+          )}
         </main>
       </div>
     </div>
