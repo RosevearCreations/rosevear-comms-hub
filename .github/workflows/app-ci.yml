@@ -19,4 +19,5 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: npm run check
       - run: npm test
+      - run: node ../scripts/__tests__/ql170-release-receipt.test.mjs
       - run: npm run build

@@ -12,6 +12,6 @@ This is a newly scoped batch following QL-163. The prior build records did not c
 | QL-169 | Private Owner-Decision Prerequisite & Privacy Review | Document identity, consent, evidence, scope and human approval gaps; no implementation permission |
 | QL-170 | Release Receipt Integrity & Queue Reconciliation | Exact-main five-check evidence and next-batch planning trigger |
 
-QL-164 through QL-168 completed their exact-main release checks. QL-169 adds a generic privacy and owner-decision prerequisite matrix while keeping all real private evidence and human approvals outside the disabled preview. Following exact-main verification of QL-169, **one build remains scoped: QL-170**. A new planning batch is needed after QL-170, before any subsequent implementation.
+QL-164 through QL-169 completed their exact-main release checks. QL-170 adds an independently testable receipt verifier that rejects mismatched PR lineage, moved commits, duplicate/skipped/failed checks and queue drift. **After QL-170 itself passes exact-main release verification, zero builds remain in this approved batch. A new planning batch is required before any QL-171+ implementation.** This roadmap does not itself certify QL-170 production readiness; consult the exact-main GitHub release receipt.
 
 Safety boundary for every build: do not enable live Phone/SMS, callbacks, provider sends, AI sends, actual owner sign-off, real hold closure, audit persistence, customer records, browser writes or new database mutations without separate explicit authorization and acceptance evidence.
