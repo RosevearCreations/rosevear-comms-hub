@@ -81,6 +81,7 @@
   // QL-167: source-only Worker release check for brand-scoped synthetic safe reads and fail-closed fallback.
   // QL-168: source-only Worker release verification for display-only synthetic hold review ordering.
   // QL-169: source-only Worker check for public-safe privacy prerequisite matrix; no private records or live operations.
+  // QL-170: source-only Worker release receipt validation marker; live provider and private intake remain disabled.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "assets": {
