@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import type { BrandId } from '../types';
 import {
   allowedReadOnlySources,
   blockedBrowserSources,
@@ -204,9 +205,10 @@ function renderDetailTabContent(activeTabId: DetailTabId, activeBrand: PreviewBr
   );
 }
 
-export function DisabledInterfacePreview() {
+export function DisabledInterfacePreview({ embedded = false, brandId, onBrandChange }: { embedded?: boolean; brandId?: BrandId; onBrandChange?: (brandId: BrandId) => void } = {}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeBrandId, setActiveBrandId] = useState<PreviewBrandId>('rosie');
+  const [localBrandId, setLocalBrandId] = useState<PreviewBrandId>('rosie');
+  const activeBrandId: PreviewBrandId = brandId ? (brandId === 'rosiedazzlers' ? 'rosie' : 'devil') : localBrandId;
   const [activeDetailTabId, setActiveDetailTabId] = useState<DetailTabId>('overview');
   const [activeConversationByBrand, setActiveConversationByBrand] = useState<Record<PreviewBrandId, string>>({
     rosie: 'rosie-ceramic-quote',
@@ -218,15 +220,15 @@ export function DisabledInterfacePreview() {
   const activeConversation = activeBrand.conversations.find((conversation) => conversation.id === activeConversationByBrand[activeBrandId]) ?? activeBrand.conversations[0];
 
   return (
-    <section className={isOpen ? 'interface-preview open' : 'interface-preview'} aria-label="Disabled interface preview">
-      <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
+    <section className={embedded ? 'interface-preview ql172-embedded-preview open' : isOpen ? 'interface-preview open' : 'interface-preview'} aria-label="Disabled interface preview">
+      {!embedded && <button className="interface-preview-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">▦</span>
         Interface preview
         <small>QL-090</small>
-      </button>
+      </button>}
 
-      {isOpen && (
-        <div className="interface-preview-panel" role="dialog" aria-modal="false" aria-label="QL-090 public disabled preview browser-safe Supabase read-only client scaffold">
+      {(isOpen || embedded) && (
+        <div className="interface-preview-panel" role={embedded ? 'region' : 'dialog'} aria-modal={embedded ? undefined : 'false'} aria-label="QL-090 public disabled preview browser-safe Supabase read-only client scaffold">
           <div className="interface-preview-header">
             <div>
               <p className="interface-preview-eyebrow">QL-090 Public disabled preview browser-safe Supabase read-only client scaffold</p>
@@ -235,9 +237,9 @@ export function DisabledInterfacePreview() {
                 This build adds the first guarded browser-safe Supabase read-only scaffold while keeping the current public preview local, synthetic, and non-mutating by default.
               </p>
             </div>
-            <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
+            {!embedded && <button className="interface-preview-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close interface preview">
               ×
-            </button>
+            </button>}
           </div>
 
           <div className="interface-preview-warning">
@@ -273,7 +275,7 @@ export function DisabledInterfacePreview() {
                     type="button"
                     className={isActive ? 'interface-preview-brand active interactive' : 'interface-preview-brand interactive'}
                     aria-pressed={isActive}
-                    onClick={() => setActiveBrandId(brandId)}
+                    onClick={() => { setLocalBrandId(brandId); onBrandChange?.(brandId === 'rosie' ? 'rosiedazzlers' : 'devilndove'); }}
                     key={brand.name}
                   >
                     <span>{brand.name}</span>

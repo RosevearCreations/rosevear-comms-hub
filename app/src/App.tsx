@@ -57,11 +57,12 @@ function conversationMatchesQuery(db: HubDatabase, conversation: Conversation, q
   return haystack.includes(cleanQuery);
 }
 
-function App() {
+function App({ activeBrandId, onBrandChange, embedded = false }: { activeBrandId?: BrandId; onBrandChange?: (brandId: BrandId) => void; embedded?: boolean } = {}) {
   const [db, setDb] = useState<HubDatabase>(() => loadHubDb());
-  const [selectedBrandId, setSelectedBrandId] = useState<BrandId>(
+  const [localBrandId, setLocalBrandId] = useState<BrandId>(
     brands.some((brand) => brand.id === defaultBrand) ? defaultBrand : 'rosiedazzlers'
   );
+  const selectedBrandId = activeBrandId ?? localBrandId;
   const [selectedConversationId, setSelectedConversationId] = useState<string>('');
   const [selectedContactId, setSelectedContactId] = useState<string>('');
   const [filters, setFilters] = useState<InboxFilterState>({ status: 'all', query: '', tag: '', sourceChannel: 'all' });
@@ -105,7 +106,8 @@ function App() {
     const firstConversation = db.conversations.find((conversation) => conversation.brandId === brandId);
     const firstContact = getContactsForBrand(db, brandId)[0];
 
-    setSelectedBrandId(brandId);
+    setLocalBrandId(brandId);
+    onBrandChange?.(brandId);
     setSelectedConversationId(firstConversation?.id ?? '');
     setSelectedContactId(firstContact?.id ?? '');
     setFilters({ status: 'all', query: '', tag: '', sourceChannel: 'all' });
@@ -191,14 +193,14 @@ function App() {
   }
 
   return (
-    <div className="app-shell">
+    <div className={embedded ? 'app-shell ql172-embedded-inbox' : 'app-shell'}>
       <aside className="sidebar">
-        <p className="eyebrow">Rosevear Comms Hub</p>
-        <h1>QL-004 Admin Inbox MVP</h1>
+        <p className="eyebrow">Local-only prototype</p>
+        <h2>Inbox tools</h2>
         <p className="sidebar-copy">
           Brand-aware local inbox with filters, contact and intake detail, tasks, and data import/export. No live phone/SMS is connected.
         </p>
-        <div className="brand-switcher">
+        {!embedded && <div className="brand-switcher">
           {brands.map((brand) => (
             <button
               key={brand.id}
@@ -210,10 +212,10 @@ function App() {
               <small>{brand.accentLabel}</small>
             </button>
           ))}
-        </div>
+        </div>}
         <nav className="nav-list" aria-label="Admin sections">
           {(['inbox', 'contacts', 'tasks', 'intakes', 'data'] as const).map((view) => (
-            <button className={activeView === view ? 'nav-button active' : 'nav-button'} key={view} onClick={() => setActiveView(view)} type="button">
+            <button className={activeView === view ? 'nav-button active' : 'nav-button'} key={view} aria-current={activeView === view ? 'page' : undefined} onClick={() => setActiveView(view)} type="button">
               {view}
             </button>
           ))}
