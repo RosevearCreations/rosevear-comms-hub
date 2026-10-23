@@ -4,6 +4,7 @@ import { brands } from '../data/brands';
 import type { BrandId } from '../types';
 import { DisabledInterfacePreview } from './DisabledInterfacePreview';
 import { DisabledOperatorConsole } from './DisabledOperatorConsole';
+import { Ql174BrandSafeTriagePreview } from './Ql174BrandSafeTriagePreview';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
 import './operator-shell.css';
 
@@ -11,7 +12,7 @@ type Workspace = 'inbox' | 'samples' | 'evidence' | 'telephony';
 
 const workspaces: ReadonlyArray<{ id: Workspace; label: string; description: string }> = [
   { id: 'inbox', label: 'Local inbox', description: 'Conversations, contacts, tasks and intakes' },
-  { id: 'samples', label: 'Synthetic conversations', description: 'Read-only sample threads and unsent drafts' },
+  { id: 'samples', label: 'Synthetic conversations', description: 'Brand-safe triage, read-only threads and unsent drafts' },
   { id: 'evidence', label: 'Safety & hold review', description: 'Synthetic evidence and unresolved prerequisites' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Disabled provider pathways and safeguards' }
 ];
@@ -101,7 +102,12 @@ export function OperatorShell() {
               <App activeBrandId={brandId} onBrandChange={setBrandId} embedded />
             </>
           )}
-          {workspace === 'samples' && <DisabledInterfacePreview embedded brandId={brandId} onBrandChange={setBrandId} />}
+          {workspace === 'samples' && (
+            <>
+              <Ql174BrandSafeTriagePreview brandId={brandId} />
+              <DisabledInterfacePreview embedded brandId={brandId} onBrandChange={setBrandId} />
+            </>
+          )}
           {workspace === 'evidence' && <Ql093SafeReadPreview embedded brandId={brandId} onBrandChange={setBrandId} />}
           {workspace === 'telephony' && <DisabledOperatorConsole embedded />}
         </main>
