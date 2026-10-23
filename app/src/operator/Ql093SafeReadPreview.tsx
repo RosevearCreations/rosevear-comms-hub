@@ -76,6 +76,7 @@ import { reviewQl161OwnerDecisionPrerequisites } from './ql161OwnerDecisionPrere
 import { reviewQl162OwnerCriteriaAndHoldContinuity } from './ql162OwnerCriteriaHoldContinuity';
 import { reviewQl163ExceptionOwnerDecisionBoundary } from './ql163ExceptionOwnerDecisionBoundary';
 import { summarizeQl168UnresolvedHolds } from './ql168UnresolvedHoldPrioritization';
+import { reviewQl169PrivateOwnerPrerequisites } from './ql169PrivateOwnerPrivacyReview';
 import {
   getLocalFallbackSafeReadResult,
   loadValidatedSyntheticSafeReads,
@@ -202,6 +203,7 @@ export function Ql093SafeReadPreview() {
   const ql162Review = reviewQl162OwnerCriteriaAndHoldContinuity(ql161Review, ql160Review, ql159Review, ql158Review, ql157Review, ql156Review, ql155Review, ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
   const ql163Review = reviewQl163ExceptionOwnerDecisionBoundary(ql162Review, ql161Review, ql160Review, ql159Review, ql158Review, ql157Review, ql156Review, ql155Review, ql154Review, ql153Review, ql152Recheck, ql151FollowUp, ql150Recheck, ql149Review);
   const ql168Summary = summarizeQl168UnresolvedHolds(ql163Review);
+  const ql169Review = reviewQl169PrivateOwnerPrerequisites(ql168Summary);
 
   // This is a non-modal review panel. Move keyboard focus into it on opening,
   // and return focus to its trigger when it closes (including Escape).
@@ -261,7 +263,7 @@ export function Ql093SafeReadPreview() {
       >
         <span aria-hidden="true">✓</span>
         Safe reads
-        <small>QL-168</small>
+        <small>QL-169</small>
       </button>
 
       {isOpen && (
@@ -281,11 +283,11 @@ export function Ql093SafeReadPreview() {
         >
           <div className="ql093-header">
             <div>
-              <p className="ql093-eyebrow">QL-168 Public disabled preview</p>
-              <h2 id={headingId}>Unresolved synthetic holds and evidence review order</h2>
+              <p className="ql093-eyebrow">QL-169 Public disabled preview</p>
+              <h2 id={headingId}>Private owner-decision gaps and synthetic hold review</h2>
               <p id={descriptionId}>
-                QL-168 groups QL-163's unresolved synthetic holds by review blocker and missing owner prerequisite.
-                It does not record owner decisions, authorize actions, write data, enable Phone/SMS or AI delivery, or activate any live pilot.
+                QL-169 lists generic private owner-review and privacy safeguards above QL-168's synthetic hold summary.
+                It does not collect private evidence, record decisions, authorize actions, write data, enable Phone/SMS or AI delivery, or activate any live pilot.
               </p>
             </div>
             <button ref={closeRef} className="ql093-close" onClick={closePanel} type="button" aria-label="Close synthetic review panel">
@@ -341,11 +343,37 @@ export function Ql093SafeReadPreview() {
           {safeReadResult.fallbackReason && <p className="ql093-notice">{safeReadResult.fallbackReason}</p>}
 
           <div className="ql093-grid">
+            <article className="ql093-card wide" aria-label="QL-169 private owner-decision prerequisite and privacy review">
+              <div className="ql093-card-heading">
+                <div>
+                  <p className="ql093-eyebrow">QL-169 privacy and human authorization boundary</p>
+                  <h3 id={`${panelId}-current`}>Private owner-decision prerequisites still unmet</h3>
+                </div>
+                <span>5 private review gaps</span>
+              </div>
+              <p className="ql093-notice">{ql169Review.notice}</p>
+              {ql169Review.warning && <p className="ql093-notice">{ql169Review.warning}</p>}
+              <p>Upstream synthetic contract: <strong>{ql169Review.sourceContractVerified ? 'verified for display only' : 'blocked'}</strong>. Private identity, consent, evidence and human sign-off: <strong>not verified</strong>.</p>
+              <ul className="ql093-status-list" aria-label="Private review gap categories only">
+                {ql169Review.gaps.map(gap => (
+                  <li key={gap.id}>
+                    <strong>{gap.label}</strong>
+                    <span className={evidencePillClass('blocked')}>Private review required</span>
+                    <p>{gap.privateProofNeeded}</p>
+                    <small>Privacy: {gap.previewPrivacyRule} No actual evidence, consent or approval has been supplied.</small>
+                  </li>
+                ))}
+              </ul>
+              <p className="ql093-muted">This is a generic public-safe checklist, not a private intake form. No owner identity, real case details, authorization credentials, customer contact information, signatures, attachments or approval controls are displayed.</p>
+            </article>
+          </div>
+
+          <div className="ql093-grid">
             <article className="ql093-card wide" aria-label="QL-168 unresolved hold prioritization and evidence summary">
               <div className="ql093-card-heading">
                 <div>
                   <p className="ql093-eyebrow">QL-168 display-only review ordering</p>
-                  <h3 id={`${panelId}-current`}>Unresolved holds grouped by blocker and prerequisite</h3>
+                  <h3>Unresolved holds grouped by blocker and prerequisite</h3>
                 </div>
                 <span>{ql168Summary.outstandingHoldIds.length} open synthetic holds</span>
               </div>
