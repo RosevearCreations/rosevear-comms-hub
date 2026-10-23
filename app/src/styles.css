@@ -44,6 +44,18 @@ button {
   margin: 0;
 }
 
+.sidebar h2 { margin: 0; font-size: 1.45rem; line-height: 1.2; }
+
+.ql172-embedded-inbox { min-height: 0; grid-template-columns: minmax(175px, 210px) minmax(0, 1fr); }
+.ql172-embedded-inbox .sidebar { padding: 18px; border-radius: 16px 0 0 16px; gap: 14px; }
+.ql172-embedded-inbox .sidebar-copy { font-size: 0.85rem; }
+.ql172-embedded-inbox .nav-list { margin-top: 0; }
+.ql172-embedded-inbox .main-content { padding: 16px; min-width: 0; }
+.ql172-embedded-inbox .topbar { flex-wrap: wrap; }
+.ql172-embedded-inbox .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 1100px) { .ql172-embedded-inbox { grid-template-columns: minmax(0, 1fr); } .ql172-embedded-inbox .sidebar { border-radius: 16px 16px 0 0; } .ql172-embedded-inbox .nav-list { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); } }
+@media (max-width: 500px) { .ql172-embedded-inbox .stat-grid { grid-template-columns: minmax(0, 1fr); } }
+
 .sidebar-copy {
   color: #cbd5e1;
   line-height: 1.55;

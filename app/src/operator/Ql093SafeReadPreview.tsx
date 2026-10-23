@@ -119,14 +119,15 @@ function renderList(items: readonly string[], className = 'ql093-check-list') {
   );
 }
 
-export function Ql093SafeReadPreview() {
+export function Ql093SafeReadPreview({ embedded = false, brandId, onBrandChange }: { embedded?: boolean; brandId?: BrandId; onBrandChange?: (brandId: BrandId) => void } = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const panelId = useId();
   const headingId = `${panelId}-heading`;
   const descriptionId = `${panelId}-description`;
   const toggleRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const [selectedBrandId, setSelectedBrandId] = useState<BrandId>('rosiedazzlers');
+  const [localBrandId, setLocalBrandId] = useState<BrandId>('rosiedazzlers');
+  const selectedBrandId = brandId ?? localBrandId;
   const [isLoading, setIsLoading] = useState(false);
   const [safeReadResult, setSafeReadResult] = useState<Ql093SafeReadResult>(() =>
     getLocalFallbackSafeReadResult('rosiedazzlers', 'QL-140 initial local fallback before the async handoff readiness follow-up planning review readiness decision review follow-up planning review readiness decision review follow-up planning review readiness decision review check runs.')
@@ -208,8 +209,8 @@ export function Ql093SafeReadPreview() {
   // This is a non-modal review panel. Move keyboard focus into it on opening,
   // and return focus to its trigger when it closes (including Escape).
   useEffect(() => {
-    if (isOpen) closeRef.current?.focus();
-  }, [isOpen]);
+    if (isOpen && !embedded) closeRef.current?.focus();
+  }, [isOpen, embedded]);
 
   function closePanel() {
     setIsOpen(false);
@@ -251,8 +252,8 @@ export function Ql093SafeReadPreview() {
   }, [selectedBrandId]);
 
   return (
-    <section className={isOpen ? 'ql093-safe-read-preview open' : 'ql093-safe-read-preview'} aria-label="Synthetic safe reads and owner decision evidence review">
-      <button
+    <section className={embedded ? 'ql093-safe-read-preview ql172-embedded-safe-read open' : isOpen ? 'ql093-safe-read-preview open' : 'ql093-safe-read-preview'} aria-label="Synthetic safe reads and owner decision evidence review">
+      {!embedded && <button
         ref={toggleRef}
         className="ql093-toggle"
         onClick={() => (isOpen ? closePanel() : setIsOpen(true))}
@@ -264,18 +265,18 @@ export function Ql093SafeReadPreview() {
         <span aria-hidden="true">✓</span>
         Safe reads
         <small>QL-169</small>
-      </button>
+      </button>}
 
-      {isOpen && (
+      {(isOpen || embedded) && (
         <div
           id={panelId}
           className="ql093-panel"
-          role="dialog"
-          aria-modal="false"
+          role={embedded ? 'region' : 'dialog'}
+          aria-modal={embedded ? undefined : 'false'}
           aria-labelledby={headingId}
           aria-describedby={descriptionId}
           onKeyDown={(event) => {
-            if (event.key === 'Escape') {
+            if (!embedded && event.key === 'Escape') {
               event.stopPropagation();
               closePanel();
             }
@@ -291,9 +292,9 @@ export function Ql093SafeReadPreview() {
                 It does not collect private evidence, record decisions, authorize actions, write data, enable Phone/SMS or AI delivery, or activate any live pilot.
               </p>
             </div>
-            <button ref={closeRef} className="ql093-close" onClick={closePanel} type="button" aria-label="Close synthetic review panel">
+            {!embedded && <button ref={closeRef} className="ql093-close" onClick={closePanel} type="button" aria-label="Close synthetic review panel">
               <span aria-hidden="true">×</span>
-            </button>
+            </button>}
           </div>
 
           <nav className="ql093-jump-links" aria-label="Jump to synthetic review sections">
@@ -334,7 +335,7 @@ export function Ql093SafeReadPreview() {
 
           <div className="ql093-brand-row" role="group" aria-label="Synthetic brand filter">
             {brandOptions.map((brand) => (
-              <button className={selectedBrandId === brand.id ? 'active' : ''} aria-pressed={selectedBrandId === brand.id} key={brand.id} onClick={() => setSelectedBrandId(brand.id)} type="button">
+              <button className={selectedBrandId === brand.id ? 'active' : ''} aria-pressed={selectedBrandId === brand.id} key={brand.id} onClick={() => { setLocalBrandId(brand.id); onBrandChange?.(brand.id); }} type="button">
                 <span>{brand.label}</span>
                 <small>{brand.help}</small>
               </button>

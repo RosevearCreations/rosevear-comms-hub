@@ -3,7 +3,7 @@ import type { BrandConfig } from '../types';
 export const brands: BrandConfig[] = [
   {
     id: 'rosiedazzlers',
-    displayName: 'RosieDazzlers',
+    displayName: 'Rosie Dazzlers',
     businessType: 'Mobile auto detailing',
     firstWorkflow: 'Detailing quote intake, missed-call follow-up, photo requests, and booking support.',
     accentLabel: 'Detailing front desk',
@@ -13,7 +13,7 @@ export const brands: BrandConfig[] = [
   },
   {
     id: 'devilndove',
-    displayName: 'DevilnDove',
+    displayName: 'Devil n Dove',
     businessType: 'Artisan custom products',
     firstWorkflow: 'Custom order intake, product questions, personalization, and reference-photo requests.',
     accentLabel: 'Maker front desk',

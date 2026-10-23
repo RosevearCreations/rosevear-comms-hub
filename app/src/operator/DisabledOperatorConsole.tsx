@@ -95,19 +95,20 @@ const operatorNotes = [
   }
 ];
 
-function DisabledOperatorConsole() {
+function DisabledOperatorConsole({ embedded = false }: { embedded?: boolean } = {}) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <section className={isOpen ? 'operator-console open' : 'operator-console'} aria-label="Phone and SMS disabled operator console">
-      <button className="operator-console-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
+    <section className={embedded ? 'operator-console ql172-embedded-console open' : isOpen ? 'operator-console open' : 'operator-console'} aria-label="Phone and SMS disabled operator console">
+      {!embedded && <button className="operator-console-toggle" onClick={() => setIsOpen((value) => !value)} type="button">
         <span aria-hidden="true">☎</span>
         Phone/SMS console
         <small>disabled</small>
-      </button>
+      </button>}
 
-      {isOpen && (
-        <div className="operator-console-panel" role="dialog" aria-modal="false" aria-label="Disabled phone and SMS operator console">
+      {(isOpen || embedded) && (
+        <div className="operator-console-panel" role={embedded ? 'region' : 'dialog'} aria-modal={embedded ? undefined : 'false'} aria-label="Disabled phone and SMS operator console">
+          {embedded && <p className="ql172-historical-notice">Historical QL-068 planning record. Its statements about future hosting describe that old decision point; the current site is a deployed <strong>disabled preview</strong>. All live phone, SMS and approval actions remain blocked.</p>}
           <div className="operator-console-header">
             <div>
               <p className="eyebrow">QL-068 disabled interface pathway decision gate</p>
@@ -116,9 +117,9 @@ function DisabledOperatorConsole() {
                 This gate decides the next disabled interface pathway only. It does not deploy GitHub Pages, add Vercel or Cloudflare Pages, create Supabase migrations, connect a provider, attach a live number, send SMS, record calls, inspect live customers, write persistence, or start live runtime.
               </p>
             </div>
-            <button className="operator-console-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close disabled operator console">
+            {!embedded && <button className="operator-console-close" onClick={() => setIsOpen(false)} type="button" aria-label="Close disabled operator console">
               ×
-            </button>
+            </button>}
           </div>
 
           <div className="operator-console-status-grid">
