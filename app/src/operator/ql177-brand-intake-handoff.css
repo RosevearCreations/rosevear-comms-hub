@@ -1,0 +1,42 @@
+.ql177-preview { margin: 0 0 20px; padding: clamp(16px, 2.5vw, 28px); border: 1px solid #a5b4fc; border-radius: 18px; color: #172033; background: #f8fafc; }
+.ql177-preview *, .ql177-preview *::before, .ql177-preview *::after { box-sizing: border-box; }
+.ql177-preview :is(button, select, textarea):focus-visible { outline: 3px solid #c2410c; outline-offset: 3px; }
+.ql177-header { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.ql177-header h3 { margin: 2px 0 8px; font-size: clamp(1.3rem, 2.4vw, 1.8rem); }
+.ql177-header p { margin: 0; max-width: 67ch; line-height: 1.55; }
+.ql177-eyebrow { margin: 0 0 6px; color: #4338ca; font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; }
+.ql177-lock { padding: 10px 12px; border: 1px solid #d97706; border-radius: 9px; background: #fef3c7; color: #713f12; font-size: .8rem; }
+.ql177-warning, .ql177-error { margin: 17px 0; padding: 13px 15px; border: 1px solid #d97706; border-radius: 10px; background: #fff7ed; color: #78350f; font-weight: 650; line-height: 1.55; }
+.ql177-error { border-color: #b91c1c; color: #991b1b; background: #fee2e2; }
+.ql177-layout { display: grid; grid-template-columns: minmax(220px, .8fr) minmax(0, 1.8fr); gap: 14px; align-items: start; }
+.ql177-threads, .ql177-panel { min-width: 0; padding: 16px; border: 1px solid #cbd5e1; border-radius: 13px; background: #fff; }
+.ql177-threads { display: grid; gap: 8px; }
+.ql177-threads h4, .ql177-panel h4 { margin: 0; font-size: 1.14rem; overflow-wrap: anywhere; }
+.ql177-threads p, .ql177-panel > p { margin: 3px 0 9px; color: #475569; line-height: 1.5; }
+.ql177-thread { display: grid; gap: 6px; min-height: 66px; width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 10px; background: #f8fafc; color: #172033; cursor: pointer; text-align: left; overflow-wrap: anywhere; }
+.ql177-thread.active { border-color: #4338ca; background: #eef2ff; }
+.ql177-thread small, .ql177-thread span { color: #475569; line-height: 1.35; }
+.ql177-links { margin: 12px 0; display: grid; gap: 8px; }
+.ql177-links div { padding: 9px 11px; border-radius: 8px; background: #f1f5f9; }
+.ql177-links dt { color: #475569; font-size: .78rem; font-weight: 750; }
+.ql177-links dd { margin: 4px 0 0; overflow-wrap: anywhere; font-size: .87rem; }
+.ql177-form, .ql177-handoff { margin-top: 18px; padding-top: 17px; border-top: 1px solid #cbd5e1; }
+.ql177-form h5, .ql177-handoff h5 { margin: 0 0 8px; font-size: 1.08rem; }
+.ql177-form p { color: #475569; line-height: 1.55; }
+.ql177-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.ql177-field { display: grid; gap: 6px; align-content: start; min-width: 0; }
+.ql177-field label, .ql177-note-label { color: #334155; font-size: .88rem; font-weight: 750; }
+.ql177-field small { line-height: 1.4; color: #475569; }
+.ql177-field select, .ql177-form textarea { width: 100%; min-height: 44px; padding: 9px 10px; border: 1px solid #64748b; border-radius: 8px; color: #0f172a; background: white; font: inherit; }
+.ql177-note-label { display: block; margin-top: 18px; margin-bottom: 7px; }
+.ql177-form textarea { min-height: 84px; resize: vertical; }
+.ql177-missing { color: #92400e; background: #fffbeb; padding: 12px; border-left: 4px solid #d97706; line-height: 1.55; }
+.ql177-ready { color: #14532d; background: #f0fdf4; padding: 12px; border-left: 4px solid #15803d; line-height: 1.55; }
+.ql177-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+.ql177-actions button { padding: 9px 12px; min-height: 44px; border: 1px solid #64748b; border-radius: 8px; background: #fff; color: #0f172a; font-weight: 750; cursor: pointer; }
+.ql177-actions .ql177-stage { background: #4338ca; border-color: #4338ca; color: white; }
+.ql177-actions button:disabled { background: #e2e8f0; color: #475569; border-color: #94a3b8; cursor: not-allowed; }
+.ql177-feedback { padding: 11px; border-radius: 8px; color: #1e3a8a; background: #eef2ff; font-weight: 750; line-height: 1.5; }
+.ql177-denials { display: block; margin-top: 11px; color: #78350f; line-height: 1.6; font-size: .82rem; }
+@media (max-width: 730px) { .ql177-layout, .ql177-fields { grid-template-columns: minmax(0, 1fr); } }
+@media (forced-colors: active) { .ql177-thread.active, .ql177-lock, .ql177-missing { outline: 2px solid Highlight; } }
