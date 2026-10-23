@@ -1,0 +1,53 @@
+.ql172-shell { min-height: 100vh; color: #172033; background: #eef2f7; }
+.ql172-shell *, .ql172-shell *::before, .ql172-shell *::after { box-sizing: border-box; }
+.ql172-skip-link { position: absolute; top: -100px; left: 16px; z-index: 100; padding: 12px 16px; color: #fff; background: #1d4ed8; border-radius: 8px; }
+.ql172-skip-link:focus { top: 12px; }
+.ql172-shell :is(button, a):focus-visible { outline: 3px solid #d97706; outline-offset: 3px; }
+.ql172-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px clamp(16px, 4vw, 48px); background: #0f172a; color: #fff; }
+.ql172-header h1 { margin: 4px 0; font-size: clamp(1.6rem, 3vw, 2.2rem); }
+.ql172-header p { color: #cbd5e1; margin: 4px 0; }
+.ql172-kicker { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+.ql172-status { display: grid; gap: 5px; max-width: 330px; border: 1px solid #fbbf24; border-radius: 14px; background: #422006; color: #fef3c7; padding: 12px 16px; }
+.ql172-status span { font-size: 0.85rem; }
+.ql172-layout { display: grid; grid-template-columns: minmax(225px, 265px) minmax(0, 1fr); align-items: start; }
+.ql172-sidebar { padding: 24px 16px; background: #17243a; color: #fff; min-height: calc(100vh - 120px); display: grid; gap: 22px; align-content: start; }
+.ql172-sidebar h2 { margin: 0 0 10px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; color: #bfdbfe; }
+.ql172-brand-group, .ql172-navigation { display: grid; gap: 8px; }
+.ql172-brand, .ql172-nav-button { min-height: 48px; border: 1px solid transparent; border-radius: 12px; padding: 12px; background: #26364f; color: #e2e8f0; text-align: left; display: grid; gap: 3px; width: 100%; }
+.ql172-brand span, .ql172-nav-button strong { font-weight: 800; }
+.ql172-brand small, .ql172-nav-button small { color: #d1d5db; font-size: 0.77rem; line-height: 1.35; }
+.ql172-brand.active, .ql172-nav-button.active { background: #1d4ed8; border-color: #93c5fd; color: #fff; }
+.ql172-brand.active small, .ql172-nav-button.active small { color: #eff6ff; }
+.ql172-brand:hover, .ql172-nav-button:hover { border-color: #bfdbfe; }
+.ql172-sidebar-warning { line-height: 1.55; color: #fef3c7; background: #713f12; padding: 12px; border-radius: 10px; font-size: 0.87rem; }
+.ql172-main { min-width: 0; padding: clamp(14px, 2.5vw, 28px); }
+.ql172-context { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 18px 22px; background: #fff; border: 1px solid #cbd5e1; border-radius: 16px; margin-bottom: 18px; }
+.ql172-context h2 { margin: 3px 0; font-size: clamp(1.4rem, 2.5vw, 1.9rem); }
+.ql172-context p { margin: 0; color: #475569; }
+.ql172-context-badge { background: #dcfce7; color: #14532d; font-size: 0.85rem; font-weight: 800; padding: 9px 12px; border-radius: 999px; }
+.ql172-local-warning { margin: 0 0 16px; background: #fff7ed; color: #7c2d12; border: 1px solid #fdba74; padding: 14px 18px; border-radius: 12px; line-height: 1.5; font-weight: 650; }
+/* Embed the legacy surfaces in the selected workspace instead of their
+   separate fixed-position popover slots. Standalone panel tests still use
+   the original popover rules when embedded is false. */
+.ql172-embedded-preview, .ql172-embedded-safe-read, .ql172-embedded-console { position: static; inset: auto; z-index: auto; width: 100%; }
+.ql172-embedded-preview .interface-preview-panel,
+.ql172-embedded-safe-read .ql093-panel,
+.ql172-embedded-console .operator-console-panel { position: static; inset: auto; max-height: none; overflow: visible; width: 100%; margin: 0; box-shadow: none; border-radius: 18px; padding: clamp(12px, 2vw, 24px); }
+.ql172-embedded-preview .interface-preview-panel { right: auto; left: auto; bottom: auto; }
+.ql172-embedded-safe-read .ql093-panel { left: auto; right: auto; bottom: auto; }
+.ql172-historical-notice { padding: 12px 16px; border: 1px solid #f59e0b; background: #fffbeb; color: #78350f; border-radius: 12px; line-height: 1.5; }
+@media (max-width: 760px) {
+  .ql172-header { display: grid; }
+  .ql172-layout { grid-template-columns: minmax(0, 1fr); }
+  .ql172-sidebar { min-height: 0; }
+  .ql172-brand-group { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ql172-brand-group h2, .ql172-navigation h2 { grid-column: 1 / -1; }
+  .ql172-navigation { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 450px) {
+  .ql172-navigation { grid-template-columns: 1fr; }
+  .ql172-context-badge { white-space: normal; }
+}
+@media (forced-colors: active) {
+  .ql172-brand.active, .ql172-nav-button.active { outline: 2px solid Highlight; }
+}

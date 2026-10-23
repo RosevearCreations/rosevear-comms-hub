@@ -1,11 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
 import { AdminSessionGate } from './auth/AdminSessionGate';
 import { SiteHelpSystem } from './help/SiteHelpSystem';
-import { DisabledInterfacePreview } from './operator/DisabledInterfacePreview';
-import { DisabledOperatorConsole } from './operator/DisabledOperatorConsole';
-import { Ql093SafeReadPreview } from './operator/Ql093SafeReadPreview';
+import { OperatorShell } from './operator/OperatorShell';
 import './styles.css';
 
 const rootElement = document.getElementById('root');
@@ -17,11 +14,8 @@ if (!rootElement) {
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <AdminSessionGate>
-      <App />
+      <OperatorShell />
       <SiteHelpSystem />
-      <DisabledInterfacePreview />
-      <Ql093SafeReadPreview />
-      <DisabledOperatorConsole />
     </AdminSessionGate>
   </React.StrictMode>
 );

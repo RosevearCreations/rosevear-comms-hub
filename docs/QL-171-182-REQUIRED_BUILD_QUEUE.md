@@ -1,6 +1,6 @@
 # Quo-lite next required build queue — QL-171 through QL-182
 
-Status: **planned / not yet implemented**. This batch follows the QL-164–170 completed queue. Queue publication is a planning-only change; it is not evidence that any QL-171+ feature has been implemented, deployed, or approved for live operation.
+Status: **QL-171 and QL-172 implementation prepared; QL-173–182 remain queued.** This batch follows the QL-164–170 completed queue. Publication of a roadmap does not authorize live operations, and QL-171/172 implementation is not considered promoted until exact-main checks pass.
 
 ## Product objective
 
@@ -43,4 +43,4 @@ Current baseline to preserve and reconcile:
 
 QL-171 must precede UI refactoring; QL-173 supplies the fixture model used by QL-174–180; QL-181 records, but does **not grant**, future live-pilot authorization. Full provider provisioning, telecom integration, authenticated Supabase customer writes, actual owner decisions, real customer importing, paid numbers and live operations are **outside** QL-171–182.
 
-**Queue accounting:** 12 newly planned builds, QL-171–182 inclusive; **0 implemented as a result of publishing this document**. Begin implementation with **QL-171** only when that build is individually requested.
+**Queue accounting:** 12 original builds, QL-171–182 inclusive. QL-171 inventory and QL-172 shell are included in this release candidate; **10 follow-on builds (QL-173–182)** remain for future separately requested implementation. None of these builds grant live operating authority.
