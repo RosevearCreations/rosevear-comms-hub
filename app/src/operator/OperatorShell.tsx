@@ -15,6 +15,7 @@ import { Ql181PrivacyPilotGatePreview } from './Ql181PrivacyPilotGatePreview';
 import { Ql182SyntheticJourneyPreview } from './Ql182SyntheticJourneyPreview';
 import { Ql183OperatorUsabilityPreview } from './Ql183OperatorUsabilityPreview';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
+import type { Ql183Feedback } from './ql183OperatorUsabilityAcceptance';
 import './operator-shell.css';
 
 type Workspace = 'inbox' | 'samples' | 'evidence' | 'telephony';
@@ -32,11 +33,17 @@ const firstBrand = brands.some((brand) => brand.id === import.meta.env.VITE_DEFA
 
 export function OperatorShell() {
   const [brandId, setBrandId] = useState<BrandId>(firstBrand);
+  const [usabilityFeedback, setUsabilityFeedback] = useState<Record<string, Ql183Feedback>>({});
   const [workspace, setWorkspace] = useState<Workspace>('inbox');
   const activeBrand = brands.find((brand) => brand.id === brandId) ?? brands[0];
   const activeWorkspace = workspaces.find((entry) => entry.id === workspace) ?? workspaces[0];
   const headingRef = useRef<HTMLHeadingElement>(null);
   const previouslySelected = useRef<Workspace | null>(null);
+
+  function changeBrand(nextBrand: BrandId) {
+    if (nextBrand !== brandId) setUsabilityFeedback({});
+    setBrandId(nextBrand);
+  }
 
   // Move focus to the visible workspace heading after an explicit navigation
   // change, while leaving initial page-load focus untouched.
@@ -70,7 +77,7 @@ export function OperatorShell() {
                 key={brand.id}
                 type="button"
                 aria-pressed={brand.id === brandId}
-                onClick={() => setBrandId(brand.id)}
+                onClick={() => changeBrand(brand.id)}
               >
                 <span>{brand.displayName}</span>
                 <small>{brand.businessType}</small>
@@ -108,7 +115,7 @@ export function OperatorShell() {
           {workspace === 'inbox' && (
             <>
               <p className="ql172-local-warning" role="note">QL-004 is a browser-local demonstration. Do not enter real names, phone numbers, messages, or owner decisions; edits and exports affect local demo data only.</p>
-              <App activeBrandId={brandId} onBrandChange={setBrandId} embedded />
+              <App activeBrandId={brandId} onBrandChange={changeBrand} embedded />
             </>
           )}
           {workspace === 'samples' && (
@@ -118,15 +125,16 @@ export function OperatorShell() {
               <Ql176ConversationTimelinePreview key={brandId} brandId={brandId} />
               <Ql177BrandIntakeHandoffPreview key={`intake-${brandId}`} brandId={brandId} />
               <Ql178OperatorTaskSimulation key={`tasks-${brandId}`} brandId={brandId} />
-              <DisabledInterfacePreview embedded brandId={brandId} onBrandChange={setBrandId} />
+              <DisabledInterfacePreview embedded brandId={brandId} onBrandChange={changeBrand} />
             </>
           )}
           {workspace === 'evidence' && (
             <>
-              <Ql183OperatorUsabilityPreview key={`usability-${brandId}`} brandId={brandId} />
+              <Ql183OperatorUsabilityPreview key={`usability-${brandId}`} brandId={brandId}
+                feedback={usabilityFeedback} onFeedbackChange={setUsabilityFeedback} />
               <Ql182SyntheticJourneyPreview key={`journey-${brandId}`} brandId={brandId} />
               <Ql181PrivacyPilotGatePreview key={`privacy-${brandId}`} brandId={brandId} />
-              <Ql093SafeReadPreview embedded brandId={brandId} onBrandChange={setBrandId} />
+              <Ql093SafeReadPreview embedded brandId={brandId} onBrandChange={changeBrand} />
             </>
           )}
           {workspace === 'telephony' && (

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 import type { BrandId } from '../types';
 import { assessQl183Rehearsal, QL183_MODES, QL183_TASKS, QL183_VERSION,
   type Ql183Feedback, type Ql183Mode } from './ql183OperatorUsabilityAcceptance';
@@ -10,10 +10,20 @@ const outcomes: ReadonlyArray<{ value: Ql183Feedback; label: string }> = [
   { value: 'NEEDS_IMPROVEMENT', label: 'Needs improvement' }
 ];
 
-/** All input is predefined, temporary and scoped to the mounted business. */
-export function Ql183OperatorUsabilityPreview({ brandId }: { brandId: BrandId }) {
+interface Ql183PreviewProps {
+  brandId: BrandId;
+  // The operator shell holds this state while visiting other workspaces; it
+  // clears it on business changes. Standalone previews use local state.
+  feedback?: Record<string, Ql183Feedback>;
+  onFeedbackChange?: Dispatch<SetStateAction<Record<string, Ql183Feedback>>>;
+}
+
+/** All input is predefined, temporary and scoped to the active business. */
+export function Ql183OperatorUsabilityPreview({ brandId, feedback: controlledFeedback, onFeedbackChange }: Ql183PreviewProps) {
   const [mode, setMode] = useState<Ql183Mode>('keyboard');
-  const [feedback, setFeedback] = useState<Record<string, Ql183Feedback>>({});
+  const [localFeedback, setLocalFeedback] = useState<Record<string, Ql183Feedback>>({});
+  const feedback = controlledFeedback ?? localFeedback;
+  const setFeedback = onFeedbackChange ?? setLocalFeedback;
   const assessment = useMemo(() => assessQl183Rehearsal(brandId, feedback), [brandId, feedback]);
   const tasks = QL183_TASKS.filter(task => task.mode === mode);
   const activeMode = QL183_MODES.find(entry => entry.id === mode)!;
