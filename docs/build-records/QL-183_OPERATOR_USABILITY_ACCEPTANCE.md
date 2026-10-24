@@ -6,7 +6,7 @@
 ## Implementation
 
 - `ql183OperatorUsabilityAcceptance.ts` defines nine deterministic manual checks, preset feedback and a deny-by-default, side-effect-free assessment. Even a complete self-review is not a verified audit or live approval.
-- `Ql183OperatorUsabilityPreview.tsx` appears in the Safety & hold review workspace, scoped and reset by active brand, with native labels, fieldsets, radios, a live summary and temporary improvement list.
+- `Ql183OperatorUsabilityPreview.tsx` appears in the Safety & hold review workspace, scoped and reset by active brand, with native labels, fieldsets, radios, a live summary and temporary improvement list. The shell holds the ephemeral choices across workspace navigation while clearing them on business switch.
 - `ql183-operator-usability.css` provides responsive narrow-screen and forced-colour display with visible focus and large controls.
 - `OperatorShell.tsx` integrates the new preview and improves the main skip target and dynamic brand/workspace announcement.
 - Focused tests exercise both brands, invalid feedback, incomplete/follow-up/completed self-reports, accessible controls, reset, brand remount, and no storage/network effects.
