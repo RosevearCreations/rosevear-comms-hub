@@ -15,6 +15,7 @@ import { Ql181PrivacyPilotGatePreview } from './Ql181PrivacyPilotGatePreview';
 import { Ql182SyntheticJourneyPreview } from './Ql182SyntheticJourneyPreview';
 import { Ql183OperatorUsabilityPreview } from './Ql183OperatorUsabilityPreview';
 import { Ql184BrandWorkspacePermissionPreview } from './Ql184BrandWorkspacePermissionPreview';
+import { Ql185PrivateDataBlueprintPreview } from './Ql185PrivateDataBlueprintPreview';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
 import type { Ql183Feedback } from './ql183OperatorUsabilityAcceptance';
 import './operator-shell.css';
@@ -131,6 +132,7 @@ export function OperatorShell() {
           )}
           {workspace === 'evidence' && (
             <>
+              <Ql185PrivateDataBlueprintPreview key={`private-data-${brandId}`} brandId={brandId} />
               <Ql184BrandWorkspacePermissionPreview key={`permission-${brandId}`} brandId={brandId} />
               <Ql183OperatorUsabilityPreview key={`usability-${brandId}`} brandId={brandId}
                 feedback={usabilityFeedback} onFeedbackChange={setUsabilityFeedback} />
