@@ -1,0 +1,33 @@
+.ql183-usability{margin:1rem 0 2rem;padding:1.2rem;background:#f1f8f4;border:1px solid #76a38e;border-radius:1rem;color:#17392a}
+.ql183-header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem}
+.ql183-header h3{font-size:1.5rem;margin:.25rem 0;color:#174c36}
+.ql183-header p{line-height:1.5;max-width:46rem}
+.ql183-kicker{font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.ql183-hold{background:#72371b;color:white;border-radius:.6rem;padding:.6rem .8rem;max-width:14rem;font-size:.78rem}
+.ql183-safety{background:#fff8ed;color:#613713;border:1px solid #d4ac73;border-left:5px solid #a85b23;border-radius:.6rem;padding:.85rem;line-height:1.55}
+.ql183-summary{background:#fff;border:1px solid #83aa96;border-radius:.65rem;padding:1rem;display:grid;gap:.45rem;line-height:1.4;overflow-wrap:anywhere}
+.ql183-summary strong{color:#174c36;font-size:1rem}
+.ql183-mode-picker{margin:1rem 0;background:#e4f2ea;border-radius:.65rem;padding:.85rem;display:grid;gap:.5rem}
+.ql183-mode-picker label{font-weight:800}
+.ql183-mode-picker select{min-height:44px;padding:.6rem;border:1px solid #476d58;background:white;color:#102c20;border-radius:.45rem;max-width:100%;width:26rem}
+.ql183-mode-picker p{margin:.2rem 0;line-height:1.5}
+.ql183-tasks{padding:0;list-style:none;counter-reset:ql183;display:grid;gap:.85rem}
+.ql183-tasks>li{min-width:0;counter-increment:ql183;border:1px solid #adcaba;border-radius:.75rem;background:#fff;padding:1rem;overflow-wrap:anywhere}
+.ql183-tasks h4{margin:.1rem 0;color:#174c36;font-size:1.12rem}
+.ql183-tasks h4::before{content:counter(ql183) '. ';font-weight:800}
+.ql183-tasks p{line-height:1.5;margin:.5rem 0}
+.ql183-workspace{font-weight:700;color:#335b46}
+.ql183-tasks fieldset{min-width:0;margin-top:1rem;border:1px solid #839b8d;border-radius:.6rem;padding:.8rem}
+.ql183-tasks legend{padding:0 .25rem;font-size:.88rem;font-weight:800}
+.ql183-tasks fieldset label{display:inline-flex;align-items:center;min-height:44px;gap:.5rem;margin:0 1rem .2rem 0;cursor:pointer;line-height:1.4}
+.ql183-tasks input{accent-color:#165f43;width:1.1rem;height:1.1rem;flex-shrink:0}
+.ql183-followup{background:#fff0e5;border:1px solid #c99360;border-radius:.65rem;padding:1rem}
+.ql183-followup ul{margin:.4rem 0;padding-left:1.3rem}
+.ql183-followup li{margin:.35rem 0}
+.ql183-actions{display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;margin-top:1rem}
+.ql183-actions button{min-height:44px;padding:.65rem .85rem;border:1px solid #165f43;border-radius:.45rem;background:#165f43;color:white;cursor:pointer;font-weight:750}
+.ql183-actions p{margin:0;font-size:.87rem}
+.ql183-usability :is(button,select,input):focus-visible{outline:3px solid #b45309;outline-offset:3px}
+@media(max-width:700px){.ql183-usability{padding:.75rem}.ql183-tasks fieldset label{display:flex;margin-right:0}.ql183-hold{max-width:none}.ql183-actions{align-items:stretch}}
+@media(max-width:375px){.ql183-usability{border-radius:.55rem}.ql183-tasks>li{padding:.7rem}.ql183-tasks fieldset{padding:.45rem}}
+@media(forced-colors:active){.ql183-usability,.ql183-summary,.ql183-tasks>li,.ql183-tasks fieldset{border:1px solid CanvasText}}
