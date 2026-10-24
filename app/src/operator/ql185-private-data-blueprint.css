@@ -1,0 +1,29 @@
+.ql185-blueprint{margin:1rem 0 2rem;padding:1.2rem;border:1px solid #90abc2;border-radius:1rem;background:#eff8fa;color:#183344}
+.ql185-header{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;flex-wrap:wrap}
+.ql185-header h3{font-size:1.5rem;color:#124c5e;margin:.25rem 0}
+.ql185-header p{max-width:52rem;line-height:1.5}
+.ql185-kicker{font-weight:800;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase}
+.ql185-badge{max-width:17rem;border-radius:.6rem;background:#692f1d;color:#fff;padding:.7rem .8rem;font-size:.82rem}
+.ql185-warning{padding:.9rem;background:#fff5e9;border-left:5px solid #a85325;border-radius:.6rem;line-height:1.55}
+.ql185-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:1rem 0}
+.ql185-controls>div{display:grid;gap:.4rem;min-width:0}
+.ql185-controls label{font-weight:800}
+.ql185-controls select{width:100%;min-height:44px;padding:.65rem;color:#142e43;background:#fff;border:1px solid #6c8796;border-radius:.5rem}
+.ql185-result{padding:1rem;border:1px solid #91aeba;background:#fff;border-radius:.7rem;line-height:1.55;overflow-wrap:anywhere}
+.ql185-result h4{color:#16485b;font-size:1.15rem;margin:.3rem 0}
+.ql185-table-wrap{overflow-x:auto;background:#fff;border:1px solid #91aeba;border-radius:.7rem;margin:1rem 0}
+.ql185-table-wrap table{width:100%;min-width:620px;text-align:left;border-collapse:collapse}
+.ql185-table-wrap caption{padding:1rem;text-align:left;font-weight:750;color:#20495a}
+.ql185-table-wrap th,.ql185-table-wrap td{padding:.7rem;vertical-align:top;border-bottom:1px solid #d2e0e5}
+.ql185-table-wrap thead{background:#dceef3}
+.ql185-table-wrap tbody tr:nth-child(even){background:#f1f8fa}
+.ql185-help{margin-top:1rem;border:1px solid #91aeba;border-radius:.7rem;background:#fff;padding:.8rem 1rem;line-height:1.55}
+.ql185-help summary{cursor:pointer;display:flex;align-items:center;gap:.55rem;font-weight:800;min-height:44px}
+.ql185-help li{margin:.5rem 0}
+.ql185-risk-list{display:grid;gap:.7rem;margin-top:1rem}
+.ql185-risk-list article{padding:.8rem;border-left:4px solid #2f697d;background:#f2f9fb}
+.ql185-risk-list h4{margin:0}
+.ql185-blueprint :is(select,summary):focus-visible{outline:3px solid #a25216;outline-offset:3px}
+@media(max-width:700px){.ql185-blueprint{padding:.8rem}.ql185-controls{grid-template-columns:1fr}.ql185-badge{max-width:none}}
+@media(max-width:375px){.ql185-blueprint{border-radius:.5rem}.ql185-result{padding:.7rem}}
+@media(forced-colors:active){.ql185-blueprint,.ql185-result,.ql185-help,.ql185-table-wrap{border:1px solid CanvasText}}
