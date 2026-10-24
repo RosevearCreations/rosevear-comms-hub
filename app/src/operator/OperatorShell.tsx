@@ -17,6 +17,7 @@ import { Ql183OperatorUsabilityPreview } from './Ql183OperatorUsabilityPreview';
 import { Ql184BrandWorkspacePermissionPreview } from './Ql184BrandWorkspacePermissionPreview';
 import { Ql185PrivateDataBlueprintPreview } from './Ql185PrivateDataBlueprintPreview';
 import { Ql186ConsentMessageClassificationPreview } from './Ql186ConsentMessageClassificationPreview';
+import { Ql187ProviderCostPreview } from './Ql187ProviderCostPreview';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
 import type { Ql183Feedback } from './ql183OperatorUsabilityAcceptance';
 import './operator-shell.css';
@@ -145,6 +146,7 @@ export function OperatorShell() {
           )}
           {workspace === 'telephony' && (
             <>
+              <Ql187ProviderCostPreview key={`provider-cost-${brandId}`} brandId={brandId} />
               <Ql179PhoneSmsEventEmulator key={`phone-sms-${brandId}`} brandId={brandId} />
               <Ql180RoutingIvrPreview key={`ivr-${brandId}`} brandId={brandId} />
               <DisabledOperatorConsole embedded />
