@@ -4,7 +4,7 @@
 
 QL-183 adds an operator-run **keyboard, screen-reader and mobile rehearsal** to the disabled two-brand communications preview. It does **not** certify accessibility, represent a real user study, store observations, or enable live operations. The 12/12 live-pilot prerequisites inherited from QL-181 remain `HELD_UNVERIFIED`. All examples must be synthetic.
 
-The checklist is found at **Operator workspace → Safety & hold review → QL-183 Operator usability acceptance rehearsal**. Switching businesses remounts the checklist. No text entry is collected: choices are limited to **Not tested**, **Usable in my rehearsal**, or **Needs improvement**. All choices disappear on page reload, business switch or Clear this rehearsal.
+The checklist is found at **Operator workspace → Safety & hold review → QL-183 Operator usability acceptance rehearsal**. No text entry is collected: choices are limited to **Not tested**, **Usable in my rehearsal**, or **Needs improvement**. Results survive temporarily when visiting other workspaces and returning. All choices disappear on page reload, business switch or Clear this rehearsal.
 
 ## Operator walkthrough matrix
 

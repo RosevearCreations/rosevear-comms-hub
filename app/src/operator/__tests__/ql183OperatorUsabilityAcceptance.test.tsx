@@ -119,7 +119,7 @@ describe('QL-183 operator accessibility rehearsal UI', () => {
     expect(host.querySelectorAll<HTMLInputElement>('input[value="SELF_REPORTED_USABLE"]:checked')).toHaveLength(0);
   });
 
-  it('is reached through the real safety workspace and fixes main skip focus and brand announcements', async () => {
+  it('persists only in shell memory across workspaces, resets for a different business, and announces context', async () => {
     await act(async () => root.render(<OperatorShell key="full-shell" />));
     expect(host.querySelector('main#ql172-workspace')?.getAttribute('tabindex')).toBe('-1');
     expect(host.querySelector('.ql172-context .ql172-kicker')?.getAttribute('aria-live')).toBe('polite');
@@ -127,10 +127,17 @@ describe('QL-183 operator accessibility rehearsal UI', () => {
     await act(async () => safety.click());
     expect(host.querySelector('.ql183-usability')).not.toBeNull();
     expect(host.querySelector('.ql182-journey')).not.toBeNull();
+    await act(async () => host.querySelector<HTMLInputElement>('input[name="ql183-key_skip"][value="NEEDS_IMPROVEMENT"]')!.click());
+    expect(host.querySelector('.ql183-usability')?.textContent).toContain('1 needs improvement');
+    const samples = [...host.querySelectorAll<HTMLButtonElement>('.ql172-nav-button')].find(b => b.textContent?.includes('Synthetic conversations'))!;
+    await act(async () => samples.click());
+    expect(host.querySelector('.ql183-usability')).toBeNull();
+    await act(async () => safety.click());
+    expect(host.querySelector('.ql183-usability')?.textContent).toContain('1 needs improvement');
     const otherBrand = [...host.querySelectorAll<HTMLButtonElement>('.ql172-brand')].find(b => b.textContent?.includes('Devil n Dove'))!;
     await act(async () => otherBrand.click());
     expect(host.querySelector('.ql183-usability')?.textContent).toContain('Devil n Dove');
-    expect(host.querySelector('.ql183-usability')?.textContent).toContain('9 not tested');
+    expect(host.querySelector('.ql183-usability')?.textContent).toContain('0 needs improvement · 9 not tested');
     expect(host.querySelector('.ql172-status')?.textContent).toContain('DISABLED PREVIEW');
   });
 
