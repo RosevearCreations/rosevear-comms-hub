@@ -1,0 +1,26 @@
+.ql186-consent{margin:1rem 0 2rem;padding:1.2rem;background:#f4f3ff;color:#2f2850;border:1px solid #a69bc7;border-radius:1rem}
+.ql186-header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;align-items:flex-start}
+.ql186-header h3{font-size:1.5rem;color:#403077;margin:.25rem 0}
+.ql186-header p{max-width:50rem;line-height:1.55}
+.ql186-kicker{font-size:.77rem;letter-spacing:.07em;text-transform:uppercase;font-weight:800}
+.ql186-hold{background:#703126;color:#fff;border-radius:.6rem;padding:.7rem .85rem;font-size:.8rem;max-width:16rem}
+.ql186-warning{padding:.9rem;border-left:5px solid #a44c2e;border-radius:.6rem;background:#fff7e9;line-height:1.55}
+.ql186-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1rem 0}
+.ql186-controls>div{display:grid;gap:.4rem;min-width:0}
+.ql186-controls label{font-weight:800;font-size:.89rem}
+.ql186-controls select{width:100%;min-height:44px;border:1px solid #726593;color:#2e2850;background:#fff;padding:.65rem;border-radius:.45rem}
+.ql186-result{padding:1rem;border:1px solid #a79cc4;border-radius:.8rem;background:#fff;line-height:1.55;overflow-wrap:anywhere}
+.ql186-result h4{font-size:1.14rem;margin:.3rem 0;color:#403077}
+.ql186-table-wrap{overflow-x:auto;background:#fff;border:1px solid #a79cc4;border-radius:.7rem;margin:1rem 0}
+.ql186-table-wrap table{width:100%;min-width:600px;border-collapse:collapse;text-align:left}
+.ql186-table-wrap caption{text-align:left;padding:1rem;color:#44346b;font-weight:800}
+.ql186-table-wrap th,.ql186-table-wrap td{border-bottom:1px solid #dcd4ed;padding:.7rem;vertical-align:top}
+.ql186-table-wrap thead{background:#e5dff6}
+.ql186-table-wrap tbody tr:nth-child(even){background:#f8f6ff}
+.ql186-help{padding:1rem;border:1px solid #a79cc4;background:#fff;border-radius:.7rem;margin-top:1rem;line-height:1.55}
+.ql186-help summary{display:flex;align-items:center;gap:.6rem;min-height:44px;font-weight:800;cursor:pointer}
+.ql186-help li{margin:.5rem 0;overflow-wrap:anywhere}
+.ql186-consent :is(select,summary):focus-visible{outline:3px solid #a95620;outline-offset:3px}
+@media(max-width:700px){.ql186-consent{padding:.8rem}.ql186-controls{grid-template-columns:1fr}.ql186-hold{max-width:none}}
+@media(max-width:375px){.ql186-consent{border-radius:.5rem}.ql186-result{padding:.7rem}}
+@media(forced-colors:active){.ql186-consent,.ql186-result,.ql186-table-wrap,.ql186-help{border:1px solid CanvasText}}
