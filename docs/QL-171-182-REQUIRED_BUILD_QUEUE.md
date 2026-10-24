@@ -1,6 +1,6 @@
 # Quo-lite next required build queue — QL-171 through QL-182
 
-Status: **QL-171–180 promoted to exact-main GREEN** (QL-180 main commit `d1f58d663187a486ef13c64541ececbc101f58a1`); **QL-181 is the current implementation/release candidate; QL-182 remains queued.** QL-181 may be called GREEN only after its own exact-main application, Pages, Supabase Preview and Workers checks succeed. Publication of a roadmap never authorizes live operations.
+Status: **QL-171–181 promoted to exact-main GREEN**, including QL-181 at main commit `a3573f7deef71c7777944ee681fb220705151cb7`. **QL-182 is the final implementation/release candidate.** When QL-182's own exact-main application, Pages, Supabase Preview and Workers checks and published asset are verified, this 12-build *synthetic development queue* is closed. Publication of a roadmap never authorizes live operations.
 
 ## Product objective
 
@@ -43,4 +43,4 @@ Current baseline to preserve and reconcile:
 
 QL-171 must precede UI refactoring; QL-173 supplies the fixture model used by QL-174–180; QL-181 records, but does **not grant**, future live-pilot authorization. Full provider provisioning, telecom integration, authenticated Supabase customer writes, actual owner decisions, real customer importing, paid numbers and live operations are **outside** QL-171–182.
 
-**Queue accounting:** 12 original builds, QL-171–182 inclusive. QL-171–180 are promoted. QL-181 privacy, roles and live-pilot prerequisite gate is this release candidate. After QL-181 is promoted, **1 follow-on build (QL-182)** remains for separately requested implementation. None of these builds grant live operating authority.
+**Queue accounting:** 12 original builds, QL-171–182 inclusive. **11/12 confirmed promoted** through QL-181; QL-182 is the final in-progress build, leaving **0 further builds** in this numbered batch once its exact-main GREEN checks succeed. The QL-182 acceptance register and proposed new batch live in `docs/QL-182_JOURNEY_ACCEPTANCE_AND_NEXT_BATCH_HANDOFF.md`. These are development milestones only, not telecom or privacy approvals. All 12 QL-181 live-pilot requirements remain HELD.
