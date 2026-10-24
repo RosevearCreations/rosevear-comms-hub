@@ -1,6 +1,6 @@
 # Quo-lite next required build queue — QL-171 through QL-182
 
-Status: **QL-171–178 promoted to exact-main GREEN** (QL-178 main commit `63fc947819136fb00f6d2d2d4b70ef1e1ef93a69`); **QL-179 is the current implementation/release candidate; QL-180–182 remain queued.** QL-179 may be called GREEN only after its own exact-main application, Pages, Supabase Preview and Workers checks succeed. Publication of a roadmap never authorizes live operations.
+Status: **QL-171–179 promoted to exact-main GREEN** (QL-179 main commit `f83be44d78f33de4f75cc0c3fc62c37c93a23a97`); **QL-180 is the current implementation/release candidate; QL-181–182 remain queued.** QL-180 may be called GREEN only after its own exact-main application, Pages, Supabase Preview and Workers checks succeed. Publication of a roadmap never authorizes live operations.
 
 ## Product objective
 
@@ -43,4 +43,4 @@ Current baseline to preserve and reconcile:
 
 QL-171 must precede UI refactoring; QL-173 supplies the fixture model used by QL-174–180; QL-181 records, but does **not grant**, future live-pilot authorization. Full provider provisioning, telecom integration, authenticated Supabase customer writes, actual owner decisions, real customer importing, paid numbers and live operations are **outside** QL-171–182.
 
-**Queue accounting:** 12 original builds, QL-171–182 inclusive. QL-171–178 are promoted. QL-179 provider-neutral phone/SMS event emulator is this release candidate. After QL-179 is promoted, **3 follow-on builds (QL-180–182)** remain for separately requested implementation. None of these builds grant live operating authority.
+**Queue accounting:** 12 original builds, QL-171–182 inclusive. QL-171–179 are promoted. QL-180 multi-line routing / IVR preview simulator is this release candidate. After QL-180 is promoted, **2 follow-on builds (QL-181–182)** remain for separately requested implementation. None of these builds grant live operating authority.
