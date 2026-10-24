@@ -13,6 +13,7 @@ import { Ql179PhoneSmsEventEmulator } from './Ql179PhoneSmsEventEmulator';
 import { Ql180RoutingIvrPreview } from './Ql180RoutingIvrPreview';
 import { Ql181PrivacyPilotGatePreview } from './Ql181PrivacyPilotGatePreview';
 import { Ql182SyntheticJourneyPreview } from './Ql182SyntheticJourneyPreview';
+import { Ql183OperatorUsabilityPreview } from './Ql183OperatorUsabilityPreview';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
 import './operator-shell.css';
 
@@ -95,10 +96,10 @@ export function OperatorShell() {
           <p className="ql172-sidebar-warning">No live calls, SMS, owner approvals, or customer-data processing is authorized.</p>
         </aside>
 
-        <main id="ql172-workspace" className="ql172-main" aria-label="Selected operator workspace">
+        <main id="ql172-workspace" tabIndex={-1} className="ql172-main" aria-label="Selected operator workspace">
           <div className="ql172-context">
             <div>
-              <p className="ql172-kicker">{activeBrand.displayName} · {activeWorkspace.label}</p>
+              <p className="ql172-kicker" aria-live="polite" aria-atomic="true">{activeBrand.displayName} · {activeWorkspace.label}</p>
               <h2 tabIndex={-1} ref={headingRef}>{activeWorkspace.label}</h2>
               <p>{activeWorkspace.description}</p>
             </div>
@@ -122,6 +123,7 @@ export function OperatorShell() {
           )}
           {workspace === 'evidence' && (
             <>
+              <Ql183OperatorUsabilityPreview key={`usability-${brandId}`} brandId={brandId} />
               <Ql182SyntheticJourneyPreview key={`journey-${brandId}`} brandId={brandId} />
               <Ql181PrivacyPilotGatePreview key={`privacy-${brandId}`} brandId={brandId} />
               <Ql093SafeReadPreview embedded brandId={brandId} onBrandChange={setBrandId} />
