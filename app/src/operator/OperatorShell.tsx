@@ -10,6 +10,7 @@ import { Ql176ConversationTimelinePreview } from './Ql176ConversationTimelinePre
 import { Ql177BrandIntakeHandoffPreview } from './Ql177BrandIntakeHandoffPreview';
 import { Ql178OperatorTaskSimulation } from './Ql178OperatorTaskSimulation';
 import { Ql179PhoneSmsEventEmulator } from './Ql179PhoneSmsEventEmulator';
+import { Ql180RoutingIvrPreview } from './Ql180RoutingIvrPreview';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
 import './operator-shell.css';
 
@@ -121,6 +122,7 @@ export function OperatorShell() {
           {workspace === 'telephony' && (
             <>
               <Ql179PhoneSmsEventEmulator key={`phone-sms-${brandId}`} brandId={brandId} />
+              <Ql180RoutingIvrPreview key={`ivr-${brandId}`} brandId={brandId} />
               <DisabledOperatorConsole embedded />
             </>
           )}
