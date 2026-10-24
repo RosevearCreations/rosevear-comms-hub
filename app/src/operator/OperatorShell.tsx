@@ -12,6 +12,7 @@ import { Ql178OperatorTaskSimulation } from './Ql178OperatorTaskSimulation';
 import { Ql179PhoneSmsEventEmulator } from './Ql179PhoneSmsEventEmulator';
 import { Ql180RoutingIvrPreview } from './Ql180RoutingIvrPreview';
 import { Ql181PrivacyPilotGatePreview } from './Ql181PrivacyPilotGatePreview';
+import { Ql182SyntheticJourneyPreview } from './Ql182SyntheticJourneyPreview';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
 import './operator-shell.css';
 
@@ -121,6 +122,7 @@ export function OperatorShell() {
           )}
           {workspace === 'evidence' && (
             <>
+              <Ql182SyntheticJourneyPreview key={`journey-${brandId}`} brandId={brandId} />
               <Ql181PrivacyPilotGatePreview key={`privacy-${brandId}`} brandId={brandId} />
               <Ql093SafeReadPreview embedded brandId={brandId} onBrandChange={setBrandId} />
             </>
