@@ -1,4 +1,7 @@
-.ql172-shell { min-height: 100vh; color: #172033; background: #eef2f7; }
+.ql172-shell { --ql191-accent: #1d4ed8; min-height: 100vh; color: #172033; background: #eef2f7; }
+.ql172-shell[data-organization='devilndove'] { --ql191-accent: #6d28d9; }
+.ql172-shell[data-organization='icamp'] { --ql191-accent: #047857; }
+.ql172-shell[data-organization='yw'] { --ql191-accent: #0f766e; }
 .ql172-shell *, .ql172-shell *::before, .ql172-shell *::after { box-sizing: border-box; }
 .ql172-skip-link { position: absolute; top: -100px; left: 16px; z-index: 100; padding: 12px 16px; color: #fff; background: #1d4ed8; border-radius: 8px; }
 .ql172-skip-link:focus { top: 12px; }
@@ -16,7 +19,7 @@
 .ql172-brand, .ql172-nav-button { min-height: 48px; border: 1px solid transparent; border-radius: 12px; padding: 12px; background: #26364f; color: #e2e8f0; text-align: left; display: grid; gap: 3px; width: 100%; }
 .ql172-brand span, .ql172-nav-button strong { font-weight: 800; }
 .ql172-brand small, .ql172-nav-button small { color: #d1d5db; font-size: 0.77rem; line-height: 1.35; }
-.ql172-brand.active, .ql172-nav-button.active { background: #1d4ed8; border-color: #93c5fd; color: #fff; }
+.ql172-brand.active, .ql172-nav-button.active { background: var(--ql191-accent); border-color: #93c5fd; color: #fff; }
 .ql172-brand.active small, .ql172-nav-button.active small { color: #eff6ff; }
 .ql172-brand:hover, .ql172-nav-button:hover { border-color: #bfdbfe; }
 .ql172-sidebar-warning { line-height: 1.55; color: #fef3c7; background: #713f12; padding: 12px; border-radius: 10px; font-size: 0.87rem; }
@@ -36,6 +39,8 @@
 .ql172-embedded-preview .interface-preview-panel { right: auto; left: auto; bottom: auto; }
 .ql172-embedded-safe-read .ql093-panel { left: auto; right: auto; bottom: auto; }
 .ql172-historical-notice { padding: 12px 16px; border: 1px solid #f59e0b; background: #fffbeb; color: #78350f; border-radius: 12px; line-height: 1.5; }
+.ql172-shell[data-organization='icamp'] .ql172-context, .ql172-shell[data-organization='yw'] .ql172-context { border-top: 4px solid var(--ql191-accent); }
+.ql172-shell[data-organization='devilndove'] .ql172-context { border-top: 4px solid var(--ql191-accent); }
 @media (max-width: 760px) {
   .ql172-header { display: grid; }
   .ql172-layout { grid-template-columns: minmax(0, 1fr); }
