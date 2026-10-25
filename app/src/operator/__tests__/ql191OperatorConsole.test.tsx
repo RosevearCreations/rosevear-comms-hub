@@ -110,15 +110,15 @@ describe('QL-191 operator console', () => {
     expect(host.querySelector('.ql172-shell')?.getAttribute('data-organization')).toBe('yw');
   });
 
-  it('navigates from the dashboard shortcut to an isolated iCamp inbox preview', async () => {
+  it('navigates from the dashboard shortcut to an isolated iCamp unified inbox', async () => {
     await chooseOrganization('iCamp');
     await act(async () => buttonWith('Open inbox preview', '.ql191-actions button').click());
-    expect(host.querySelector('[aria-current="page"]')?.textContent).toContain('Local inbox');
-    expect(host.textContent).toContain('This company workspace is not yet integrated');
-    expect(host.textContent).toContain('Campsite availability question');
+    expect(host.querySelector('[aria-current="page"]')?.textContent).toContain('Unified inbox');
+    expect(host.textContent).toContain('DISABLED SYNTHETIC INBOX');
+    expect(host.textContent).toContain('Tent-site availability');
     expect(host.textContent).not.toContain('Unanswered detailing request');
-    await act(async () => buttonWith('Event guest registration question', '.ql191-queue-entry').click());
-    expect(host.querySelector('.ql191-additional-preview .ql191-queue-detail')?.textContent).toContain('Fictitious weekend-event visitor');
+    await act(async () => buttonWith('Event hall visitor pass', '.ql192-thread').click());
+    expect(host.querySelector('.ql192-detail-panel')?.textContent).toContain('Mock form: What is the process');
   });
 
   it('navigates to a YW safety view without falsely showing earlier brand approvals', async () => {
@@ -130,8 +130,10 @@ describe('QL-191 operator console', () => {
   });
 
   it('preserves historical two-brand inbox and evidence workspaces', async () => {
-    await chooseWorkspace('Local inbox');
+    await chooseWorkspace('Unified inbox');
     expect(host.querySelector('.ql172-local-warning')?.textContent).toContain('Do not enter real names');
+    await act(async () => buttonWith('Open historical QL-004 local demo tools', '.ql192-legacy-tools button').click());
+    expect(host.querySelector('.ql172-embedded-inbox')).not.toBeNull();
     await chooseOrganization('Devil n Dove');
     expect(host.querySelector('.ql172-context')?.textContent).toContain('Devil n Dove');
     await chooseWorkspace('Safety & hold review');

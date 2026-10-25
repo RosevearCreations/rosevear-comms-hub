@@ -62,9 +62,10 @@ describe('QL-172 unified operator navigation and safe preview', () => {
     expect(host.querySelector('.operator-console-panel')?.getAttribute('role')).toBe('region');
     expect(host.textContent).toContain('Historical QL-068 planning record');
     expect(host.querySelectorAll<HTMLButtonElement>('.operator-console-disabled-actions button:not(:disabled)')).toHaveLength(0);
-    await chooseWorkspace('Local inbox');
+    await chooseWorkspace('Unified inbox');
     expect(host.querySelector('.ql172-context')?.textContent).toContain('Devil n Dove');
     expect(host.querySelector('.ql172-local-warning')).not.toBeNull();
+    expect(host.querySelector('.ql192-inbox')).not.toBeNull();
   });
 
   it('opens the synthetic hold review without a floating modal or a real approval action', async () => {
