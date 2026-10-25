@@ -1,0 +1,26 @@
+.ql188-security{margin:1rem 0 2rem;padding:1.2rem;background:#eff3fc;border:1px solid #8498c7;color:#27395b;border-radius:1rem}
+.ql188-header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:1rem}
+.ql188-header h3{color:#263f76;font-size:1.5rem;margin:.25rem 0}
+.ql188-header p{line-height:1.55;max-width:52rem}
+.ql188-kicker{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em}
+.ql188-hold{background:#703126;color:white;padding:.7rem .85rem;border-radius:.6rem;max-width:15rem;font-size:.8rem}
+.ql188-warning{line-height:1.55;background:#fff7e7;border-left:5px solid #9b5220;padding:1rem;border-radius:.6rem}
+.ql188-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1rem 0}
+.ql188-controls>div{display:grid;gap:.4rem;min-width:0}
+.ql188-controls label{font-weight:800;font-size:.9rem}
+.ql188-controls select{width:100%;min-height:44px;border:1px solid #526d9a;background:white;color:#27395b;border-radius:.4rem;padding:.65rem}
+.ql188-result{background:white;border:1px solid #8498c7;border-radius:.7rem;padding:1rem;line-height:1.55;overflow-wrap:anywhere}
+.ql188-result h4{color:#263f76;margin:.3rem 0;font-size:1.12rem}
+.ql188-table-wrap{overflow-x:auto;margin:1rem 0;border:1px solid #8498c7;border-radius:.7rem;background:white}
+.ql188-table-wrap table{min-width:670px;width:100%;border-collapse:collapse;text-align:left}
+.ql188-table-wrap caption{font-weight:800;color:#263f76;text-align:left;padding:1rem}
+.ql188-table-wrap th,.ql188-table-wrap td{padding:.75rem;vertical-align:top;border-bottom:1px solid #cfdaee}
+.ql188-table-wrap thead{background:#dfe9fc}
+.ql188-table-wrap tbody tr:nth-child(even){background:#f6f9ff}
+.ql188-help{padding:1rem;margin-top:1rem;border:1px solid #8498c7;border-radius:.7rem;background:white;line-height:1.55;overflow-wrap:anywhere}
+.ql188-help summary{display:flex;align-items:center;gap:.6rem;min-height:44px;font-weight:800;cursor:pointer}
+.ql188-help li{margin:.55rem 0}
+.ql188-security :is(select,summary):focus-visible{outline:3px solid #9b5220;outline-offset:3px}
+@media(max-width:700px){.ql188-security{padding:.8rem}.ql188-controls{grid-template-columns:1fr}.ql188-hold{max-width:none}}
+@media(max-width:375px){.ql188-security{border-radius:.5rem}.ql188-result{padding:.7rem}}
+@media(forced-colors:active){.ql188-security,.ql188-result,.ql188-table-wrap,.ql188-help{border:1px solid CanvasText}}
