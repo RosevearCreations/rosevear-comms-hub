@@ -1,0 +1,39 @@
+.ql197-calendar { display: grid; gap: 17px; color: #172033; }
+.ql197-header { display: flex; justify-content: space-between; align-items: start; gap: 15px; }
+.ql197-header h3 { margin: 4px 0 8px; font-size: clamp(1.4rem,2.4vw,1.9rem); }
+.ql197-header p { margin: 0; line-height: 1.5; }
+.ql197-help { padding: 14px; border: 1px solid #94a3b8; border-radius: 12px; background: #f8fafc; line-height: 1.6; }
+.ql197-metrics { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
+.ql197-metrics div, .ql197-board, .ql197-agenda, .ql197-details { min-width: 0; border: 1px solid #cbd5e1; border-radius: 15px; background: #fff; padding: 16px; }
+.ql197-metrics div { display: grid; gap: 5px; border-top: 4px solid var(--ql191-accent); }
+.ql197-metrics strong { font-size: 1.65rem; }
+.ql197-metrics span { font-size: .84rem; color: #475569; }
+.ql197-calendar button, .ql197-calendar select { min-height: 44px; font: inherit; font-weight: 750; border: 1px solid #94a3b8; border-radius: 9px; color: #172033; background: #f8fafc; padding: 9px 11px; cursor: pointer; }
+.ql197-calendar button:disabled { cursor: not-allowed; color: #64748b; background: #e2e8f0; }
+.ql197-board-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.ql197-board-header h4, .ql197-agenda h4, .ql197-details h4 { margin: 0 0 7px; font-size: 1.13rem; }
+.ql197-board-header p { font-size: .86rem; color: #475569; margin: 0 0 12px; }
+.ql197-week-controls { display: flex; flex-wrap: wrap; gap: 7px; }
+.ql197-days { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 6px; margin-top: 10px; }
+.ql197-day { min-height: 130px; border: 1px solid #cbd5e1; border-radius: 9px; background: #f8fafc; padding: 9px; min-width: 0; display: grid; align-content: start; gap: 8px; }
+.ql197-day > strong { font-size: .83rem; }
+.ql197-day small { color: #64748b; }
+.ql197-day button { display: grid; gap: 5px; min-width: 0; overflow-wrap: anywhere; text-align: left; background: #eff6ff; border-color: #60a5fa; }
+.ql197-day button span { font-size: .75rem; color: #475569; }
+.ql197-day button strong { font-size: .8rem; }
+.ql197-layout { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.15fr); align-items: start; gap: 16px; }
+.ql197-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.ql197-filters button.active, .ql197-agenda-item.active { outline: 2px solid var(--ql191-accent); background: #eff6ff; }
+.ql197-agenda-item { text-align: left; display: grid; gap: 5px; width: 100%; margin-top: 9px; }
+.ql197-agenda-item small, .ql197-agenda-item span { color: #475569; font-size: .81rem; }
+.ql197-details h5 { margin: 9px 0; font-size: 1.12rem; }
+.ql197-details label { display: block; font-weight: 800; margin: 14px 0 7px; }
+.ql197-details select { width: 100%; }
+.ql197-demo-date, .ql197-reminder-result { font-size: .87rem; color: #475569; line-height: 1.5; }
+.ql197-reminder-result { background: #fffbeb; border: 1px solid #fbbf24; color: #78350f; border-radius: 10px; padding: 12px; }
+.ql197-actions, .ql197-disabled { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 15px; }
+.ql197-disabled { padding-top: 14px; border-top: 1px solid #cbd5e1; }
+@media (max-width: 1080px) { .ql197-days { grid-template-columns: repeat(4,minmax(0,1fr)); } .ql197-layout { grid-template-columns: 1fr; } }
+@media (max-width: 650px) { .ql197-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); } .ql197-days { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 390px) { .ql197-metrics { grid-template-columns: 1fr; } .ql197-days { grid-template-columns: 1fr; } }
+@media (forced-colors: active) { .ql197-agenda-item.active, .ql197-filters button.active { outline: 2px solid Highlight; } }

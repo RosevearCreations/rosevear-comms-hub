@@ -40,6 +40,8 @@ QL-195 adds **Phone desk** as an eighth synthetic workspace for all four compani
 
 QL-196 adds **SMS/MMS composer** as a ninth synthetic workspace: unsent drafts, fictional attachments, business templates, linked-source navigation and conservative cross-channel consent/opt-out review. All sending remains disabled. See [`docs/QL-196_SMS_MMS_COMPOSER_CONSENT_CONTROLS.md`](../docs/QL-196_SMS_MMS_COMPOSER_CONSENT_CONTROLS.md).
 
+QL-197 adds **Tasks, reminders & calendar** as a tenth synthetic workspace: a fixed three-week sample calendar, agenda filtering, guarded changes to the shared QL-194 task schedule and session-only reminder flags. No live reminders or invites. See [`docs/QL-197_TASKS_REMINDERS_CALENDAR.md`](../docs/QL-197_TASKS_REMINDERS_CALENDAR.md).
+
 ## What works in QL-003
 
 - Switch between RosieDazzlers and DevilnDove.

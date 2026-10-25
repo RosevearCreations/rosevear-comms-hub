@@ -101,6 +101,7 @@ export function Ql191OperatorDashboard({ organization, onNavigate }: {
               <button type="button" onClick={() => onNavigate('telephony')}>Phone/SMS safety <span aria-hidden="true">›</span></button>
               <button type="button" onClick={() => onNavigate('phone')}>Open phone desk preview <span aria-hidden="true">›</span></button>
               <button type="button" onClick={() => onNavigate('composer')}>SMS/MMS draft studio <span aria-hidden="true">›</span></button>
+              <button type="button" onClick={() => onNavigate('calendar')}>Tasks & calendar preview <span aria-hidden="true">›</span></button>
               <button type="button" onClick={() => onNavigate('evidence')}>Safety & hold review <span aria-hidden="true">›</span></button>
             </div>
           </section>

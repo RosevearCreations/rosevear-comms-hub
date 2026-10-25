@@ -27,6 +27,7 @@ import { Ql193Customer360 } from './Ql193Customer360';
 import { Ql194FollowUpQueue } from './Ql194FollowUpQueue';
 import { Ql195PhoneDesk } from './Ql195PhoneDesk';
 import { Ql196MessageComposer } from './Ql196MessageComposer';
+import { Ql197TaskCalendar } from './Ql197TaskCalendar';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -40,6 +41,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'queue', label: 'Assignments & follow-ups', description: 'Fictional owners, due windows, triage and conversation-linked sample tasks' },
   { id: 'phone', label: 'Phone desk', description: 'Mock keypad, missed calls, voicemail descriptions and business-line review' },
   { id: 'composer', label: 'SMS/MMS composer', description: 'Unsent message templates, attachment placeholders, consent and opt-out controls' },
+  { id: 'calendar', label: 'Tasks & calendar', description: 'Fictional calendar board, task schedule and local reminder rehearsals' },
   { id: 'samples', label: 'Synthetic conversations', description: 'Brand-safe triage, unsent drafts, mock intake handoffs and follow-up tasks' },
   { id: 'evidence', label: 'Safety & hold review', description: 'Synthetic evidence and unresolved prerequisites' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
@@ -57,6 +59,7 @@ export function OperatorShell() {
   const [queueJump, setQueueJump] = useState<string | null>(null);
   const [composerJump, setComposerJump] = useState<string | null>(null);
   const [queueState, setQueueState] = useState<MockQueueState>(() => seedQueueForOrganization(firstOrganization));
+  const [reminderIds, setReminderIds] = useState<ReadonlySet<string>>(() => new Set());
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
   const activeWorkspace = workspaces.find((entry) => entry.id === workspace) ?? workspaces[0];
@@ -72,6 +75,7 @@ export function OperatorShell() {
       setQueueJump(null);
       setComposerJump(null);
       setQueueState(seedQueueForOrganization(nextOrganization));
+      setReminderIds(new Set());
     }
     setOrganizationId(nextOrganization);
   }
@@ -189,6 +193,7 @@ export function OperatorShell() {
           {workspace === 'queue' && <Ql194FollowUpQueue key={`follow-up-queue-${organization.id}-${queueJump ?? 'default'}`} organization={organization} queue={queueState} setQueue={setQueueState} initialThreadId={queueJump} onOpenThread={openThread} onOpenContact={openCustomer} />}
           {workspace === 'phone' && <Ql195PhoneDesk key={`phone-desk-${organization.id}`} organization={organization} onOpenThread={openThread} onOpenQueue={openQueue} />}
           {workspace === 'composer' && <Ql196MessageComposer key={`message-composer-${organization.id}-${composerJump ?? 'default'}`} organization={organization} initialThreadId={composerJump} onOpenThread={openThread} />}
+          {workspace === 'calendar' && <Ql197TaskCalendar key={`task-calendar-${organization.id}`} organization={organization} queue={queueState} setQueue={setQueueState} reminderIds={reminderIds} setReminderIds={setReminderIds} onOpenThread={openThread} onOpenQueue={openQueue} />}
           {workspace === 'samples' && brandId !== null && (
             <>
               <Ql174BrandSafeTriagePreview brandId={brandId} />
@@ -222,7 +227,7 @@ export function OperatorShell() {
               <DisabledOperatorConsole embedded />
             </>
           )}
-          {workspace !== 'dashboard' && workspace !== 'inbox' && workspace !== 'contacts' && workspace !== 'queue' && workspace !== 'phone' && workspace !== 'composer' && brandId === null && (
+          {workspace !== 'dashboard' && workspace !== 'inbox' && workspace !== 'contacts' && workspace !== 'queue' && workspace !== 'phone' && workspace !== 'composer' && workspace !== 'calendar' && brandId === null && (
             <Ql191AdditionalOrganizationPreview key={`additional-${organization.id}-${workspace}`} organization={organization} workspace={workspace} />
           )}
         </main>
