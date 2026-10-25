@@ -38,6 +38,8 @@ QL-194 adds **Assignments & follow-ups** as a seventh synthetic workspace: busin
 
 QL-195 adds **Phone desk** as an eighth synthetic workspace for all four companies: mock keypad, missed-call/voicemail fixture history, text-only fictional descriptions and links into the inbox/follow-up queue. No live telephony or audio playback. See [`docs/QL-195_PHONE_DESK_VOICEMAIL_CALL_HISTORY.md`](../docs/QL-195_PHONE_DESK_VOICEMAIL_CALL_HISTORY.md).
 
+QL-196 adds **SMS/MMS composer** as a ninth synthetic workspace: unsent drafts, fictional attachments, business templates, linked-source navigation and conservative cross-channel consent/opt-out review. All sending remains disabled. See [`docs/QL-196_SMS_MMS_COMPOSER_CONSENT_CONTROLS.md`](../docs/QL-196_SMS_MMS_COMPOSER_CONSENT_CONTROLS.md).
+
 ## What works in QL-003
 
 - Switch between RosieDazzlers and DevilnDove.
