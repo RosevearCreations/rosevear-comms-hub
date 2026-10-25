@@ -29,6 +29,7 @@ import { Ql195PhoneDesk } from './Ql195PhoneDesk';
 import { Ql196MessageComposer } from './Ql196MessageComposer';
 import { Ql197TaskCalendar } from './Ql197TaskCalendar';
 import { Ql198Reports } from './Ql198Reports';
+import { Ql199ConnectorCentre } from './Ql199ConnectorCentre';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -44,6 +45,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'composer', label: 'SMS/MMS composer', description: 'Unsent message templates, attachment placeholders, consent and opt-out controls' },
   { id: 'calendar', label: 'Tasks & calendar', description: 'Fictional calendar board, task schedule and local reminder rehearsals' },
   { id: 'reports', label: 'Reporting centre', description: 'Fictional communication breakdowns and session-only task totals' },
+  { id: 'connectors', label: 'Connector centre', description: 'Company-scoped mock integration contracts, gates and mapping rehearsals' },
   { id: 'samples', label: 'Synthetic conversations', description: 'Brand-safe triage, unsent drafts, mock intake handoffs and follow-up tasks' },
   { id: 'evidence', label: 'Safety & hold review', description: 'Synthetic evidence and unresolved prerequisites' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
@@ -197,6 +199,7 @@ export function OperatorShell() {
           {workspace === 'composer' && <Ql196MessageComposer key={`message-composer-${organization.id}-${composerJump ?? 'default'}`} organization={organization} initialThreadId={composerJump} onOpenThread={openThread} />}
           {workspace === 'calendar' && <Ql197TaskCalendar key={`task-calendar-${organization.id}`} organization={organization} queue={queueState} setQueue={setQueueState} reminderIds={reminderIds} setReminderIds={setReminderIds} onOpenThread={openThread} onOpenQueue={openQueue} />}
           {workspace === 'reports' && <Ql198Reports key={`reports-${organization.id}`} organization={organization} queue={queueState} onNavigate={setWorkspace} />}
+          {workspace === 'connectors' && <Ql199ConnectorCentre key={`connectors-${organization.id}`} organization={organization} />}
           {workspace === 'samples' && brandId !== null && (
             <>
               <Ql174BrandSafeTriagePreview brandId={brandId} />
@@ -230,7 +233,7 @@ export function OperatorShell() {
               <DisabledOperatorConsole embedded />
             </>
           )}
-          {workspace !== 'dashboard' && workspace !== 'inbox' && workspace !== 'contacts' && workspace !== 'queue' && workspace !== 'phone' && workspace !== 'composer' && workspace !== 'calendar' && workspace !== 'reports' && brandId === null && (
+          {workspace !== 'dashboard' && workspace !== 'inbox' && workspace !== 'contacts' && workspace !== 'queue' && workspace !== 'phone' && workspace !== 'composer' && workspace !== 'calendar' && workspace !== 'reports' && workspace !== 'connectors' && brandId === null && (
             <Ql191AdditionalOrganizationPreview key={`additional-${organization.id}-${workspace}`} organization={organization} workspace={workspace} />
           )}
         </main>
