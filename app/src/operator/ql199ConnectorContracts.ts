@@ -28,7 +28,7 @@ export const connectorContracts: Readonly<Record<OrganizationId, ConnectorContra
   devilndove: {
     id: 'dnd-order-intake', organizationId: 'devilndove', label: 'Custom order and commission intake',
     upstreamSystem: 'Devil n Dove storefront', allowedOperations: ['intake_preview', 'status_preview'],
-    approvedChannels: ['website', 'email'], tenantBoundary: 'Devil n Dove organization + authorized order scope',
+    approvedChannels: ['website', 'email', 'voicemail'], tenantBoundary: 'Devil n Dove organization + authorized order scope',
     requiredGates: ['Server-authenticated Devil n Dove role', 'Verified order/commission permission', 'Redacted media and data-minimal API', 'Explicit owner approval'],
     state: 'mock_only', nextBuild: 'QL-201'
   },
