@@ -42,7 +42,7 @@ export const connectorContracts: Readonly<Record<OrganizationId, ConnectorContra
   yw: {
     id: 'yw-service-intake', organizationId: 'yw', label: 'Property service request and job intake',
     upstreamSystem: 'YW Property Maintenance System', allowedOperations: ['intake_preview', 'status_preview'],
-    approvedChannels: ['website', 'email'], tenantBoundary: 'Verified company tenant + enabled service module + property permission',
+    approvedChannels: ['website', 'email', 'sms', 'voicemail'], tenantBoundary: 'Verified company tenant + enabled service module + property permission',
     requiredGates: ['Server-authenticated YW company role', 'Module and property authorization', 'Scoped job-intake audit and retention policy', 'Explicit owner approval'],
     state: 'mock_only', nextBuild: 'QL-203'
   }
