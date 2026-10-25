@@ -5,10 +5,11 @@ import './ql193-customer-360.css';
 
 type ListFilter = 'all' | 'attention' | 'multi_channel';
 
-export function Ql193Customer360({ organization, initialContactId, onOpenThread }: {
+export function Ql193Customer360({ organization, initialContactId, onOpenThread, onOpenQueue }: {
   organization: OperatorOrganization;
   initialContactId?: string | null;
   onOpenThread: (threadId: string) => void;
+  onOpenQueue?: (threadId: string) => void;
 }) {
   const contacts = customersForOrganization(organization.id);
   const [selectedId, setSelectedId] = useState(contacts.some((contact) => contact.id === initialContactId) ? initialContactId : contacts[0]?.id);
@@ -107,6 +108,7 @@ export function Ql193Customer360({ organization, initialContactId, onOpenThread 
                   <p>{thread.sourceLabel} · Consent: {thread.consent.replaceAll('_', ' ')}</p>
                   <ul>{thread.events.map((event) => <li key={event.id}><strong>{event.timeLabel}</strong> · {event.body}</li>)}</ul>
                   <button type="button" onClick={() => onOpenThread(thread.id)}>View in unified inbox: {thread.subject}</button>
+                  {onOpenQueue && <button type="button" onClick={() => onOpenQueue(thread.id)}>Manage follow-up: {thread.subject}</button>}
                 </article>)}
               </section>
               <div className="ql193-disabled-actions" aria-label="Disabled live customer actions"><button type="button" disabled>Merge contacts disabled</button><button type="button" disabled>Sync customer disabled</button><button type="button" disabled>Send message disabled</button></div>

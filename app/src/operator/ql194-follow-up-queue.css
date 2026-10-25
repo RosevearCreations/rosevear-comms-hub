@@ -1,0 +1,48 @@
+.ql194-queue { display: grid; gap: 16px; color: #172033; }
+.ql194-queue *, .ql194-queue *::before, .ql194-queue *::after { box-sizing: border-box; }
+.ql194-header { background: white; border: 1px solid #cbd5e1; border-left: 5px solid var(--ql191-accent, #1d4ed8); border-radius: 17px; padding: 18px 21px; display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 14px; }
+.ql194-header h3 { margin: 0 0 6px; font-size: clamp(1.4rem, 2.5vw, 2rem); }
+.ql194-header p:last-child { margin: 0; color: #475569; line-height: 1.5; }
+.ql194-help { border: 1px solid #64748b; background: #f8fafc; padding: 14px; border-radius: 12px; line-height: 1.5; }
+.ql194-queue .ql191-synthetic-banner { margin: 0; }
+.ql194-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.ql194-stats > div { display: grid; gap: 5px; border: 1px solid #cbd5e1; background: #fff; border-radius: 13px; padding: 14px; }
+.ql194-stats strong { font-size: 1.8rem; color: #1e40af; font-variant-numeric: tabular-nums; }
+.ql194-stats span { color: #475569; font-weight: 750; font-size: .84rem; }
+.ql194-jump { background: #eff6ff; border: 1px solid #60a5fa; border-radius: 13px; padding: 14px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between; line-height: 1.5; }
+.ql194-jump p { color: #334155; margin: 0; }
+.ql194-jump button { border: 1px solid #1d4ed8; color: #fff; background: #1d4ed8; font: inherit; border-radius: 9px; min-height: 44px; padding: 8px 13px; font-weight: 800; cursor: pointer; }
+.ql194-layout { display: grid; grid-template-columns: minmax(260px, .86fr) minmax(0, 1.5fr); align-items: start; gap: 16px; }
+.ql194-directory, .ql194-details { background: white; border: 1px solid #cbd5e1; border-radius: 16px; padding: clamp(13px, 1.8vw, 21px); min-width: 0; }
+.ql194-directory label, .ql194-controls label { display: block; font-size: .84rem; font-weight: 800; color: #334155; margin: 11px 0 6px; }
+.ql194-directory input, .ql194-directory select, .ql194-controls select { min-height: 44px; border: 1px solid #94a3b8; border-radius: 10px; background: #fff; color: #0f172a; font: inherit; padding: 9px 11px; width: 100%; min-width: 0; }
+.ql194-filters { display: flex; flex-wrap: wrap; gap: 7px; margin: 15px 0 10px; }
+.ql194-filters button, .ql194-empty button { border-radius: 999px; border: 1px solid #94a3b8; background: #f8fafc; color: #334155; font: inherit; font-size: .83rem; min-height: 44px; padding: 9px 12px; font-weight: 800; cursor: pointer; }
+.ql194-filters button.active { background: #1e40af; border-color: #1e40af; color: #fff; }
+.ql194-count { color: #475569; font-size: .83rem; font-weight: 750; }
+.ql194-task-list { display: grid; gap: 8px; }
+.ql194-task { text-align: left; display: grid; gap: 7px; width: 100%; min-width: 0; border: 1px solid #cbd5e1; border-radius: 12px; background: #f8fafc; padding: 13px; color: #172033; font: inherit; cursor: pointer; }
+.ql194-task:hover, .ql194-task.active { background: #eff6ff; border-color: #2563eb; }
+.ql194-task.active { box-shadow: inset 4px 0 #2563eb; }
+.ql194-task-flags { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 7px; color: #92400e; font-size: .78rem; font-weight: 850; }
+.ql194-task small { color: #475569; font-size: .83rem; }
+.ql194-details h4 { font-size: clamp(1.25rem, 2.2vw, 1.75rem); margin: 5px 0; }
+.ql194-details > p { color: #475569; line-height: 1.5; }
+.ql194-source-context { background: #f1f5f9; border-left: 4px solid #64748b; border-radius: 10px; padding: 13px; line-height: 1.5; font-size: .88rem; }
+.ql194-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+.ql194-navigation { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; }
+.ql194-navigation button { border: 1px solid #2563eb; border-radius: 10px; background: #eff6ff; color: #1e3a8a; padding: 9px 13px; min-height: 44px; font: inherit; font-weight: 800; cursor: pointer; }
+.ql194-navigation span { color: #475569; font-size: .85rem; }
+.ql194-receipts { margin: 18px 0 12px; padding: 13px; background: #f8fafc; border-radius: 11px; border: 1px solid #cbd5e1; }
+.ql194-receipts h5 { font-size: 1rem; margin: 0 0 8px; }
+.ql194-receipts ol { margin: 8px 0; padding-left: 21px; }
+.ql194-receipts li { margin: 6px 0; font-size: .86rem; line-height: 1.4; }
+.ql194-receipts p, .ql194-receipts small { color: #475569; font-size: .82rem; }
+.ql194-disabled { border-top: 1px solid #cbd5e1; padding-top: 14px; display: flex; flex-wrap: wrap; gap: 9px; }
+.ql194-disabled button { border: 1px solid #94a3b8; border-radius: 9px; color: #475569; background: #e2e8f0; min-height: 44px; font: inherit; padding: 9px 12px; cursor: not-allowed; }
+.ql194-empty { background: #f8fafc; border: 1px dashed #94a3b8; border-radius: 12px; padding: 15px; }
+.ql194-queue button:focus-visible, .ql194-queue input:focus-visible, .ql194-queue select:focus-visible { outline: 3px solid #f59e0b; outline-offset: 3px; }
+@media (max-width: 1080px) { .ql194-layout { grid-template-columns: 1fr; } }
+@media (max-width: 650px) { .ql194-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ql194-controls { grid-template-columns: 1fr; } }
+@media (max-width: 390px) { .ql194-stats { grid-template-columns: 1fr; } }
+@media (forced-colors: active) { .ql194-task.active, .ql194-filters button.active { outline: 2px solid Highlight; } .ql194-disabled button { border: 2px solid GrayText; } }
