@@ -66,7 +66,7 @@ describe('QL-191 operator console', () => {
   it('opens the dashboard by default with four companies, accessible navigation and an explicit synthetic banner', () => {
     expect(host.querySelectorAll('.ql172-brand')).toHaveLength(4);
     expect(host.querySelector('.ql172-shell')?.getAttribute('data-ql191-release')).toBe('ql191-four-organization-console-v2');
-    expect(host.querySelectorAll('.ql172-nav-button')).toHaveLength(11);
+    expect(host.querySelectorAll('.ql172-nav-button')).toHaveLength(12);
     expect(host.querySelector('[aria-current="page"]')?.textContent).toContain('Dashboard');
     expect(host.textContent).toContain('Demonstration mode');
     expect(host.textContent).toContain('No live connections or real customer records');
