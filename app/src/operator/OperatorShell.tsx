@@ -22,6 +22,7 @@ import { Ql189OperationsSafetyPreview } from './Ql189OperationsSafetyPreview';
 import { Ql190IndependentReviewPacketPreview } from './Ql190IndependentReviewPacketPreview';
 import { Ql191OperatorDashboard } from './Ql191OperatorDashboard';
 import { Ql191AdditionalOrganizationPreview } from './Ql191AdditionalOrganizationPreview';
+import { Ql192UnifiedInbox } from './Ql192UnifiedInbox';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
 import type { Ql183Feedback } from './ql183OperatorUsabilityAcceptance';
@@ -29,7 +30,7 @@ import './operator-shell.css';
 
 const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; description: string }> = [
   { id: 'dashboard', label: 'Dashboard', description: 'Company overview, synthetic activity and quick navigation' },
-  { id: 'inbox', label: 'Local inbox', description: 'Conversations, contacts, tasks and intakes' },
+  { id: 'inbox', label: 'Unified inbox', description: 'Company-scoped multi-channel threads, filters and review-only timelines' },
   { id: 'samples', label: 'Synthetic conversations', description: 'Brand-safe triage, unsent drafts, mock intake handoffs and follow-up tasks' },
   { id: 'evidence', label: 'Safety & hold review', description: 'Synthetic evidence and unresolved prerequisites' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
@@ -40,6 +41,7 @@ const firstOrganization = initialOperatorOrganization(import.meta.env.VITE_DEFAU
 export function OperatorShell() {
   const [organizationId, setOrganizationId] = useState<OrganizationId>(firstOrganization);
   const [usabilityFeedback, setUsabilityFeedback] = useState<Record<string, Ql183Feedback>>({});
+  const [showLegacyTools, setShowLegacyTools] = useState(false);
   const [workspace, setWorkspace] = useState<OperatorWorkspace>('dashboard');
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
@@ -48,7 +50,10 @@ export function OperatorShell() {
   const previouslySelected = useRef<OperatorWorkspace | null>(null);
 
   function changeOrganization(nextOrganization: OrganizationId) {
-    if (nextOrganization !== organizationId) setUsabilityFeedback({});
+    if (nextOrganization !== organizationId) {
+      setUsabilityFeedback({});
+      setShowLegacyTools(false);
+    }
     setOrganizationId(nextOrganization);
   }
 
@@ -122,10 +127,21 @@ export function OperatorShell() {
             <span className="ql172-context-badge">Preview only · no dispatch</span>
           </div>
           {workspace === 'dashboard' && <Ql191OperatorDashboard key={`dashboard-${organization.id}`} organization={organization} onNavigate={setWorkspace} />}
-          {workspace === 'inbox' && brandId !== null && (
+          {workspace === 'inbox' && (
             <>
-              <p className="ql172-local-warning" role="note">QL-004 is a browser-local demonstration. Do not enter real names, phone numbers, messages, or owner decisions; edits and exports affect local demo data only.</p>
-              <App activeBrandId={brandId} onBrandChange={changeBrand} embedded />
+              <p className="ql172-local-warning" role="note">QL-192 is a synthetic unified inbox. Do not enter real names, phone numbers, messages, or owner decisions. No communications are sent or saved.</p>
+              <Ql192UnifiedInbox key={`unified-inbox-${organization.id}`} organization={organization} />
+              {brandId !== null && (
+                <section className="ql192-legacy-tools" aria-label="Historical browser-local inbox tools">
+                  <button type="button" aria-expanded={showLegacyTools} aria-controls="ql192-legacy-panel" onClick={() => setShowLegacyTools((open) => !open)}>{showLegacyTools ? 'Hide' : 'Open'} historical QL-004 local demo tools</button>
+                  {showLegacyTools && (
+                    <div id="ql192-legacy-panel">
+                      <p className="ql172-local-warning" role="note">Historical QL-004 browser-local demonstration. Any edits or exports affect only local demo records. Do not enter personal information.</p>
+                      <App activeBrandId={brandId} onBrandChange={changeBrand} embedded />
+                    </div>
+                  )}
+                </section>
+              )}
             </>
           )}
           {workspace === 'samples' && brandId !== null && (
@@ -161,7 +177,7 @@ export function OperatorShell() {
               <DisabledOperatorConsole embedded />
             </>
           )}
-          {workspace !== 'dashboard' && brandId === null && (
+          {workspace !== 'dashboard' && workspace !== 'inbox' && brandId === null && (
             <Ql191AdditionalOrganizationPreview key={`additional-${organization.id}-${workspace}`} organization={organization} workspace={workspace} />
           )}
         </main>
