@@ -1,0 +1,26 @@
+.ql189-operations{margin:1rem 0 2rem;padding:1.2rem;background:#ebf5f3;border:1px solid #528d85;color:#173d3a;border-radius:1rem}
+.ql189-header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:1rem}
+.ql189-header h3{color:#104d45;font-size:1.5rem;margin:.25rem 0}
+.ql189-header p{line-height:1.55;max-width:52rem}
+.ql189-kicker{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.ql189-hold{background:#71341f;color:white;padding:.75rem .85rem;border-radius:.6rem;max-width:17rem;font-size:.8rem}
+.ql189-warning{line-height:1.55;background:#fff6e7;border-left:5px solid #a3561e;padding:1rem;border-radius:.6rem}
+.ql189-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1rem 0}
+.ql189-controls>div{display:grid;gap:.4rem;min-width:0}
+.ql189-controls label{font-weight:800;font-size:.9rem}
+.ql189-controls select{width:100%;min-height:44px;border:1px solid #326c64;background:white;color:#173d3a;border-radius:.4rem;padding:.65rem}
+.ql189-result{background:white;border:1px solid #528d85;border-radius:.7rem;padding:1rem;line-height:1.55;overflow-wrap:anywhere}
+.ql189-result h4{color:#104d45;margin:.3rem 0;font-size:1.12rem}
+.ql189-table-wrap{overflow-x:auto;margin:1rem 0;border:1px solid #528d85;border-radius:.7rem;background:white}
+.ql189-table-wrap table{min-width:670px;width:100%;border-collapse:collapse;text-align:left}
+.ql189-table-wrap caption{font-weight:800;color:#104d45;text-align:left;padding:1rem}
+.ql189-table-wrap th,.ql189-table-wrap td{padding:.75rem;vertical-align:top;border-bottom:1px solid #c5e4dc}
+.ql189-table-wrap thead{background:#d8ede8}
+.ql189-table-wrap tbody tr:nth-child(even){background:#f1faf7}
+.ql189-help{padding:1rem;margin-top:1rem;border:1px solid #528d85;border-radius:.7rem;background:white;line-height:1.55;overflow-wrap:anywhere}
+.ql189-help summary{display:flex;align-items:center;gap:.6rem;min-height:44px;font-weight:800;cursor:pointer}
+.ql189-help li{margin:.55rem 0}
+.ql189-operations :is(select,summary):focus-visible{outline:3px solid #a3561e;outline-offset:3px}
+@media(max-width:700px){.ql189-operations{padding:.8rem}.ql189-controls{grid-template-columns:1fr}.ql189-hold{max-width:none}}
+@media(max-width:375px){.ql189-operations{border-radius:.5rem}.ql189-result{padding:.7rem}}
+@media(forced-colors:active){.ql189-operations,.ql189-result,.ql189-table-wrap,.ql189-help{border:1px solid CanvasText}}
