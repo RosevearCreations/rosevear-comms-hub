@@ -57,7 +57,7 @@ export const inboxFixtures: Readonly<Record<OrganizationId, readonly InboxThread
     },
     {
       id: 'rd-mms', organizationId: 'rosiedazzlers', channel: 'mms', sourceLabel: 'MMS · simulated',
-      contactLabel: 'Demo detailing customer D', subject: 'Condition photo question',
+      contactLabel: 'Demo detailing customer A', subject: 'Condition photo question',
       summary: 'Sample attachment description only; no picture or personal data.', status: 'resolved', consent: 'opted_out',
       unread: false, needsFollowUp: false, priority: 'normal', context: 'Photo intake · Marketing opt-out recorded only in fixture',
       events: [{ id: 'rd-mms-e1', kind: 'inbound', body: 'Simulated image attachment: upholstery condition photo. No media uploaded.', timeLabel: 'Sample · earlier' }]
@@ -94,7 +94,7 @@ export const inboxFixtures: Readonly<Record<OrganizationId, readonly InboxThread
     },
     {
       id: 'dnd-mms', organizationId: 'devilndove', channel: 'mms', sourceLabel: 'MMS · simulated',
-      contactLabel: 'Demo maker customer D', subject: 'Reference photo intake',
+      contactLabel: 'Demo maker customer A', subject: 'Reference photo intake',
       summary: 'Only an attachment placeholder; no photo uploaded.', status: 'resolved', consent: 'opted_out',
       unread: false, needsFollowUp: false, priority: 'normal', context: 'Photo reference · Marketing opt-out simulated',
       events: [{ id: 'dnd-mms-e1', kind: 'inbound', body: 'Simulated image attachment: jewellery inspiration. No actual attachment.', timeLabel: 'Sample · earlier' }]
@@ -117,7 +117,7 @@ export const inboxFixtures: Readonly<Record<OrganizationId, readonly InboxThread
     },
     {
       id: 'camp-voice', organizationId: 'icamp', channel: 'voice', sourceLabel: 'Office call · simulated',
-      contactLabel: 'Demo campground guest B', subject: 'Arrival gate question',
+      contactLabel: 'Demo campground guest A', subject: 'Arrival gate question',
       summary: 'Fictional missed front-desk call about visitor arrival.', status: 'new', consent: 'unknown',
       unread: true, needsFollowUp: true, priority: 'high', context: 'Front desk · No gate integration',
       events: [{ id: 'camp-voice-e1', kind: 'call_event', body: 'Simulated office missed-call event. No telephone or gate touched.', timeLabel: 'Sample · now' }]
@@ -168,7 +168,7 @@ export const inboxFixtures: Readonly<Record<OrganizationId, readonly InboxThread
     },
     {
       id: 'yw-email', organizationId: 'yw', channel: 'email', sourceLabel: 'Email · simulated',
-      contactLabel: 'Demo property owner D', subject: 'Lawn care renewal',
+      contactLabel: 'Demo property owner A', subject: 'Lawn care renewal',
       summary: 'Fictitious spring maintenance contract question.', status: 'resolved', consent: 'opted_out',
       unread: false, needsFollowUp: false, priority: 'normal', context: 'Recurring lawn care · No accounting access',
       events: [{ id: 'yw-email-e1', kind: 'inbound', body: 'Mock email: Please explain the annual lawn maintenance options.', timeLabel: 'Sample · earlier' }]
