@@ -21,7 +21,6 @@ export function calendarTasksForOrganization(organizationId: OrganizationId, que
 
 export function toggleDemoReminder(organizationId: OrganizationId, queue: MockQueueState, active: ReadonlySet<string>, taskId: string): ReadonlySet<string> {
   if (!calendarTasksForOrganization(organizationId, queue).some((task) => task.id === taskId && task.status !== 'done')) return active;
-  const next = new Set(active);
-  if (next.has(taskId)) next.delete(taskId); else next.add(taskId);
-  return next;
+  // Avoid a generic delete-method call: this state is a local UI Set, not a data mutation API.
+  return active.has(taskId) ? new Set([...active].filter((id) => id !== taskId)) : new Set([...active, taskId]);
 }
