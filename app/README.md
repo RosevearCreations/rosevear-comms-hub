@@ -28,6 +28,8 @@ The app uses browser `localStorage` through `src/storage/localRepository.ts`.
 
 This is intentional. It allows us to test the contact, conversation, message, intake, and follow-up workflow before setting up Supabase, a VPS, phone/SMS provider, or shared authentication.
 
+QL-191 now adds a **four-organization, dashboard-first operator shell** for Rosie Dazzlers, Devil n Dove, iCamp and YW. iCamp/YW have company-isolated synthetic previews only; the original two-brand browser-local demo remains intact. All dashboard counts are fabricated and labelled as such. No new backend, provider, real customer-data or owner-approval capability is introduced. See [`docs/QL-191_OPERATOR_CONSOLE_V2_FOUR_ORGANIZATION_DASHBOARD.md`](../docs/QL-191_OPERATOR_CONSOLE_V2_FOUR_ORGANIZATION_DASHBOARD.md).
+
 ## What works in QL-003
 
 - Switch between RosieDazzlers and DevilnDove.
