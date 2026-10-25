@@ -23,6 +23,7 @@ import { Ql190IndependentReviewPacketPreview } from './Ql190IndependentReviewPac
 import { Ql191OperatorDashboard } from './Ql191OperatorDashboard';
 import { Ql191AdditionalOrganizationPreview } from './Ql191AdditionalOrganizationPreview';
 import { Ql192UnifiedInbox } from './Ql192UnifiedInbox';
+import { Ql193Customer360 } from './Ql193Customer360';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
 import type { Ql183Feedback } from './ql183OperatorUsabilityAcceptance';
@@ -31,6 +32,7 @@ import './operator-shell.css';
 const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; description: string }> = [
   { id: 'dashboard', label: 'Dashboard', description: 'Company overview, synthetic activity and quick navigation' },
   { id: 'inbox', label: 'Unified inbox', description: 'Company-scoped multi-channel threads, filters and review-only timelines' },
+  { id: 'contacts', label: 'Customer 360', description: 'Explicitly linked fictional customer context and cross-channel history' },
   { id: 'samples', label: 'Synthetic conversations', description: 'Brand-safe triage, unsent drafts, mock intake handoffs and follow-up tasks' },
   { id: 'evidence', label: 'Safety & hold review', description: 'Synthetic evidence and unresolved prerequisites' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
@@ -43,6 +45,8 @@ export function OperatorShell() {
   const [usabilityFeedback, setUsabilityFeedback] = useState<Record<string, Ql183Feedback>>({});
   const [showLegacyTools, setShowLegacyTools] = useState(false);
   const [workspace, setWorkspace] = useState<OperatorWorkspace>('dashboard');
+  const [contactJump, setContactJump] = useState<string | null>(null);
+  const [threadJump, setThreadJump] = useState<string | null>(null);
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
   const activeWorkspace = workspaces.find((entry) => entry.id === workspace) ?? workspaces[0];
@@ -53,11 +57,25 @@ export function OperatorShell() {
     if (nextOrganization !== organizationId) {
       setUsabilityFeedback({});
       setShowLegacyTools(false);
+      setContactJump(null);
+      setThreadJump(null);
     }
     setOrganizationId(nextOrganization);
   }
 
   function changeBrand(nextBrand: BrandId) { changeOrganization(nextBrand); }
+
+  function openCustomer(contactId: string) {
+    setContactJump(contactId);
+    setThreadJump(null);
+    setWorkspace('contacts');
+  }
+
+  function openThread(threadId: string) {
+    setThreadJump(threadId);
+    setContactJump(null);
+    setWorkspace('inbox');
+  }
 
   // Move focus to the visible workspace heading after an explicit navigation
   // change, while leaving initial page-load focus untouched.
@@ -130,7 +148,7 @@ export function OperatorShell() {
           {workspace === 'inbox' && (
             <>
               <p className="ql172-local-warning" role="note">QL-192 is a synthetic unified inbox. Do not enter real names, phone numbers, messages, or owner decisions. No communications are sent or saved.</p>
-              <Ql192UnifiedInbox key={`unified-inbox-${organization.id}`} organization={organization} />
+              <Ql192UnifiedInbox key={`unified-inbox-${organization.id}-${threadJump ?? 'default'}`} organization={organization} initialThreadId={threadJump} onOpenContact={openCustomer} />
               {brandId !== null && (
                 <section className="ql192-legacy-tools" aria-label="Historical browser-local inbox tools">
                   <button type="button" aria-expanded={showLegacyTools} aria-controls="ql192-legacy-panel" onClick={() => setShowLegacyTools((open) => !open)}>{showLegacyTools ? 'Hide' : 'Open'} historical QL-004 local demo tools</button>
@@ -144,6 +162,7 @@ export function OperatorShell() {
               )}
             </>
           )}
+          {workspace === 'contacts' && <Ql193Customer360 key={`customer-360-${organization.id}-${contactJump ?? 'default'}`} organization={organization} initialContactId={contactJump} onOpenThread={openThread} />}
           {workspace === 'samples' && brandId !== null && (
             <>
               <Ql174BrandSafeTriagePreview brandId={brandId} />
@@ -177,7 +196,7 @@ export function OperatorShell() {
               <DisabledOperatorConsole embedded />
             </>
           )}
-          {workspace !== 'dashboard' && workspace !== 'inbox' && brandId === null && (
+          {workspace !== 'dashboard' && workspace !== 'inbox' && workspace !== 'contacts' && brandId === null && (
             <Ql191AdditionalOrganizationPreview key={`additional-${organization.id}-${workspace}`} organization={organization} workspace={workspace} />
           )}
         </main>

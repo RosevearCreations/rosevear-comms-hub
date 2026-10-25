@@ -32,6 +32,8 @@ QL-191 now adds a **four-organization, dashboard-first operator shell** for Rosi
 
 QL-192 adds a **unified synthetic communications inbox** across all four organizations: search, channel/status filters, fictional thread timelines, in-memory review/follow-up flags, disabled reply composer, consent warnings, accessible help and optional legacy QL-004 tools for the original two brands. This does not connect any phone, mailbox, website, provider or real customer. See [`docs/QL-192_UNIFIED_COMMUNICATIONS_INBOX.md`](../docs/QL-192_UNIFIED_COMMUNICATIONS_INBOX.md).
 
+QL-193 adds **Customer 360** as a sixth console workspace. It explicitly associates sample contact IDs with cross-channel inbox conversations, shows contact-level consent cautions and open work, offers company-scoped search/filtering, and navigates between a sample contact and its source inbox thread. All identities and links are handcrafted fixtures, with no real CRM/tenant records, contact merges, provider queries or persistence. See [`docs/QL-193_CUSTOMER_360_CROSS_CHANNEL_CONTACT_CONTEXT.md`](../docs/QL-193_CUSTOMER_360_CROSS_CHANNEL_CONTACT_CONTEXT.md).
+
 ## What works in QL-003
 
 - Switch between RosieDazzlers and DevilnDove.

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { OperatorOrganization } from './ql191Organizations';
 import { inboxChannels, inboxForOrganization, type InboxChannel, type InboxThread } from './ql192InboxFixtures';
+import { customerForThread } from './ql193CustomerContexts';
 import './ql192-inbox.css';
 
 type ViewFilter = 'all' | 'unread' | 'needs_reply' | 'follow_up';
@@ -16,9 +17,13 @@ function matchesText(thread: InboxThread, query: string): boolean {
   return text.includes(query.trim().toLocaleLowerCase());
 }
 
-export function Ql192UnifiedInbox({ organization }: { organization: OperatorOrganization }) {
+export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact }: {
+  organization: OperatorOrganization;
+  initialThreadId?: string | null;
+  onOpenContact?: (contactId: string) => void;
+}) {
   const threads = inboxForOrganization(organization.id);
-  const [selectedId, setSelectedId] = useState(threads[0]?.id ?? '');
+  const [selectedId, setSelectedId] = useState(threads.some((thread) => thread.id === initialThreadId) ? initialThreadId! : (threads[0]?.id ?? ''));
   const [search, setSearch] = useState('');
   const [channel, setChannel] = useState<InboxChannel | 'all'>('all');
   const [view, setView] = useState<ViewFilter>('all');
@@ -124,6 +129,13 @@ export function Ql192UnifiedInbox({ organization }: { organization: OperatorOrga
               <div className="ql192-consent" role="status">
                 <strong>Consent:</strong> {selected.consent === 'opted_out' ? 'Opt-out indicated in test fixture; promotional send prohibited.' : selected.consent === 'service_only' ? 'Service-only demonstration; marketing not authorized.' : 'Unknown; no outbound communication authorized.'}
               </div>
+              {(() => {
+                const linked = customerForThread(organization.id, selected.id);
+                return linked && onOpenContact ? <div className="ql192-contact-link">
+                  <strong>Linked fictional contact:</strong> {linked.label}
+                  <button type="button" onClick={() => onOpenContact(linked.id)}>Open Customer 360</button>
+                </div> : <p className="ql192-nonpersistent">This internal source has no customer profile. No identity is inferred.</p>;
+              })()}
               <div className="ql192-timeline" aria-label="Synthetic communication timeline">
                 <h5>Conversation timeline</h5>
                 <ol>{selected.events.map((event) => (
