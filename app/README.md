@@ -34,6 +34,8 @@ QL-192 adds a **unified synthetic communications inbox** across all four organiz
 
 QL-193 adds **Customer 360** as a sixth console workspace. It explicitly associates sample contact IDs with cross-channel inbox conversations, shows contact-level consent cautions and open work, offers company-scoped search/filtering, and navigates between a sample contact and its source inbox thread. All identities and links are handcrafted fixtures, with no real CRM/tenant records, contact merges, provider queries or persistence. See [`docs/QL-193_CUSTOMER_360_CROSS_CHANNEL_CONTACT_CONTEXT.md`](../docs/QL-193_CUSTOMER_360_CROSS_CHANNEL_CONTACT_CONTEXT.md).
 
+QL-194 adds **Assignments & follow-ups** as a seventh synthetic workspace: business-specific fictional owners, linked task triage, owner/status/priority/due examples, in-memory receipts and safe navigation from the QL-192 Inbox and QL-193 Customer 360. It never assigns actual staff, notifies anyone, dispatches jobs or persists data. See [`docs/QL-194_CONVERSATION_ASSIGNMENT_OWNERSHIP_FOLLOW_UP_QUEUE.md`](../docs/QL-194_CONVERSATION_ASSIGNMENT_OWNERSHIP_FOLLOW_UP_QUEUE.md).
+
 ## What works in QL-003
 
 - Switch between RosieDazzlers and DevilnDove.
