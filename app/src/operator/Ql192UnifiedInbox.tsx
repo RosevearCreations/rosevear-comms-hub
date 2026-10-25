@@ -17,10 +17,11 @@ function matchesText(thread: InboxThread, query: string): boolean {
   return text.includes(query.trim().toLocaleLowerCase());
 }
 
-export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact }: {
+export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact, onOpenQueue }: {
   organization: OperatorOrganization;
   initialThreadId?: string | null;
   onOpenContact?: (contactId: string) => void;
+  onOpenQueue?: (threadId: string) => void;
 }) {
   const threads = inboxForOrganization(organization.id);
   const [selectedId, setSelectedId] = useState(threads.some((thread) => thread.id === initialThreadId) ? initialThreadId! : (threads[0]?.id ?? ''));
@@ -124,6 +125,7 @@ export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact
                 <div className="ql192-detail-actions">
                   <button type="button" onClick={() => markRead(selected)} disabled={!isUnread(selected)}>{isUnread(selected) ? 'Mark reviewed (demo)' : 'Reviewed in demo'}</button>
                   <button type="button" onClick={() => toggleFollowUp(selected)} aria-pressed={isFollowUp(selected)}>{isFollowUp(selected) ? 'Remove follow-up flag' : 'Flag follow-up (demo)'}</button>
+                  {onOpenQueue && <button type="button" onClick={() => onOpenQueue(selected.id)}>Manage follow-up queue</button>}
                 </div>
               </header>
               <div className="ql192-consent" role="status">
