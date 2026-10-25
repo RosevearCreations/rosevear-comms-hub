@@ -20,6 +20,7 @@ import { Ql186ConsentMessageClassificationPreview } from './Ql186ConsentMessageC
 import { Ql187ProviderCostPreview } from './Ql187ProviderCostPreview';
 import { Ql188SecurityHarnessPreview } from './Ql188SecurityHarnessPreview';
 import { Ql189OperationsSafetyPreview } from './Ql189OperationsSafetyPreview';
+import { Ql190IndependentReviewPacketPreview } from './Ql190IndependentReviewPacketPreview';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
 import type { Ql183Feedback } from './ql183OperatorUsabilityAcceptance';
 import './operator-shell.css';
@@ -136,6 +137,7 @@ export function OperatorShell() {
           )}
           {workspace === 'evidence' && (
             <>
+              <Ql190IndependentReviewPacketPreview key={`prepilot-packet-${brandId}`} brandId={brandId} />
               <Ql186ConsentMessageClassificationPreview key={`consent-message-${brandId}`} brandId={brandId} />
               <Ql185PrivateDataBlueprintPreview key={`private-data-${brandId}`} brandId={brandId} />
               <Ql184BrandWorkspacePermissionPreview key={`permission-${brandId}`} brandId={brandId} />
