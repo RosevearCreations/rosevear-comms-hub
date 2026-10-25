@@ -21,5 +21,6 @@ jobs:
       - run: npm test
       - run: node ../scripts/__tests__/ql170-release-receipt.test.mjs
       - run: node --test ../scripts/__tests__/ql171-operator-baseline.test.mjs
+      - run: node --test ../scripts/__tests__/ql188-synthetic-server-harness.test.mjs
       - run: node ../scripts/ql171-operator-baseline.mjs
       - run: npm run build

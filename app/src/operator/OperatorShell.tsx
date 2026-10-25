@@ -18,6 +18,7 @@ import { Ql184BrandWorkspacePermissionPreview } from './Ql184BrandWorkspacePermi
 import { Ql185PrivateDataBlueprintPreview } from './Ql185PrivateDataBlueprintPreview';
 import { Ql186ConsentMessageClassificationPreview } from './Ql186ConsentMessageClassificationPreview';
 import { Ql187ProviderCostPreview } from './Ql187ProviderCostPreview';
+import { Ql188SecurityHarnessPreview } from './Ql188SecurityHarnessPreview';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
 import type { Ql183Feedback } from './ql183OperatorUsabilityAcceptance';
 import './operator-shell.css';
@@ -146,6 +147,7 @@ export function OperatorShell() {
           )}
           {workspace === 'telephony' && (
             <>
+              <Ql188SecurityHarnessPreview key={`security-harness-${brandId}`} brandId={brandId} />
               <Ql187ProviderCostPreview key={`provider-cost-${brandId}`} brandId={brandId} />
               <Ql179PhoneSmsEventEmulator key={`phone-sms-${brandId}`} brandId={brandId} />
               <Ql180RoutingIvrPreview key={`ivr-${brandId}`} brandId={brandId} />
