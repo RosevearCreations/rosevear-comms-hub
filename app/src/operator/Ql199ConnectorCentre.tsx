@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import type { OperatorOrganization } from './ql191Organizations';
 import { connectorContracts, eligibleConnectorSamples, previewConnectorMapping, type ConnectorOperation, type ConnectorMockPreview } from './ql199ConnectorContracts';
+import { Ql200RosieQuoteBooking } from './Ql200RosieQuoteBooking';
 import './ql199-connector-centre.css';
 
-export function Ql199ConnectorCentre({ organization }: { organization: OperatorOrganization }) {
+export function Ql199ConnectorCentre({ organization, onOpenThread }: { organization: OperatorOrganization; onOpenThread: (threadId: string) => void }) {
   const contract = connectorContracts[organization.id];
   const samples = eligibleConnectorSamples(organization.id);
   const [operation, setOperation] = useState<ConnectorOperation>('intake_preview');
@@ -46,6 +47,7 @@ export function Ql199ConnectorCentre({ organization }: { organization: OperatorO
         </div>
       </section>
     </div>
+    {organization.id === 'rosiedazzlers' && <Ql200RosieQuoteBooking onOpenThread={onOpenThread} />}
     <p className="ql199-footer">Connection, authorization, data synchronization, live customer reads, webhooks, credential entry and outbound delivery stay disabled. QL-200–203 are separate company integration builds.</p>
   </section>;
 }
