@@ -29,6 +29,9 @@
 .ql172-context p { margin: 0; color: #475569; }
 .ql172-context-badge { background: #dcfce7; color: #14532d; font-size: 0.85rem; font-weight: 800; padding: 9px 12px; border-radius: 999px; }
 .ql172-local-warning { margin: 0 0 16px; background: #fff7ed; color: #7c2d12; border: 1px solid #fdba74; padding: 14px 18px; border-radius: 12px; line-height: 1.5; font-weight: 650; }
+.ql192-legacy-tools { margin-top: 22px; background: #fff; border: 1px solid #cbd5e1; border-radius: 16px; padding: 16px; }
+.ql192-legacy-tools > button { min-height: 44px; padding: 10px 14px; border: 1px solid #64748b; border-radius: 10px; color: #1e3a8a; background: #f8fafc; font-weight: 800; cursor: pointer; }
+.ql192-legacy-tools > div { margin-top: 15px; }
 /* Embed the legacy surfaces in the selected workspace instead of their
    separate fixed-position popover slots. Standalone panel tests still use
    the original popover rules when embedded is false. */
