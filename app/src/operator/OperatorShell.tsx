@@ -25,6 +25,7 @@ import { Ql191AdditionalOrganizationPreview } from './Ql191AdditionalOrganizatio
 import { Ql192UnifiedInbox } from './Ql192UnifiedInbox';
 import { Ql193Customer360 } from './Ql193Customer360';
 import { Ql194FollowUpQueue } from './Ql194FollowUpQueue';
+import { Ql195PhoneDesk } from './Ql195PhoneDesk';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -36,6 +37,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'inbox', label: 'Unified inbox', description: 'Company-scoped multi-channel threads, filters and review-only timelines' },
   { id: 'contacts', label: 'Customer 360', description: 'Explicitly linked fictional customer context and cross-channel history' },
   { id: 'queue', label: 'Assignments & follow-ups', description: 'Fictional owners, due windows, triage and conversation-linked sample tasks' },
+  { id: 'phone', label: 'Phone desk', description: 'Mock keypad, missed calls, voicemail descriptions and business-line review' },
   { id: 'samples', label: 'Synthetic conversations', description: 'Brand-safe triage, unsent drafts, mock intake handoffs and follow-up tasks' },
   { id: 'evidence', label: 'Safety & hold review', description: 'Synthetic evidence and unresolved prerequisites' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
@@ -176,6 +178,7 @@ export function OperatorShell() {
           )}
           {workspace === 'contacts' && <Ql193Customer360 key={`customer-360-${organization.id}-${contactJump ?? 'default'}`} organization={organization} initialContactId={contactJump} onOpenThread={openThread} onOpenQueue={openQueue} />}
           {workspace === 'queue' && <Ql194FollowUpQueue key={`follow-up-queue-${organization.id}-${queueJump ?? 'default'}`} organization={organization} queue={queueState} setQueue={setQueueState} initialThreadId={queueJump} onOpenThread={openThread} onOpenContact={openCustomer} />}
+          {workspace === 'phone' && <Ql195PhoneDesk key={`phone-desk-${organization.id}`} organization={organization} onOpenThread={openThread} onOpenQueue={openQueue} />}
           {workspace === 'samples' && brandId !== null && (
             <>
               <Ql174BrandSafeTriagePreview brandId={brandId} />
@@ -209,7 +212,7 @@ export function OperatorShell() {
               <DisabledOperatorConsole embedded />
             </>
           )}
-          {workspace !== 'dashboard' && workspace !== 'inbox' && workspace !== 'contacts' && workspace !== 'queue' && brandId === null && (
+          {workspace !== 'dashboard' && workspace !== 'inbox' && workspace !== 'contacts' && workspace !== 'queue' && workspace !== 'phone' && brandId === null && (
             <Ql191AdditionalOrganizationPreview key={`additional-${organization.id}-${workspace}`} organization={organization} workspace={workspace} />
           )}
         </main>

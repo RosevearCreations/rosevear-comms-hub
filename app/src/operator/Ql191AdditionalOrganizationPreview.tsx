@@ -31,7 +31,7 @@ export function Ql191AdditionalOrganizationPreview({ organization, workspace }: 
           <article className="ql191-queue-detail" aria-live="polite"><h4>{item.title}</h4><p>{item.detail}</p><p>{item.action} — planning only; no connected intake or message dispatch.</p></article>
         </div>
       )}
-      {workspace === 'telephony' && <p>Phone numbers, IVR, provider credentials, callbacks, live messages, calls and recording remain unconfigured and disabled. QL-195 and QL-204 will introduce organization-specific mock phone desk and routing.</p>}
+      {workspace === 'telephony' && <p>Phone numbers, IVR, provider credentials, callbacks, live messages, calls and recording remain unconfigured and disabled. QL-195 provides a separate mock phone desk; QL-204 plans further routing.</p>}
       {workspace === 'evidence' && <p>Existing QL-190 records concern the earlier two-brand synthetic review. They do not approve iCamp or YW tenants. All twelve real-pilot requirements remain held; independent tenant and provider checks are still required.</p>}
     </section>
   );
