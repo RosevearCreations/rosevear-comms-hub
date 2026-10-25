@@ -1,0 +1,33 @@
+{
+  "version": "ql190-independent-prepilot-review-packet-v1",
+  "state": "DRAFT_FOR_INDEPENDENT_REVIEW",
+  "sourceMatrix": "docs/QL-181_PRIVACY_ROLES_LIVE_PILOT_DECISION_MATRIX.md",
+  "externalReviewCompleted": false,
+  "ownerSignoffCaptured": false,
+  "pilotAuthorizationGranted": false,
+  "sourceDocuments": [
+    { "build": "QL-181", "path": "docs/QL-181_PRIVACY_ROLES_LIVE_PILOT_DECISION_MATRIX.md", "purpose": "Authoritative list of twelve held prerequisites" },
+    { "build": "QL-182", "path": "docs/QL-182_JOURNEY_ACCEPTANCE_AND_NEXT_BATCH_HANDOFF.md", "purpose": "Synthetic journey acceptance and batch separation" },
+    { "build": "QL-183", "path": "docs/QL-183_OPERATOR_USABILITY_ACCEPTANCE.md", "purpose": "Operator usability evidence; no owner acceptance" },
+    { "build": "QL-184", "path": "docs/QL-184_BRAND_WORKSPACE_PERMISSION_MAPPING.md", "purpose": "Draft least-privilege and brand-role mapping" },
+    { "build": "QL-185", "path": "docs/QL-185_PRIVATE_DATA_MINIMIZATION_RETENTION_BLUEPRINT.md", "purpose": "Private-data risk and retention plan" },
+    { "build": "QL-186", "path": "docs/QL-186_CONSENT_MESSAGE_CLASSIFICATION_SPECIFICATION.md", "purpose": "Consent and message classification design" },
+    { "build": "QL-187", "path": "docs/QL-187_PROVIDER_DECISION_COST_MODEL.md", "purpose": "Undecided provider and cost assumptions" },
+    { "build": "QL-188", "path": "docs/QL-188_SERVER_AUTH_WEBHOOK_REPLAY_TEST_HARNESS.md", "purpose": "Invented non-provider signature and replay tests" },
+    { "build": "QL-189", "path": "docs/QL-189_OPERATIONS_SAFETY_CONTROLS.md", "purpose": "Mock rate, spending, stop and monitoring tests" }
+  ],
+  "prerequisites": [
+    { "id": "identity-mfa", "state": "HELD_UNVERIFIED", "reviewLane": "Owner and security", "requiredArtifact": "Server identity, independent MFA, recovery and revocation acceptance record" },
+    { "id": "brand-rls", "state": "HELD_UNVERIFIED", "reviewLane": "Security and database", "requiredArtifact": "Tenant-scoped API authorization, GRANT and RLS review, cross-brand IDOR test evidence" },
+    { "id": "lawful-collection", "state": "HELD_UNVERIFIED", "reviewLane": "Privacy and owner", "requiredArtifact": "Reviewed notice, purpose inventory, collection minimization and storage replacement decision" },
+    { "id": "consent-proof", "state": "HELD_UNVERIFIED", "reviewLane": "Privacy and legal", "requiredArtifact": "Channel and purpose consent proof, withdrawal and STOP/HELP suppression acceptance" },
+    { "id": "retention-deletion", "state": "HELD_UNVERIFIED", "reviewLane": "Privacy and owner", "requiredArtifact": "Approved retention schedule, access/correction, secure deletion and backup response evidence" },
+    { "id": "provider-auth", "state": "HELD_UNVERIFIED", "reviewLane": "Security and telephony", "requiredArtifact": "Selected provider contract, authenticated webhook, replay and invalid-event tests" },
+    { "id": "secrets", "state": "HELD_UNVERIFIED", "reviewLane": "Security and infrastructure", "requiredArtifact": "Protected keys, rotation, secret redaction, access-revocation and incident drills" },
+    { "id": "abuse-limits", "state": "HELD_UNVERIFIED", "reviewLane": "Security and telephony", "requiredArtifact": "Real provider and backend rate/cost controls, emergency stop and spam/fraud negative tests" },
+    { "id": "audit-monitor", "state": "HELD_UNVERIFIED", "reviewLane": "Security and operations", "requiredArtifact": "Private audited logs, alerting, evidence integrity and rollback/restore drill reports" },
+    { "id": "numbers-carrier", "state": "HELD_UNVERIFIED", "reviewLane": "Line owner and telephony", "requiredArtifact": "Bell Fibe/cell number authorization, brand/personal isolation, routing and reversal plan" },
+    { "id": "independent-security", "state": "HELD_UNVERIFIED", "reviewLane": "Independent security reviewer", "requiredArtifact": "Unconflicted external staging security/privacy report, residual risk and release recommendation" },
+    { "id": "owner-signoff", "state": "HELD_UNVERIFIED", "reviewLane": "Verified business owner", "requiredArtifact": "Separate verified owner decision specifying exact pilot scope, costs, numbers, data, users and rollback" }
+  ]
+}
