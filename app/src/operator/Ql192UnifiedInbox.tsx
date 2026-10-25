@@ -17,11 +17,12 @@ function matchesText(thread: InboxThread, query: string): boolean {
   return text.includes(query.trim().toLocaleLowerCase());
 }
 
-export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact, onOpenQueue }: {
+export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact, onOpenQueue, onOpenComposer }: {
   organization: OperatorOrganization;
   initialThreadId?: string | null;
   onOpenContact?: (contactId: string) => void;
   onOpenQueue?: (threadId: string) => void;
+  onOpenComposer?: (threadId: string) => void;
 }) {
   const threads = inboxForOrganization(organization.id);
   const [selectedId, setSelectedId] = useState(threads.some((thread) => thread.id === initialThreadId) ? initialThreadId! : (threads[0]?.id ?? ''));
@@ -126,6 +127,7 @@ export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact
                   <button type="button" onClick={() => markRead(selected)} disabled={!isUnread(selected)}>{isUnread(selected) ? 'Mark reviewed (demo)' : 'Reviewed in demo'}</button>
                   <button type="button" onClick={() => toggleFollowUp(selected)} aria-pressed={isFollowUp(selected)}>{isFollowUp(selected) ? 'Remove follow-up flag' : 'Flag follow-up (demo)'}</button>
                   {onOpenQueue && <button type="button" onClick={() => onOpenQueue(selected.id)}>Manage follow-up queue</button>}
+                  {onOpenComposer && (selected.channel === 'sms' || selected.channel === 'mms') && <button type="button" onClick={() => onOpenComposer(selected.id)}>Open unsent SMS/MMS composer</button>}
                 </div>
               </header>
               <div className="ql192-consent" role="status">

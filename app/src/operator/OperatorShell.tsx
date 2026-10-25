@@ -26,6 +26,7 @@ import { Ql192UnifiedInbox } from './Ql192UnifiedInbox';
 import { Ql193Customer360 } from './Ql193Customer360';
 import { Ql194FollowUpQueue } from './Ql194FollowUpQueue';
 import { Ql195PhoneDesk } from './Ql195PhoneDesk';
+import { Ql196MessageComposer } from './Ql196MessageComposer';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -38,6 +39,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'contacts', label: 'Customer 360', description: 'Explicitly linked fictional customer context and cross-channel history' },
   { id: 'queue', label: 'Assignments & follow-ups', description: 'Fictional owners, due windows, triage and conversation-linked sample tasks' },
   { id: 'phone', label: 'Phone desk', description: 'Mock keypad, missed calls, voicemail descriptions and business-line review' },
+  { id: 'composer', label: 'SMS/MMS composer', description: 'Unsent message templates, attachment placeholders, consent and opt-out controls' },
   { id: 'samples', label: 'Synthetic conversations', description: 'Brand-safe triage, unsent drafts, mock intake handoffs and follow-up tasks' },
   { id: 'evidence', label: 'Safety & hold review', description: 'Synthetic evidence and unresolved prerequisites' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
@@ -53,6 +55,7 @@ export function OperatorShell() {
   const [contactJump, setContactJump] = useState<string | null>(null);
   const [threadJump, setThreadJump] = useState<string | null>(null);
   const [queueJump, setQueueJump] = useState<string | null>(null);
+  const [composerJump, setComposerJump] = useState<string | null>(null);
   const [queueState, setQueueState] = useState<MockQueueState>(() => seedQueueForOrganization(firstOrganization));
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
@@ -67,6 +70,7 @@ export function OperatorShell() {
       setContactJump(null);
       setThreadJump(null);
       setQueueJump(null);
+      setComposerJump(null);
       setQueueState(seedQueueForOrganization(nextOrganization));
     }
     setOrganizationId(nextOrganization);
@@ -89,6 +93,11 @@ export function OperatorShell() {
   function openQueue(threadId: string) {
     setQueueJump(threadId);
     setWorkspace('queue');
+  }
+
+  function openComposer(threadId: string) {
+    setComposerJump(threadId);
+    setWorkspace('composer');
   }
 
   // Move focus to the visible workspace heading after an explicit navigation
@@ -162,7 +171,7 @@ export function OperatorShell() {
           {workspace === 'inbox' && (
             <>
               <p className="ql172-local-warning" role="note">QL-192 is a synthetic unified inbox. Do not enter real names, phone numbers, messages, or owner decisions. No communications are sent or saved.</p>
-              <Ql192UnifiedInbox key={`unified-inbox-${organization.id}-${threadJump ?? 'default'}`} organization={organization} initialThreadId={threadJump} onOpenContact={openCustomer} onOpenQueue={openQueue} />
+              <Ql192UnifiedInbox key={`unified-inbox-${organization.id}-${threadJump ?? 'default'}`} organization={organization} initialThreadId={threadJump} onOpenContact={openCustomer} onOpenQueue={openQueue} onOpenComposer={openComposer} />
               {brandId !== null && (
                 <section className="ql192-legacy-tools" aria-label="Historical browser-local inbox tools">
                   <button type="button" aria-expanded={showLegacyTools} aria-controls="ql192-legacy-panel" onClick={() => setShowLegacyTools((open) => !open)}>{showLegacyTools ? 'Hide' : 'Open'} historical QL-004 local demo tools</button>
@@ -179,6 +188,7 @@ export function OperatorShell() {
           {workspace === 'contacts' && <Ql193Customer360 key={`customer-360-${organization.id}-${contactJump ?? 'default'}`} organization={organization} initialContactId={contactJump} onOpenThread={openThread} onOpenQueue={openQueue} />}
           {workspace === 'queue' && <Ql194FollowUpQueue key={`follow-up-queue-${organization.id}-${queueJump ?? 'default'}`} organization={organization} queue={queueState} setQueue={setQueueState} initialThreadId={queueJump} onOpenThread={openThread} onOpenContact={openCustomer} />}
           {workspace === 'phone' && <Ql195PhoneDesk key={`phone-desk-${organization.id}`} organization={organization} onOpenThread={openThread} onOpenQueue={openQueue} />}
+          {workspace === 'composer' && <Ql196MessageComposer key={`message-composer-${organization.id}-${composerJump ?? 'default'}`} organization={organization} initialThreadId={composerJump} onOpenThread={openThread} />}
           {workspace === 'samples' && brandId !== null && (
             <>
               <Ql174BrandSafeTriagePreview brandId={brandId} />
@@ -212,7 +222,7 @@ export function OperatorShell() {
               <DisabledOperatorConsole embedded />
             </>
           )}
-          {workspace !== 'dashboard' && workspace !== 'inbox' && workspace !== 'contacts' && workspace !== 'queue' && workspace !== 'phone' && brandId === null && (
+          {workspace !== 'dashboard' && workspace !== 'inbox' && workspace !== 'contacts' && workspace !== 'queue' && workspace !== 'phone' && workspace !== 'composer' && brandId === null && (
             <Ql191AdditionalOrganizationPreview key={`additional-${organization.id}-${workspace}`} organization={organization} workspace={workspace} />
           )}
         </main>
