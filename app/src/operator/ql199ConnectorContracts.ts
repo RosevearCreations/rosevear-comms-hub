@@ -35,7 +35,7 @@ export const connectorContracts: Readonly<Record<OrganizationId, ConnectorContra
   icamp: {
     id: 'camp-guest-intake', organizationId: 'icamp', label: 'Campground guest and reservation intake',
     upstreamSystem: 'iCamp campground platform', allowedOperations: ['intake_preview', 'status_preview'],
-    approvedChannels: ['website', 'email'], tenantBoundary: 'Verified campground tenant + role + site access',
+    approvedChannels: ['website', 'email', 'sms'], tenantBoundary: 'Verified campground tenant + role + site access',
     requiredGates: ['Server-authenticated campground tenant and role', 'Campground isolation and reservation scope', 'Tenant-level audit and retention settings', 'Explicit owner approval'],
     state: 'mock_only', nextBuild: 'QL-202'
   },
