@@ -36,6 +36,8 @@ QL-193 adds **Customer 360** as a sixth console workspace. It explicitly associa
 
 QL-194 adds **Assignments & follow-ups** as a seventh synthetic workspace: business-specific fictional owners, linked task triage, owner/status/priority/due examples, in-memory receipts and safe navigation from the QL-192 Inbox and QL-193 Customer 360. It never assigns actual staff, notifies anyone, dispatches jobs or persists data. See [`docs/QL-194_CONVERSATION_ASSIGNMENT_OWNERSHIP_FOLLOW_UP_QUEUE.md`](../docs/QL-194_CONVERSATION_ASSIGNMENT_OWNERSHIP_FOLLOW_UP_QUEUE.md).
 
+QL-195 adds **Phone desk** as an eighth synthetic workspace for all four companies: mock keypad, missed-call/voicemail fixture history, text-only fictional descriptions and links into the inbox/follow-up queue. No live telephony or audio playback. See [`docs/QL-195_PHONE_DESK_VOICEMAIL_CALL_HISTORY.md`](../docs/QL-195_PHONE_DESK_VOICEMAIL_CALL_HISTORY.md).
+
 ## What works in QL-003
 
 - Switch between RosieDazzlers and DevilnDove.
