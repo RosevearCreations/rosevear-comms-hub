@@ -49,6 +49,8 @@ import { Ql218RecurrenceHoldFollowUp } from './Ql218RecurrenceHoldFollowUp';
 import { type Ql218Ledger } from './ql218RecurrenceAudit';
 import { Ql219ClosureReadiness } from './Ql219ClosureReadiness';
 import { type Ql219Ledger } from './ql219OutcomeReconciliation';
+import { Ql220ReopenMonitor } from './Ql220ReopenMonitor';
+import { type Ql220Ledger } from './ql220ReopenMonitoring';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -76,6 +78,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'reassessment', label: 'Owner handoff & evidence reassessment', description: 'Source-linked fictional decision-aging cycles and unverified independent-evidence reassessment' },
   { id: 'recurrence', label: 'Recurrence replay & conditional holds', description: 'Four-company fictional exception recurrence, owner-decision replay and hold follow-up audit' },
   { id: 'closure', label: 'Outcome reconciliation & closure readiness', description: 'Four-company source-linked fictional outcomes and unverified independent-closure review packets' },
+  { id: 'reopen', label: 'Reopen exceptions & owner follow-up audit', description: 'Four-company fictional independent-review reopen, follow-up aging and blocked closure audit' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
 ];
 
@@ -100,6 +103,7 @@ export function OperatorShell() {
   const [reassessmentLedger, setReassessmentLedger] = useState<Ql217Ledger>({});
   const [recurrenceLedger, setRecurrenceLedger] = useState<Ql218Ledger>({});
   const [closureLedger, setClosureLedger] = useState<Ql219Ledger>({});
+  const [reopenLedger, setReopenLedger] = useState<Ql220Ledger>({});
   const [reminderIds, setReminderIds] = useState<ReadonlySet<string>>(() => new Set());
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
@@ -257,6 +261,7 @@ export function OperatorShell() {
           {workspace === 'reassessment' && <Ql217OwnerEvidenceReassessment key={`reassessment-${organization.id}`} organization={organization} trial={trialLedger} repair={repairLedger} review={reviewLedger} intake={intakeLedger} audit={auditLedger} handoff={handoffLedger} ledger={reassessmentLedger} setLedger={setReassessmentLedger} onNavigate={setWorkspace} />}
           {workspace === 'recurrence' && <Ql218RecurrenceHoldFollowUp key={`recurrence-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger }} ledger={recurrenceLedger} setLedger={setRecurrenceLedger} onNavigate={setWorkspace} />}
           {workspace === 'closure' && <Ql219ClosureReadiness key={`closure-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger, recurrence: recurrenceLedger }} ledger={closureLedger} setLedger={setClosureLedger} onNavigate={setWorkspace} />}
+          {workspace === 'reopen' && <Ql220ReopenMonitor key={`reopen-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger, recurrence: recurrenceLedger, closure: closureLedger }} ledger={reopenLedger} setLedger={setReopenLedger} onNavigate={setWorkspace} />}
           {workspace === 'evidence' && brandId !== null && (
             <>
               <Ql190IndependentReviewPacketPreview key={`prepilot-packet-${brandId}`} brandId={brandId} />
