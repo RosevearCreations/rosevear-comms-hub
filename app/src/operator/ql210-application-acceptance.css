@@ -1,0 +1,33 @@
+.ql210-acceptance{margin:1rem 0 1.5rem;border:1px solid #5e7393;border-radius:14px;background:#142034;color:#f1f6ff;padding:1.2rem}
+.ql210-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.ql210-head h3{font-size:1.33rem;margin:.2rem 0 .4rem}
+.ql210-head p{line-height:1.6;color:#d6e6fb;margin:.3rem 0 .8rem}
+.ql210-warning{background:#312719;border:1px solid #e2bd78;color:#fff1d5;border-radius:9px;padding:.9rem 1rem;line-height:1.6}
+.ql210-help{background:#263952;border-left:4px solid #9dc9ef;padding:.8rem 1rem;line-height:1.6}
+.ql210-statuses{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:.8rem;margin:1rem 0}
+.ql210-statuses>div{border:1px solid #68809f;background:#24364e;border-radius:9px;padding:.85rem;display:flex;flex-direction:column;gap:.4rem}
+.ql210-statuses span{font-size:.9rem;color:#e0ebfb}
+.ql210-statuses strong{font-size:1.17rem}
+.ql210-statuses small{color:#d1e2f6;line-height:1.35}
+.ql210-held,.ql210-fail{color:#ffce8c}
+.ql210-pass{color:#aaf0bb}
+.ql210-actions,.ql210-workspace-links{display:flex;gap:.65rem;flex-wrap:wrap;margin:.9rem 0}
+.ql210-actions button,.ql210-workspace-links button{border:1px solid #adcae5;border-radius:8px;background:#d9eaff;color:#17283d;padding:.65rem .85rem;font-weight:700;cursor:pointer}
+.ql210-actions button:focus-visible,.ql210-workspace-links button:focus-visible{outline:3px solid #f3c876;outline-offset:2px}
+.ql210-ran{color:#dce8f6;font-size:.89rem}
+.ql210-matrix,.ql210-summary,.ql210-required{margin:1rem 0;background:#20334c;border:1px solid #587493;border-radius:9px;padding:.95rem;min-width:0}
+.ql210-matrix h4,.ql210-summary h4,.ql210-required h4{margin:.15rem 0 .65rem;font-size:1.13rem}
+.ql210-matrix table,.ql210-summary table{width:100%;border-collapse:collapse;font-size:.88rem}
+.ql210-matrix caption,.ql210-summary caption{color:#e2edfa;text-align:left;padding:.3rem 0 .65rem}
+.ql210-matrix th,.ql210-matrix td,.ql210-summary th,.ql210-summary td{padding:.62rem .45rem;border-bottom:1px solid #566e89;text-align:left;vertical-align:top;color:#e9f1fd;line-height:1.42}
+.ql210-matrix td:nth-child(2){min-width:105px}
+.ql210-required p{color:#e3edfa;line-height:1.55}
+.ql210-required label{display:block;font-weight:700;margin:.5rem 0}
+.ql210-required select{border-radius:7px;border:1px solid #8fb4d4;padding:.65rem;min-width:min(100%,260px);background:#fff;color:#172439}
+.ql210-required ol{padding-left:1.25rem}
+.ql210-required li{padding:.55rem .3rem;border-bottom:1px solid #607792;line-height:1.5}
+.ql210-required li span{color:#ffd79d;font-weight:700;font-size:.8rem}
+.ql210-required li p{margin:.25rem 0}
+.ql210-required small{color:#cce0f7}
+.ql210-foot{line-height:1.65;font-size:.93rem;color:#d7e7f9}
+@media(max-width:760px){.ql210-head{flex-direction:column}.ql210-acceptance{padding:.75rem}.ql210-matrix,.ql210-summary{overflow-x:auto}.ql210-matrix table,.ql210-summary table{min-width:580px}.ql210-actions button,.ql210-workspace-links button{flex:1 1 210px}}
