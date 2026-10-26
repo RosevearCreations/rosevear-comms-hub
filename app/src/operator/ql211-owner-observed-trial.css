@@ -1,0 +1,33 @@
+.ql211-trial{margin:1rem 0 1.5rem;border:1px solid #5e7393;border-radius:14px;background:#142034;color:#f1f6ff;padding:1.1rem;min-width:0}
+.ql211-trial h3,.ql211-trial h4{line-height:1.35;margin:.25rem 0 .6rem;color:#fff}
+.ql211-trial h3{font-size:1.3rem}.ql211-trial h4{font-size:1.1rem}
+.ql211-trial p{line-height:1.55}.ql211-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.ql211-header p{color:#dae9fa}.ql211-header button,.ql211-actions button,.ql211-reset button,.ql211-open-workspace{border:1px solid #a6c9e9;border-radius:8px;background:#d9eaff;color:#182a40;padding:.65rem .85rem;font-weight:700;cursor:pointer}
+.ql211-trial button:focus-visible,.ql211-trial select:focus-visible,.ql211-trial textarea:focus-visible{outline:3px solid #ffce89;outline-offset:2px}
+.ql211-warning{background:#352a1d;border:1px solid #e6c08e;color:#fff0d8;border-radius:9px;padding:.85rem 1rem}
+.ql211-help{background:#263952;border-left:4px solid #aad4f9;padding:.85rem 1rem;line-height:1.6}
+.ql211-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;margin:1rem 0}
+.ql211-metrics>div{display:flex;flex-direction:column;gap:.35rem;border:1px solid #6a839f;border-radius:9px;background:#243950;padding:.8rem}
+.ql211-metrics small,.ql211-metrics span{color:#d9e9f9;line-height:1.3}.ql211-metrics strong{font-size:1.4rem}.ql211-metrics .ql211-held{color:#ffce8c}
+.ql211-portfolio,.ql211-scenarios,.ql211-observe,.ql211-triage,.ql211-receipt{background:#20344c;border:1px solid #587493;border-radius:10px;padding:.9rem;min-width:0;margin:.9rem 0}
+.ql211-table-scroll{max-width:100%;overflow-x:auto}.ql211-table-scroll table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:580px}
+.ql211-table-scroll caption{text-align:left;color:#d7e7f9;padding:.3rem 0 .6rem;line-height:1.45}
+.ql211-table-scroll th,.ql211-table-scroll td{border-bottom:1px solid #647e9d;text-align:left;padding:.6rem .45rem;color:#f2f6fd}
+.ql211-grid{display:grid;grid-template-columns:minmax(220px,1fr) minmax(0,1.4fr);gap:.8rem;align-items:start}
+.ql211-scenarios p{color:#dce9fb;font-size:.9rem}.ql211-scenario{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;gap:.65rem;border:1px solid #728caa;background:#293e57;color:#eef5ff;border-radius:8px;margin:.5rem 0;padding:.65rem;cursor:pointer;min-height:64px}
+.ql211-scenario.active{border:2px solid #ffd390;background:#394f68}.ql211-scenario span{display:flex;flex-direction:column;gap:.3rem}
+.ql211-scenario small{color:#d6e5f8}.ql211-scenario em{font-size:.79rem;font-style:normal;color:#fff1cf;text-align:right;max-width:140px}
+.ql211-step{border-left:3px solid #8cc6f8;padding:.45rem .8rem;margin:.8rem 0;background:#2a405a}
+.ql211-step p{margin:.4rem 0}.ql211-return-hint{font-size:.88rem;color:#d3e5fa}
+.ql211-form{border-top:1px solid #607995;margin-top:1rem;padding-top:1rem;display:flex;flex-direction:column;gap:.5rem}
+.ql211-form label{font-weight:700;margin-top:.45rem}.ql211-form select,.ql211-form textarea{width:100%;max-width:100%;box-sizing:border-box;border-radius:7px;border:1px solid #a8c9e9;background:#f6fbff;color:#162a43;padding:.65rem;font:inherit}
+.ql211-form small{color:#d4e5f8}.ql211-triage-inputs{display:flex;flex-direction:column;gap:.45rem}
+.ql211-triage ol{padding-left:1.4rem}.ql211-triage li{padding:.65rem 0;border-bottom:1px solid #607995}
+.ql211-priority{display:inline-block;margin-left:.4rem;background:#583a2b;border:1px solid #e2b37f;border-radius:6px;padding:.24rem .42rem;color:#fff0d6;font-size:.8rem}
+.ql211-triage .ql211-note{overflow-wrap:anywhere;background:#263b54;padding:.45rem .65rem;border-radius:6px}
+.ql211-triage small{color:#d9e9fa}.ql211-actions{display:flex;gap:.7rem;flex-wrap:wrap}
+.ql211-receipt textarea{width:100%;box-sizing:border-box;max-width:100%;background:#edf6ff;color:#17283f;border:1px solid #a6c9e9;border-radius:8px;padding:.75rem;font: .85rem/1.45 ui-monospace,monospace}
+.ql211-reset{background:#352819;border:1px solid #efc47c;padding:.8rem;border-radius:8px;margin-top:.7rem}
+.ql211-reset button{margin-right:.5rem;margin-bottom:.3rem}.ql211-foot{font-size:.91rem;color:#d9e8fa}
+@media(max-width:780px){.ql211-header{flex-direction:column}.ql211-grid{grid-template-columns:minmax(0,1fr)}.ql211-trial{padding:.7rem}.ql211-scenario{min-height:55px}.ql211-actions button{flex:1 1 185px}}
+@media(prefers-reduced-motion:reduce){.ql211-trial *{scroll-behavior:auto}}

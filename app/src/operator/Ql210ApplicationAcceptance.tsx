@@ -59,6 +59,7 @@ export function Ql210ApplicationAcceptance({ organization, onNavigate }: {
       </div>}
     </section>
     <div className="ql210-workspace-links" aria-label="Open demonstration workspace for manual trial">
+      <button type="button" onClick={() => onNavigate('trial')}>Open QL-211 owner trial</button>
       <button type="button" onClick={() => onNavigate('inbox')}>Review sample inbox</button>
       <button type="button" onClick={() => onNavigate('queue')}>Review task queue</button>
       <button type="button" onClick={() => onNavigate('reports')}>Review scoped analytics</button>
