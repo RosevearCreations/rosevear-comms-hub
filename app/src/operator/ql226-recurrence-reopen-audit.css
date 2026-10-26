@@ -1,0 +1,4 @@
+@import './ql225-disposition-audit.css';
+
+.ql226-workbench .ql218-metrics strong { font-variant-numeric: tabular-nums; }
+.ql226-workbench .ql218-gap strong { overflow-wrap: anywhere; }
