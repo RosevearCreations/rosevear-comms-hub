@@ -35,6 +35,8 @@ import { Ql211OwnerObservedTrial } from './Ql211OwnerObservedTrial';
 import { type Ql211Ledger } from './ql211OwnerTrial';
 import { Ql212RepairEvidenceQueue } from './Ql212RepairEvidenceQueue';
 import { type Ql212Ledger } from './ql212RepairQueue';
+import { Ql213IndependentReviewPrep } from './Ql213IndependentReviewPrep';
+import { type Ql213Ledger } from './ql213ReviewPreparation';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -55,6 +57,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'evidence', label: 'Safety & hold review', description: 'Four-company preview acceptance, synthetic evidence and unresolved pilot prerequisites' },
   { id: 'trial', label: 'Owner trial & gap triage', description: 'Guided four-company manual preview observations, mobile review and prioritized gap follow-up' },
   { id: 'repair', label: 'Finding replay & repair queue', description: 'Synthetic trial-finding replay, session-only repair evidence drafts and manual retest holds' },
+  { id: 'review', label: 'Retest comparison & review prep', description: 'Before/after mock replay evidence, independent-review checklist drafts and unresolved closure risks' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
 ];
 
@@ -72,6 +75,7 @@ export function OperatorShell() {
   const [queueState, setQueueState] = useState<MockQueueState>(() => seedQueueForOrganization(firstOrganization));
   const [trialLedger, setTrialLedger] = useState<Ql211Ledger>({});
   const [repairLedger, setRepairLedger] = useState<Ql212Ledger>({});
+  const [reviewLedger, setReviewLedger] = useState<Ql213Ledger>({});
   const [reminderIds, setReminderIds] = useState<ReadonlySet<string>>(() => new Set());
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
@@ -222,6 +226,7 @@ export function OperatorShell() {
           {workspace === 'evidence' && <Ql210ApplicationAcceptance key={`acceptance-${organization.id}`} organization={organization} onNavigate={setWorkspace} />}
           {workspace === 'trial' && <Ql211OwnerObservedTrial key={`trial-${organization.id}`} organization={organization} ledger={trialLedger} setLedger={setTrialLedger} onNavigate={setWorkspace} />}
           {workspace === 'repair' && <Ql212RepairEvidenceQueue key={`repair-${organization.id}`} organization={organization} trial={trialLedger} ledger={repairLedger} setLedger={setRepairLedger} onNavigate={setWorkspace} />}
+          {workspace === 'review' && <Ql213IndependentReviewPrep key={`review-${organization.id}`} organization={organization} trial={trialLedger} repair={repairLedger} ledger={reviewLedger} setLedger={setReviewLedger} onNavigate={setWorkspace} />}
           {workspace === 'evidence' && brandId !== null && (
             <>
               <Ql190IndependentReviewPacketPreview key={`prepilot-packet-${brandId}`} brandId={brandId} />
