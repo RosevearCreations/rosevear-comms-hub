@@ -123,6 +123,8 @@ export function Ql214ReviewIntakeHoldRegister({ organization, trial, repair, rev
       </table></div>
     </section>
     <section className="ql214-panel" aria-labelledby="ql214-receipt-title"><h4 id="ql214-receipt-title">Fixed-schema local review intake receipt</h4>
+      <p>For locally prepared fictional handoffs, continue to QL-215 to rehearse follow-up aging, source reconciliation and release hold continuity.</p>
+      <button type="button" onClick={() => onNavigate('audit')}>Open QL-215 follow-up aging &amp; hold audit</button>
       <button type="button" aria-expanded={showReceipt} aria-controls="ql214-receipt" onClick={() => setShowReceipt((open) => !open)}>{showReceipt ? 'Hide' : 'Show'} PII-minimized company receipt</button>
       {showReceipt && <div id="ql214-receipt"><p>Copy manually if needed. This excludes fictional free text, reviewer role details, upstream version hashes and any real-world identity or customer data.</p>
         <textarea aria-label="Fixture-only independent review intake receipt" readOnly rows={13} value={ql214CompanyReceipt(trial, repair, review, ledger, organization.id)} /></div>}
