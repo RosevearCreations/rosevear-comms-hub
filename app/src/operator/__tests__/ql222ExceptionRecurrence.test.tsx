@@ -7,6 +7,7 @@ import { Ql222OwnerDecisionAudit } from '../Ql222OwnerDecisionAudit';
 import { Ql223DecisionAgingAudit } from '../Ql223DecisionAgingAudit';
 import { Ql224OverdueHoldAudit } from '../Ql224OverdueHoldAudit';
 import { Ql225DispositionAudit } from '../Ql225DispositionAudit';
+import { Ql226RecurrenceReopenAudit } from '../Ql226RecurrenceReopenAudit';
 import { operatorOrganizations, type OrganizationId } from '../ql191Organizations';
 import { recordQl211Observation } from '../ql211OwnerTrial';
 import { queueQl212Finding, replayQl212Finding, writeQl212RepairNote, requestQl212Retest, recordQl212Retest } from '../ql212RepairQueue';
@@ -34,6 +35,9 @@ import { QL224_RELEASE, QL224_CHECKS, beginQl224Replay, recordQl224Reconciliatio
 import { QL225_RELEASE, QL225_CHECKS, beginQl225Disposition, recordQl225Disposition, advanceQl225Cycle,
   acknowledgeQl225Check, prepareQl225HeldReassessment, ql225CompanyDispositions, ql225CompanyReceipt,
   ql225Portfolio, type Ql225Sources, type Ql225Ledger } from '../ql225EvidenceDisposition';
+import { QL226_RELEASE, QL226_CHECKS, beginQl226Reopen, recordQl226Reopen, advanceQl226Cycle,
+  acknowledgeQl226Check, prepareQl226HoldRecheck, ql226CompanyReopens, ql226CompanyReceipt,
+  ql226Portfolio, type Ql226Sources, type Ql226Ledger } from '../ql226RecurrenceReopen';
 
 /** Real contract construction from the synthetic QL-211→QL-221 chain, never a live connector. */
 function fixture(company: OrganizationId, recurring = false): Ql222Sources {
@@ -820,6 +824,189 @@ describe('QL-225 four-company escalation outcome and evidence disposition interf
     const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-225 evidence disposition receipt"]')?.value ?? '';
     expect(receipt).toContain('"prepared": 1');
     expect(receipt).not.toContain('Invented independent source discrepancy');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+  });
+});
+
+function reopenFixture(company: OrganizationId, recurring = false): Ql226Sources {
+  const sources = dispositionFixture(company, recurring);
+  let disposition = beginQl225Disposition(sources, {}, company, 'inbox');
+  for (const category of ['actual_repair', 'accessibility'] as const) disposition = recordQl225Disposition(
+    sources, disposition, company, 'inbox', category,
+    category === 'actual_repair' ? 'SIMULATED_DISCREPANCY_UNVERIFIED' : 'EVIDENCE_PENDING_UNVERIFIED',
+    category === 'actual_repair' ? 'REFER_INDEPENDENT_DRAFT' : 'CONTINUE_HELD_MONITOR_DRAFT',
+    `Invented QL-225 ${category} outcome remains unverified`);
+  for (const check of QL225_CHECKS) disposition = acknowledgeQl225Check(sources, disposition, company, 'inbox', check.id);
+  disposition = prepareQl225HeldReassessment(sources, disposition, company, 'inbox');
+  expect(disposition[company]?.inbox?.phase).toBe('held_release_reassessment_packet_prepared');
+  return { ...sources, disposition };
+}
+
+describe('QL-226 fictional independent disposition recurrence, owner reopening and conditional holds', () => {
+  it('keeps four company boundaries and twelve actual held prerequisites without live operations', () => {
+    const empty: Ql226Sources = { trial: {}, repair: {}, review: {}, intake: {}, audit: {},
+      handoff: {}, reassessment: {}, recurrence: {}, closure: {}, reopen: {}, refresh: {},
+      exception: {}, aging: {}, overdue: {}, disposition: {} };
+    const portfolio = ql226Portfolio(empty, {});
+    expect(portfolio.companies.map((row) => row.company)).toEqual(operatorOrganizations.map((org) => org.id));
+    expect(portfolio.prerequisites).toHaveLength(12);
+    expect(portfolio).toMatchObject({ release: QL226_RELEASE, eligible: 0, prepared: 0,
+      allReleaseHoldsPreserved: true, actualIndependentRecheck: false, actualEvidenceVerified: false,
+      actualOwnerAuthorization: false, livePilotReady: false, providerConnected: false,
+      externalWrites: 0, callsPlaced: 0, messagesSent: 0 });
+    expect(beginQl226Reopen(empty, {}, 'icamp', 'inbox')).toEqual({});
+    expect(prepareQl226HoldRecheck(empty, {}, 'icamp', 'inbox')).toEqual({});
+  });
+
+  it('requires current prepared QL-225, all gap outcomes, risk referrals and three unverified checks', () => {
+    const sources = reopenFixture('devilndove', true);
+    let ledger = beginQl226Reopen(sources, {}, 'devilndove', 'inbox');
+    expect(ledger.devilndove?.inbox?.phase).toBe('independent_recurrence_reopen_draft');
+    expect(recordQl226Reopen(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'REOPENED_EXCEPTION_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT', 'short')).toBe(ledger);
+    expect(recordQl226Reopen(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'INVALID' as never, 'REFER_INDEPENDENT_DRAFT', 'Invented invalid outcome')).toBe(ledger);
+    ledger = recordQl226Reopen(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'REOPENED_EXCEPTION_UNVERIFIED', 'MAINTAIN_HOLD_DRAFT', 'Fictional repeat exception needs independent follow-up');
+    ledger = recordQl226Reopen(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'MONITOR_OPEN_UNVERIFIED', 'MAINTAIN_HOLD_DRAFT', 'Invented accessibility issue still held');
+    for (const check of QL226_CHECKS) ledger = acknowledgeQl226Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    expect(ql226CompanyReopens(sources, ledger, 'devilndove')).toMatchObject({
+      reopened: 1, reopenEvents: 1, undecided: 0, referralsDue: 1 });
+    expect(prepareQl226HoldRecheck(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    ledger = recordQl226Reopen(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'REOPENED_EXCEPTION_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT', 'Fictional independent referral unsent');
+    ledger = prepareQl226HoldRecheck(sources, ledger, 'devilndove', 'inbox');
+    expect(ql226CompanyReopens(sources, ledger, 'devilndove')).toMatchObject({
+      prepared: 1, referralsDue: 0, holdAudit: { held: 12, allHeld: true, conditionalRelease: 'BLOCKED' } });
+    expect(advanceQl226Cycle(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    expect(recordQl226Reopen(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'MONITOR_OPEN_UNVERIFIED', 'MAINTAIN_HOLD_DRAFT', 'Cannot edit prepared packet')).toBe(ledger);
+  });
+
+  it('ages owner follow-ups, requires late independent recheck, and retains historical overdue episodes', () => {
+    const sources = reopenFixture('yw');
+    let ledger = beginQl226Reopen(sources, {}, 'yw', 'inbox');
+    ledger = recordQl226Reopen(sources, ledger, 'yw', 'inbox', 'actual_repair',
+      'REOPENED_EXCEPTION_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT', 'Invented repair exception reopened');
+    ledger = recordQl226Reopen(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'MONITOR_OPEN_UNVERIFIED', 'MAINTAIN_HOLD_DRAFT', 'Fictional accessibility owner monitoring');
+    for (let i = 0; i < 2; i++) ledger = advanceQl226Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql226CompanyReopens(sources, ledger, 'yw')).toMatchObject({ dueSoon: 2, overdue: 0 });
+    ledger = advanceQl226Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql226CompanyReopens(sources, ledger, 'yw')).toMatchObject({ dueSoon: 0, overdue: 2 });
+    expect(recordQl226Reopen(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'SIMULATED_RECHECK_RECORDED_UNVERIFIED', 'MAINTAIN_HOLD_DRAFT',
+      'Cannot refresh invented overdue without independent referral')).toBe(ledger);
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl226Reopen(
+      sources, ledger, 'yw', 'inbox', category, 'SIMULATED_RECHECK_RECORDED_UNVERIFIED',
+      'REFER_INDEPENDENT_DRAFT', `Invented ${category} late referral still unsent`);
+    expect(ql226CompanyReopens(sources, ledger, 'yw')).toMatchObject({
+      overdue: 0, overdueFollowUps: 2, reopenEvents: 1, referralsDue: 0 });
+    for (const check of QL226_CHECKS) ledger = acknowledgeQl226Check(sources, ledger, 'yw', 'inbox', check.id);
+    ledger = prepareQl226HoldRecheck(sources, ledger, 'yw', 'inbox');
+    expect(ql226Portfolio(sources, ledger)).toMatchObject({
+      prepared: 1, overdueFollowUps: 2, reopenEvents: 1, actualIndependentRecheck: false, externalWrites: 0 });
+  });
+
+  it('counts fictional reopening only once per gap per simulated cycle', () => {
+    const sources = reopenFixture('rosiedazzlers');
+    let ledger = beginQl226Reopen(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = recordQl226Reopen(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'REOPENED_EXCEPTION_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT', 'Fictional reopened evidence first event');
+    ledger = recordQl226Reopen(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'REOPENED_EXCEPTION_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT', 'Revised reopened note same cycle');
+    expect(ql226CompanyReopens(sources, ledger, 'rosiedazzlers').reopenEvents).toBe(1);
+    ledger = advanceQl226Cycle(sources, ledger, 'rosiedazzlers', 'inbox');
+    ledger = recordQl226Reopen(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'REOPENED_EXCEPTION_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT', 'Invented new cycle of reopen');
+    expect(ql226CompanyReopens(sources, ledger, 'rosiedazzlers').reopenEvents).toBe(2);
+  });
+
+  it('freezes upstream evidence changes, resets only the selected case and leaves orphaned cases held', () => {
+    const a = reopenFixture('rosiedazzlers');
+    const b = reopenFixture('icamp');
+    const sources = Object.fromEntries((Object.keys(a) as Array<keyof Ql226Sources>).map((key) =>
+      [key, { ...a[key], ...b[key] }])) as unknown as Ql226Sources;
+    let ledger = beginQl226Reopen(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = beginQl226Reopen(sources, ledger, 'icamp', 'inbox');
+    const other = ledger.rosiedazzlers?.inbox;
+    const revised: Ql226Sources = { ...sources, disposition: { ...sources.disposition, icamp: {
+      ...sources.disposition.icamp, inbox: { ...sources.disposition.icamp?.inbox!, gaps: {
+        ...sources.disposition.icamp?.inbox?.gaps, actual_repair: {
+          ...sources.disposition.icamp?.inbox?.gaps.actual_repair!, note: 'Revised invented QL-225 independent evidence disposition' } } } } } };
+    expect(ql226CompanyReopens(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('QL225_DISPOSITION_REVISED');
+    expect(recordQl226Reopen(revised, ledger, 'icamp', 'inbox', 'actual_repair',
+      'MONITOR_OPEN_UNVERIFIED', 'MAINTAIN_HOLD_DRAFT', 'Cannot alter a stale source')).toBe(ledger);
+    ledger = beginQl226Reopen(revised, ledger, 'icamp', 'inbox');
+    expect(ledger.rosiedazzlers?.inbox).toBe(other);
+    expect(ledger.icamp?.inbox?.gaps).toEqual({});
+    expect(ql226CompanyReopens(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('SOURCE_CURRENT');
+    const removed: Ql226Sources = { ...revised, trial: { ...revised.trial, icamp: {} } };
+    expect(ql226CompanyReopens(removed, ledger, 'icamp').stale).toBeGreaterThan(0);
+    expect(beginQl226Reopen(removed, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('exports coded recurrence counts without private notes, reviewer identities or revision tokens', () => {
+    const sources = reopenFixture('icamp');
+    let ledger = beginQl226Reopen(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl226Reopen(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'REOPENED_EXCEPTION_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT',
+      'Secret fictitious independent reviewer remarks never belong in export');
+    const receipt = ql226CompanyReceipt(sources, ledger, 'icamp');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    expect(receipt).toContain('"notesIncluded": false');
+    expect(receipt).not.toContain('Secret fictitious independent reviewer remarks');
+    expect(receipt).not.toContain('invented-reopen-');
+    expect(receipt).not.toContain('fictional_security_reviewer');
+  });
+});
+
+describe('QL-226 operator independent recurrence and owner reopening interface', () => {
+  it('opens the new four-company navigation, help, held prerequisites and redacted receipt', async () => {
+    await act(async () => root.render(<OperatorShell />));
+    await click('Independent recurrence & owner reopen', '.ql172-nav-button');
+    expect(host.querySelector(`[data-ql226-release="${QL226_RELEASE}"]`)).not.toBeNull();
+    expect(host.textContent).toContain('12/12 HELD');
+    await click('ⓘ Recurrence & reopen help');
+    expect(host.textContent).toContain('confirmed case-only reset');
+    await click('Show local QL-226 audit receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-226 recurrence reopen receipt"]')?.value ?? '';
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    await click('iCamp', '.ql172-brand');
+    expect(host.querySelector('[data-organization="icamp"][data-ql226-release]')).not.toBeNull();
+    await click('Open owner trial');
+    expect(host.querySelector('#ql211-title')).not.toBeNull();
+  });
+
+  it('prepares a held local packet only after gap outcomes, independent referral and unverified checks', async () => {
+    const sources = reopenFixture('rosiedazzlers', true);
+    function Harness() {
+      const [ledger, setLedger] = useState<Ql226Ledger>({});
+      return <Ql226RecurrenceReopenAudit organization={operatorOrganizations[0]} sources={sources}
+        ledger={ledger} setLedger={setLedger} onNavigate={() => undefined} />;
+    }
+    await act(async () => root.render(<Harness />));
+    await click('Begin fictional recurrence & reopen review');
+    await select('#ql226-outcome', 'REOPENED_EXCEPTION_UNVERIFIED');
+    await select('#ql226-route', 'REFER_INDEPENDENT_DRAFT');
+    await type('#ql226-note', 'Invented repeated independent evidence exception remains held');
+    await click('Record fictional recurrence & owner reopen · UNSENT');
+    await select('#ql226-gap', 'accessibility');
+    await select('#ql226-outcome', 'MONITOR_OPEN_UNVERIFIED');
+    await select('#ql226-route', 'MAINTAIN_HOLD_DRAFT');
+    await type('#ql226-note', 'Fictional accessibility evidence remains unverified');
+    await click('Record fictional recurrence & owner reopen · UNSENT');
+    for (const check of QL226_CHECKS) await click('Acknowledge conditional hold · UNVERIFIED');
+    const prepare = [...host.querySelectorAll<HTMLButtonElement>('button')].find((button) =>
+      button.textContent?.includes('Prepare reopened evidence & conditional hold recheck packet'))!;
+    expect(prepare.disabled).toBe(false);
+    await click('Prepare reopened evidence & conditional hold recheck packet');
+    expect(host.textContent).toContain('packet prepared locally');
+    await click('Show local QL-226 audit receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-226 recurrence reopen receipt"]')?.value ?? '';
+    expect(receipt).toContain('"prepared": 1');
+    expect(receipt).not.toContain('Invented repeated independent evidence exception');
     expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
   });
 });
