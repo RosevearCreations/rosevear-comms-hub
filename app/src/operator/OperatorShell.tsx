@@ -45,6 +45,8 @@ import { Ql216EscalationHandoffAudit } from './Ql216EscalationHandoffAudit';
 import { type Ql216Ledger } from './ql216EscalationHandoff';
 import { Ql217OwnerEvidenceReassessment } from './Ql217OwnerEvidenceReassessment';
 import { type Ql217Ledger } from './ql217OwnerReassessment';
+import { Ql218RecurrenceHoldFollowUp } from './Ql218RecurrenceHoldFollowUp';
+import { type Ql218Ledger } from './ql218RecurrenceAudit';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -70,6 +72,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'audit', label: 'Reviewer follow-up aging & hold audit', description: 'Simulated gap-aging cycles, stale source reconciliation and read-only release hold continuity' },
   { id: 'handoff', label: 'Escalation replay & owner-safe handoff', description: 'Source-linked fictional escalations, locally prepared review packets and unchanged release holds' },
   { id: 'reassessment', label: 'Owner handoff & evidence reassessment', description: 'Source-linked fictional decision-aging cycles and unverified independent-evidence reassessment' },
+  { id: 'recurrence', label: 'Recurrence replay & conditional holds', description: 'Four-company fictional exception recurrence, owner-decision replay and hold follow-up audit' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
 ];
 
@@ -92,6 +95,7 @@ export function OperatorShell() {
   const [auditLedger, setAuditLedger] = useState<Ql215Ledger>({});
   const [handoffLedger, setHandoffLedger] = useState<Ql216Ledger>({});
   const [reassessmentLedger, setReassessmentLedger] = useState<Ql217Ledger>({});
+  const [recurrenceLedger, setRecurrenceLedger] = useState<Ql218Ledger>({});
   const [reminderIds, setReminderIds] = useState<ReadonlySet<string>>(() => new Set());
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
@@ -247,6 +251,7 @@ export function OperatorShell() {
           {workspace === 'audit' && <Ql215FollowUpAgingHoldAudit key={`audit-${organization.id}`} organization={organization} trial={trialLedger} repair={repairLedger} review={reviewLedger} intake={intakeLedger} ledger={auditLedger} setLedger={setAuditLedger} onNavigate={setWorkspace} />}
           {workspace === 'handoff' && <Ql216EscalationHandoffAudit key={`handoff-${organization.id}`} organization={organization} trial={trialLedger} repair={repairLedger} review={reviewLedger} intake={intakeLedger} audit={auditLedger} packets={handoffLedger} setPackets={setHandoffLedger} onNavigate={setWorkspace} />}
           {workspace === 'reassessment' && <Ql217OwnerEvidenceReassessment key={`reassessment-${organization.id}`} organization={organization} trial={trialLedger} repair={repairLedger} review={reviewLedger} intake={intakeLedger} audit={auditLedger} handoff={handoffLedger} ledger={reassessmentLedger} setLedger={setReassessmentLedger} onNavigate={setWorkspace} />}
+          {workspace === 'recurrence' && <Ql218RecurrenceHoldFollowUp key={`recurrence-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger }} ledger={recurrenceLedger} setLedger={setRecurrenceLedger} onNavigate={setWorkspace} />}
           {workspace === 'evidence' && brandId !== null && (
             <>
               <Ql190IndependentReviewPacketPreview key={`prepilot-packet-${brandId}`} brandId={brandId} />
