@@ -33,6 +33,8 @@ import { Ql199ConnectorCentre } from './Ql199ConnectorCentre';
 import { Ql210ApplicationAcceptance } from './Ql210ApplicationAcceptance';
 import { Ql211OwnerObservedTrial } from './Ql211OwnerObservedTrial';
 import { type Ql211Ledger } from './ql211OwnerTrial';
+import { Ql212RepairEvidenceQueue } from './Ql212RepairEvidenceQueue';
+import { type Ql212Ledger } from './ql212RepairQueue';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -52,6 +54,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'samples', label: 'Synthetic conversations', description: 'Brand-safe triage, unsent drafts, mock intake handoffs and follow-up tasks' },
   { id: 'evidence', label: 'Safety & hold review', description: 'Four-company preview acceptance, synthetic evidence and unresolved pilot prerequisites' },
   { id: 'trial', label: 'Owner trial & gap triage', description: 'Guided four-company manual preview observations, mobile review and prioritized gap follow-up' },
+  { id: 'repair', label: 'Finding replay & repair queue', description: 'Synthetic trial-finding replay, session-only repair evidence drafts and manual retest holds' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
 ];
 
@@ -68,6 +71,7 @@ export function OperatorShell() {
   const [composerJump, setComposerJump] = useState<string | null>(null);
   const [queueState, setQueueState] = useState<MockQueueState>(() => seedQueueForOrganization(firstOrganization));
   const [trialLedger, setTrialLedger] = useState<Ql211Ledger>({});
+  const [repairLedger, setRepairLedger] = useState<Ql212Ledger>({});
   const [reminderIds, setReminderIds] = useState<ReadonlySet<string>>(() => new Set());
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
@@ -217,6 +221,7 @@ export function OperatorShell() {
           )}
           {workspace === 'evidence' && <Ql210ApplicationAcceptance key={`acceptance-${organization.id}`} organization={organization} onNavigate={setWorkspace} />}
           {workspace === 'trial' && <Ql211OwnerObservedTrial key={`trial-${organization.id}`} organization={organization} ledger={trialLedger} setLedger={setTrialLedger} onNavigate={setWorkspace} />}
+          {workspace === 'repair' && <Ql212RepairEvidenceQueue key={`repair-${organization.id}`} organization={organization} trial={trialLedger} ledger={repairLedger} setLedger={setRepairLedger} onNavigate={setWorkspace} />}
           {workspace === 'evidence' && brandId !== null && (
             <>
               <Ql190IndependentReviewPacketPreview key={`prepilot-packet-${brandId}`} brandId={brandId} />
@@ -240,7 +245,7 @@ export function OperatorShell() {
               <DisabledOperatorConsole embedded />
             </>
           )}
-          {workspace !== 'dashboard' && workspace !== 'inbox' && workspace !== 'contacts' && workspace !== 'queue' && workspace !== 'phone' && workspace !== 'composer' && workspace !== 'calendar' && workspace !== 'reports' && workspace !== 'connectors' && workspace !== 'evidence' && workspace !== 'trial' && brandId === null && (
+          {workspace !== 'dashboard' && workspace !== 'inbox' && workspace !== 'contacts' && workspace !== 'queue' && workspace !== 'phone' && workspace !== 'composer' && workspace !== 'calendar' && workspace !== 'reports' && workspace !== 'connectors' && workspace !== 'evidence' && workspace !== 'trial' && workspace !== 'repair' && brandId === null && (
             <Ql191AdditionalOrganizationPreview key={`additional-${organization.id}-${workspace}`} organization={organization} workspace={workspace} />
           )}
         </main>
