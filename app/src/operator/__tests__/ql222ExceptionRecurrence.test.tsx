@@ -4,6 +4,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, describe, expect, it } from 'vitest';
 import { OperatorShell } from '../OperatorShell';
 import { Ql222OwnerDecisionAudit } from '../Ql222OwnerDecisionAudit';
+import { Ql223DecisionAgingAudit } from '../Ql223DecisionAgingAudit';
 import { operatorOrganizations, type OrganizationId } from '../ql191Organizations';
 import { recordQl211Observation } from '../ql211OwnerTrial';
 import { queueQl212Finding, replayQl212Finding, writeQl212RepairNote, requestQl212Retest, recordQl212Retest } from '../ql212RepairQueue';
@@ -22,6 +23,9 @@ import { QL221_CHECKS, beginQl221Refresh, recordQl221Refresh, acknowledgeQl221Ch
 import { QL222_RELEASE, QL222_CHECKS, beginQl222Replay, recordQl222Decision, advanceQl222Cycle,
   acknowledgeQl222Check, prepareQl222HoldRecheck, ql222CompanyRecurrence, ql222CompanyReceipt,
   ql222Portfolio, type Ql222Sources, type Ql222Ledger } from '../ql222ExceptionRecurrence';
+import { QL223_RELEASE, QL223_CHECKS, beginQl223FollowUp, recordQl223FollowUp, advanceQl223Cycle,
+  acknowledgeQl223Check, prepareQl223HoldOversight, ql223CompanyAging, ql223CompanyReceipt,
+  ql223Portfolio, type Ql223Sources, type Ql223Ledger } from '../ql223DecisionAging';
 
 /** Real contract construction from the synthetic QL-211→QL-221 chain, never a live connector. */
 function fixture(company: OrganizationId, recurring = false): Ql222Sources {
@@ -270,6 +274,177 @@ describe('QL-222 four-company operator recurrence and owner follow-up interface'
     const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-222 recurrence and hold receipt"]')?.value ?? '';
     expect(receipt).toContain('"prepared": 1');
     expect(receipt).not.toContain('Fictional repeat event');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+  });
+});
+
+/** Prepared synthetic QL-222 decision packets feed QL-223. No real account, SMS or approval is involved. */
+function agingFixture(company: OrganizationId, recurring = false): Ql223Sources {
+  const sources = fixture(company, recurring);
+  let exception = beginQl222Replay(sources, {}, company, 'inbox');
+  for (const category of ['actual_repair', 'accessibility'] as const) exception = recordQl222Decision(
+    sources, exception, company, 'inbox', category,
+    recurring && category === 'actual_repair' ? 'REPEATED_AFTER_REFRESH' : 'RECONFIRMED_OPEN',
+    recurring && category === 'actual_repair' ? 'ESCALATE_INDEPENDENT_DRAFT' : 'MAINTAIN_HOLD_DRAFT',
+    `Invented QL-222 ${category} source for QL-223 review`);
+  for (const check of QL222_CHECKS) exception = acknowledgeQl222Check(sources, exception, company, 'inbox', check.id);
+  exception = prepareQl222HoldRecheck(sources, exception, company, 'inbox');
+  expect(exception[company]?.inbox?.phase).toBe('independent_hold_recheck_packet_prepared');
+  return { ...sources, exception };
+}
+
+describe('QL-223 four-company owner decision aging and conditional hold oversight contract', () => {
+  it('keeps four companies separated and real release entirely held in an empty preview', () => {
+    const empty: Ql223Sources = { trial: {}, repair: {}, review: {}, intake: {}, audit: {}, handoff: {},
+      reassessment: {}, recurrence: {}, closure: {}, reopen: {}, refresh: {}, exception: {} };
+    const portfolio = ql223Portfolio(empty, {});
+    expect(portfolio.companies.map((company) => company.company)).toEqual(operatorOrganizations.map((org) => org.id));
+    expect(portfolio.prerequisites).toHaveLength(12);
+    expect(portfolio).toMatchObject({ release: QL223_RELEASE, eligible: 0, prepared: 0, approaching: 0,
+      allReleaseHoldsPreserved: true, actualOwnerApproval: false, actualIndependentRecheck: false,
+      actualClosure: false, livePilotReady: false, providerConnected: false,
+      externalWrites: 0, callsPlaced: 0, messagesSent: 0 });
+    expect(beginQl223FollowUp(empty, {}, 'icamp', 'inbox')).toEqual({});
+    expect(prepareQl223HoldOversight(empty, {}, 'icamp', 'inbox')).toEqual({});
+  });
+
+  it('requires current QL-222 decisions, every follow-up, risk referrals and three unverified checks', () => {
+    const sources = agingFixture('devilndove', true);
+    let ledger = beginQl223FollowUp(sources, {}, 'devilndove', 'inbox');
+    expect(ledger.devilndove?.inbox?.phase).toBe('follow_up_aging_draft');
+    expect(recordQl223FollowUp(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'FICTIONAL_EXCEPTION_RECURRED', 'REFER_INDEPENDENT_DRAFT', 'short')).toBe(ledger);
+    expect(recordQl223FollowUp(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'UNKNOWN' as never, 'REFER_INDEPENDENT_DRAFT', 'Invented invalid evidence code')).toBe(ledger);
+    ledger = recordQl223FollowUp(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'FICTIONAL_EXCEPTION_RECURRED', 'CONTINUE_HOLD_DRAFT', 'Invented evidence exception needs review');
+    ledger = recordQl223FollowUp(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'FICTIONAL_REFRESH_NOTED', 'CONTINUE_HOLD_DRAFT', 'Fictional accessibility evidence was refreshed');
+    for (const check of QL223_CHECKS) ledger = acknowledgeQl223Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    expect(ql223CompanyAging(sources, ledger, 'devilndove').referralsDue).toBe(1);
+    expect(prepareQl223HoldOversight(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    ledger = recordQl223FollowUp(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'FICTIONAL_EXCEPTION_RECURRED', 'REFER_INDEPENDENT_DRAFT', 'Invented source referred to independent check');
+    expect(ql223CompanyAging(sources, ledger, 'devilndove')).toMatchObject({
+      undecided: 0, overdue: 0, referralsDue: 0, exceptionEvents: 1 });
+    ledger = prepareQl223HoldOversight(sources, ledger, 'devilndove', 'inbox');
+    expect(ql223CompanyAging(sources, ledger, 'devilndove')).toMatchObject({
+      prepared: 1, holdAudit: { held: 12, allHeld: true, conditionalRelease: 'BLOCKED' } });
+    expect(advanceQl223Cycle(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    expect(recordQl223FollowUp(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'FICTIONAL_REFRESH_NOTED', 'CONTINUE_HOLD_DRAFT', 'Cannot edit a prepared packet')).toBe(ledger);
+  });
+
+  it('tracks synthetic approaching and overdue ages and counts exception events at most once per cycle', () => {
+    const sources = agingFixture('yw');
+    let ledger = beginQl223FollowUp(sources, {}, 'yw', 'inbox');
+    ledger = recordQl223FollowUp(sources, ledger, 'yw', 'inbox', 'actual_repair',
+      'FICTIONAL_EXCEPTION_RECURRED', 'REFER_INDEPENDENT_DRAFT', 'Invented evidence recurrence in one cycle');
+    ledger = recordQl223FollowUp(sources, ledger, 'yw', 'inbox', 'actual_repair',
+      'FICTIONAL_EXCEPTION_RECURRED', 'REFER_INDEPENDENT_DRAFT', 'Revised fictional evidence from same cycle');
+    ledger = recordQl223FollowUp(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'REQUEST_PENDING_UNSENT', 'REQUEST_MORE_EVIDENCE_DRAFT', 'Invented accessibility evidence still pending');
+    expect(ql223CompanyAging(sources, ledger, 'yw')).toMatchObject({ exceptionEvents: 1, pendingEvidence: 1 });
+    ledger = advanceQl223Cycle(sources, ledger, 'yw', 'inbox');
+    ledger = advanceQl223Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql223CompanyAging(sources, ledger, 'yw')).toMatchObject({ approaching: 2, overdue: 0 });
+    ledger = advanceQl223Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql223CompanyAging(sources, ledger, 'yw')).toMatchObject({ approaching: 0, overdue: 2 });
+    for (const check of QL223_CHECKS) ledger = acknowledgeQl223Check(sources, ledger, 'yw', 'inbox', check.id);
+    expect(prepareQl223HoldOversight(sources, ledger, 'yw', 'inbox')).toBe(ledger);
+    ledger = recordQl223FollowUp(sources, ledger, 'yw', 'inbox', 'actual_repair',
+      'FICTIONAL_EXCEPTION_RECURRED', 'REFER_INDEPENDENT_DRAFT', 'New invented cycle of evidence recurrence');
+    ledger = recordQl223FollowUp(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'FICTIONAL_REFRESH_NOTED', 'CONTINUE_HOLD_DRAFT', 'Invented accessibility evidence refreshed');
+    expect(ql223CompanyAging(sources, ledger, 'yw')).toMatchObject({ overdue: 0, exceptionEvents: 2 });
+    ledger = prepareQl223HoldOversight(sources, ledger, 'yw', 'inbox');
+    expect(ql223Portfolio(sources, ledger)).toMatchObject({ prepared: 1, exceptionEvents: 2, externalWrites: 0 });
+  });
+
+  it('freezes revised QL-222 sources and allows only explicit case reset without changing another company', () => {
+    const a = agingFixture('rosiedazzlers');
+    const b = agingFixture('icamp');
+    const sources = Object.fromEntries((Object.keys(a) as Array<keyof Ql223Sources>).map((key) =>
+      [key, { ...a[key], ...b[key] }])) as unknown as Ql223Sources;
+    let ledger = beginQl223FollowUp(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = beginQl223FollowUp(sources, ledger, 'icamp', 'inbox');
+    const rosie = ledger.rosiedazzlers?.inbox;
+    const revised: Ql223Sources = { ...sources, exception: { ...sources.exception, icamp: {
+      ...sources.exception.icamp, inbox: { ...sources.exception.icamp?.inbox!, gaps: {
+        ...sources.exception.icamp?.inbox?.gaps, actual_repair: {
+          ...sources.exception.icamp?.inbox?.gaps.actual_repair!, note: 'Different invented QL-222 owner note' } } } } } };
+    expect(ql223CompanyAging(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('QL222_DECISION_REVISED');
+    expect(recordQl223FollowUp(revised, ledger, 'icamp', 'inbox', 'actual_repair',
+      'FICTIONAL_REFRESH_NOTED', 'REFER_INDEPENDENT_DRAFT', 'Stale evidence cannot be changed')).toBe(ledger);
+    ledger = beginQl223FollowUp(revised, ledger, 'icamp', 'inbox');
+    expect(ledger.rosiedazzlers?.inbox).toBe(rosie);
+    expect(ledger.icamp?.inbox?.gaps).toEqual({});
+    expect(ql223CompanyAging(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('SOURCE_CURRENT');
+    const removed: Ql223Sources = { ...revised, trial: { ...revised.trial, icamp: {} } };
+    expect(ql223CompanyAging(removed, ledger, 'icamp').stale).toBeGreaterThan(0);
+    expect(beginQl223FollowUp(removed, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('exports status-only owner aging receipt without note content or source identity', () => {
+    const sources = agingFixture('icamp');
+    let ledger = beginQl223FollowUp(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl223FollowUp(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'FICTIONAL_REFRESH_NOTED', 'REFER_INDEPENDENT_DRAFT',
+      'Sensitive fictional reviewer narrative that must not be exported');
+    const receipt = ql223CompanyReceipt(sources, ledger, 'icamp');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    expect(receipt).toContain('"notesIncluded": false');
+    expect(receipt).not.toContain('Sensitive fictional reviewer narrative');
+    expect(receipt).not.toContain('simulated-followup-');
+    expect(receipt).not.toContain('fictional_security_reviewer');
+  });
+});
+
+describe('QL-223 operator owner aging and conditional hold review interface', () => {
+  it('opens new navigation, explains holds and shows a redacted empty status receipt', async () => {
+    await act(async () => root.render(<OperatorShell />));
+    await click('Owner decision aging & conditional holds', '.ql172-nav-button');
+    expect(host.querySelector(`[data-ql223-release="${QL223_RELEASE}"]`)).not.toBeNull();
+    expect(host.textContent).toContain('12/12 HELD');
+    await click('ⓘ Owner aging help');
+    expect(host.textContent).toContain('three or more');
+    await click('Show local QL-223 audit receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-223 aging and hold oversight receipt"]')?.value ?? '';
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    await click('iCamp', '.ql172-brand');
+    expect(host.querySelector('[data-organization="icamp"][data-ql223-release]')).not.toBeNull();
+    await click('Open owner trial');
+    expect(host.querySelector('#ql211-title')).not.toBeNull();
+  });
+
+  it('records fictional owner aging and prepares only an unverified conditional hold packet', async () => {
+    const sources = agingFixture('rosiedazzlers', true);
+    function Harness() {
+      const [ledger, setLedger] = useState<Ql223Ledger>({});
+      return <Ql223DecisionAgingAudit organization={operatorOrganizations[0]} sources={sources}
+        ledger={ledger} setLedger={setLedger} onNavigate={() => undefined} />;
+    }
+    await act(async () => root.render(<Harness />));
+    await click('Begin fictional owner aging review');
+    await select('#ql223-evidence', 'FICTIONAL_EXCEPTION_RECURRED');
+    await select('#ql223-route', 'REFER_INDEPENDENT_DRAFT');
+    await type('#ql223-note', 'Invented repeat evidence referred for independent check');
+    await click('Record fictional evidence follow-up · UNSENT');
+    await select('#ql223-gap', 'accessibility');
+    await select('#ql223-evidence', 'FICTIONAL_REFRESH_NOTED');
+    await select('#ql223-route', 'CONTINUE_HOLD_DRAFT');
+    await type('#ql223-note', 'Invented accessibility follow-up kept held');
+    await click('Record fictional evidence follow-up · UNSENT');
+    for (const check of QL223_CHECKS) await click('Acknowledge conditional hold · UNVERIFIED');
+    const prepare = [...host.querySelectorAll<HTMLButtonElement>('button')].find((button) =>
+      button.textContent?.includes('Prepare follow-up & conditional hold oversight packet'))!;
+    expect(prepare.disabled).toBe(false);
+    await click('Prepare follow-up & conditional hold oversight packet');
+    expect(host.textContent).toContain('packet prepared locally');
+    await click('Show local QL-223 audit receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-223 aging and hold oversight receipt"]')?.value ?? '';
+    expect(receipt).toContain('"prepared": 1');
+    expect(receipt).not.toContain('Invented repeat evidence');
     expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
   });
 });
