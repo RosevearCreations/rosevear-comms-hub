@@ -1,7 +1,7 @@
 import type { BrandId } from '../types';
 
 export type OrganizationId = BrandId | 'icamp' | 'yw';
-export type OperatorWorkspace = 'dashboard' | 'inbox' | 'contacts' | 'queue' | 'phone' | 'composer' | 'calendar' | 'reports' | 'connectors' | 'samples' | 'evidence' | 'trial' | 'repair' | 'review' | 'telephony';
+export type OperatorWorkspace = 'dashboard' | 'inbox' | 'contacts' | 'queue' | 'phone' | 'composer' | 'calendar' | 'reports' | 'connectors' | 'samples' | 'evidence' | 'trial' | 'repair' | 'review' | 'intake' | 'telephony';
 
 export interface OperatorOrganization {
   id: OrganizationId;
