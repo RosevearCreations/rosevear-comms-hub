@@ -30,6 +30,7 @@ import { Ql196MessageComposer } from './Ql196MessageComposer';
 import { Ql197TaskCalendar } from './Ql197TaskCalendar';
 import { Ql198Reports } from './Ql198Reports';
 import { Ql199ConnectorCentre } from './Ql199ConnectorCentre';
+import { Ql210ApplicationAcceptance } from './Ql210ApplicationAcceptance';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -47,7 +48,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'reports', label: 'Reporting centre', description: 'Fictional communication breakdowns and session-only task totals' },
   { id: 'connectors', label: 'Connector centre', description: 'Company-scoped mock integration contracts, gates and mapping rehearsals' },
   { id: 'samples', label: 'Synthetic conversations', description: 'Brand-safe triage, unsent drafts, mock intake handoffs and follow-up tasks' },
-  { id: 'evidence', label: 'Safety & hold review', description: 'Synthetic evidence and unresolved prerequisites' },
+  { id: 'evidence', label: 'Safety & hold review', description: 'Four-company preview acceptance, synthetic evidence and unresolved pilot prerequisites' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
 ];
 
@@ -210,6 +211,7 @@ export function OperatorShell() {
               <DisabledInterfacePreview embedded brandId={brandId} onBrandChange={changeBrand} />
             </>
           )}
+          {workspace === 'evidence' && <Ql210ApplicationAcceptance key={`acceptance-${organization.id}`} organization={organization} onNavigate={setWorkspace} />}
           {workspace === 'evidence' && brandId !== null && (
             <>
               <Ql190IndependentReviewPacketPreview key={`prepilot-packet-${brandId}`} brandId={brandId} />
@@ -233,7 +235,7 @@ export function OperatorShell() {
               <DisabledOperatorConsole embedded />
             </>
           )}
-          {workspace !== 'dashboard' && workspace !== 'inbox' && workspace !== 'contacts' && workspace !== 'queue' && workspace !== 'phone' && workspace !== 'composer' && workspace !== 'calendar' && workspace !== 'reports' && workspace !== 'connectors' && brandId === null && (
+          {workspace !== 'dashboard' && workspace !== 'inbox' && workspace !== 'contacts' && workspace !== 'queue' && workspace !== 'phone' && workspace !== 'composer' && workspace !== 'calendar' && workspace !== 'reports' && workspace !== 'connectors' && workspace !== 'evidence' && brandId === null && (
             <Ql191AdditionalOrganizationPreview key={`additional-${organization.id}-${workspace}`} organization={organization} workspace={workspace} />
           )}
         </main>
