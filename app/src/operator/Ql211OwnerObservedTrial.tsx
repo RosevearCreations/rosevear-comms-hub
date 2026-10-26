@@ -92,6 +92,7 @@ export function Ql211OwnerObservedTrial({ organization, ledger, setLedger, onNav
       </section>
     </div>
     <section className="ql211-triage" aria-labelledby="ql211-triage-title"><h4 id="ql211-triage-title">{organization.name} · Readiness gap triage ({company.findings.length})</h4>
+      <button type="button" onClick={() => onNavigate('repair')}>Open QL-212 replay &amp; repair queue</button>
       {company.findings.length === 0 ? <p>No gap or blocker has been reported for this company in the current browser session. <strong>This does not mean the company has been tested or approved.</strong></p>
         : <ol>{company.findings.map((finding) => <li key={finding.id}>
           <div><strong>{finding.title}</strong> <span className="ql211-priority">{finding.priority} · {finding.outcome === 'blocked' ? 'Blocked' : 'Observed gap'} · {finding.area}</span></div>
