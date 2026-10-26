@@ -5,6 +5,7 @@ import { beforeEach, afterEach, describe, expect, it } from 'vitest';
 import { OperatorShell } from '../OperatorShell';
 import { Ql222OwnerDecisionAudit } from '../Ql222OwnerDecisionAudit';
 import { Ql223DecisionAgingAudit } from '../Ql223DecisionAgingAudit';
+import { Ql224OverdueHoldAudit } from '../Ql224OverdueHoldAudit';
 import { operatorOrganizations, type OrganizationId } from '../ql191Organizations';
 import { recordQl211Observation } from '../ql211OwnerTrial';
 import { queueQl212Finding, replayQl212Finding, writeQl212RepairNote, requestQl212Retest, recordQl212Retest } from '../ql212RepairQueue';
@@ -26,6 +27,9 @@ import { QL222_RELEASE, QL222_CHECKS, beginQl222Replay, recordQl222Decision, adv
 import { QL223_RELEASE, QL223_CHECKS, beginQl223FollowUp, recordQl223FollowUp, advanceQl223Cycle,
   acknowledgeQl223Check, prepareQl223HoldOversight, ql223CompanyAging, ql223CompanyReceipt,
   ql223Portfolio, type Ql223Sources, type Ql223Ledger } from '../ql223DecisionAging';
+import { QL224_RELEASE, QL224_CHECKS, beginQl224Replay, recordQl224Reconciliation, advanceQl224Cycle,
+  acknowledgeQl224Check, prepareQl224Continuity, ql224CompanyEscalations, ql224CompanyReceipt,
+  ql224Portfolio, type Ql224Sources, type Ql224Ledger } from '../ql224OverdueEscalation';
 
 /** Real contract construction from the synthetic QL-211→QL-221 chain, never a live connector. */
 function fixture(company: OrganizationId, recurring = false): Ql222Sources {
@@ -445,6 +449,190 @@ describe('QL-223 operator owner aging and conditional hold review interface', ()
     const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-223 aging and hold oversight receipt"]')?.value ?? '';
     expect(receipt).toContain('"prepared": 1');
     expect(receipt).not.toContain('Invented repeat evidence');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+  });
+});
+
+/** QL-224 begins from a prepared fictional QL-223 decision-aging packet, never a production reviewer. */
+function overdueFixture(company: OrganizationId, recurring = false): Ql224Sources {
+  const sources = agingFixture(company, recurring);
+  let aging = beginQl223FollowUp(sources, {}, company, 'inbox');
+  for (const category of ['actual_repair', 'accessibility'] as const) aging = recordQl223FollowUp(
+    sources, aging, company, 'inbox', category,
+    recurring && category === 'actual_repair' ? 'FICTIONAL_EXCEPTION_RECURRED' : 'FICTIONAL_REFRESH_NOTED',
+    category === 'actual_repair' ? 'REFER_INDEPENDENT_DRAFT' : 'CONTINUE_HOLD_DRAFT',
+    `Invented QL-223 ${category} follow-up for QL-224`);
+  for (const check of QL223_CHECKS) aging = acknowledgeQl223Check(sources, aging, company, 'inbox', check.id);
+  aging = prepareQl223HoldOversight(sources, aging, company, 'inbox');
+  expect(aging[company]?.inbox?.phase).toBe('conditional_hold_oversight_packet_prepared');
+  return { ...sources, aging };
+}
+
+describe('QL-224 overdue follow-up, evidence reconciliation and independent hold contract', () => {
+  it('preserves the four-company and twelve immutable QL-181 release holds in empty preview', () => {
+    const empty: Ql224Sources = { trial: {}, repair: {}, review: {}, intake: {}, audit: {}, handoff: {},
+      reassessment: {}, recurrence: {}, closure: {}, reopen: {}, refresh: {}, exception: {}, aging: {} };
+    const portfolio = ql224Portfolio(empty, {});
+    expect(portfolio.companies.map((company) => company.company)).toEqual(operatorOrganizations.map((org) => org.id));
+    expect(portfolio.prerequisites).toHaveLength(12);
+    expect(portfolio).toMatchObject({ release: QL224_RELEASE, eligible: 0, prepared: 0,
+      allReleaseHoldsPreserved: true, actualIndependentClosure: false, actualOwnerAuthorization: false,
+      actualEvidenceVerified: false, livePilotReady: false, providerConnected: false,
+      externalWrites: 0, callsPlaced: 0, messagesSent: 0 });
+    expect(beginQl224Replay(empty, {}, 'icamp', 'inbox')).toEqual({});
+    expect(prepareQl224Continuity(empty, {}, 'icamp', 'inbox')).toEqual({});
+  });
+
+  it('requires current QL-223, reconciliation of every gap and unverified continuity checks', () => {
+    const sources = overdueFixture('devilndove', true);
+    let ledger = beginQl224Replay(sources, {}, 'devilndove', 'inbox');
+    expect(ledger.devilndove?.inbox?.phase).toBe('overdue_escalation_replay_draft');
+    expect(recordQl224Reconciliation(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'FICTIONAL_SOURCE_CONFLICT', 'REFER_INDEPENDENT_DRAFT', 'short')).toBe(ledger);
+    expect(recordQl224Reconciliation(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'INVALID' as never, 'REFER_INDEPENDENT_DRAFT', 'Fictional invalid evidence status')).toBe(ledger);
+    ledger = recordQl224Reconciliation(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'FICTIONAL_SOURCE_CONFLICT', 'HOLD_AND_MONITOR_DRAFT', 'Invented source mismatch still unverified');
+    ledger = recordQl224Reconciliation(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'STILL_OPEN_UNVERIFIED', 'HOLD_AND_MONITOR_DRAFT', 'Fictional accessibility evidence remains held');
+    for (const check of QL224_CHECKS) ledger = acknowledgeQl224Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    expect(ql224CompanyEscalations(sources, ledger, 'devilndove')).toMatchObject({
+      referralsDue: 1, undecided: 0, sourceConflicts: 1, conflictEvents: 1 });
+    expect(prepareQl224Continuity(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    ledger = recordQl224Reconciliation(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'FICTIONAL_SOURCE_CONFLICT', 'REFER_INDEPENDENT_DRAFT', 'Invented conflict independently referred as draft');
+    ledger = prepareQl224Continuity(sources, ledger, 'devilndove', 'inbox');
+    expect(ql224CompanyEscalations(sources, ledger, 'devilndove')).toMatchObject({
+      prepared: 1, referralsDue: 0, holdAudit: { held: 12, allHeld: true, conditionalRelease: 'BLOCKED' } });
+    expect(advanceQl224Cycle(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    expect(recordQl224Reconciliation(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'STILL_OPEN_UNVERIFIED', 'HOLD_AND_MONITOR_DRAFT', 'Cannot edit prepared packet')).toBe(ledger);
+  });
+
+  it('requires an independent draft to refresh overdue decisions and retains historical escalation counts', () => {
+    const sources = overdueFixture('yw');
+    let ledger = beginQl224Replay(sources, {}, 'yw', 'inbox');
+    ledger = recordQl224Reconciliation(sources, ledger, 'yw', 'inbox', 'actual_repair',
+      'STILL_OPEN_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT', 'Fictional repair gap needs recheck');
+    ledger = recordQl224Reconciliation(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'STILL_OPEN_UNVERIFIED', 'HOLD_AND_MONITOR_DRAFT', 'Invented accessibility evidence remains open');
+    for (let i = 0; i < 2; i++) ledger = advanceQl224Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql224CompanyEscalations(sources, ledger, 'yw')).toMatchObject({ dueSoon: 2, overdue: 0 });
+    ledger = advanceQl224Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql224CompanyEscalations(sources, ledger, 'yw')).toMatchObject({ dueSoon: 0, overdue: 2 });
+    expect(recordQl224Reconciliation(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'FICTIONAL_EVIDENCE_MATCHED_UNVERIFIED', 'HOLD_AND_MONITOR_DRAFT',
+      'Fictional late evidence cannot skip referral')).toBe(ledger);
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl224Reconciliation(
+      sources, ledger, 'yw', 'inbox', category, 'FICTIONAL_EVIDENCE_MATCHED_UNVERIFIED',
+      'REFER_INDEPENDENT_DRAFT', `Fictional ${category} overdue independent referral drafted`);
+    expect(ql224CompanyEscalations(sources, ledger, 'yw')).toMatchObject({
+      overdue: 0, historicalEscalations: 2, referralsDue: 0 });
+    for (const check of QL224_CHECKS) ledger = acknowledgeQl224Check(sources, ledger, 'yw', 'inbox', check.id);
+    ledger = prepareQl224Continuity(sources, ledger, 'yw', 'inbox');
+    expect(ql224Portfolio(sources, ledger)).toMatchObject({
+      prepared: 1, historicalEscalations: 2, externalWrites: 0 });
+  });
+
+  it('counts invented evidence source conflicts no more than once per gap and simulated cycle', () => {
+    const sources = overdueFixture('rosiedazzlers');
+    let ledger = beginQl224Replay(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = recordQl224Reconciliation(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'FICTIONAL_SOURCE_CONFLICT', 'REFER_INDEPENDENT_DRAFT', 'Invented mismatch occurrence one');
+    ledger = recordQl224Reconciliation(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'FICTIONAL_SOURCE_CONFLICT', 'REFER_INDEPENDENT_DRAFT', 'Revised invented mismatch same cycle');
+    expect(ql224CompanyEscalations(sources, ledger, 'rosiedazzlers').conflictEvents).toBe(1);
+    ledger = advanceQl224Cycle(sources, ledger, 'rosiedazzlers', 'inbox');
+    ledger = recordQl224Reconciliation(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'FICTIONAL_SOURCE_CONFLICT', 'REFER_INDEPENDENT_DRAFT', 'Invented mismatch in next cycle');
+    expect(ql224CompanyEscalations(sources, ledger, 'rosiedazzlers').conflictEvents).toBe(2);
+    expect(ql224CompanyEscalations(sources, ledger, 'rosiedazzlers').holdAudit.conditionalRelease).toBe('BLOCKED');
+  });
+
+  it('freezes upstream QL-223 revisions, resets only the selected case and holds orphaned cases', () => {
+    const a = overdueFixture('rosiedazzlers');
+    const b = overdueFixture('icamp');
+    const sources = Object.fromEntries((Object.keys(a) as Array<keyof Ql224Sources>).map((key) =>
+      [key, { ...a[key], ...b[key] }])) as unknown as Ql224Sources;
+    let ledger = beginQl224Replay(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = beginQl224Replay(sources, ledger, 'icamp', 'inbox');
+    const rosie = ledger.rosiedazzlers?.inbox;
+    const revised: Ql224Sources = { ...sources, aging: { ...sources.aging, icamp: {
+      ...sources.aging.icamp, inbox: { ...sources.aging.icamp?.inbox!, gaps: {
+        ...sources.aging.icamp?.inbox?.gaps, actual_repair: {
+          ...sources.aging.icamp?.inbox?.gaps.actual_repair!, note: 'Revised invented QL-223 source note' } } } } } };
+    expect(ql224CompanyEscalations(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('QL223_FOLLOW_UP_REVISED');
+    expect(recordQl224Reconciliation(revised, ledger, 'icamp', 'inbox', 'actual_repair',
+      'STILL_OPEN_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT', 'Stale fictional source')).toBe(ledger);
+    ledger = beginQl224Replay(revised, ledger, 'icamp', 'inbox');
+    expect(ledger.rosiedazzlers?.inbox).toBe(rosie);
+    expect(ledger.icamp?.inbox?.gaps).toEqual({});
+    expect(ql224CompanyEscalations(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('SOURCE_CURRENT');
+    const removed: Ql224Sources = { ...revised, trial: { ...revised.trial, icamp: {} } };
+    expect(ql224CompanyEscalations(removed, ledger, 'icamp').stale).toBeGreaterThan(0);
+    expect(beginQl224Replay(removed, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('produces a PII-minimized fixed status receipt without source fingerprints or private notes', () => {
+    const sources = overdueFixture('icamp');
+    let ledger = beginQl224Replay(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl224Reconciliation(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'FICTIONAL_SOURCE_CONFLICT', 'REFER_INDEPENDENT_DRAFT',
+      'Secret invented independent reviewer narrative must never be exported');
+    const receipt = ql224CompanyReceipt(sources, ledger, 'icamp');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    expect(receipt).toContain('"notesIncluded": false');
+    expect(receipt).not.toContain('Secret invented independent reviewer narrative');
+    expect(receipt).not.toContain('invented-overdue-');
+    expect(receipt).not.toContain('fictional_security_reviewer');
+  });
+});
+
+describe('QL-224 four-company overdue escalation and hold continuity interface', () => {
+  it('opens new navigation with hold warnings, help, source link and redacted empty receipt', async () => {
+    await act(async () => root.render(<OperatorShell />));
+    await click('Overdue escalation & hold continuity', '.ql172-nav-button');
+    expect(host.querySelector(`[data-ql224-release="${QL224_RELEASE}"]`)).not.toBeNull();
+    expect(host.textContent).toContain('12/12 HELD');
+    await click('ⓘ Overdue escalation help');
+    expect(host.textContent).toContain('remains counted after refresh');
+    await click('Show local QL-224 audit receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-224 overdue escalation receipt"]')?.value ?? '';
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    await click('iCamp', '.ql172-brand');
+    expect(host.querySelector('[data-organization="icamp"][data-ql224-release]')).not.toBeNull();
+    await click('Open owner trial');
+    expect(host.querySelector('#ql211-title')).not.toBeNull();
+  });
+
+  it('prepares only a synthetic unverified independent hold packet after risk routing and checks', async () => {
+    const sources = overdueFixture('rosiedazzlers', true);
+    function Harness() {
+      const [ledger, setLedger] = useState<Ql224Ledger>({});
+      return <Ql224OverdueHoldAudit organization={operatorOrganizations[0]} sources={sources}
+        ledger={ledger} setLedger={setLedger} onNavigate={() => undefined} />;
+    }
+    await act(async () => root.render(<Harness />));
+    await click('Begin fictional overdue escalation replay');
+    await select('#ql224-evidence', 'FICTIONAL_SOURCE_CONFLICT');
+    await select('#ql224-route', 'REFER_INDEPENDENT_DRAFT');
+    await type('#ql224-note', 'Invented evidence conflict requires unsent independent referral');
+    await click('Record fictional escalation & evidence reconciliation · UNSENT');
+    await select('#ql224-gap', 'accessibility');
+    await select('#ql224-evidence', 'STILL_OPEN_UNVERIFIED');
+    await select('#ql224-route', 'HOLD_AND_MONITOR_DRAFT');
+    await type('#ql224-note', 'Fictional accessibility evidence is still unverified');
+    await click('Record fictional escalation & evidence reconciliation · UNSENT');
+    for (const check of QL224_CHECKS) await click('Acknowledge independent hold · UNVERIFIED');
+    const prepare = [...host.querySelectorAll<HTMLButtonElement>('button')].find((button) =>
+      button.textContent?.includes('Prepare overdue escalation & hold continuity packet'))!;
+    expect(prepare.disabled).toBe(false);
+    await click('Prepare overdue escalation & hold continuity packet');
+    expect(host.textContent).toContain('packet prepared locally');
+    await click('Show local QL-224 audit receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-224 overdue escalation receipt"]')?.value ?? '';
+    expect(receipt).toContain('"prepared": 1');
+    expect(receipt).not.toContain('Invented evidence conflict');
     expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
   });
 });
