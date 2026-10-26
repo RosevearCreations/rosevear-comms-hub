@@ -1,0 +1,19 @@
+.ql208-lab{margin:1.2rem 0;border:1px solid #526276;border-radius:14px;background:#121b2a;padding:1.2rem;color:#eff5ff}
+.ql208-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+.ql208-head h4{margin:.15rem 0 .4rem;font-size:1.24rem}
+.ql208-head p{margin:.3rem 0 .7rem;color:#d5e3f6;line-height:1.5}
+.ql208-caution{padding:.85rem 1rem;border:1px solid #d5ad65;border-radius:9px;background:#2b2418;color:#fff0cf;line-height:1.55}
+.ql208-help{margin:.7rem 0;border-left:3px solid #7baddd;padding:.75rem 1rem;background:#203149;line-height:1.55}
+.ql208-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.8rem;margin:1rem 0}
+.ql208-controls label{display:block;font-weight:700;margin-bottom:.4rem}
+.ql208-controls select{width:100%;max-width:100%;padding:.65rem;border:1px solid #8babc6;border-radius:7px;background:#fff;color:#182437}
+.ql208-actions{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1rem}
+.ql208-actions button{padding:.65rem .8rem;border:1px solid #acc2de;border-radius:7px;background:#d7e8ff;color:#17293a;font-weight:700;cursor:pointer}
+.ql208-actions button:hover,.ql208-actions button:focus-visible{outline:2px solid #edc570;outline-offset:2px}
+.ql208-decision,.ql208-receipts{padding:.9rem 1rem;margin:.7rem 0;border:1px solid #546e8a;border-radius:9px;background:#1d2b3e;line-height:1.5}
+.ql208-decision p,.ql208-receipts p{margin:.45rem 0}
+.ql208-decision small{display:block;color:#c5d9ef}
+.ql208-receipts h5{margin:.1rem 0 .5rem;font-size:1rem}
+.ql208-receipts ul{margin:0;padding-left:1.2rem}
+.ql208-foot{font-size:.93rem;color:#d3e1f2;line-height:1.6;margin:.9rem 0 0}
+@media(max-width:620px){.ql208-head{flex-direction:column}.ql208-lab{padding:.8rem}.ql208-actions button{width:100%}}
