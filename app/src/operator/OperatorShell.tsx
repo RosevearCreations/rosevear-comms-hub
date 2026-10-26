@@ -43,6 +43,8 @@ import { Ql215FollowUpAgingHoldAudit } from './Ql215FollowUpAgingHoldAudit';
 import { type Ql215Ledger } from './ql215FollowUpAudit';
 import { Ql216EscalationHandoffAudit } from './Ql216EscalationHandoffAudit';
 import { type Ql216Ledger } from './ql216EscalationHandoff';
+import { Ql217OwnerEvidenceReassessment } from './Ql217OwnerEvidenceReassessment';
+import { type Ql217Ledger } from './ql217OwnerReassessment';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -67,6 +69,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'intake', label: 'Independent review intake & holds', description: 'Fictional reviewer intake, evidence gap follow-up and conditional release hold register' },
   { id: 'audit', label: 'Reviewer follow-up aging & hold audit', description: 'Simulated gap-aging cycles, stale source reconciliation and read-only release hold continuity' },
   { id: 'handoff', label: 'Escalation replay & owner-safe handoff', description: 'Source-linked fictional escalations, locally prepared review packets and unchanged release holds' },
+  { id: 'reassessment', label: 'Owner handoff & evidence reassessment', description: 'Source-linked fictional decision-aging cycles and unverified independent-evidence reassessment' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
 ];
 
@@ -88,6 +91,7 @@ export function OperatorShell() {
   const [intakeLedger, setIntakeLedger] = useState<Ql214Ledger>({});
   const [auditLedger, setAuditLedger] = useState<Ql215Ledger>({});
   const [handoffLedger, setHandoffLedger] = useState<Ql216Ledger>({});
+  const [reassessmentLedger, setReassessmentLedger] = useState<Ql217Ledger>({});
   const [reminderIds, setReminderIds] = useState<ReadonlySet<string>>(() => new Set());
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
@@ -242,6 +246,7 @@ export function OperatorShell() {
           {workspace === 'intake' && <Ql214ReviewIntakeHoldRegister key={`intake-${organization.id}`} organization={organization} trial={trialLedger} repair={repairLedger} review={reviewLedger} ledger={intakeLedger} setLedger={setIntakeLedger} onNavigate={setWorkspace} />}
           {workspace === 'audit' && <Ql215FollowUpAgingHoldAudit key={`audit-${organization.id}`} organization={organization} trial={trialLedger} repair={repairLedger} review={reviewLedger} intake={intakeLedger} ledger={auditLedger} setLedger={setAuditLedger} onNavigate={setWorkspace} />}
           {workspace === 'handoff' && <Ql216EscalationHandoffAudit key={`handoff-${organization.id}`} organization={organization} trial={trialLedger} repair={repairLedger} review={reviewLedger} intake={intakeLedger} audit={auditLedger} packets={handoffLedger} setPackets={setHandoffLedger} onNavigate={setWorkspace} />}
+          {workspace === 'reassessment' && <Ql217OwnerEvidenceReassessment key={`reassessment-${organization.id}`} organization={organization} trial={trialLedger} repair={repairLedger} review={reviewLedger} intake={intakeLedger} audit={auditLedger} handoff={handoffLedger} ledger={reassessmentLedger} setLedger={setReassessmentLedger} onNavigate={setWorkspace} />}
           {workspace === 'evidence' && brandId !== null && (
             <>
               <Ql190IndependentReviewPacketPreview key={`prepilot-packet-${brandId}`} brandId={brandId} />
