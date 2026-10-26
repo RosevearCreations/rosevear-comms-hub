@@ -120,6 +120,8 @@ export function Ql213IndependentReviewPrep({ organization, trial, repair, ledger
       </section>}
     </div>
     <section className="ql213-panel" aria-labelledby="ql213-receipt-title"><h4 id="ql213-receipt-title">PII-minimized review packet preview</h4>
+      <p>When a QL-213 packet is locally prepared, open the next fictional independent-review intake and conditional release hold register.</p>
+      <button type="button" onClick={() => onNavigate('intake')}>Open QL-214 review intake &amp; holds</button>
       <button type="button" aria-expanded={showReceipt} aria-controls="ql213-receipt-data" onClick={() => setShowReceipt((open) => !open)}>{showReceipt ? 'Hide' : 'Show'} fixed-schema company receipt</button>
       {showReceipt && <div id="ql213-receipt-data"><p>This copyable status receipt excludes source notes, repair plans, reviewer drafts, customer information, source version hashes and identities.</p>
         <textarea aria-label="Fixture-only comparison review receipt" readOnly rows={14} value={ql213CompanyReceipt(trial, repair, ledger, organization.id)} /></div>}
