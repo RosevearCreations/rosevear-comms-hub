@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { OperatorOrganization, OperatorWorkspace } from './ql191Organizations';
 import type { MockQueueState } from './ql194WorkQueue';
 import { reportForOrganization, type ReportingDimension } from './ql198Reporting';
+import { Ql209AnalyticsCostControls } from './Ql209AnalyticsCostControls';
 import './ql198-reports.css';
 
 export function Ql198Reports({ organization, queue, onNavigate }: {
@@ -37,5 +38,6 @@ export function Ql198Reports({ organization, queue, onNavigate }: {
       </tbody></table>
     </div>
     <div className="ql198-actions"><button type="button" onClick={() => onNavigate('inbox')}>Inspect sample inbox</button><button type="button" onClick={() => onNavigate('queue')}>Review follow-up queue</button><button type="button" onClick={() => onNavigate('calendar')}>Open task calendar</button></div>
+    <Ql209AnalyticsCostControls key={organization.id} organizationId={organization.id} />
   </section>;
 }
