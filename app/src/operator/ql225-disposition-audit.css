@@ -1,0 +1,4 @@
+@import './ql224-overdue-hold-audit.css';
+
+.ql225-workbench .ql218-metrics strong { font-variant-numeric: tabular-nums; }
+.ql225-workbench .ql218-gap strong { overflow-wrap: anywhere; }
