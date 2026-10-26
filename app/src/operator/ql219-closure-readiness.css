@@ -1,0 +1,6 @@
+@import './ql218-recurrence-hold-followup.css';
+.ql219-workbench .ql219-checklist{border-top:1px solid #81abc4;padding-top:.65rem;margin:.9rem 0}
+.ql219-check{display:flex;align-items:center;justify-content:space-between;gap:.7rem;background:#304e65;border:1px solid #79a0b9;padding:.7rem;margin:.55rem 0;border-radius:8px}
+.ql219-check p{margin:.25rem 0;color:#e0efff}.ql219-check button{flex:0 0 auto}
+.ql219-due{border-left:3px solid #f4c67d;padding:.4rem .7rem;background:#503c25;color:#fff1d7}
+@media(max-width:740px){.ql219-check{flex-direction:column;align-items:stretch}.ql219-check button{flex:1 1 auto}}
