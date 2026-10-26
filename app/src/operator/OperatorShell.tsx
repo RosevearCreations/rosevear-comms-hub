@@ -57,6 +57,8 @@ import { Ql222OwnerDecisionAudit } from './Ql222OwnerDecisionAudit';
 import { type Ql222Ledger } from './ql222ExceptionRecurrence';
 import { Ql223DecisionAgingAudit } from './Ql223DecisionAgingAudit';
 import { type Ql223Ledger } from './ql223DecisionAging';
+import { Ql224OverdueHoldAudit } from './Ql224OverdueHoldAudit';
+import { type Ql224Ledger } from './ql224OverdueEscalation';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -88,6 +90,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'refresh', label: 'Evidence refresh & hold continuity audit', description: 'Four-company reopened exception source refresh, simulated reassessment and unaltered release holds' },
   { id: 'exception', label: 'Exception recurrence & owner decisions', description: 'Four-company synthetic recurrence replay, owner draft follow-up and independent release hold recheck' },
   { id: 'aging', label: 'Owner decision aging & conditional holds', description: 'Four-company fictional decision aging, follow-up evidence exceptions and release-hold oversight' },
+  { id: 'overdue', label: 'Overdue escalation & hold continuity', description: 'Four-company fictional overdue owner follow-up, evidence reconciliation and independent release holds' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
 ];
 
@@ -116,6 +119,7 @@ export function OperatorShell() {
   const [refreshLedger, setRefreshLedger] = useState<Ql221Ledger>({});
   const [exceptionLedger, setExceptionLedger] = useState<Ql222Ledger>({});
   const [agingLedger, setAgingLedger] = useState<Ql223Ledger>({});
+  const [overdueLedger, setOverdueLedger] = useState<Ql224Ledger>({});
   const [reminderIds, setReminderIds] = useState<ReadonlySet<string>>(() => new Set());
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
@@ -277,6 +281,7 @@ export function OperatorShell() {
           {workspace === 'refresh' && <Ql221EvidenceRefresh key={`refresh-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger, recurrence: recurrenceLedger, closure: closureLedger, reopen: reopenLedger }} ledger={refreshLedger} setLedger={setRefreshLedger} onNavigate={setWorkspace} />}
           {workspace === 'exception' && <Ql222OwnerDecisionAudit key={`exception-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger, recurrence: recurrenceLedger, closure: closureLedger, reopen: reopenLedger, refresh: refreshLedger }} ledger={exceptionLedger} setLedger={setExceptionLedger} onNavigate={setWorkspace} />}
           {workspace === 'aging' && <Ql223DecisionAgingAudit key={`aging-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger, recurrence: recurrenceLedger, closure: closureLedger, reopen: reopenLedger, refresh: refreshLedger, exception: exceptionLedger }} ledger={agingLedger} setLedger={setAgingLedger} onNavigate={setWorkspace} />}
+          {workspace === 'overdue' && <Ql224OverdueHoldAudit key={`overdue-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger, recurrence: recurrenceLedger, closure: closureLedger, reopen: reopenLedger, refresh: refreshLedger, exception: exceptionLedger, aging: agingLedger }} ledger={overdueLedger} setLedger={setOverdueLedger} onNavigate={setWorkspace} />}
           {workspace === 'evidence' && brandId !== null && (
             <>
               <Ql190IndependentReviewPacketPreview key={`prepilot-packet-${brandId}`} brandId={brandId} />
