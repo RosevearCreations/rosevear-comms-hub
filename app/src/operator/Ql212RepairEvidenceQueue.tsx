@@ -101,6 +101,8 @@ export function Ql212RepairEvidenceQueue({ organization, trial, ledger, setLedge
       </section>}
     </div>
     <section className="ql212-receipt" aria-labelledby="ql212-receipt-title"><h4 id="ql212-receipt-title">Safe session receipt</h4>
+      <p>After you have explicitly noted a QL-212 retest, you can prepare a separate unverified before/after comparison and independent-review checklist.</p>
+      <button type="button" onClick={() => onNavigate('review')}>Open QL-213 comparison &amp; review prep</button>
       <button type="button" aria-expanded={showReceipt} aria-controls="ql212-receipt-data" onClick={() => setShowReceipt((value) => !value)}>{showReceipt ? 'Hide' : 'Show'} PII-minimized queue receipt</button>
       {showReceipt && <div id="ql212-receipt-data"><p>Copy manually if needed; this summary excludes observation notes, repair text, signatures, names and independent approval claims.</p>
         <textarea aria-label="Fixture-only repair queue receipt" readOnly rows={11} value={ql212CompanyReceipt(trial, ledger, organization.id)} /></div>}
