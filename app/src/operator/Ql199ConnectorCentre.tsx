@@ -7,6 +7,7 @@ import { Ql202CampGuestReservation } from './Ql202CampGuestReservation';
 import { Ql203YwServiceInquiry } from './Ql203YwServiceInquiry';
 import { Ql204HandoffReviewQueue } from './Ql204HandoffReviewQueue';
 import { Ql206SecureOperations } from './Ql206SecureOperations';
+import { Ql207PersistenceSandbox } from './Ql207PersistenceSandbox';
 import './ql199-connector-centre.css';
 
 export function Ql199ConnectorCentre({ organization, onOpenThread }: { organization: OperatorOrganization; onOpenThread: (threadId: string) => void }) {
@@ -57,6 +58,7 @@ export function Ql199ConnectorCentre({ organization, onOpenThread }: { organizat
     {organization.id === 'icamp' && <Ql202CampGuestReservation onOpenThread={onOpenThread} />}
     {organization.id === 'yw' && <Ql203YwServiceInquiry onOpenThread={onOpenThread} />}
     <Ql206SecureOperations organizationId={organization.id} />
+    <Ql207PersistenceSandbox organizationId={organization.id} />
     <Ql204HandoffReviewQueue organizationId={organization.id} onOpenThread={onOpenThread} />
     <p className="ql199-footer">Connection, authorization, data synchronization, live customer reads, webhooks, credential entry and outbound delivery stay disabled. QL-200–203 are separate company integration builds.</p>
   </section>;
