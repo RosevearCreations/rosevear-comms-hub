@@ -6,6 +6,7 @@ import { OperatorShell } from '../OperatorShell';
 import { Ql222OwnerDecisionAudit } from '../Ql222OwnerDecisionAudit';
 import { Ql223DecisionAgingAudit } from '../Ql223DecisionAgingAudit';
 import { Ql224OverdueHoldAudit } from '../Ql224OverdueHoldAudit';
+import { Ql225DispositionAudit } from '../Ql225DispositionAudit';
 import { operatorOrganizations, type OrganizationId } from '../ql191Organizations';
 import { recordQl211Observation } from '../ql211OwnerTrial';
 import { queueQl212Finding, replayQl212Finding, writeQl212RepairNote, requestQl212Retest, recordQl212Retest } from '../ql212RepairQueue';
@@ -30,6 +31,9 @@ import { QL223_RELEASE, QL223_CHECKS, beginQl223FollowUp, recordQl223FollowUp, a
 import { QL224_RELEASE, QL224_CHECKS, beginQl224Replay, recordQl224Reconciliation, advanceQl224Cycle,
   acknowledgeQl224Check, prepareQl224Continuity, ql224CompanyEscalations, ql224CompanyReceipt,
   ql224Portfolio, type Ql224Sources, type Ql224Ledger } from '../ql224OverdueEscalation';
+import { QL225_RELEASE, QL225_CHECKS, beginQl225Disposition, recordQl225Disposition, advanceQl225Cycle,
+  acknowledgeQl225Check, prepareQl225HeldReassessment, ql225CompanyDispositions, ql225CompanyReceipt,
+  ql225Portfolio, type Ql225Sources, type Ql225Ledger } from '../ql225EvidenceDisposition';
 
 /** Real contract construction from the synthetic QL-211→QL-221 chain, never a live connector. */
 function fixture(company: OrganizationId, recurring = false): Ql222Sources {
@@ -633,6 +637,189 @@ describe('QL-224 four-company overdue escalation and hold continuity interface',
     const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-224 overdue escalation receipt"]')?.value ?? '';
     expect(receipt).toContain('"prepared": 1');
     expect(receipt).not.toContain('Invented evidence conflict');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+  });
+});
+
+function dispositionFixture(company: OrganizationId, recurring = false): Ql225Sources {
+  const sources = overdueFixture(company, recurring);
+  let overdue = beginQl224Replay(sources, {}, company, 'inbox');
+  for (const category of ['actual_repair', 'accessibility'] as const) overdue = recordQl224Reconciliation(
+    sources, overdue, company, 'inbox', category,
+    category === 'actual_repair' ? 'FICTIONAL_SOURCE_CONFLICT' : 'STILL_OPEN_UNVERIFIED',
+    category === 'actual_repair' ? 'REFER_INDEPENDENT_DRAFT' : 'HOLD_AND_MONITOR_DRAFT',
+    `Fictional QL-224 ${category} source outcome remains unverified`);
+  for (const check of QL224_CHECKS) overdue = acknowledgeQl224Check(sources, overdue, company, 'inbox', check.id);
+  overdue = prepareQl224Continuity(sources, overdue, company, 'inbox');
+  expect(overdue[company]?.inbox?.phase).toBe('independent_hold_continuity_packet_prepared');
+  return { ...sources, overdue };
+}
+
+describe('QL-225 fictional independent evidence disposition and held-release reassessment contract', () => {
+  it('starts only from QL-224 current prepared sources across four separated companies and keeps twelve actual holds', () => {
+    const empty: Ql225Sources = { trial: {}, repair: {}, review: {}, intake: {}, audit: {},
+      handoff: {}, reassessment: {}, recurrence: {}, closure: {}, reopen: {}, refresh: {},
+      exception: {}, aging: {}, overdue: {} };
+    const portfolio = ql225Portfolio(empty, {});
+    expect(portfolio.companies.map((row) => row.company)).toEqual(operatorOrganizations.map((org) => org.id));
+    expect(portfolio.prerequisites).toHaveLength(12);
+    expect(portfolio).toMatchObject({ release: QL225_RELEASE, eligible: 0, prepared: 0,
+      allReleaseHoldsPreserved: true, actualIndependentDisposition: false,
+      actualEvidenceVerified: false, actualOwnerAuthorization: false, livePilotReady: false,
+      externalWrites: 0, callsPlaced: 0, messagesSent: 0 });
+    expect(beginQl225Disposition(empty, {}, 'icamp', 'inbox')).toEqual({});
+    expect(prepareQl225HeldReassessment(empty, {}, 'icamp', 'inbox')).toEqual({});
+  });
+
+  it('requires all fictional evidence dispositions, independently routed high-risk outcomes and unverified checks', () => {
+    const sources = dispositionFixture('devilndove', true);
+    let ledger = beginQl225Disposition(sources, {}, 'devilndove', 'inbox');
+    expect(ledger.devilndove?.inbox?.phase).toBe('escalation_outcome_disposition_draft');
+    expect(recordQl225Disposition(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_DISCREPANCY_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT', 'short')).toBe(ledger);
+    expect(recordQl225Disposition(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'INVALID' as never, 'REFER_INDEPENDENT_DRAFT', 'Invented unsupported status')).toBe(ledger);
+    ledger = recordQl225Disposition(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_DISCREPANCY_UNVERIFIED', 'CONTINUE_HELD_MONITOR_DRAFT', 'Fictional discrepancy still pending independent decision');
+    ledger = recordQl225Disposition(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'EVIDENCE_PENDING_UNVERIFIED', 'CONTINUE_HELD_MONITOR_DRAFT', 'Fictional accessibility evidence still pending');
+    for (const check of QL225_CHECKS) ledger = acknowledgeQl225Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    expect(ql225CompanyDispositions(sources, ledger, 'devilndove')).toMatchObject({
+      undecided: 0, discrepancies: 1, discrepancyEvents: 1, referralsDue: 1 });
+    expect(prepareQl225HeldReassessment(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    ledger = recordQl225Disposition(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_DISCREPANCY_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT', 'Independent discrepancy route is an unsent fictional draft');
+    ledger = prepareQl225HeldReassessment(sources, ledger, 'devilndove', 'inbox');
+    expect(ql225CompanyDispositions(sources, ledger, 'devilndove')).toMatchObject({
+      prepared: 1, referralsDue: 0, holdAudit: { held: 12, allHeld: true, conditionalRelease: 'BLOCKED' } });
+    expect(advanceQl225Cycle(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    expect(recordQl225Disposition(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'EVIDENCE_PENDING_UNVERIFIED', 'REQUEST_EVIDENCE_DRAFT', 'Cannot change prepared local packet')).toBe(ledger);
+  });
+
+  it('flags due-soon and overdue outcomes, requires independent late referral, and preserves history after refresh', () => {
+    const sources = dispositionFixture('yw');
+    let ledger = beginQl225Disposition(sources, {}, 'yw', 'inbox');
+    ledger = recordQl225Disposition(sources, ledger, 'yw', 'inbox', 'actual_repair',
+      'EVIDENCE_PENDING_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT', 'Fictional repair evidence needs review');
+    ledger = recordQl225Disposition(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'EVIDENCE_PENDING_UNVERIFIED', 'REQUEST_EVIDENCE_DRAFT', 'Invented accessibility follow-up is held');
+    for (let i = 0; i < 2; i++) ledger = advanceQl225Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql225CompanyDispositions(sources, ledger, 'yw')).toMatchObject({ dueSoon: 2, overdue: 0 });
+    ledger = advanceQl225Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql225CompanyDispositions(sources, ledger, 'yw')).toMatchObject({ dueSoon: 0, overdue: 2 });
+    expect(recordQl225Disposition(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'SIMULATED_REVIEW_NOTED_UNVERIFIED', 'REQUEST_EVIDENCE_DRAFT',
+      'Late fictional review cannot bypass independent referral')).toBe(ledger);
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl225Disposition(
+      sources, ledger, 'yw', 'inbox', category, 'SIMULATED_REVIEW_NOTED_UNVERIFIED',
+      'REFER_INDEPENDENT_DRAFT', `Fictional ${category} overdue independent referral`);
+    expect(ql225CompanyDispositions(sources, ledger, 'yw')).toMatchObject({
+      overdue: 0, overdueEpisodes: 2, referralsDue: 0 });
+    for (const check of QL225_CHECKS) ledger = acknowledgeQl225Check(sources, ledger, 'yw', 'inbox', check.id);
+    ledger = prepareQl225HeldReassessment(sources, ledger, 'yw', 'inbox');
+    expect(ql225Portfolio(sources, ledger)).toMatchObject({
+      prepared: 1, overdueEpisodes: 2, actualIndependentDisposition: false, externalWrites: 0 });
+  });
+
+  it('deduplicates invented discrepancy events per gap and simulated cycle', () => {
+    const sources = dispositionFixture('rosiedazzlers');
+    let ledger = beginQl225Disposition(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = recordQl225Disposition(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_DISCREPANCY_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT', 'Fictional discrepancy initial event');
+    ledger = recordQl225Disposition(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_DISCREPANCY_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT', 'Reworded invented discrepancy in same cycle');
+    expect(ql225CompanyDispositions(sources, ledger, 'rosiedazzlers').discrepancyEvents).toBe(1);
+    ledger = advanceQl225Cycle(sources, ledger, 'rosiedazzlers', 'inbox');
+    ledger = recordQl225Disposition(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_DISCREPANCY_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT', 'Fictional discrepancy new cycle');
+    expect(ql225CompanyDispositions(sources, ledger, 'rosiedazzlers').discrepancyEvents).toBe(2);
+  });
+
+  it('freezes QL-224 revisions, resets only one case, and never closes orphaned upstream gaps', () => {
+    const a = dispositionFixture('rosiedazzlers');
+    const b = dispositionFixture('icamp');
+    const sources = Object.fromEntries((Object.keys(a) as Array<keyof Ql225Sources>).map((key) =>
+      [key, { ...a[key], ...b[key] }])) as unknown as Ql225Sources;
+    let ledger = beginQl225Disposition(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = beginQl225Disposition(sources, ledger, 'icamp', 'inbox');
+    const otherCompany = ledger.rosiedazzlers?.inbox;
+    const revised: Ql225Sources = { ...sources, overdue: { ...sources.overdue, icamp: {
+      ...sources.overdue.icamp, inbox: { ...sources.overdue.icamp?.inbox!, gaps: {
+        ...sources.overdue.icamp?.inbox?.gaps, actual_repair: {
+          ...sources.overdue.icamp?.inbox?.gaps.actual_repair!, note: 'Revised invented QL-224 evidence review note' } } } } } };
+    expect(ql225CompanyDispositions(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('QL224_OUTCOME_REVISED');
+    expect(recordQl225Disposition(revised, ledger, 'icamp', 'inbox', 'actual_repair',
+      'EVIDENCE_PENDING_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT', 'Cannot act on stale fictional evidence')).toBe(ledger);
+    ledger = beginQl225Disposition(revised, ledger, 'icamp', 'inbox');
+    expect(ledger.rosiedazzlers?.inbox).toBe(otherCompany);
+    expect(ledger.icamp?.inbox?.gaps).toEqual({});
+    expect(ql225CompanyDispositions(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('SOURCE_CURRENT');
+    const removed: Ql225Sources = { ...revised, trial: { ...revised.trial, icamp: {} } };
+    expect(ql225CompanyDispositions(removed, ledger, 'icamp').stale).toBeGreaterThan(0);
+    expect(beginQl225Disposition(removed, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('exports coded status only, never private notes, reviewer identity or source tokens', () => {
+    const sources = dispositionFixture('icamp');
+    let ledger = beginQl225Disposition(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl225Disposition(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_DISCREPANCY_UNVERIFIED', 'REFER_INDEPENDENT_DRAFT',
+      'Secret imaginary reviewer narrative must never appear in export');
+    const receipt = ql225CompanyReceipt(sources, ledger, 'icamp');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    expect(receipt).toContain('"notesIncluded": false');
+    expect(receipt).not.toContain('Secret imaginary reviewer narrative');
+    expect(receipt).not.toContain('fictional-disposition-');
+    expect(receipt).not.toContain('fictional_security_reviewer');
+  });
+});
+
+describe('QL-225 four-company escalation outcome and evidence disposition interface', () => {
+  it('opens the held release workspace, exposes help, organization switching and a redacted receipt', async () => {
+    await act(async () => root.render(<OperatorShell />));
+    await click('Evidence disposition & held-release reassessment', '.ql172-nav-button');
+    expect(host.querySelector(`[data-ql225-release="${QL225_RELEASE}"]`)).not.toBeNull();
+    expect(host.textContent).toContain('12/12 HELD');
+    await click('ⓘ Evidence disposition help');
+    expect(host.textContent).toContain('A changed source freezes the case');
+    await click('Show local QL-225 audit receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-225 evidence disposition receipt"]')?.value ?? '';
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    await click('iCamp', '.ql172-brand');
+    expect(host.querySelector('[data-organization="icamp"][data-ql225-release]')).not.toBeNull();
+    await click('Open owner trial');
+    expect(host.querySelector('#ql211-title')).not.toBeNull();
+  });
+
+  it('prepares a locally held fictional packet only after risk referral and all checks', async () => {
+    const sources = dispositionFixture('rosiedazzlers', true);
+    function Harness() {
+      const [ledger, setLedger] = useState<Ql225Ledger>({});
+      return <Ql225DispositionAudit organization={operatorOrganizations[0]} sources={sources}
+        ledger={ledger} setLedger={setLedger} onNavigate={() => undefined} />;
+    }
+    await act(async () => root.render(<Harness />));
+    await click('Begin fictional independent evidence disposition');
+    await select('#ql225-disposition', 'SIMULATED_DISCREPANCY_UNVERIFIED');
+    await select('#ql225-follow-up', 'REFER_INDEPENDENT_DRAFT');
+    await type('#ql225-note', 'Invented independent source discrepancy remains unverified');
+    await click('Record fictional evidence disposition · UNSENT');
+    await select('#ql225-gap', 'accessibility');
+    await select('#ql225-disposition', 'EVIDENCE_PENDING_UNVERIFIED');
+    await select('#ql225-follow-up', 'CONTINUE_HELD_MONITOR_DRAFT');
+    await type('#ql225-note', 'Fictional accessibility evidence pending independent review');
+    await click('Record fictional evidence disposition · UNSENT');
+    for (const check of QL225_CHECKS) await click('Acknowledge held reassessment · UNVERIFIED');
+    const prepare = [...host.querySelectorAll<HTMLButtonElement>('button')].find((button) =>
+      button.textContent?.includes('Prepare independent evidence & held-release reassessment packet'))!;
+    expect(prepare.disabled).toBe(false);
+    await click('Prepare independent evidence & held-release reassessment packet');
+    expect(host.textContent).toContain('packet prepared locally');
+    await click('Show local QL-225 audit receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-225 evidence disposition receipt"]')?.value ?? '';
+    expect(receipt).toContain('"prepared": 1');
+    expect(receipt).not.toContain('Invented independent source discrepancy');
     expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
   });
 });
