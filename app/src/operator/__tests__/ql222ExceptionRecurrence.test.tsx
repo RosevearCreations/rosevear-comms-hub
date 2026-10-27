@@ -71,6 +71,11 @@ import { QL233_RELEASE, QL233_CHECKS, beginQl233IntegrityAudit, recordQl233Follo
   advanceQl233Cycle, acknowledgeQl233Check, prepareQl233HeldAudit,
   ql233CompanyIntegrity, ql233CompanyReceipt, ql233Portfolio,
   type Ql233Sources, type Ql233Ledger } from '../ql233FollowUpIntegrity';
+import { Ql234SourceDriftContinuityAudit } from '../Ql234SourceDriftContinuityAudit';
+import { QL234_RELEASE, QL234_CHECKS, beginQl234DriftAudit, recordQl234Drift,
+  advanceQl234Cycle, acknowledgeQl234Check, prepareQl234HeldRecheck,
+  ql234CompanyContinuity, ql234CompanyReceipt, ql234Portfolio,
+  type Ql234Sources, type Ql234Ledger } from '../ql234SourceDriftContinuity';
 
 /** Real contract construction from the synthetic QL-211→QL-221 chain, never a live connector. */
 function fixture(company: OrganizationId, recurring = false): Ql222Sources {
@@ -2432,5 +2437,226 @@ describe('QL-233 held-pilot integrity operator UI', () => {
     expect(receipt).toContain('"prepared": 1');
     expect(receipt).not.toContain('Imaginary independent escalation for held pilot');
     expect(receipt).toContain('"pilotRelease": "BLOCKED"');
+  });
+});
+
+function sourceDriftFixture(company: OrganizationId): Ql234Sources {
+  const sources = heldPilotIntegrityFixture(company);
+  let followUpIntegrity = beginQl233IntegrityAudit(sources, {}, company, 'inbox');
+  followUpIntegrity = recordQl233FollowUp(sources, followUpIntegrity, company, 'inbox', 'actual_repair',
+    'SIMULATED_EXCEPTION_REOPENED_UNVERIFIED', 'REFER_INDEPENDENT_REASSESSMENT_DRAFT',
+    'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'Fictional independent source review never dispatched');
+  followUpIntegrity = recordQl233FollowUp(sources, followUpIntegrity, company, 'inbox', 'accessibility',
+    'SIMULATED_FOLLOW_UP_RECORDED_UNVERIFIED', 'MAINTAIN_HELD_DECISION_DRAFT',
+    'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'Imaginary accessibility follow-up remained held');
+  for (const check of QL233_CHECKS) followUpIntegrity = acknowledgeQl233Check(sources,
+    followUpIntegrity, company, 'inbox', check.id);
+  followUpIntegrity = prepareQl233HeldAudit(sources, followUpIntegrity, company, 'inbox');
+  expect(followUpIntegrity[company]?.inbox?.phase).toBe('held_pilot_integrity_audit_prepared');
+  return { ...sources, followUpIntegrity };
+}
+
+describe('QL-234 source identity drift, independent follow-up continuity and conditional hold integrity', () => {
+  it('protects four companies and all twelve actual holds with no real verification or external writes', () => {
+    const empty: Ql234Sources = { trial: {}, repair: {}, review: {}, intake: {}, audit: {},
+      handoff: {}, reassessment: {}, recurrence: {}, closure: {}, reopen: {}, refresh: {},
+      exception: {}, aging: {}, overdue: {}, disposition: {}, reopenReview: {}, evidenceAudit: {},
+      handoffContinuity: {}, reassignmentAudit: {}, reviewerContinuity: {}, dispositionOversight: {},
+      escalationProof: {}, followUpIntegrity: {} };
+    const portfolio = ql234Portfolio(empty, {});
+    expect(portfolio.companies.map((row) => row.company)).toEqual(operatorOrganizations.map((org) => org.id));
+    expect(portfolio.prerequisites).toHaveLength(12);
+    expect(portfolio).toMatchObject({ release: QL234_RELEASE, eligible: 0, prepared: 0,
+      allReleaseHoldsPreserved: true, actualIndependentReassessment: false,
+      actualSourceVerified: false, actualOwnerAuthorization: false, livePilotReady: false,
+      providerConnected: false, externalWrites: 0, callsPlaced: 0, messagesSent: 0 });
+    expect(beginQl234DriftAudit(empty, {}, 'icamp', 'inbox')).toEqual({});
+    expect(prepareQl234HeldRecheck(empty, {}, 'icamp', 'inbox')).toEqual({});
+  });
+
+  it('requires current prepared QL-233, independent follow-up, drift closure and new checks', () => {
+    const sources = sourceDriftFixture('devilndove');
+    let ledger = beginQl234DriftAudit(sources, {}, 'devilndove', 'inbox');
+    expect(ledger.devilndove?.inbox?.phase).toBe('source_drift_reassessment_continuity_draft');
+    expect(recordQl234Drift(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_SOURCE_DRIFT_FOUND_UNVERIFIED', 'REFER_FRESH_INDEPENDENT_FOLLOW_UP_DRAFT',
+      'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED', 'short')).toBe(ledger);
+    expect(recordQl234Drift(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'NOT_A_REAL_SOURCE_STATE' as never, 'REFER_FRESH_INDEPENDENT_FOLLOW_UP_DRAFT',
+      'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED', 'Invalid simulated source state')).toBe(ledger);
+    expect(recordQl234Drift(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_SOURCE_DRIFT_FOUND_UNVERIFIED', 'CONTINUE_INDEPENDENT_HELD_WATCH_DRAFT',
+      'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED', 'Drift requires independent follow-up')).toBe(ledger);
+    ledger = recordQl234Drift(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_SOURCE_DRIFT_FOUND_UNVERIFIED', 'REFER_FRESH_INDEPENDENT_FOLLOW_UP_DRAFT',
+      'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED', 'Imaginary source drift exception remains held');
+    ledger = recordQl234Drift(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'SIMULATED_SOURCE_IDENTITY_MATCH_UNVERIFIED', 'CONTINUE_INDEPENDENT_HELD_WATCH_DRAFT',
+      'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED', 'Imaginary accessibility source matches');
+    for (const check of QL234_CHECKS) ledger = acknowledgeQl234Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    expect(ql234CompanyContinuity(sources, ledger, 'devilndove')).toMatchObject({ openDrift: 1, prepared: 0 });
+    expect(prepareQl234HeldRecheck(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    ledger = recordQl234Drift(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_SOURCE_IDENTITY_MATCH_UNVERIFIED', 'REFER_FRESH_INDEPENDENT_FOLLOW_UP_DRAFT',
+      'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED', 'Imaginary source now reconciled without live verification');
+    expect(ql234CompanyContinuity(sources, ledger, 'devilndove')).toMatchObject({
+      openDrift: 0, driftEvents: 1, missingFollowUps: 0 });
+    expect(ql234CompanyContinuity(sources, ledger, 'devilndove').cases[0].checksComplete).toBe(false);
+    for (const check of QL234_CHECKS) ledger = acknowledgeQl234Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    ledger = prepareQl234HeldRecheck(sources, ledger, 'devilndove', 'inbox');
+    expect(ql234CompanyContinuity(sources, ledger, 'devilndove')).toMatchObject({
+      prepared: 1, holdAudit: { held: 12, allHeld: true, conditionalRelease: 'BLOCKED' } });
+    expect(recordQl234Drift(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'SIMULATED_SOURCE_DRIFT_FOUND_UNVERIFIED', 'REOPEN_SOURCE_DRIFT_EXCEPTION_DRAFT',
+      'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED', 'Prepared held packet cannot be modified')).toBe(ledger);
+  });
+
+  it('counts drift once per gap per simulated cycle while independent follow-up remains mandatory', () => {
+    const sources = sourceDriftFixture('rosiedazzlers');
+    let ledger = beginQl234DriftAudit(sources, {}, 'rosiedazzlers', 'inbox');
+    for (const note of ['First imaginary drift event', 'Repeated edit within one drift cycle']) ledger =
+      recordQl234Drift(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+        'SIMULATED_SOURCE_DRIFT_FOUND_UNVERIFIED', 'REOPEN_SOURCE_DRIFT_EXCEPTION_DRAFT',
+        'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED', note);
+    expect(ql234CompanyContinuity(sources, ledger, 'rosiedazzlers')).toMatchObject({ driftEvents: 1, openDrift: 1 });
+    for (const check of QL234_CHECKS) ledger = acknowledgeQl234Check(sources, ledger, 'rosiedazzlers', 'inbox', check.id);
+    ledger = advanceQl234Cycle(sources, ledger, 'rosiedazzlers', 'inbox');
+    expect(ql234CompanyContinuity(sources, ledger, 'rosiedazzlers').cases[0].checksComplete).toBe(false);
+    ledger = recordQl234Drift(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_SOURCE_DRIFT_FOUND_UNVERIFIED', 'REFER_FRESH_INDEPENDENT_FOLLOW_UP_DRAFT',
+      'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED', 'Later independent synthetic source drift event');
+    expect(ql234CompanyContinuity(sources, ledger, 'rosiedazzlers').driftEvents).toBe(2);
+  });
+
+  it('moves from due-soon to overdue and retains historical overdue after a new independent referral', () => {
+    const sources = sourceDriftFixture('yw');
+    let ledger = beginQl234DriftAudit(sources, {}, 'yw', 'inbox');
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl234Drift(
+      sources, ledger, 'yw', 'inbox', category, 'SIMULATED_SOURCE_IDENTITY_MATCH_UNVERIFIED',
+      category === 'actual_repair' ? 'REFER_FRESH_INDEPENDENT_FOLLOW_UP_DRAFT' : 'CONTINUE_INDEPENDENT_HELD_WATCH_DRAFT',
+      'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED', 'Fictional held source continuity reviewed locally');
+    for (let i = 0; i < 2; i++) ledger = advanceQl234Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql234CompanyContinuity(sources, ledger, 'yw')).toMatchObject({ dueSoon: 2, overdue: 0 });
+    expect(prepareQl234HeldRecheck(sources, ledger, 'yw', 'inbox')).toBe(ledger);
+    ledger = advanceQl234Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql234CompanyContinuity(sources, ledger, 'yw')).toMatchObject({ dueSoon: 0, overdue: 2 });
+    expect(recordQl234Drift(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'SIMULATED_SOURCE_IDENTITY_MATCH_UNVERIFIED', 'CONTINUE_INDEPENDENT_HELD_WATCH_DRAFT',
+      'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED', 'Overdue source needs independent referral')).toBe(ledger);
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl234Drift(
+      sources, ledger, 'yw', 'inbox', category, 'SIMULATED_SOURCE_IDENTITY_MATCH_UNVERIFIED',
+      'REFER_FRESH_INDEPENDENT_FOLLOW_UP_DRAFT', 'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED',
+      'Fictional overdue source recheck referral remains unsent');
+    expect(ql234CompanyContinuity(sources, ledger, 'yw')).toMatchObject({
+      overdue: 0, overdueFollowUpEpisodes: 2, missingFollowUps: 0 });
+    for (const check of QL234_CHECKS) ledger = acknowledgeQl234Check(sources, ledger, 'yw', 'inbox', check.id);
+    ledger = prepareQl234HeldRecheck(sources, ledger, 'yw', 'inbox');
+    expect(ql234Portfolio(sources, ledger)).toMatchObject({ prepared: 1, externalWrites: 0 });
+  });
+
+  it('blocks conditional release exceptions even when imaginary source identity matches', () => {
+    const sources = sourceDriftFixture('icamp');
+    let ledger = beginQl234DriftAudit(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl234Drift(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_SOURCE_IDENTITY_MATCH_UNVERIFIED', 'REFER_FRESH_INDEPENDENT_FOLLOW_UP_DRAFT',
+      'CONDITIONAL_HOLD_EXCEPTION_RECONFIRMED_UNVERIFIED', 'Imaginary source matched but held release proof differed');
+    ledger = recordQl234Drift(sources, ledger, 'icamp', 'inbox', 'accessibility',
+      'SIMULATED_SOURCE_IDENTITY_MATCH_UNVERIFIED', 'CONTINUE_INDEPENDENT_HELD_WATCH_DRAFT',
+      'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED', 'Fictional accessibility hold remained intact');
+    for (const check of QL234_CHECKS) ledger = acknowledgeQl234Check(sources, ledger, 'icamp', 'inbox', check.id);
+    expect(ql234CompanyContinuity(sources, ledger, 'icamp')).toMatchObject({ holdExceptions: 1, prepared: 0 });
+    expect(prepareQl234HeldRecheck(sources, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('freezes source revisions, proof tampering and upstream withdrawal without affecting another company', () => {
+    const a = sourceDriftFixture('rosiedazzlers');
+    const b = sourceDriftFixture('icamp');
+    const sources = Object.fromEntries((Object.keys(a) as Array<keyof Ql234Sources>).map((key) =>
+      [key, { ...a[key], ...b[key] }])) as unknown as Ql234Sources;
+    let ledger = beginQl234DriftAudit(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = beginQl234DriftAudit(sources, ledger, 'icamp', 'inbox');
+    const other = ledger.rosiedazzlers?.inbox;
+    const revised: Ql234Sources = { ...sources, followUpIntegrity: { ...sources.followUpIntegrity, icamp: {
+      ...sources.followUpIntegrity.icamp, inbox: { ...sources.followUpIntegrity.icamp?.inbox!, gaps: {
+        ...sources.followUpIntegrity.icamp?.inbox?.gaps, actual_repair: {
+          ...sources.followUpIntegrity.icamp?.inbox?.gaps.actual_repair!, note: 'Imaginary source identity revised during reassessment' } } } } } };
+    expect(ql234CompanyContinuity(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('QL233_SOURCE_IDENTITY_REVISED');
+    expect(recordQl234Drift(revised, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_SOURCE_DRIFT_FOUND_UNVERIFIED', 'REFER_FRESH_INDEPENDENT_FOLLOW_UP_DRAFT',
+      'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED', 'Frozen source cannot accept review')).toBe(ledger);
+    ledger = beginQl234DriftAudit(revised, ledger, 'icamp', 'inbox');
+    expect(ledger.rosiedazzlers?.inbox).toBe(other);
+    expect(ledger.icamp?.inbox?.gaps).toEqual({});
+    expect(ql234CompanyContinuity(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('SOURCE_CURRENT');
+    const tampered: Ql234Ledger = { ...ledger, icamp: { ...ledger.icamp, inbox: {
+      ...ledger.icamp?.inbox!, holdToken: 'modified-held-proof-local-token' } } };
+    expect(ql234CompanyContinuity(revised, tampered, 'icamp').cases[0].sourceStatus).toBe('ACTUAL_RELEASE_HOLD_REVISED');
+    expect(prepareQl234HeldRecheck(revised, tampered, 'icamp', 'inbox')).toBe(tampered);
+    const withdrawn: Ql234Sources = { ...revised, trial: { ...revised.trial, icamp: {} } };
+    expect(ql234CompanyContinuity(withdrawn, ledger, 'icamp').stale).toBeGreaterThan(0);
+    expect(beginQl234DriftAudit(withdrawn, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('exports blocked, status-only receipts without local notes, fingerprints or reviewer identities', () => {
+    const sources = sourceDriftFixture('icamp');
+    let ledger = beginQl234DriftAudit(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl234Drift(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_SOURCE_DRIFT_FOUND_UNVERIFIED', 'REFER_FRESH_INDEPENDENT_FOLLOW_UP_DRAFT',
+      'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED', 'Secret imaginary reviewer details remain session only');
+    const receipt = ql234CompanyReceipt(sources, ledger, 'icamp');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    expect(receipt).toContain('"holdTokensIncluded": false');
+    expect(receipt).not.toContain('Secret imaginary reviewer details');
+    expect(receipt).not.toContain('fictional-drift-');
+    expect(receipt).not.toContain('fictional_security_reviewer');
+  });
+});
+
+describe('QL-234 source drift continuity operator UI', () => {
+  it('shows navigation, four-company held matrix, help, QL-233 source and sanitized receipt', async () => {
+    await act(async () => root.render(<OperatorShell />));
+    await click('Source drift & release continuity', '.ql172-nav-button');
+    expect(host.querySelector(`[data-ql234-release="${QL234_RELEASE}"]`)).not.toBeNull();
+    expect(host.textContent).toContain('12/12 HELD');
+    await click('ⓘ Source drift & continuity help');
+    expect(host.textContent).toContain('case-only reset');
+    await click('Show local QL-234 held-release receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-234 held-release receipt"]')?.value ?? '';
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    await click('iCamp', '.ql172-brand');
+    expect(host.querySelector('[data-organization="icamp"][data-ql234-release]')).not.toBeNull();
+    await click('Open owner trial');
+    expect(host.querySelector('#ql211-title')).not.toBeNull();
+  }, 15_000);
+
+  it('prepares a local held-release packet only after drift closure, independent continuity and checks', async () => {
+    const sources = sourceDriftFixture('rosiedazzlers');
+    function Harness() {
+      const [ledger, setLedger] = useState<Ql234Ledger>({});
+      return <Ql234SourceDriftContinuityAudit organization={operatorOrganizations[0]} sources={sources}
+        ledger={ledger} setLedger={setLedger} onNavigate={() => undefined} />;
+    }
+    await act(async () => root.render(<Harness />));
+    await click('Begin fictional source drift & held-release recheck');
+    await select('#ql234-drift', 'SIMULATED_SOURCE_IDENTITY_MATCH_UNVERIFIED');
+    await select('#ql234-continuity', 'REFER_FRESH_INDEPENDENT_FOLLOW_UP_DRAFT');
+    await select('#ql234-hold', 'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED');
+    await type('#ql234-note', 'Imaginary independent held-source follow-up remains unsent');
+    await click('Record fictional source & continuity recheck · UNSENT');
+    await select('#ql234-gap', 'accessibility');
+    await select('#ql234-continuity', 'CONTINUE_INDEPENDENT_HELD_WATCH_DRAFT');
+    await type('#ql234-note', 'Imaginary accessibility source remains held');
+    await click('Record fictional source & continuity recheck · UNSENT');
+    for (const check of QL234_CHECKS) await click('Acknowledge conditional hold · UNVERIFIED');
+    const prepare = [...host.querySelectorAll<HTMLButtonElement>('button')].find((button) =>
+      button.textContent?.includes('Prepare source drift & held-release packet'))!;
+    expect(prepare.disabled).toBe(false);
+    await click('Prepare source drift & held-release packet');
+    expect(host.textContent).toContain('packet prepared locally');
+    await click('Show local QL-234 held-release receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-234 held-release receipt"]')?.value ?? '';
+    expect(receipt).toContain('"prepared": 1');
+    expect(receipt).not.toContain('Imaginary independent held-source follow-up remains unsent');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
   });
 });
