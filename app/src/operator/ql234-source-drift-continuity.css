@@ -1,0 +1,4 @@
+.ql234-workbench .ql218-metrics strong { font-variant-numeric: tabular-nums; }
+.ql234-workbench .ql218-gap { border-left: 3px solid #bf8c52; }
+.ql234-workbench .ql218-gap h6 { overflow-wrap: anywhere; }
+.ql234-workbench textarea[readonly] { width: 100%; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
