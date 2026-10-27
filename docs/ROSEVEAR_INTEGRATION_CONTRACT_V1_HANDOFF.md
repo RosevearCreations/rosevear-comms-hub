@@ -107,3 +107,11 @@ The QL-238 Comms Hub screen and isolated Node-only synthetic HMAC harness now de
 The current mock and Node sandbox use fabricated IDs and randomly generated test keys **only**. They are not proof that any connected app endpoint exists. Keep all actual Comms Hub connections DISCONNECTED and all twelve QL-181 live-pilot gates held until separately approved.
 
 **Next expected Comms Hub build:** QL-239 — Integration Contract v1 Read-Only Gateway Proof Intake, Credential Rotation Dry Run & Independent Four-Company Connection Review.
+
+## QL-239 read-only proof intake: how other teams return evidence
+
+QL-239 adds a **manual, session-local intake** and independent HELD-review draft (details in [QL-239 acceptance note](QL-239_READ_ONLY_GATEWAY_PROOF_INTAKE_ROTATION_REVIEW_HELD.md)). Each receiving application should send back a GitHub commit/PR/Actions run URL, exact 40-character commit SHA, non-personal evidence identifier, **separate health/capabilities audit receipt IDs**, exact UTC evidence capture time, and a checklist with signed health, signed capabilities, wrong business/tenant denial, expired/replayed request denial, revoked-key denial, prohibited write/dispatch denial, new-key held GET and old-key rejection after rotation. These references **are only claims until independently retrieved and checked**. Never send keys, tokens, full customer payloads, conversation messages or actual contact data in the handoff.
+
+QL-239's separate Node-only rehearsal uses invented keys and no network. Its browser review cannot authenticate a real application or enable a connector. Every actual Comms Hub gateway connection remains DISCONNECTED and the twelve live-pilot gates remain held. The first potential real read-only candidate is still **AI Data Platform ↔ Devil n Dove** under a separate owner decision.
+
+**Next expected Comms Hub build after QL-239:** QL-240 — Integration Contract v1 Independently Verified Nonproduction Gateway Receipts, Tenant/Key Audit Reconciliation & Owner-Safe Read-Only Pilot Decision Gate.
