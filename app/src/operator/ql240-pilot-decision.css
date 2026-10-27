@@ -1,0 +1,31 @@
+.ql240-screen { display: grid; gap: 1rem; color: #edf5ff; }
+.ql240-header { display: flex; gap: 1rem; justify-content: space-between; align-items: flex-start; }
+.ql240-header h3 { margin: .3rem 0; }
+.ql240-warning { background: #4b3828; border: 2px solid #e6c47f; color: #fff3d6; border-radius: .8rem; padding: 1rem; }
+.ql240-help { background: #24444d; padding: .85rem; border-left: 4px solid #8cd4b2; border-radius: .3rem; }
+.ql240-panel { border: 1px solid #6d8fa7; border-radius: .9rem; padding: 1rem; background: #182f40; min-width: 0; }
+.ql240-panel h4 { margin: 0 0 .6rem; color: #fff; }
+.ql240-table-scroll { overflow-x: auto; }
+.ql240-table-scroll table { border-collapse: collapse; min-width: 750px; width: 100%; }
+.ql240-table-scroll th, .ql240-table-scroll td { text-align: left; vertical-align: top; border-bottom: 1px solid #5f809a; padding: .65rem; }
+.ql240-table-scroll th { color: white; }
+.ql240-meta { display: flex; flex-wrap: wrap; gap: .6rem; margin: .65rem 0; }
+.ql240-meta span { background: #294a60; border-radius: .45rem; padding: .6rem; overflow-wrap: anywhere; }
+.ql240-form { display: grid; gap: .8rem; margin-top: 1rem; }
+.ql240-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+.ql240-fields label, .ql240-actions label { display: grid; gap: .25rem; min-width: 0; }
+.ql240-fields small { color: #dce8f4; }
+.ql240-screen input:not([type]) { color: #172d3d; background: #fff; border: 1px solid #8aaac0; border-radius: .4rem; padding: .63rem; box-sizing: border-box; width: 100%; min-width: 0; }
+.ql240-checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; border: 1px solid #819db3; border-radius: .65rem; }
+.ql240-checks legend { padding: .2rem .4rem; font-weight: 700; }
+.ql240-checks label { display: flex; align-items: baseline; gap: .5rem; }
+.ql240-checks input { flex: none; }
+.ql240-actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: end; }
+.ql240-screen button { cursor: pointer; padding: .68rem .8rem; border: 1px solid #8eb4ce; background: #24546b; color: #fff; border-radius: .6rem; }
+.ql240-screen button:disabled { opacity: .48; cursor: not-allowed; }
+.ql240-screen button:focus-visible, .ql240-screen input:focus-visible { outline: 3px solid #ffe18d; outline-offset: 3px; }
+.ql240-result { margin: .85rem 0; background: #294b5b; border-left: 4px solid #e6c47f; padding: .85rem; border-radius: .35rem; overflow-wrap: anywhere; }
+.ql240-result p { margin: .5rem 0 0; }
+.ql240-message { color: #ffe8ae; font-weight: 600; }
+@media (max-width: 650px) { .ql240-header { flex-direction: column; } .ql240-fields, .ql240-checks { grid-template-columns: 1fr; } .ql240-actions { display: grid; align-items: stretch; } }
+@media (forced-colors: active) { .ql240-panel, .ql240-warning, .ql240-result { border: 1px solid CanvasText; } }
