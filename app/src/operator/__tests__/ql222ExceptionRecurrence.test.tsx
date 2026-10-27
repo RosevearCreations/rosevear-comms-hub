@@ -9,6 +9,7 @@ import { Ql224OverdueHoldAudit } from '../Ql224OverdueHoldAudit';
 import { Ql225DispositionAudit } from '../Ql225DispositionAudit';
 import { Ql226RecurrenceReopenAudit } from '../Ql226RecurrenceReopenAudit';
 import { Ql227DecisionEvidenceAudit } from '../Ql227DecisionEvidenceAudit';
+import { Ql228HandoffContinuityAudit } from '../Ql228HandoffContinuityAudit';
 import { operatorOrganizations, type OrganizationId } from '../ql191Organizations';
 import { recordQl211Observation } from '../ql211OwnerTrial';
 import { queueQl212Finding, replayQl212Finding, writeQl212RepairNote, requestQl212Retest, recordQl212Retest } from '../ql212RepairQueue';
@@ -42,6 +43,9 @@ import { QL226_RELEASE, QL226_CHECKS, beginQl226Reopen, recordQl226Reopen, advan
 import { QL227_RELEASE, QL227_CHECKS, beginQl227Audit, recordQl227Decision, advanceQl227Cycle,
   acknowledgeQl227Check, prepareQl227HeldAudit, ql227CompanyDecisions, ql227CompanyReceipt,
   ql227Portfolio, type Ql227Sources, type Ql227Ledger } from '../ql227DecisionEvidenceAudit';
+import { QL228_RELEASE, QL228_CHECKS, beginQl228FollowUp, recordQl228FollowUp, advanceQl228Cycle,
+  acknowledgeQl228Check, prepareQl228Continuity, ql228CompanyContinuity, ql228CompanyReceipt,
+  ql228Portfolio, type Ql228Sources, type Ql228Ledger } from '../ql228HandoffContinuity';
 
 /** Real contract construction from the synthetic QL-211→QL-221 chain, never a live connector. */
 function fixture(company: OrganizationId, recurring = false): Ql222Sources {
@@ -1194,6 +1198,188 @@ describe('QL-227 operator owner decision aging and independent evidence UI', () 
     const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-227 independent evidence receipt"]')?.value ?? '';
     expect(receipt).toContain('"prepared": 1');
     expect(receipt).not.toContain('Invented reopened source conflict');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+  });
+});
+
+function handoffContinuityFixture(company: OrganizationId, recurring = false): Ql228Sources {
+  const sources = evidenceAuditFixture(company, recurring);
+  let evidenceAudit = beginQl227Audit(sources, {}, company, 'inbox');
+  for (const category of ['actual_repair', 'accessibility'] as const) evidenceAudit = recordQl227Decision(
+    sources, evidenceAudit, company, 'inbox', category,
+    category === 'actual_repair' ? 'SIMULATED_CONFLICT_UNVERIFIED' : 'EVIDENCE_STILL_OPEN_UNVERIFIED',
+    category === 'actual_repair' ? 'REFER_INDEPENDENT_RECHECK_DRAFT' : 'CONTINUE_HELD_FOLLOW_UP_DRAFT',
+    `Fictional QL-227 ${category} follow-up remains unverified`);
+  for (const check of QL227_CHECKS) evidenceAudit = acknowledgeQl227Check(sources, evidenceAudit, company, 'inbox', check.id);
+  evidenceAudit = prepareQl227HeldAudit(sources, evidenceAudit, company, 'inbox');
+  expect(evidenceAudit[company]?.inbox?.phase).toBe('held_release_follow_up_audit_packet_prepared');
+  return { ...sources, evidenceAudit };
+}
+
+describe('QL-228 four-company evidence exception recurrence and independent handoff contract', () => {
+  it('keeps all twelve actual holds and prevents a fictional handoff from authorizing live communications', () => {
+    const empty: Ql228Sources = { trial: {}, repair: {}, review: {}, intake: {}, audit: {},
+      handoff: {}, reassessment: {}, recurrence: {}, closure: {}, reopen: {}, refresh: {},
+      exception: {}, aging: {}, overdue: {}, disposition: {}, reopenReview: {}, evidenceAudit: {} };
+    const portfolio = ql228Portfolio(empty, {});
+    expect(portfolio.companies.map((row) => row.company)).toEqual(operatorOrganizations.map((organization) => organization.id));
+    expect(portfolio.prerequisites).toHaveLength(12);
+    expect(portfolio).toMatchObject({ release: QL228_RELEASE, eligible: 0, prepared: 0,
+      allReleaseHoldsPreserved: true, actualIndependentHandoff: false,
+      actualEvidenceVerified: false, actualOwnerAuthorization: false, livePilotReady: false,
+      providerConnected: false, externalWrites: 0, callsPlaced: 0, messagesSent: 0 });
+    expect(beginQl228FollowUp(empty, {}, 'icamp', 'inbox')).toEqual({});
+    expect(prepareQl228Continuity(empty, {}, 'icamp', 'inbox')).toEqual({});
+  });
+
+  it('requires current QL-227, all gap decisions, independent reassignment and unverified review checks', () => {
+    const sources = handoffContinuityFixture('devilndove', true);
+    let ledger = beginQl228FollowUp(sources, {}, 'devilndove', 'inbox');
+    expect(ledger.devilndove?.inbox?.phase).toBe('independent_handoff_recurrence_follow_up_draft');
+    expect(recordQl228FollowUp(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_EXCEPTION_UNVERIFIED', 'REASSIGN_INDEPENDENT_HANDOFF_DRAFT', 'short')).toBe(ledger);
+    expect(recordQl228FollowUp(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'INVALID' as never, 'REASSIGN_INDEPENDENT_HANDOFF_DRAFT', 'Invented invalid evidence')).toBe(ledger);
+    ledger = recordQl228FollowUp(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_EXCEPTION_UNVERIFIED', 'MAINTAIN_HELD_HANDOFF_DRAFT', 'Invented repeated independent evidence exception');
+    ledger = recordQl228FollowUp(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'EVIDENCE_EXCEPTION_STILL_OPEN_UNVERIFIED', 'MAINTAIN_HELD_HANDOFF_DRAFT', 'Fictional accessibility handoff still pending');
+    for (const check of QL228_CHECKS) ledger = acknowledgeQl228Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    expect(ql228CompanyContinuity(sources, ledger, 'devilndove')).toMatchObject({
+      unreviewed: 0, recurring: 1, recurrenceEvents: 1, handoffsDue: 1 });
+    expect(prepareQl228Continuity(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    ledger = recordQl228FollowUp(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_EXCEPTION_UNVERIFIED', 'REASSIGN_INDEPENDENT_HANDOFF_DRAFT', 'Invented independent reassignment draft remains unsent');
+    ledger = prepareQl228Continuity(sources, ledger, 'devilndove', 'inbox');
+    expect(ql228CompanyContinuity(sources, ledger, 'devilndove')).toMatchObject({
+      prepared: 1, handoffsDue: 0, holdAudit: { held: 12, allHeld: true, conditionalRelease: 'BLOCKED' } });
+    expect(advanceQl228Cycle(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    expect(recordQl228FollowUp(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'SIMULATED_MATCH_UNVERIFIED', 'MAINTAIN_HELD_HANDOFF_DRAFT', 'Prepared local packet is locked')).toBe(ledger);
+  });
+
+  it('retains overdue independent handoff history and requires reassignment after the deadline', () => {
+    const sources = handoffContinuityFixture('yw');
+    let ledger = beginQl228FollowUp(sources, {}, 'yw', 'inbox');
+    ledger = recordQl228FollowUp(sources, ledger, 'yw', 'inbox', 'actual_repair',
+      'EVIDENCE_EXCEPTION_STILL_OPEN_UNVERIFIED', 'REASSIGN_INDEPENDENT_HANDOFF_DRAFT', 'Fictional repair handoff held for reassignment');
+    ledger = recordQl228FollowUp(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'EVIDENCE_EXCEPTION_STILL_OPEN_UNVERIFIED', 'MAINTAIN_HELD_HANDOFF_DRAFT', 'Invented accessibility follow-up pending');
+    for (let i = 0; i < 2; i++) ledger = advanceQl228Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql228CompanyContinuity(sources, ledger, 'yw')).toMatchObject({ dueSoon: 2, overdue: 0 });
+    ledger = advanceQl228Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql228CompanyContinuity(sources, ledger, 'yw')).toMatchObject({ dueSoon: 0, overdue: 2 });
+    expect(recordQl228FollowUp(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'SIMULATED_MATCH_UNVERIFIED', 'MAINTAIN_HELD_HANDOFF_DRAFT', 'Late evidence cannot bypass independent follow-up')).toBe(ledger);
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl228FollowUp(
+      sources, ledger, 'yw', 'inbox', category, 'SIMULATED_MATCH_UNVERIFIED',
+      'REASSIGN_INDEPENDENT_HANDOFF_DRAFT', `Fictional ${category} overdue handoff reallocated`);
+    expect(ql228CompanyContinuity(sources, ledger, 'yw')).toMatchObject({
+      overdue: 0, overdueHandoffs: 2, handoffsDue: 0 });
+    for (const check of QL228_CHECKS) ledger = acknowledgeQl228Check(sources, ledger, 'yw', 'inbox', check.id);
+    ledger = prepareQl228Continuity(sources, ledger, 'yw', 'inbox');
+    expect(ql228Portfolio(sources, ledger)).toMatchObject({
+      prepared: 1, overdueHandoffs: 2, actualIndependentHandoff: false, externalWrites: 0 });
+  });
+
+  it('counts synthetic recurring exceptions only once per category per cycle', () => {
+    const sources = handoffContinuityFixture('rosiedazzlers');
+    let ledger = beginQl228FollowUp(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = recordQl228FollowUp(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_EXCEPTION_UNVERIFIED', 'REASSIGN_INDEPENDENT_HANDOFF_DRAFT', 'First invented recurrence');
+    ledger = recordQl228FollowUp(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_EXCEPTION_UNVERIFIED', 'REASSIGN_INDEPENDENT_HANDOFF_DRAFT', 'Reworded same-cycle recurrence');
+    expect(ql228CompanyContinuity(sources, ledger, 'rosiedazzlers').recurrenceEvents).toBe(1);
+    ledger = advanceQl228Cycle(sources, ledger, 'rosiedazzlers', 'inbox');
+    ledger = recordQl228FollowUp(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_EXCEPTION_UNVERIFIED', 'REASSIGN_INDEPENDENT_HANDOFF_DRAFT', 'New invented recurrence cycle');
+    expect(ql228CompanyContinuity(sources, ledger, 'rosiedazzlers').recurrenceEvents).toBe(2);
+  });
+
+  it('freezes revised QL-227 source, supports case-only reset and leaves orphaned evidence held', () => {
+    const a = handoffContinuityFixture('rosiedazzlers');
+    const b = handoffContinuityFixture('icamp');
+    const sources = Object.fromEntries((Object.keys(a) as Array<keyof Ql228Sources>).map((key) =>
+      [key, { ...a[key], ...b[key] }])) as unknown as Ql228Sources;
+    let ledger = beginQl228FollowUp(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = beginQl228FollowUp(sources, ledger, 'icamp', 'inbox');
+    const other = ledger.rosiedazzlers?.inbox;
+    const revised: Ql228Sources = { ...sources, evidenceAudit: { ...sources.evidenceAudit, icamp: {
+      ...sources.evidenceAudit.icamp, inbox: { ...sources.evidenceAudit.icamp?.inbox!, gaps: {
+        ...sources.evidenceAudit.icamp?.inbox?.gaps, actual_repair: {
+          ...sources.evidenceAudit.icamp?.inbox?.gaps.actual_repair!, note: 'Changed fictional QL-227 source owner decision note' } } } } } };
+    expect(ql228CompanyContinuity(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('QL227_EVIDENCE_DECISION_REVISED');
+    expect(recordQl228FollowUp(revised, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_EXCEPTION_UNVERIFIED', 'REASSIGN_INDEPENDENT_HANDOFF_DRAFT', 'Cannot alter stale evidence')).toBe(ledger);
+    ledger = beginQl228FollowUp(revised, ledger, 'icamp', 'inbox');
+    expect(ledger.rosiedazzlers?.inbox).toBe(other);
+    expect(ledger.icamp?.inbox?.gaps).toEqual({});
+    expect(ql228CompanyContinuity(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('SOURCE_CURRENT');
+    const removed: Ql228Sources = { ...revised, trial: { ...revised.trial, icamp: {} } };
+    expect(ql228CompanyContinuity(removed, ledger, 'icamp').stale).toBeGreaterThan(0);
+    expect(beginQl228FollowUp(removed, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('exports a privacy-minimized held audit without notes, fingerprints or reviewer identity', () => {
+    const sources = handoffContinuityFixture('icamp');
+    let ledger = beginQl228FollowUp(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl228FollowUp(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_EXCEPTION_UNVERIFIED', 'REASSIGN_INDEPENDENT_HANDOFF_DRAFT',
+      'Secret fictional reviewer handoff notes should never appear in exported data');
+    const receipt = ql228CompanyReceipt(sources, ledger, 'icamp');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    expect(receipt).toContain('"notesIncluded": false');
+    expect(receipt).not.toContain('Secret fictional reviewer handoff notes');
+    expect(receipt).not.toContain('fictional-handoff-');
+    expect(receipt).not.toContain('fictional_security_reviewer');
+  });
+});
+
+describe('QL-228 operator evidence exception and independent handoff interface', () => {
+  it('shows the new navigation, four-company hold matrix, help, source and redacted receipt', async () => {
+    await act(async () => root.render(<OperatorShell />));
+    await click('Evidence recurrence & handoff continuity', '.ql172-nav-button');
+    expect(host.querySelector(`[data-ql228-release="${QL228_RELEASE}"]`)).not.toBeNull();
+    expect(host.textContent).toContain('12/12 HELD');
+    await click('ⓘ Exception & handoff help');
+    expect(host.textContent).toContain('confirmed reset');
+    await click('Show local QL-228 continuity receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-228 held handoff receipt"]')?.value ?? '';
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    await click('iCamp', '.ql172-brand');
+    expect(host.querySelector('[data-organization="icamp"][data-ql228-release]')).not.toBeNull();
+    await click('Open owner trial');
+    expect(host.querySelector('#ql211-title')).not.toBeNull();
+  });
+
+  it('prepares a fictional held handoff only with complete source-linked decisions and checks', async () => {
+    const sources = handoffContinuityFixture('rosiedazzlers', true);
+    function Harness() {
+      const [ledger, setLedger] = useState<Ql228Ledger>({});
+      return <Ql228HandoffContinuityAudit organization={operatorOrganizations[0]} sources={sources}
+        ledger={ledger} setLedger={setLedger} onNavigate={() => undefined} />;
+    }
+    await act(async () => root.render(<Harness />));
+    await click('Begin fictional evidence exception & handoff follow-up');
+    await select('#ql228-exception', 'SIMULATED_RECURRENT_EXCEPTION_UNVERIFIED');
+    await select('#ql228-handoff', 'REASSIGN_INDEPENDENT_HANDOFF_DRAFT');
+    await type('#ql228-note', 'Fictional repaired evidence repeated and needs independent handoff');
+    await click('Record fictional recurrence & independent handoff · UNSENT');
+    await select('#ql228-gap', 'accessibility');
+    await select('#ql228-exception', 'EVIDENCE_EXCEPTION_STILL_OPEN_UNVERIFIED');
+    await select('#ql228-handoff', 'MAINTAIN_HELD_HANDOFF_DRAFT');
+    await type('#ql228-note', 'Invented accessibility handoff remains unverified');
+    await click('Record fictional recurrence & independent handoff · UNSENT');
+    for (const check of QL228_CHECKS) await click('Acknowledge continuity check · UNVERIFIED');
+    const prepare = [...host.querySelectorAll<HTMLButtonElement>('button')].find((button) =>
+      button.textContent?.includes('Prepare independent handoff & hold continuity packet'))!;
+    expect(prepare.disabled).toBe(false);
+    await click('Prepare independent handoff & hold continuity packet');
+    expect(host.textContent).toContain('packet prepared locally');
+    await click('Show local QL-228 continuity receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-228 held handoff receipt"]')?.value ?? '';
+    expect(receipt).toContain('"prepared": 1');
+    expect(receipt).not.toContain('Fictional repaired evidence repeated');
     expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
   });
 });
