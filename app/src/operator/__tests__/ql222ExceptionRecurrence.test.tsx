@@ -66,6 +66,11 @@ import { QL232_RELEASE, QL232_CHECKS, beginQl232ProofReview, recordQl232Outcome,
   advanceQl232Cycle, acknowledgeQl232Check, prepareQl232HeldProof,
   ql232CompanyProof, ql232CompanyReceipt, ql232Portfolio,
   type Ql232Sources, type Ql232Ledger } from '../ql232EscalationProof';
+import { Ql233FollowUpIntegrityAudit } from '../Ql233FollowUpIntegrityAudit';
+import { QL233_RELEASE, QL233_CHECKS, beginQl233IntegrityAudit, recordQl233FollowUp,
+  advanceQl233Cycle, acknowledgeQl233Check, prepareQl233HeldAudit,
+  ql233CompanyIntegrity, ql233CompanyReceipt, ql233Portfolio,
+  type Ql233Sources, type Ql233Ledger } from '../ql233FollowUpIntegrity';
 
 /** Real contract construction from the synthetic QL-211→QL-221 chain, never a live connector. */
 function fixture(company: OrganizationId, recurring = false): Ql222Sources {
@@ -2178,5 +2183,254 @@ describe('QL-232 four-company escalation outcome and held proof operator UI', ()
     expect(receipt).toContain('"prepared": 1');
     expect(receipt).not.toContain('Invented repair escalation remains unverified');
     expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+  });
+});
+
+function heldPilotIntegrityFixture(company: OrganizationId): Ql233Sources {
+  const sources = escalationProofFixture(company);
+  let escalationProof = beginQl232ProofReview(sources, {}, company, 'inbox');
+  escalationProof = recordQl232Outcome(sources, escalationProof, company, 'inbox', 'actual_repair',
+    'SIMULATED_ESCALATION_EXCEPTION_RECURRED_UNVERIFIED', 'REFER_NEW_INDEPENDENT_DISPOSITION_DRAFT',
+    'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Fictional escalation reviewed without contact');
+  escalationProof = recordQl232Outcome(sources, escalationProof, company, 'inbox', 'accessibility',
+    'SIMULATED_ESCALATION_HANDOFF_UNVERIFIED', 'MAINTAIN_INDEPENDENT_HOLD_DRAFT',
+    'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Fictional accessible proof remains held');
+  for (const check of QL232_CHECKS) escalationProof = acknowledgeQl232Check(sources,
+    escalationProof, company, 'inbox', check.id);
+  escalationProof = prepareQl232HeldProof(sources, escalationProof, company, 'inbox');
+  expect(escalationProof[company]?.inbox?.phase).toBe('held_proof_revalidation_packet_prepared');
+  return { ...sources, escalationProof };
+}
+
+describe('QL-233 four-company exception follow-up, independent reassessment and held-pilot integrity', () => {
+  it('holds all four companies and twelve real pilot gates without side effects or source evidence', () => {
+    const empty: Ql233Sources = { trial: {}, repair: {}, review: {}, intake: {}, audit: {},
+      handoff: {}, reassessment: {}, recurrence: {}, closure: {}, reopen: {}, refresh: {},
+      exception: {}, aging: {}, overdue: {}, disposition: {}, reopenReview: {}, evidenceAudit: {},
+      handoffContinuity: {}, reassignmentAudit: {}, reviewerContinuity: {}, dispositionOversight: {},
+      escalationProof: {} };
+    const portfolio = ql233Portfolio(empty, {});
+    expect(portfolio.companies.map((row) => row.company)).toEqual(operatorOrganizations.map((org) => org.id));
+    expect(portfolio.prerequisites).toHaveLength(12);
+    expect(portfolio).toMatchObject({ release: QL233_RELEASE, eligible: 0, prepared: 0,
+      allReleaseHoldsPreserved: true, actualIndependentDecision: false,
+      actualPilotProofVerified: false, actualOwnerAuthorization: false, livePilotReady: false,
+      providerConnected: false, externalWrites: 0, callsPlaced: 0, messagesSent: 0 });
+    expect(beginQl233IntegrityAudit(empty, {}, 'icamp', 'inbox')).toEqual({});
+    expect(prepareQl233HeldAudit(empty, {}, 'icamp', 'inbox')).toEqual({});
+  });
+
+  it('requires current prepared QL-232, complete follow-ups, independent decisions and fresh checks', () => {
+    const sources = heldPilotIntegrityFixture('devilndove');
+    let ledger = beginQl233IntegrityAudit(sources, {}, 'devilndove', 'inbox');
+    expect(ledger.devilndove?.inbox?.phase).toBe('exception_follow_up_integrity_review_draft');
+    expect(recordQl233FollowUp(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_EXCEPTION_REOPENED_UNVERIFIED', 'REFER_INDEPENDENT_REASSESSMENT_DRAFT',
+      'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'short')).toBe(ledger);
+    expect(recordQl233FollowUp(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'BAD_FOLLOW_UP' as never, 'REFER_INDEPENDENT_REASSESSMENT_DRAFT',
+      'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'Imagined forbidden follow-up')).toBe(ledger);
+    expect(recordQl233FollowUp(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_EXCEPTION_REOPENED_UNVERIFIED', 'MAINTAIN_HELD_DECISION_DRAFT',
+      'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'Recurring proof needs independent review')).toBe(ledger);
+    ledger = recordQl233FollowUp(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_EXCEPTION_REOPENED_UNVERIFIED', 'REFER_INDEPENDENT_REASSESSMENT_DRAFT',
+      'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'Fictional independent decision draft not sent');
+    ledger = recordQl233FollowUp(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'FOLLOW_UP_PENDING_UNVERIFIED', 'MAINTAIN_HELD_DECISION_DRAFT',
+      'HELD_PILOT_PROOF_PENDING_UNVERIFIED', 'Imaginary accessibility evidence still pending');
+    expect(ql233CompanyIntegrity(sources, ledger, 'devilndove')).toMatchObject({
+      unreviewed: 1, recurrenceEvents: 1, missingReassessments: 0 });
+    for (const check of QL233_CHECKS) ledger = acknowledgeQl233Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    expect(prepareQl233HeldAudit(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    ledger = recordQl233FollowUp(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'SIMULATED_FOLLOW_UP_RECORDED_UNVERIFIED', 'MAINTAIN_HELD_DECISION_DRAFT',
+      'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'Imaginary accessibility decision remained held');
+    expect(ql233CompanyIntegrity(sources, ledger, 'devilndove').cases[0].checksComplete).toBe(false);
+    for (const check of QL233_CHECKS) ledger = acknowledgeQl233Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    ledger = prepareQl233HeldAudit(sources, ledger, 'devilndove', 'inbox');
+    expect(ql233CompanyIntegrity(sources, ledger, 'devilndove')).toMatchObject({
+      prepared: 1, holdAudit: { held: 12, allHeld: true, pilotRelease: 'BLOCKED' } });
+    expect(recordQl233FollowUp(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'SIMULATED_EXCEPTION_REOPENED_UNVERIFIED', 'REOPEN_INDEPENDENT_DECISION_DRAFT',
+      'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'Prepared packet cannot be edited')).toBe(ledger);
+  });
+
+  it('ages follow-up from due soon to overdue; new unsent referral preserves late history', () => {
+    const sources = heldPilotIntegrityFixture('yw');
+    let ledger = beginQl233IntegrityAudit(sources, {}, 'yw', 'inbox');
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl233FollowUp(
+      sources, ledger, 'yw', 'inbox', category,
+      'SIMULATED_FOLLOW_UP_RECORDED_UNVERIFIED', category === 'actual_repair' ?
+        'REFER_INDEPENDENT_REASSESSMENT_DRAFT' : 'MAINTAIN_HELD_DECISION_DRAFT',
+      'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'Fictional follow-up draft remains private');
+    for (let i = 0; i < 2; i++) ledger = advanceQl233Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql233CompanyIntegrity(sources, ledger, 'yw')).toMatchObject({ dueSoon: 2, overdue: 0 });
+    ledger = advanceQl233Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql233CompanyIntegrity(sources, ledger, 'yw')).toMatchObject({ dueSoon: 0, overdue: 2 });
+    expect(recordQl233FollowUp(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'SIMULATED_FOLLOW_UP_RECORDED_UNVERIFIED', 'MAINTAIN_HELD_DECISION_DRAFT',
+      'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'Overdue requires new independent referral')).toBe(ledger);
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl233FollowUp(
+      sources, ledger, 'yw', 'inbox', category, 'SIMULATED_FOLLOW_UP_RECORDED_UNVERIFIED',
+      'REFER_INDEPENDENT_REASSESSMENT_DRAFT', 'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED',
+      'Fictional overdue reassessment referred but not sent');
+    expect(ql233CompanyIntegrity(sources, ledger, 'yw')).toMatchObject({
+      overdue: 0, historicalOverdueEpisodes: 2, missingReassessments: 0 });
+    for (const check of QL233_CHECKS) ledger = acknowledgeQl233Check(sources, ledger, 'yw', 'inbox', check.id);
+    ledger = prepareQl233HeldAudit(sources, ledger, 'yw', 'inbox');
+    expect(ql233Portfolio(sources, ledger)).toMatchObject({ prepared: 1, externalWrites: 0 });
+  });
+
+  it('tracks only one exception recurrence per gap and cycle and invalidates checklist on cycle change', () => {
+    const sources = heldPilotIntegrityFixture('rosiedazzlers');
+    let ledger = beginQl233IntegrityAudit(sources, {}, 'rosiedazzlers', 'inbox');
+    for (const note of ['Imaginary recurrence first', 'Second edit of same fictional recurrence']) ledger =
+      recordQl233FollowUp(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+        'SIMULATED_EXCEPTION_REOPENED_UNVERIFIED', 'REOPEN_INDEPENDENT_DECISION_DRAFT',
+        'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', note);
+    expect(ql233CompanyIntegrity(sources, ledger, 'rosiedazzlers').recurrenceEvents).toBe(1);
+    for (const check of QL233_CHECKS) ledger = acknowledgeQl233Check(sources, ledger, 'rosiedazzlers', 'inbox', check.id);
+    ledger = advanceQl233Cycle(sources, ledger, 'rosiedazzlers', 'inbox');
+    expect(ql233CompanyIntegrity(sources, ledger, 'rosiedazzlers').cases[0].checksComplete).toBe(false);
+    ledger = recordQl233FollowUp(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_EXCEPTION_REOPENED_UNVERIFIED', 'REFER_INDEPENDENT_REASSESSMENT_DRAFT',
+      'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'Later imaginary recurrence referred again');
+    expect(ql233CompanyIntegrity(sources, ledger, 'rosiedazzlers').recurrenceEvents).toBe(2);
+  });
+
+  it('blocks integrity exceptions and pending proof even with all acknowledgements', () => {
+    const sources = heldPilotIntegrityFixture('icamp');
+    let ledger = beginQl233IntegrityAudit(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl233FollowUp(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_EXCEPTION_REOPENED_UNVERIFIED', 'REFER_INDEPENDENT_REASSESSMENT_DRAFT',
+      'HELD_PILOT_PROOF_EXCEPTION_UNVERIFIED', 'Fictional pilot integrity still discrepant');
+    ledger = recordQl233FollowUp(sources, ledger, 'icamp', 'inbox', 'accessibility',
+      'SIMULATED_FOLLOW_UP_RECORDED_UNVERIFIED', 'MAINTAIN_HELD_DECISION_DRAFT',
+      'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'Imaginary held pilot integrity matched');
+    for (const check of QL233_CHECKS) ledger = acknowledgeQl233Check(sources, ledger, 'icamp', 'inbox', check.id);
+    expect(ql233CompanyIntegrity(sources, ledger, 'icamp')).toMatchObject({ integrityExceptions: 1, prepared: 0 });
+    expect(prepareQl233HeldAudit(sources, ledger, 'icamp', 'inbox')).toBe(ledger);
+    ledger = recordQl233FollowUp(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_FOLLOW_UP_RECORDED_UNVERIFIED', 'REFER_INDEPENDENT_REASSESSMENT_DRAFT',
+      'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'Invented held pilot gap now checked locally');
+    expect(ql233CompanyIntegrity(sources, ledger, 'icamp').integrityExceptions).toBe(0);
+    expect(ql233CompanyIntegrity(sources, ledger, 'icamp').cases[0].checksComplete).toBe(false);
+  });
+
+  it('cannot hide an inherited QL-232 proof gap by recording a fictional QL-233 match', () => {
+    const upstream = escalationProofFixture('icamp');
+    let escalationProof = beginQl232ProofReview(upstream, {}, 'icamp', 'inbox');
+    escalationProof = recordQl232Outcome(upstream, escalationProof, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_ESCALATION_EXCEPTION_RECURRED_UNVERIFIED', 'REFER_NEW_INDEPENDENT_DISPOSITION_DRAFT',
+      'HOLD_PROOF_GAP_RECONFIRMED_UNVERIFIED', 'Imaginary proof gap remained unresolved upstream');
+    escalationProof = recordQl232Outcome(upstream, escalationProof, 'icamp', 'inbox', 'accessibility',
+      'SIMULATED_ESCALATION_HANDOFF_UNVERIFIED', 'MAINTAIN_INDEPENDENT_HOLD_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Imaginary accessibility proof still held');
+    for (const check of QL232_CHECKS) escalationProof = acknowledgeQl232Check(upstream,
+      escalationProof, 'icamp', 'inbox', check.id);
+    escalationProof = prepareQl232HeldProof(upstream, escalationProof, 'icamp', 'inbox');
+    const sources: Ql233Sources = { ...upstream, escalationProof };
+    let ledger = beginQl233IntegrityAudit(sources, {}, 'icamp', 'inbox');
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl233FollowUp(
+      sources, ledger, 'icamp', 'inbox', category, 'SIMULATED_FOLLOW_UP_RECORDED_UNVERIFIED',
+      category === 'actual_repair' ? 'REFER_INDEPENDENT_REASSESSMENT_DRAFT' : 'MAINTAIN_HELD_DECISION_DRAFT',
+      'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'Synthetic local hold proof looked consistent');
+    for (const check of QL233_CHECKS) ledger = acknowledgeQl233Check(sources, ledger, 'icamp', 'inbox', check.id);
+    expect(ql233CompanyIntegrity(sources, ledger, 'icamp')).toMatchObject({ integrityExceptions: 1, prepared: 0 });
+    expect(prepareQl233HeldAudit(sources, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('freezes revised QL-232 source and altered proof snapshot; case-only reset preserves another company', () => {
+    const a = heldPilotIntegrityFixture('rosiedazzlers');
+    const b = heldPilotIntegrityFixture('icamp');
+    const sources = Object.fromEntries((Object.keys(a) as Array<keyof Ql233Sources>).map((key) =>
+      [key, { ...a[key], ...b[key] }])) as unknown as Ql233Sources;
+    let ledger = beginQl233IntegrityAudit(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = beginQl233IntegrityAudit(sources, ledger, 'icamp', 'inbox');
+    const other = ledger.rosiedazzlers?.inbox;
+    const revised: Ql233Sources = { ...sources, escalationProof: { ...sources.escalationProof, icamp: {
+      ...sources.escalationProof.icamp, inbox: { ...sources.escalationProof.icamp?.inbox!, gaps: {
+        ...sources.escalationProof.icamp?.inbox?.gaps, actual_repair: {
+          ...sources.escalationProof.icamp?.inbox?.gaps.actual_repair!, note: 'Changed fictional QL-232 follow-up evidence' } } } } } };
+    expect(ql233CompanyIntegrity(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('QL232_ESCALATION_PROOF_REVISED');
+    expect(recordQl233FollowUp(revised, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_EXCEPTION_REOPENED_UNVERIFIED', 'REFER_INDEPENDENT_REASSESSMENT_DRAFT',
+      'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'Frozen case cannot record')).toBe(ledger);
+    ledger = beginQl233IntegrityAudit(revised, ledger, 'icamp', 'inbox');
+    expect(ledger.rosiedazzlers?.inbox).toBe(other);
+    expect(ledger.icamp?.inbox?.gaps).toEqual({});
+    expect(ql233CompanyIntegrity(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('SOURCE_CURRENT');
+    const tampered: Ql233Ledger = { ...ledger, icamp: { ...ledger.icamp, inbox: {
+      ...ledger.icamp?.inbox!, holdToken: 'not-a-matching-held-pilot-token' } } };
+    expect(ql233CompanyIntegrity(revised, tampered, 'icamp').cases[0].sourceStatus).toBe('HELD_PILOT_PROOF_REVISED');
+    expect(prepareQl233HeldAudit(revised, tampered, 'icamp', 'inbox')).toBe(tampered);
+    const removed: Ql233Sources = { ...revised, trial: { ...revised.trial, icamp: {} } };
+    expect(ql233CompanyIntegrity(removed, ledger, 'icamp').stale).toBeGreaterThan(0);
+    expect(beginQl233IntegrityAudit(removed, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('exports redacted held-pilot statuses without private notes or revision tokens', () => {
+    const sources = heldPilotIntegrityFixture('icamp');
+    let ledger = beginQl233IntegrityAudit(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl233FollowUp(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_EXCEPTION_REOPENED_UNVERIFIED', 'REFER_INDEPENDENT_REASSESSMENT_DRAFT',
+      'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED', 'Secret imaginary reviewer details must not leave session');
+    const receipt = ql233CompanyReceipt(sources, ledger, 'icamp');
+    expect(receipt).toContain('"pilotRelease": "BLOCKED"');
+    expect(receipt).toContain('"holdTokensIncluded": false');
+    expect(receipt).not.toContain('Secret imaginary reviewer details');
+    expect(receipt).not.toContain('fictional-integrity-');
+    expect(receipt).not.toContain('fictional_security_reviewer');
+  });
+});
+
+describe('QL-233 held-pilot integrity operator UI', () => {
+  it('shows navigation, four-company matrix, help, QL-232 source and redacted local receipt', async () => {
+    await act(async () => root.render(<OperatorShell />));
+    await click('Exception follow-up & pilot integrity', '.ql172-nav-button');
+    expect(host.querySelector(`[data-ql233-release="${QL233_RELEASE}"]`)).not.toBeNull();
+    expect(host.textContent).toContain('12/12 HELD');
+    await click('ⓘ Follow-up & integrity help');
+    expect(host.textContent).toContain('case-only reset');
+    await click('Show local QL-233 held-pilot receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-233 held-pilot receipt"]')?.value ?? '';
+    expect(receipt).toContain('"pilotRelease": "BLOCKED"');
+    await click('iCamp', '.ql172-brand');
+    expect(host.querySelector('[data-organization="icamp"][data-ql233-release]')).not.toBeNull();
+    await click('Open owner trial');
+    expect(host.querySelector('#ql211-title')).not.toBeNull();
+  }, 15_000);
+
+  it('prepares a local held-pilot audit after both evidence gaps, separate reassessment and fresh checks', async () => {
+    const sources = heldPilotIntegrityFixture('rosiedazzlers');
+    function Harness() {
+      const [ledger, setLedger] = useState<Ql233Ledger>({});
+      return <Ql233FollowUpIntegrityAudit organization={operatorOrganizations[0]} sources={sources}
+        ledger={ledger} setLedger={setLedger} onNavigate={() => undefined} />;
+    }
+    await act(async () => root.render(<Harness />));
+    await click('Begin fictional exception follow-up & held-pilot audit');
+    await select('#ql233-followup', 'SIMULATED_EXCEPTION_REOPENED_UNVERIFIED');
+    await select('#ql233-reassessment', 'REFER_INDEPENDENT_REASSESSMENT_DRAFT');
+    await select('#ql233-integrity', 'SIMULATED_HELD_PILOT_PROOF_MATCH_UNVERIFIED');
+    await type('#ql233-note', 'Imaginary independent escalation for held pilot');
+    await click('Record fictional follow-up & held integrity · UNSENT');
+    await select('#ql233-gap', 'accessibility');
+    await select('#ql233-followup', 'SIMULATED_FOLLOW_UP_RECORDED_UNVERIFIED');
+    await select('#ql233-reassessment', 'MAINTAIN_HELD_DECISION_DRAFT');
+    await type('#ql233-note', 'Imaginary accessibility evidence remains held');
+    await click('Record fictional follow-up & held integrity · UNSENT');
+    for (const check of QL233_CHECKS) await click('Acknowledge held-pilot integrity · UNVERIFIED');
+    const prepare = [...host.querySelectorAll<HTMLButtonElement>('button')].find((button) =>
+      button.textContent?.includes('Prepare fictional held-pilot integrity packet'))!;
+    expect(prepare.disabled).toBe(false);
+    await click('Prepare fictional held-pilot integrity packet');
+    expect(host.textContent).toContain('packet prepared locally');
+    await click('Show local QL-233 held-pilot receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-233 held-pilot receipt"]')?.value ?? '';
+    expect(receipt).toContain('"prepared": 1');
+    expect(receipt).not.toContain('Imaginary independent escalation for held pilot');
+    expect(receipt).toContain('"pilotRelease": "BLOCKED"');
   });
 });
