@@ -88,6 +88,8 @@ import { Ql238HandshakeReadiness } from './Ql238HandshakeReadiness';
 import { type Ql238Ledger } from './ql238HandshakeReadiness';
 import { Ql239GatewayProofReview } from './Ql239GatewayProofReview';
 import { type Ql239Ledger } from './ql239GatewayProofReview';
+import { Ql240PilotDecision } from './Ql240PilotDecision';
+import { type Ql240Ledger } from './ql240PilotDecision';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -107,6 +109,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'integration_options', label: 'Free phone options & integration v1', description: 'Research-backed free option limits, shared integration handoff and safe four-business gateway event tests' },
   { id: 'handshake_readiness', label: 'Gateway handshake & tenant gate', description: 'Four-company fictional v1 health/capabilities handshake, tenant denial proofs and unverified no-dispatch evidence' },
   { id: 'gateway_proof_review', label: 'Gateway proof intake & rotation', description: 'Four-company read-only source proof intake, invented-key rotation checklist and independent HELD review' },
+  { id: 'receipt_pilot_gate', label: 'Nonproduction receipts & pilot HOLD', description: 'Pinned-key nonproduction evidence reconciliation, separate audit draft and owner-safe read-only pilot candidate HOLD' },
   { id: 'samples', label: 'Synthetic conversations', description: 'Brand-safe triage, unsent drafts, mock intake handoffs and follow-up tasks' },
   { id: 'evidence', label: 'Safety & hold review', description: 'Four-company preview acceptance, synthetic evidence and unresolved pilot prerequisites' },
   { id: 'trial', label: 'Owner trial & gap triage', description: 'Guided four-company manual preview observations, mobile review and prioritized gap follow-up' },
@@ -178,6 +181,7 @@ export function OperatorShell() {
   const [receiptHandoffLedger, setReceiptHandoffLedger] = useState<Ql236Ledger>({});
   const [ql238Ledger, setQl238Ledger] = useState<Ql238Ledger>({});
   const [ql239Ledger, setQl239Ledger] = useState<Ql239Ledger>({});
+  const [ql240Ledger, setQl240Ledger] = useState<Ql240Ledger>({});
   const [reminderIds, setReminderIds] = useState<ReadonlySet<string>>(() => new Set());
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
@@ -318,6 +322,7 @@ export function OperatorShell() {
           {workspace === 'integration_options' && <Ql237IntegrationOptions key={'integration-v1-' + organization.id} organization={organization} />}
           {workspace === 'handshake_readiness' && <Ql238HandshakeReadiness key={'handshake-v1-' + organization.id} organization={organization} ledger={ql238Ledger} setLedger={setQl238Ledger} onNavigate={setWorkspace} />}
           {workspace === 'gateway_proof_review' && <Ql239GatewayProofReview key={'gateway-proof-v1-' + organization.id} organization={organization} ledger={ql239Ledger} setLedger={setQl239Ledger} onNavigate={setWorkspace} />}
+          {workspace === 'receipt_pilot_gate' && <Ql240PilotDecision key={'receipt-pilot-v1-' + organization.id} organization={organization} sourceLedger={ql239Ledger} ledger={ql240Ledger} setLedger={setQl240Ledger} onNavigate={setWorkspace} />}
           {workspace === 'samples' && brandId !== null && (
             <>
               <Ql174BrandSafeTriagePreview brandId={brandId} />

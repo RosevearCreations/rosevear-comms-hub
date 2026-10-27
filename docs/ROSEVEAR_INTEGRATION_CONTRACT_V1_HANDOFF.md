@@ -115,3 +115,11 @@ QL-239 adds a **manual, session-local intake** and independent HELD-review draft
 QL-239's separate Node-only rehearsal uses invented keys and no network. Its browser review cannot authenticate a real application or enable a connector. Every actual Comms Hub gateway connection remains DISCONNECTED and the twelve live-pilot gates remain held. The first potential real read-only candidate is still **AI Data Platform ↔ Devil n Dove** under a separate owner decision.
 
 **Next expected Comms Hub build after QL-239:** QL-240 — Integration Contract v1 Independently Verified Nonproduction Gateway Receipts, Tenant/Key Audit Reconciliation & Owner-Safe Read-Only Pilot Decision Gate.
+
+## QL-240 — external nonproduction signature evidence handoff
+
+QL-240's isolated Node verifier now demonstrates real **Ed25519 signature verification against independently supplied pinned public keys** for invented nonproduction receipts. It rejects tampering, revoked/unpinned keys, wrong business/tenant, stale or replayed receipt, unknown/write capability, direct app routes and non-held/production statuses. This does **not** prove any actual company deployed this contract or owns the test keys. See [QL-240 audit requirements](QL-240_NONPRODUCTION_RECEIPT_VERIFICATION_AND_PILOT_GATE_HELD.md).
+
+For each application, return the exact GitHub source commit and CI run, gateway health/capabilities receipt IDs, trusted public-key ID/fingerprint via a separate verified channel, signed test receipt proof, tenant rejection tests, rotation/revocation/rollback evidence and durable gateway audit IDs. **Do not send private keys, secrets, customer information, Etsy updates, phone messages or live dispatch commands.** QL-239 input must be external, not fictional, before QL-240 can prepare a held review. All Comms Hub actual connections remain DISCONNECTED with all twelve real QL-181 pilot gates held.
+
+**Next expected Comms Hub build after QL-240:** QL-241 — External Nonproduction Gateway Proof Retrieval, Independently Pinned Public-Key Evidence & Devil n Dove Read-Only Pilot Owner Authorization Readiness.
