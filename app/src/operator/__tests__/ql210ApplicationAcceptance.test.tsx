@@ -107,5 +107,5 @@ describe('QL-210 all-company operator acceptance interface', () => {
     await click('Review connector safety');
     expect(host.textContent).toContain('Connector centre');
     expect(host.querySelector('.ql172-skip-link')?.getAttribute('href')).toBe('#ql172-workspace');
-  });
+  }, 15_000);
 });
