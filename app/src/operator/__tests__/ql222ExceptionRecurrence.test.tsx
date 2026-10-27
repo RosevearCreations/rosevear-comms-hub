@@ -13,6 +13,7 @@ import { Ql228HandoffContinuityAudit } from '../Ql228HandoffContinuityAudit';
 import { Ql229ReassignmentAudit } from '../Ql229ReassignmentAudit';
 import { Ql230ReviewerContinuityAudit } from '../Ql230ReviewerContinuityAudit';
 import { Ql231DispositionOversight } from '../Ql231DispositionOversight';
+import { Ql232EscalationProofAudit } from '../Ql232EscalationProofAudit';
 import { operatorOrganizations, type OrganizationId } from '../ql191Organizations';
 import { recordQl211Observation } from '../ql211OwnerTrial';
 import { queueQl212Finding, replayQl212Finding, writeQl212RepairNote, requestQl212Retest, recordQl212Retest } from '../ql212RepairQueue';
@@ -61,6 +62,10 @@ import { QL231_RELEASE, QL231_CHECKS, beginQl231Disposition, recordQl231Recheck,
   advanceQl231Cycle, acknowledgeQl231Check, prepareQl231Oversight,
   ql231CompanyDisposition, ql231CompanyReceipt, ql231Portfolio,
   type Ql231Sources, type Ql231Ledger } from '../ql231DispositionOversight';
+import { QL232_RELEASE, QL232_CHECKS, beginQl232ProofReview, recordQl232Outcome,
+  advanceQl232Cycle, acknowledgeQl232Check, prepareQl232HeldProof,
+  ql232CompanyProof, ql232CompanyReceipt, ql232Portfolio,
+  type Ql232Sources, type Ql232Ledger } from '../ql232EscalationProof';
 
 /** Real contract construction from the synthetic QL-211→QL-221 chain, never a live connector. */
 function fixture(company: OrganizationId, recurring = false): Ql222Sources {
@@ -1965,6 +1970,213 @@ describe('QL-231 four-company reviewer recurrence disposition and hold exception
     const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-231 disposition oversight receipt"]')?.value ?? '';
     expect(receipt).toContain('"prepared": 1');
     expect(receipt).not.toContain('Fictional repeated repair exception');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+  });
+});
+
+function escalationProofFixture(company: OrganizationId, recurring = false): Ql232Sources {
+  const sources = ql231Fixture(company, recurring);
+  let dispositionOversight = beginQl231Disposition(sources, {}, company, 'inbox');
+  for (const category of ['actual_repair', 'accessibility'] as const) dispositionOversight = recordQl231Recheck(
+    sources, dispositionOversight, company, 'inbox', category,
+    category === 'actual_repair' ? 'SIMULATED_RECHECK_EXCEPTION_UNVERIFIED' : 'EVIDENCE_RECHECK_PENDING_UNVERIFIED',
+    category === 'actual_repair' ? 'REOPEN_EVIDENCE_EXCEPTION_DRAFT' : 'CONTINUE_HELD_REVIEW_DRAFT',
+    category === 'actual_repair' ? 'REFER_SEPARATE_RECHECK_DRAFT' : 'RECHECK_MONITOR_HELD_DRAFT',
+    `Fictional QL-231 ${category} independent disposition remains unverified`);
+  for (const check of QL231_CHECKS) dispositionOversight = acknowledgeQl231Check(sources,
+    dispositionOversight, company, 'inbox', check.id);
+  dispositionOversight = prepareQl231Oversight(sources, dispositionOversight, company, 'inbox');
+  expect(dispositionOversight[company]?.inbox?.phase).toBe('conditional_hold_exception_oversight_packet_prepared');
+  return { ...sources, dispositionOversight };
+}
+
+describe('QL-232 four-company escalation outcome and conditional hold proof contract', () => {
+  it('preserves four companies, all twelve real holds and zero external writes or calls', () => {
+    const empty: Ql232Sources = { trial: {}, repair: {}, review: {}, intake: {}, audit: {},
+      handoff: {}, reassessment: {}, recurrence: {}, closure: {}, reopen: {}, refresh: {},
+      exception: {}, aging: {}, overdue: {}, disposition: {}, reopenReview: {}, evidenceAudit: {},
+      handoffContinuity: {}, reassignmentAudit: {}, reviewerContinuity: {}, dispositionOversight: {} };
+    const portfolio = ql232Portfolio(empty, {});
+    expect(portfolio.companies.map((row) => row.company)).toEqual(operatorOrganizations.map((org) => org.id));
+    expect(portfolio.prerequisites).toHaveLength(12);
+    expect(portfolio).toMatchObject({ release: QL232_RELEASE, eligible: 0, prepared: 0,
+      allReleaseHoldsPreserved: true, actualIndependentDisposition: false, actualHoldProofVerified: false,
+      actualOwnerAuthorization: false, livePilotReady: false, providerConnected: false,
+      externalWrites: 0, callsPlaced: 0, messagesSent: 0 });
+    expect(beginQl232ProofReview(empty, {}, 'icamp', 'inbox')).toEqual({});
+    expect(prepareQl232HeldProof(empty, {}, 'icamp', 'inbox')).toEqual({});
+  });
+
+  it('requires current prepared QL-231, reconciled proof, independent referrals and all checks', () => {
+    const sources = escalationProofFixture('devilndove', true);
+    let ledger = beginQl232ProofReview(sources, {}, 'devilndove', 'inbox');
+    expect(ledger.devilndove?.inbox?.phase).toBe('overdue_escalation_disposition_proof_review_draft');
+    expect(recordQl232Outcome(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_ESCALATION_EXCEPTION_RECURRED_UNVERIFIED', 'REFER_NEW_INDEPENDENT_DISPOSITION_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'short')).toBe(ledger);
+    expect(recordQl232Outcome(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'INVALID' as never, 'REFER_NEW_INDEPENDENT_DISPOSITION_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Invalid fictional escalation cannot be saved')).toBe(ledger);
+    expect(recordQl232Outcome(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_ESCALATION_EXCEPTION_RECURRED_UNVERIFIED', 'MAINTAIN_INDEPENDENT_HOLD_DRAFT',
+      'HOLD_PROOF_GAP_RECONFIRMED_UNVERIFIED', 'Recurring proof gap requires independent disposition')).toBe(ledger);
+    ledger = recordQl232Outcome(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_ESCALATION_EXCEPTION_RECURRED_UNVERIFIED', 'MAINTAIN_INDEPENDENT_HOLD_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Invented repair escalation remains held');
+    ledger = recordQl232Outcome(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'ESCALATION_OUTCOME_PENDING_UNVERIFIED', 'MAINTAIN_INDEPENDENT_HOLD_DRAFT',
+      'HOLD_PROOF_REVALIDATION_PENDING_UNVERIFIED', 'Imaginary accessibility proof pending');
+    expect(ql232CompanyProof(sources, ledger, 'devilndove')).toMatchObject({
+      unreviewed: 1, missingDispositions: 0, recurring: 0 });
+    // Fully reconcile inherited P0 and recurring repair risk; a held proof gap can be recorded but never releases holds.
+    ledger = recordQl232Outcome(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_ESCALATION_EXCEPTION_RECURRED_UNVERIFIED', 'REFER_NEW_INDEPENDENT_DISPOSITION_DRAFT',
+      'HOLD_PROOF_GAP_RECONFIRMED_UNVERIFIED', 'Invented independent escalation referral not transmitted');
+    expect(ql232CompanyProof(sources, ledger, 'devilndove')).toMatchObject({
+      unreviewed: 0, recurring: 1, recurrenceEvents: 1, proofGaps: 1, missingDispositions: 0 });
+    for (const check of QL232_CHECKS) ledger = acknowledgeQl232Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    ledger = prepareQl232HeldProof(sources, ledger, 'devilndove', 'inbox');
+    expect(ql232CompanyProof(sources, ledger, 'devilndove')).toMatchObject({
+      prepared: 1, holdAudit: { held: 12, allHeld: true, conditionalRelease: 'BLOCKED' } });
+    expect(recordQl232Outcome(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'SIMULATED_ESCALATION_HANDOFF_UNVERIFIED', 'MAINTAIN_INDEPENDENT_HOLD_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Cannot change prepared case')).toBe(ledger);
+  });
+
+  it('ages fictional independent dispositions and retains overdue history after a new referral', () => {
+    const sources = escalationProofFixture('yw');
+    let ledger = beginQl232ProofReview(sources, {}, 'yw', 'inbox');
+    ledger = recordQl232Outcome(sources, ledger, 'yw', 'inbox', 'actual_repair',
+      'ESCALATION_OUTCOME_PENDING_UNVERIFIED', 'REFER_NEW_INDEPENDENT_DISPOSITION_DRAFT',
+      'HOLD_PROOF_REVALIDATION_PENDING_UNVERIFIED', 'Imaginary repair evidence escalation pending');
+    ledger = recordQl232Outcome(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'ESCALATION_OUTCOME_PENDING_UNVERIFIED', 'MAINTAIN_INDEPENDENT_HOLD_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Imaginary accessibility held proof checked');
+    for (let i = 0; i < 2; i++) ledger = advanceQl232Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql232CompanyProof(sources, ledger, 'yw')).toMatchObject({ dueSoon: 2, overdue: 0 });
+    ledger = advanceQl232Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql232CompanyProof(sources, ledger, 'yw')).toMatchObject({ dueSoon: 0, overdue: 2 });
+    expect(recordQl232Outcome(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'SIMULATED_ESCALATION_HANDOFF_UNVERIFIED', 'MAINTAIN_INDEPENDENT_HOLD_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Late fictional evidence must be referred')).toBe(ledger);
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl232Outcome(
+      sources, ledger, 'yw', 'inbox', category, 'SIMULATED_ESCALATION_HANDOFF_UNVERIFIED',
+      'REFER_NEW_INDEPENDENT_DISPOSITION_DRAFT', 'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED',
+      `Fictional ${category} late disposition referred without delivery`);
+    expect(ql232CompanyProof(sources, ledger, 'yw')).toMatchObject({
+      overdue: 0, overdueDispositionEpisodes: 2, missingDispositions: 0 });
+    for (const check of QL232_CHECKS) ledger = acknowledgeQl232Check(sources, ledger, 'yw', 'inbox', check.id);
+    ledger = prepareQl232HeldProof(sources, ledger, 'yw', 'inbox');
+    expect(ql232Portfolio(sources, ledger)).toMatchObject({
+      prepared: 1, overdueDispositionEpisodes: 2, actualHoldProofVerified: false, externalWrites: 0 });
+  });
+
+  it('counts a recurring disposition once per evidence gap and simulated cycle', () => {
+    const sources = escalationProofFixture('rosiedazzlers');
+    let ledger = beginQl232ProofReview(sources, {}, 'rosiedazzlers', 'inbox');
+    for (const note of ['Invented independent recurrence first', 'Invented second edit in same cycle'])
+      ledger = recordQl232Outcome(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+        'SIMULATED_ESCALATION_EXCEPTION_RECURRED_UNVERIFIED', 'REOPEN_ESCALATION_EXCEPTION_DRAFT',
+        'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', note);
+    expect(ql232CompanyProof(sources, ledger, 'rosiedazzlers').recurrenceEvents).toBe(1);
+    ledger = advanceQl232Cycle(sources, ledger, 'rosiedazzlers', 'inbox');
+    ledger = recordQl232Outcome(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_ESCALATION_EXCEPTION_RECURRED_UNVERIFIED', 'REFER_NEW_INDEPENDENT_DISPOSITION_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Imaginary later cycle escalation exception');
+    expect(ql232CompanyProof(sources, ledger, 'rosiedazzlers').recurrenceEvents).toBe(2);
+  });
+
+  it('freezes revised QL-231 source and altered hold-proof tokens without touching other companies', () => {
+    const a = escalationProofFixture('rosiedazzlers');
+    const b = escalationProofFixture('icamp');
+    const sources = Object.fromEntries((Object.keys(a) as Array<keyof Ql232Sources>).map((key) =>
+      [key, { ...a[key], ...b[key] }])) as unknown as Ql232Sources;
+    let ledger = beginQl232ProofReview(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = beginQl232ProofReview(sources, ledger, 'icamp', 'inbox');
+    const other = ledger.rosiedazzlers?.inbox;
+    const revised: Ql232Sources = { ...sources, dispositionOversight: { ...sources.dispositionOversight, icamp: {
+      ...sources.dispositionOversight.icamp, inbox: { ...sources.dispositionOversight.icamp?.inbox!, gaps: {
+        ...sources.dispositionOversight.icamp?.inbox?.gaps, actual_repair: {
+          ...sources.dispositionOversight.icamp?.inbox?.gaps.actual_repair!, note: 'Changed fictional QL-231 evidence note' } } } } } };
+    expect(ql232CompanyProof(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('QL231_DISPOSITION_REVISED');
+    expect(recordQl232Outcome(revised, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_ESCALATION_EXCEPTION_RECURRED_UNVERIFIED', 'REFER_NEW_INDEPENDENT_DISPOSITION_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Must not alter frozen case')).toBe(ledger);
+    ledger = beginQl232ProofReview(revised, ledger, 'icamp', 'inbox');
+    expect(ledger.rosiedazzlers?.inbox).toBe(other);
+    expect(ledger.icamp?.inbox?.gaps).toEqual({});
+    expect(ql232CompanyProof(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('SOURCE_CURRENT');
+    const tampered: Ql232Ledger = { ...ledger, icamp: { ...ledger.icamp, inbox: {
+      ...ledger.icamp?.inbox!, proofToken: 'not-a-matching-held-proof-token' } } };
+    expect(ql232CompanyProof(revised, tampered, 'icamp').cases[0].sourceStatus).toBe('HOLD_PROOF_REVISED');
+    expect(prepareQl232HeldProof(revised, tampered, 'icamp', 'inbox')).toBe(tampered);
+    const removed: Ql232Sources = { ...revised, trial: { ...revised.trial, icamp: {} } };
+    expect(ql232CompanyProof(removed, ledger, 'icamp').stale).toBeGreaterThan(0);
+    expect(beginQl232ProofReview(removed, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('exports only held status without fictional private notes, source tokens or reviewer names', () => {
+    const sources = escalationProofFixture('icamp');
+    let ledger = beginQl232ProofReview(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl232Outcome(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_ESCALATION_EXCEPTION_RECURRED_UNVERIFIED', 'REFER_NEW_INDEPENDENT_DISPOSITION_DRAFT',
+      'HOLD_PROOF_GAP_RECONFIRMED_UNVERIFIED', 'Secret imaginary reviewer details must not leave session');
+    const receipt = ql232CompanyReceipt(sources, ledger, 'icamp');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    expect(receipt).toContain('"proofTokensIncluded": false');
+    expect(receipt).not.toContain('Secret imaginary reviewer details');
+    expect(receipt).not.toContain('fictional-proof-');
+    expect(receipt).not.toContain('fictional_security_reviewer');
+  });
+});
+
+describe('QL-232 four-company escalation outcome and held proof operator UI', () => {
+  it('shows navigation, four-company hold matrix, help, source and redacted proof receipt', async () => {
+    await act(async () => root.render(<OperatorShell />));
+    await click('Escalation outcomes & held proof', '.ql172-nav-button');
+    expect(host.querySelector(`[data-ql232-release="${QL232_RELEASE}"]`)).not.toBeNull();
+    expect(host.textContent).toContain('12/12 HELD');
+    await click('ⓘ Escalation & proof help');
+    expect(host.textContent).toContain('case-only reset');
+    await click('Show local QL-232 held proof receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-232 held proof receipt"]')?.value ?? '';
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    await click('iCamp', '.ql172-brand');
+    expect(host.querySelector('[data-organization="icamp"][data-ql232-release]')).not.toBeNull();
+    await click('Open owner trial');
+    expect(host.querySelector('#ql211-title')).not.toBeNull();
+  });
+
+  it('prepares local held proof only after both gap outcomes, independent referral and checks', async () => {
+    const sources = escalationProofFixture('rosiedazzlers', true);
+    function Harness() {
+      const [ledger, setLedger] = useState<Ql232Ledger>({});
+      return <Ql232EscalationProofAudit organization={operatorOrganizations[0]} sources={sources}
+        ledger={ledger} setLedger={setLedger} onNavigate={() => undefined} />;
+    }
+    await act(async () => root.render(<Harness />));
+    await click('Begin fictional escalation outcome & held proof revalidation');
+    await select('#ql232-escalation', 'SIMULATED_ESCALATION_EXCEPTION_RECURRED_UNVERIFIED');
+    await select('#ql232-disposition', 'REFER_NEW_INDEPENDENT_DISPOSITION_DRAFT');
+    await select('#ql232-proof', 'HOLD_PROOF_GAP_RECONFIRMED_UNVERIFIED');
+    await type('#ql232-note', 'Invented repair escalation remains unverified with a proof gap');
+    await click('Record fictional escalation & hold proof · UNSENT');
+    await select('#ql232-gap', 'accessibility');
+    await select('#ql232-escalation', 'ESCALATION_OUTCOME_PENDING_UNVERIFIED');
+    await select('#ql232-disposition', 'MAINTAIN_INDEPENDENT_HOLD_DRAFT');
+    await select('#ql232-proof', 'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED');
+    await type('#ql232-note', 'Imaginary accessibility proof continues to be held for review');
+    await click('Record fictional escalation & hold proof · UNSENT');
+    for (const check of QL232_CHECKS) await click('Acknowledge held proof · UNVERIFIED');
+    const prepare = [...host.querySelectorAll<HTMLButtonElement>('button')].find((button) =>
+      button.textContent?.includes('Prepare escalation & held proof revalidation packet'))!;
+    expect(prepare.disabled).toBe(false);
+    await click('Prepare escalation & held proof revalidation packet');
+    expect(host.textContent).toContain('packet prepared locally');
+    await click('Show local QL-232 held proof receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-232 held proof receipt"]')?.value ?? '';
+    expect(receipt).toContain('"prepared": 1');
+    expect(receipt).not.toContain('Invented repair escalation remains unverified');
     expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
   });
 });
