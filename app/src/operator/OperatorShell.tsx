@@ -81,6 +81,8 @@ import { Ql234SourceDriftContinuityAudit } from './Ql234SourceDriftContinuityAud
 import { type Ql234Ledger } from './ql234SourceDriftContinuity';
 import { Ql235RenewalWatchAudit } from './Ql235RenewalWatchAudit';
 import { type Ql235Ledger } from './ql235RenewalWatch';
+import { Ql236ReceiptHandoffAudit } from './Ql236ReceiptHandoffAudit';
+import { type Ql236Ledger } from './ql236ReceiptHandoff';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -124,6 +126,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'held_integrity', label: 'Exception follow-up & pilot integrity', description: 'Four-company fictional escalation proof follow-up aging, independent decision reassessment and blocked held-pilot integrity audit' },
   { id: 'source_drift', label: 'Source drift & release continuity', description: 'Four-company fictional held-pilot evidence drift, independent reassessment continuity and unchanged conditional release hold proof' },
   { id: 'renewal_watch', label: 'Independent renewal & hold watch', description: 'Four-company fictional reopened drift aging, independent renewal follow-up and unchanged held-pilot release gate audit' },
+  { id: 'receipt_handoff', label: 'Receipt handoff & overdue continuity', description: 'Four-company fictional renewal receipt aging, independent handoff exceptions and conditional held-release proof continuity' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
 ];
 
@@ -164,6 +167,7 @@ export function OperatorShell() {
   const [heldIntegrityLedger, setHeldIntegrityLedger] = useState<Ql233Ledger>({});
   const [sourceDriftLedger, setSourceDriftLedger] = useState<Ql234Ledger>({});
   const [renewalWatchLedger, setRenewalWatchLedger] = useState<Ql235Ledger>({});
+  const [receiptHandoffLedger, setReceiptHandoffLedger] = useState<Ql236Ledger>({});
   const [reminderIds, setReminderIds] = useState<ReadonlySet<string>>(() => new Set());
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
@@ -337,6 +341,7 @@ export function OperatorShell() {
           {workspace === 'held_integrity' && <Ql233FollowUpIntegrityAudit key={`held-integrity-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger, recurrence: recurrenceLedger, closure: closureLedger, reopen: reopenLedger, refresh: refreshLedger, exception: exceptionLedger, aging: agingLedger, overdue: overdueLedger, disposition: dispositionLedger, reopenReview: reopenReviewLedger, evidenceAudit: evidenceAuditLedger, handoffContinuity: handoffContinuityLedger, reassignmentAudit: reassignmentAuditLedger, reviewerContinuity: reviewerContinuityLedger, dispositionOversight: dispositionOversightLedger, escalationProof: escalationProofLedger }} ledger={heldIntegrityLedger} setLedger={setHeldIntegrityLedger} onNavigate={setWorkspace} />}
           {workspace === 'source_drift' && <Ql234SourceDriftContinuityAudit key={`source-drift-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger, recurrence: recurrenceLedger, closure: closureLedger, reopen: reopenLedger, refresh: refreshLedger, exception: exceptionLedger, aging: agingLedger, overdue: overdueLedger, disposition: dispositionLedger, reopenReview: reopenReviewLedger, evidenceAudit: evidenceAuditLedger, handoffContinuity: handoffContinuityLedger, reassignmentAudit: reassignmentAuditLedger, reviewerContinuity: reviewerContinuityLedger, dispositionOversight: dispositionOversightLedger, escalationProof: escalationProofLedger, followUpIntegrity: heldIntegrityLedger }} ledger={sourceDriftLedger} setLedger={setSourceDriftLedger} onNavigate={setWorkspace} />}
           {workspace === 'renewal_watch' && <Ql235RenewalWatchAudit key={`renewal-watch-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger, recurrence: recurrenceLedger, closure: closureLedger, reopen: reopenLedger, refresh: refreshLedger, exception: exceptionLedger, aging: agingLedger, overdue: overdueLedger, disposition: dispositionLedger, reopenReview: reopenReviewLedger, evidenceAudit: evidenceAuditLedger, handoffContinuity: handoffContinuityLedger, reassignmentAudit: reassignmentAuditLedger, reviewerContinuity: reviewerContinuityLedger, dispositionOversight: dispositionOversightLedger, escalationProof: escalationProofLedger, followUpIntegrity: heldIntegrityLedger, sourceDrift: sourceDriftLedger }} ledger={renewalWatchLedger} setLedger={setRenewalWatchLedger} onNavigate={setWorkspace} />}
+          {workspace === 'receipt_handoff' && <Ql236ReceiptHandoffAudit key={`receipt-handoff-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger, recurrence: recurrenceLedger, closure: closureLedger, reopen: reopenLedger, refresh: refreshLedger, exception: exceptionLedger, aging: agingLedger, overdue: overdueLedger, disposition: dispositionLedger, reopenReview: reopenReviewLedger, evidenceAudit: evidenceAuditLedger, handoffContinuity: handoffContinuityLedger, reassignmentAudit: reassignmentAuditLedger, reviewerContinuity: reviewerContinuityLedger, dispositionOversight: dispositionOversightLedger, escalationProof: escalationProofLedger, followUpIntegrity: heldIntegrityLedger, sourceDrift: sourceDriftLedger, renewalWatch: renewalWatchLedger }} ledger={receiptHandoffLedger} setLedger={setReceiptHandoffLedger} onNavigate={setWorkspace} />}
           {workspace === 'evidence' && brandId !== null && (
             <>
               <Ql190IndependentReviewPacketPreview key={`prepilot-packet-${brandId}`} brandId={brandId} />

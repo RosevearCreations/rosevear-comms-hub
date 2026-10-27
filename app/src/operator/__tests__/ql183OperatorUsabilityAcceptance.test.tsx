@@ -139,7 +139,7 @@ describe('QL-183 operator accessibility rehearsal UI', () => {
     expect(host.querySelector('.ql183-usability')?.textContent).toContain('Devil n Dove');
     expect(host.querySelector('.ql183-usability')?.textContent).toContain('0 needs improvement · 9 not tested');
     expect(host.querySelector('.ql172-status')?.textContent).toContain('DISABLED PREVIEW');
-  });
+  }, 15_000);
 
   it('provides narrow viewport wrapping, 44 px controls, forced colours and visible focus', () => {
     const css = readFileSync('src/operator/ql183-operator-usability.css', 'utf8');

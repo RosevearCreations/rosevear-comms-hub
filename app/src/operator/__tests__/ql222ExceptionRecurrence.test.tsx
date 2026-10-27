@@ -81,6 +81,11 @@ import { QL235_RELEASE, QL235_CHECKS, beginQl235Renewal, recordQl235Renewal,
   advanceQl235Cycle, acknowledgeQl235Check, prepareQl235HeldAudit,
   ql235CompanyWatch, ql235CompanyReceipt, ql235Portfolio,
   type Ql235Sources, type Ql235Ledger } from '../ql235RenewalWatch';
+import { Ql236ReceiptHandoffAudit } from '../Ql236ReceiptHandoffAudit';
+import { QL236_RELEASE, QL236_CHECKS, beginQl236Receipt, recordQl236Receipt,
+  advanceQl236Cycle, acknowledgeQl236Check, prepareQl236HeldReceipt,
+  ql236CompanyReceipts, ql236CompanyReceipt, ql236Portfolio,
+  type Ql236Sources, type Ql236Ledger } from '../ql236ReceiptHandoff';
 
 /** Real contract construction from the synthetic QL-211→QL-221 chain, never a live connector. */
 function fixture(company: OrganizationId, recurring = false): Ql222Sources {
@@ -2836,6 +2841,196 @@ describe('QL-235 operator renewal watch UI', () => {
     const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-235 renewal receipt"]')?.value ?? '';
     expect(receipt).toContain('"prepared": 1');
     expect(receipt).not.toContain('Imaginary independent renewal remains unsent');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+  });
+});
+
+function receiptHandoffFixture(company: OrganizationId): Ql236Sources {
+  const sources = renewalWatchFixture(company);
+  let renewalWatch = beginQl235Renewal(sources, {}, company, 'inbox');
+  for (const category of ['actual_repair', 'accessibility'] as const) renewalWatch = recordQl235Renewal(
+    sources, renewalWatch, company, 'inbox', category, 'SIMULATED_RENEWAL_MATCH_UNVERIFIED',
+    category === 'actual_repair' ? 'REFER_INDEPENDENT_RENEWAL_DRAFT' : 'MAINTAIN_HELD_RENEWAL_WATCH_DRAFT',
+    'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Synthetic QL-235 renewal is not independently verified');
+  for (const check of QL235_CHECKS) renewalWatch = acknowledgeQl235Check(sources, renewalWatch, company, 'inbox', check.id);
+  renewalWatch = prepareQl235HeldAudit(sources, renewalWatch, company, 'inbox');
+  expect(renewalWatch[company]?.inbox?.phase).toBe('held_renewal_audit_packet_prepared');
+  return { ...sources, renewalWatch };
+}
+
+describe('QL-236 independent handoff receipt aging and held-release continuity', () => {
+  it('starts held across all four companies without any independent real receipt, writes or provider activity', () => {
+    const fixture = receiptHandoffFixture('icamp');
+    const noPreparedSource: Ql236Sources = { ...fixture, renewalWatch: {} };
+    const portfolio = ql236Portfolio(noPreparedSource, {});
+    expect(portfolio.companies.map((row) => row.company)).toEqual(operatorOrganizations.map((org) => org.id));
+    expect(portfolio.prerequisites).toHaveLength(12);
+    expect(portfolio).toMatchObject({ release: QL236_RELEASE, prepared: 0,
+      allReleaseHoldsPreserved: true, actualIndependentReceipt: false,
+      actualOwnerAuthorization: false, livePilotReady: false, providerConnected: false,
+      externalWrites: 0, callsPlaced: 0, messagesSent: 0 });
+    expect(beginQl236Receipt(noPreparedSource, {}, 'icamp', 'inbox')).toEqual({});
+  });
+
+  it('counts a fictional receipt exception once per gap per cycle, blocks packet until resolved and rechecks acknowledgements', () => {
+    const sources = receiptHandoffFixture('devilndove');
+    let ledger = beginQl236Receipt(sources, {}, 'devilndove', 'inbox');
+    expect(ledger.devilndove?.inbox?.phase).toBe('independent_receipt_handoff_draft');
+    expect(recordQl236Receipt(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_RECEIPT_EXCEPTION_UNVERIFIED', 'CONTINUE_UNSENT_HELD_FOLLOWUP_DRAFT',
+      'SIMULATED_CONDITIONAL_PROOF_MATCH_UNVERIFIED', 'Missing independent follow-up')).toBe(ledger);
+    expect(recordQl236Receipt(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'INVALID' as never, 'REFER_FRESH_INDEPENDENT_RECEIPT_DRAFT',
+      'SIMULATED_CONDITIONAL_PROOF_MATCH_UNVERIFIED', 'Invalid status is blocked')).toBe(ledger);
+    for (const note of ['First fictional receipt exception', 'Repeat fictional edit in same cycle']) ledger = recordQl236Receipt(
+      sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_RECEIPT_EXCEPTION_UNVERIFIED', 'REOPEN_INDEPENDENT_RECEIPT_EXCEPTION_DRAFT',
+      'SIMULATED_CONDITIONAL_PROOF_MATCH_UNVERIFIED', note);
+    ledger = recordQl236Receipt(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'SIMULATED_INDEPENDENT_RECEIPT_MATCH_UNVERIFIED', 'CONTINUE_UNSENT_HELD_FOLLOWUP_DRAFT',
+      'SIMULATED_CONDITIONAL_PROOF_MATCH_UNVERIFIED', 'Fictional accessibility handoff remains held');
+    for (const check of QL236_CHECKS) ledger = acknowledgeQl236Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    expect(ql236CompanyReceipts(sources, ledger, 'devilndove')).toMatchObject({ openExceptions: 1, exceptionEvents: 1, prepared: 0 });
+    expect(prepareQl236HeldReceipt(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    ledger = recordQl236Receipt(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_INDEPENDENT_RECEIPT_MATCH_UNVERIFIED', 'REFER_FRESH_INDEPENDENT_RECEIPT_DRAFT',
+      'SIMULATED_CONDITIONAL_PROOF_MATCH_UNVERIFIED', 'Fictional independent receipt reviewed locally');
+    expect(ql236CompanyReceipts(sources, ledger, 'devilndove').cases[0].checksComplete).toBe(false);
+    for (const check of QL236_CHECKS) ledger = acknowledgeQl236Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    ledger = prepareQl236HeldReceipt(sources, ledger, 'devilndove', 'inbox');
+    expect(ql236CompanyReceipts(sources, ledger, 'devilndove')).toMatchObject({
+      prepared: 1, openExceptions: 0, exceptionEvents: 1,
+      holdAudit: { held: 12, conditionalRelease: 'BLOCKED' } });
+    expect(advanceQl236Cycle(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+  });
+
+  it('moves due-soon to overdue, requires a fresh independent receipt and retains late history', () => {
+    const sources = receiptHandoffFixture('yw');
+    let ledger = beginQl236Receipt(sources, {}, 'yw', 'inbox');
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl236Receipt(
+      sources, ledger, 'yw', 'inbox', category, 'SIMULATED_INDEPENDENT_RECEIPT_MATCH_UNVERIFIED',
+      category === 'actual_repair' ? 'REFER_FRESH_INDEPENDENT_RECEIPT_DRAFT' : 'CONTINUE_UNSENT_HELD_FOLLOWUP_DRAFT',
+      'SIMULATED_CONDITIONAL_PROOF_MATCH_UNVERIFIED', 'Imaginary original handoff receipt remains held');
+    for (let i = 0; i < 2; i++) ledger = advanceQl236Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql236CompanyReceipts(sources, ledger, 'yw')).toMatchObject({ dueSoon: 2, overdue: 0 });
+    expect(prepareQl236HeldReceipt(sources, ledger, 'yw', 'inbox')).toBe(ledger);
+    ledger = advanceQl236Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql236CompanyReceipts(sources, ledger, 'yw')).toMatchObject({ dueSoon: 0, overdue: 2 });
+    expect(recordQl236Receipt(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'SIMULATED_INDEPENDENT_RECEIPT_MATCH_UNVERIFIED', 'CONTINUE_UNSENT_HELD_FOLLOWUP_DRAFT',
+      'SIMULATED_CONDITIONAL_PROOF_MATCH_UNVERIFIED', 'Overdue independent referral is mandatory')).toBe(ledger);
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl236Receipt(
+      sources, ledger, 'yw', 'inbox', category, 'SIMULATED_INDEPENDENT_RECEIPT_MATCH_UNVERIFIED',
+      'REFER_FRESH_INDEPENDENT_RECEIPT_DRAFT', 'SIMULATED_CONDITIONAL_PROOF_MATCH_UNVERIFIED',
+      'Fictional refreshed independent receipt remains unsent');
+    expect(ql236CompanyReceipts(sources, ledger, 'yw')).toMatchObject({ overdue: 0, overdueEpisodes: 2 });
+    for (const check of QL236_CHECKS) ledger = acknowledgeQl236Check(sources, ledger, 'yw', 'inbox', check.id);
+    ledger = prepareQl236HeldReceipt(sources, ledger, 'yw', 'inbox');
+    expect(ql236Portfolio(sources, ledger)).toMatchObject({ prepared: 1, livePilotReady: false, externalWrites: 0 });
+  });
+
+  it('cannot conceal fictional conditional hold exceptions with matching receipts', () => {
+    const sources = receiptHandoffFixture('icamp');
+    let ledger = beginQl236Receipt(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl236Receipt(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_INDEPENDENT_RECEIPT_MATCH_UNVERIFIED', 'REFER_FRESH_INDEPENDENT_RECEIPT_DRAFT',
+      'CONDITIONAL_PROOF_EXCEPTION_UNVERIFIED', 'Fictional held proof exception cannot be hidden');
+    ledger = recordQl236Receipt(sources, ledger, 'icamp', 'inbox', 'accessibility',
+      'SIMULATED_INDEPENDENT_RECEIPT_MATCH_UNVERIFIED', 'CONTINUE_UNSENT_HELD_FOLLOWUP_DRAFT',
+      'SIMULATED_CONDITIONAL_PROOF_MATCH_UNVERIFIED', 'Imaginary accessibility receipt matched');
+    for (const check of QL236_CHECKS) ledger = acknowledgeQl236Check(sources, ledger, 'icamp', 'inbox', check.id);
+    expect(ql236CompanyReceipts(sources, ledger, 'icamp')).toMatchObject({ holdExceptions: 1, prepared: 0 });
+    expect(prepareQl236HeldReceipt(sources, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('freezes upstream source revision, isolates another company and rejects tampered holds', () => {
+    const a = receiptHandoffFixture('rosiedazzlers');
+    const b = receiptHandoffFixture('icamp');
+    const sources = Object.fromEntries((Object.keys(a) as Array<keyof Ql236Sources>).map((key) =>
+      [key, { ...a[key], ...b[key] }])) as unknown as Ql236Sources;
+    let ledger = beginQl236Receipt(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = beginQl236Receipt(sources, ledger, 'icamp', 'inbox');
+    const unaffected = ledger.rosiedazzlers?.inbox;
+    const revised: Ql236Sources = { ...sources, renewalWatch: { ...sources.renewalWatch, icamp: {
+      ...sources.renewalWatch.icamp, inbox: { ...sources.renewalWatch.icamp?.inbox!, gaps: {
+        ...sources.renewalWatch.icamp?.inbox?.gaps, actual_repair: {
+          ...sources.renewalWatch.icamp?.inbox?.gaps.actual_repair!, note: 'Source renewal receipt changed after handoff' } } } } } };
+    expect(ql236CompanyReceipts(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('QL235_RECEIPT_SOURCE_REVISED');
+    expect(recordQl236Receipt(revised, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_INDEPENDENT_RECEIPT_MATCH_UNVERIFIED', 'REFER_FRESH_INDEPENDENT_RECEIPT_DRAFT',
+      'SIMULATED_CONDITIONAL_PROOF_MATCH_UNVERIFIED', 'Cannot mutate a frozen source')).toBe(ledger);
+    ledger = beginQl236Receipt(revised, ledger, 'icamp', 'inbox');
+    expect(ledger.rosiedazzlers?.inbox).toBe(unaffected);
+    expect(ledger.icamp?.inbox?.gaps).toEqual({});
+    const tampered: Ql236Ledger = { ...ledger, icamp: { ...ledger.icamp, inbox: {
+      ...ledger.icamp?.inbox!, holdToken: 'fabricated-release-proof' } } };
+    expect(ql236CompanyReceipts(revised, tampered, 'icamp').cases[0].sourceStatus).toBe('ACTUAL_HOLD_REVISED');
+    expect(prepareQl236HeldReceipt(revised, tampered, 'icamp', 'inbox')).toBe(tampered);
+    const withdrawn: Ql236Sources = { ...revised, trial: { ...revised.trial, icamp: {} } };
+    expect(ql236CompanyReceipts(withdrawn, ledger, 'icamp').stale).toBeGreaterThan(0);
+    expect(beginQl236Receipt(withdrawn, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('redacts synthetic notes, identities and change tokens from receipt', () => {
+    const sources = receiptHandoffFixture('icamp');
+    let ledger = beginQl236Receipt(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl236Receipt(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_RECEIPT_EXCEPTION_UNVERIFIED', 'REOPEN_INDEPENDENT_RECEIPT_EXCEPTION_DRAFT',
+      'SIMULATED_CONDITIONAL_PROOF_MATCH_UNVERIFIED', 'PRIVATE synthetic reviewer detail must stay in session');
+    const receipt = ql236CompanyReceipt(sources, ledger, 'icamp');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    expect(receipt).toContain('"sourceTokensIncluded": false');
+    expect(receipt).not.toContain('PRIVATE synthetic reviewer');
+    expect(receipt).not.toContain('fictional-receipt-');
+    expect(receipt).not.toContain('fabricated-release-proof');
+  });
+});
+
+describe('QL-236 operator independent receipt UI', () => {
+  it('navigates between four companies, contextual help, QL-235 source and redacted receipt', async () => {
+    await act(async () => root.render(<OperatorShell />));
+    await click('Receipt handoff & overdue continuity', '.ql172-nav-button');
+    expect(host.querySelector(`[data-ql236-release="${QL236_RELEASE}"]`)).not.toBeNull();
+    expect(host.textContent).toContain('12/12 HELD');
+    await click('ⓘ Receipt handoff help');
+    expect(host.textContent).toContain('case-only reset');
+    await click('Show local QL-236 handoff receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-236 handoff receipt"]')?.value ?? '';
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    await click('iCamp', '.ql172-brand');
+    expect(host.querySelector('[data-organization="icamp"][data-ql236-release]')).not.toBeNull();
+    await click('Open owner trial');
+    expect(host.querySelector('#ql211-title')).not.toBeNull();
+  }, 15_000);
+
+  it('prepares only after independent fictional receipts, separate referral and fresh checks', async () => {
+    const sources = receiptHandoffFixture('rosiedazzlers');
+    function Harness() {
+      const [ledger, setLedger] = useState<Ql236Ledger>({});
+      return <Ql236ReceiptHandoffAudit organization={operatorOrganizations[0]} sources={sources}
+        ledger={ledger} setLedger={setLedger} onNavigate={() => undefined} />;
+    }
+    await act(async () => root.render(<Harness />));
+    await click('Begin fictional receipt handoff & hold watch');
+    await select('#ql236-receipt', 'SIMULATED_INDEPENDENT_RECEIPT_MATCH_UNVERIFIED');
+    await select('#ql236-handoff', 'REFER_FRESH_INDEPENDENT_RECEIPT_DRAFT');
+    await select('#ql236-hold', 'SIMULATED_CONDITIONAL_PROOF_MATCH_UNVERIFIED');
+    await type('#ql236-note', 'Imaginary independent handoff receipt remains unsent');
+    await click('Record fictional independent receipt · UNSENT');
+    await select('#ql236-gap', 'accessibility');
+    await select('#ql236-handoff', 'CONTINUE_UNSENT_HELD_FOLLOWUP_DRAFT');
+    await type('#ql236-note', 'Imaginary accessibility receipt is held locally');
+    await click('Record fictional independent receipt · UNSENT');
+    for (const check of QL236_CHECKS) await click('Acknowledge receipt check · UNVERIFIED');
+    const prepare = [...host.querySelectorAll<HTMLButtonElement>('button')].find((button) =>
+      button.textContent?.includes('Prepare conditional held receipt packet'))!;
+    expect(prepare.disabled).toBe(false);
+    await click('Prepare conditional held receipt packet');
+    expect(host.textContent).toContain('packet prepared locally');
+    await click('Show local QL-236 handoff receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-236 handoff receipt"]')?.value ?? '';
+    expect(receipt).toContain('"prepared": 1');
+    expect(receipt).not.toContain('Imaginary independent handoff receipt remains unsent');
     expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
   });
 });
