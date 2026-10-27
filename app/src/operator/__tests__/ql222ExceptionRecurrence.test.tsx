@@ -11,6 +11,7 @@ import { Ql226RecurrenceReopenAudit } from '../Ql226RecurrenceReopenAudit';
 import { Ql227DecisionEvidenceAudit } from '../Ql227DecisionEvidenceAudit';
 import { Ql228HandoffContinuityAudit } from '../Ql228HandoffContinuityAudit';
 import { Ql229ReassignmentAudit } from '../Ql229ReassignmentAudit';
+import { Ql230ReviewerContinuityAudit } from '../Ql230ReviewerContinuityAudit';
 import { operatorOrganizations, type OrganizationId } from '../ql191Organizations';
 import { recordQl211Observation } from '../ql211OwnerTrial';
 import { queueQl212Finding, replayQl212Finding, writeQl212RepairNote, requestQl212Retest, recordQl212Retest } from '../ql212RepairQueue';
@@ -51,6 +52,10 @@ import { QL229_RELEASE, QL229_CHECKS, beginQl229Reassessment, recordQl229Reassig
   advanceQl229Cycle, acknowledgeQl229Check, prepareQl229HoldReassessment,
   ql229CompanyReassignment, ql229CompanyReceipt, ql229Portfolio,
   type Ql229Sources, type Ql229Ledger } from '../ql229ReassignmentAudit';
+import { QL230_RELEASE, QL230_CHECKS, beginQl230ReviewerReview, recordQl230Decision,
+  advanceQl230Cycle, acknowledgeQl230Check, prepareQl230HoldAudit,
+  ql230CompanyReview, ql230CompanyReceipt, ql230Portfolio,
+  type Ql230Sources, type Ql230Ledger } from '../ql230ReviewerContinuity';
 
 /** Real contract construction from the synthetic QL-211→QL-221 chain, never a live connector. */
 function fixture(company: OrganizationId, recurring = false): Ql222Sources {
@@ -1569,6 +1574,191 @@ describe('QL-229 operator reassignment outcome and conditional hold interface', 
     const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-229 reassignment receipt"]')?.value ?? '';
     expect(receipt).toContain('"prepared": 1');
     expect(receipt).not.toContain('Invented independent handoff conflict');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+  });
+});
+
+function reviewerContinuityFixture(company: OrganizationId, recurring = false): Ql230Sources {
+  const sources = reassignmentFixture(company, recurring);
+  let reassignmentAudit = beginQl229Reassessment(sources, {}, company, 'inbox');
+  for (const category of ['actual_repair', 'accessibility'] as const) reassignmentAudit = recordQl229Reassignment(
+    sources, reassignmentAudit, company, 'inbox', category,
+    category === 'actual_repair' ? 'SIMULATED_REASSIGNMENT_CONFLICT_UNVERIFIED' : 'REASSIGNMENT_EVIDENCE_OPEN_UNVERIFIED',
+    category === 'actual_repair' ? 'REFER_INDEPENDENT_RECHECK_DRAFT' : 'MAINTAIN_HELD_REVIEW_DRAFT',
+    `Fictional QL-229 ${category} reassignment outcome remains unverified`);
+  for (const check of QL229_CHECKS) reassignmentAudit = acknowledgeQl229Check(sources, reassignmentAudit,
+    company, 'inbox', check.id);
+  reassignmentAudit = prepareQl229HoldReassessment(sources, reassignmentAudit, company, 'inbox');
+  expect(reassignmentAudit[company]?.inbox?.phase).toBe('conditional_hold_reassessment_packet_prepared');
+  return { ...sources, reassignmentAudit };
+}
+
+describe('QL-230 four-company recurrence and independent reviewer decision aging contract', () => {
+  it('preserves twelve actual holds, four company boundaries and zero real communication or writes', () => {
+    const empty: Ql230Sources = { trial: {}, repair: {}, review: {}, intake: {}, audit: {},
+      handoff: {}, reassessment: {}, recurrence: {}, closure: {}, reopen: {}, refresh: {},
+      exception: {}, aging: {}, overdue: {}, disposition: {}, reopenReview: {}, evidenceAudit: {},
+      handoffContinuity: {}, reassignmentAudit: {} };
+    const portfolio = ql230Portfolio(empty, {});
+    expect(portfolio.companies.map((item) => item.company)).toEqual(operatorOrganizations.map((item) => item.id));
+    expect(portfolio.prerequisites).toHaveLength(12);
+    expect(portfolio).toMatchObject({ release: QL230_RELEASE, eligible: 0, prepared: 0,
+      allReleaseHoldsPreserved: true, actualIndependentReview: false, actualEvidenceVerified: false,
+      actualOwnerAuthorization: false, livePilotReady: false, providerConnected: false,
+      externalWrites: 0, callsPlaced: 0, messagesSent: 0 });
+    expect(beginQl230ReviewerReview(empty, {}, 'icamp', 'inbox')).toEqual({});
+    expect(prepareQl230HoldAudit(empty, {}, 'icamp', 'inbox')).toEqual({});
+  });
+
+  it('requires prepared QL-229, all follow-up outcomes, separate-review referrals and three held checks', () => {
+    const sources = reviewerContinuityFixture('devilndove', true);
+    let ledger = beginQl230ReviewerReview(sources, {}, 'devilndove', 'inbox');
+    expect(ledger.devilndove?.inbox?.phase).toBe('reassignment_recurrence_reviewer_decision_draft');
+    expect(recordQl230Decision(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_FOLLOWUP_UNVERIFIED', 'REFER_SEPARATE_REVIEWER_DRAFT', 'short')).toBe(ledger);
+    expect(recordQl230Decision(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'INVALID' as never, 'REFER_SEPARATE_REVIEWER_DRAFT', 'Imaginary invalid review status')).toBe(ledger);
+    ledger = recordQl230Decision(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_FOLLOWUP_UNVERIFIED', 'CONTINUE_REVIEW_HELD_DRAFT', 'Imagined recurring repaired evidence');
+    ledger = recordQl230Decision(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'REASSIGNMENT_FOLLOWUP_OPEN_UNVERIFIED', 'CONTINUE_REVIEW_HELD_DRAFT', 'Imagined accessible case remains unresolved');
+    expect(ql230CompanyReview(sources, ledger, 'devilndove')).toMatchObject({
+      unreviewed: 0, recurring: 1, recurrenceEvents: 1, separateReviewsDue: 1 });
+    for (const check of QL230_CHECKS) ledger = acknowledgeQl230Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    expect(prepareQl230HoldAudit(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    ledger = recordQl230Decision(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_FOLLOWUP_UNVERIFIED', 'REFER_SEPARATE_REVIEWER_DRAFT', 'Invented separate review referral not transmitted');
+    ledger = prepareQl230HoldAudit(sources, ledger, 'devilndove', 'inbox');
+    expect(ql230CompanyReview(sources, ledger, 'devilndove')).toMatchObject({
+      prepared: 1, separateReviewsDue: 0, holdAudit: { held: 12, allHeld: true, conditionalRelease: 'BLOCKED' } });
+    expect(advanceQl230Cycle(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    expect(recordQl230Decision(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'SIMULATED_FOLLOWUP_MATCH_UNVERIFIED', 'CONTINUE_REVIEW_HELD_DRAFT', 'Prepared packet cannot change')).toBe(ledger);
+  });
+
+  it('ages independent decisions at cycle two and three, preserving late history and referral requirements', () => {
+    const sources = reviewerContinuityFixture('yw');
+    let ledger = beginQl230ReviewerReview(sources, {}, 'yw', 'inbox');
+    ledger = recordQl230Decision(sources, ledger, 'yw', 'inbox', 'actual_repair',
+      'REASSIGNMENT_FOLLOWUP_OPEN_UNVERIFIED', 'REFER_SEPARATE_REVIEWER_DRAFT', 'Imaginary repair review referral');
+    ledger = recordQl230Decision(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'REASSIGNMENT_FOLLOWUP_OPEN_UNVERIFIED', 'CONTINUE_REVIEW_HELD_DRAFT', 'Imaginary accessible review held');
+    for (let i = 0; i < 2; i++) ledger = advanceQl230Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql230CompanyReview(sources, ledger, 'yw')).toMatchObject({ dueSoon: 2, overdue: 0 });
+    ledger = advanceQl230Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql230CompanyReview(sources, ledger, 'yw')).toMatchObject({ dueSoon: 0, overdue: 2 });
+    expect(recordQl230Decision(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'SIMULATED_FOLLOWUP_MATCH_UNVERIFIED', 'CONTINUE_REVIEW_HELD_DRAFT',
+      'Fictional overdue independent review cannot bypass separate referral')).toBe(ledger);
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl230Decision(
+      sources, ledger, 'yw', 'inbox', category, 'SIMULATED_FOLLOWUP_MATCH_UNVERIFIED',
+      'REFER_SEPARATE_REVIEWER_DRAFT', `Imagined ${category} overdue independent reviewer decision`);
+    expect(ql230CompanyReview(sources, ledger, 'yw')).toMatchObject({
+      overdue: 0, overdueReviewerDecisions: 2, separateReviewsDue: 0 });
+    for (const check of QL230_CHECKS) ledger = acknowledgeQl230Check(sources, ledger, 'yw', 'inbox', check.id);
+    ledger = prepareQl230HoldAudit(sources, ledger, 'yw', 'inbox');
+    expect(ql230Portfolio(sources, ledger)).toMatchObject({
+      prepared: 1, overdueReviewerDecisions: 2, actualIndependentReview: false, externalWrites: 0 });
+  });
+
+  it('counts recurrence once per gap per cycle without inflating a same-cycle follow-up', () => {
+    const sources = reviewerContinuityFixture('rosiedazzlers');
+    let ledger = beginQl230ReviewerReview(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = recordQl230Decision(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_FOLLOWUP_UNVERIFIED', 'REFER_SEPARATE_REVIEWER_DRAFT', 'First invented recurrence');
+    ledger = recordQl230Decision(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_FOLLOWUP_UNVERIFIED', 'REFER_SEPARATE_REVIEWER_DRAFT', 'Revised invention same cycle');
+    expect(ql230CompanyReview(sources, ledger, 'rosiedazzlers').recurrenceEvents).toBe(1);
+    ledger = advanceQl230Cycle(sources, ledger, 'rosiedazzlers', 'inbox');
+    ledger = recordQl230Decision(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_FOLLOWUP_UNVERIFIED', 'REFER_SEPARATE_REVIEWER_DRAFT', 'Later invented recurrence');
+    expect(ql230CompanyReview(sources, ledger, 'rosiedazzlers').recurrenceEvents).toBe(2);
+  });
+
+  it('freezes changed QL-229 reassignment evidence while preserving other company and orphan holds', () => {
+    const a = reviewerContinuityFixture('rosiedazzlers');
+    const b = reviewerContinuityFixture('icamp');
+    const sources = Object.fromEntries((Object.keys(a) as Array<keyof Ql230Sources>).map((key) =>
+      [key, { ...a[key], ...b[key] }])) as unknown as Ql230Sources;
+    let ledger = beginQl230ReviewerReview(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = beginQl230ReviewerReview(sources, ledger, 'icamp', 'inbox');
+    const other = ledger.rosiedazzlers?.inbox;
+    const revised: Ql230Sources = { ...sources, reassignmentAudit: { ...sources.reassignmentAudit, icamp: {
+      ...sources.reassignmentAudit.icamp, inbox: { ...sources.reassignmentAudit.icamp?.inbox!, gaps: {
+        ...sources.reassignmentAudit.icamp?.inbox?.gaps, actual_repair: {
+          ...sources.reassignmentAudit.icamp?.inbox?.gaps.actual_repair!, note: 'Invented revised QL-229 handoff evidence note' } } } } } };
+    expect(ql230CompanyReview(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('QL229_REASSIGNMENT_REVISED');
+    expect(recordQl230Decision(revised, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_FOLLOWUP_UNVERIFIED', 'REFER_SEPARATE_REVIEWER_DRAFT', 'Cannot revise stale follow-up')).toBe(ledger);
+    ledger = beginQl230ReviewerReview(revised, ledger, 'icamp', 'inbox');
+    expect(ledger.rosiedazzlers?.inbox).toBe(other);
+    expect(ledger.icamp?.inbox?.gaps).toEqual({});
+    expect(ql230CompanyReview(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('SOURCE_CURRENT');
+    const removed: Ql230Sources = { ...revised, trial: { ...revised.trial, icamp: {} } };
+    expect(ql230CompanyReview(removed, ledger, 'icamp').stale).toBeGreaterThan(0);
+    expect(beginQl230ReviewerReview(removed, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('exports status-only held receipts without fictional private notes or source fingerprints', () => {
+    const sources = reviewerContinuityFixture('icamp');
+    let ledger = beginQl230ReviewerReview(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl230Decision(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_RECURRENT_FOLLOWUP_UNVERIFIED', 'REFER_SEPARATE_REVIEWER_DRAFT',
+      'Secret fictional independent reviewer note must never appear in receipt');
+    const receipt = ql230CompanyReceipt(sources, ledger, 'icamp');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    expect(receipt).toContain('"reviewerIdentitiesIncluded": false');
+    expect(receipt).not.toContain('Secret fictional independent reviewer note');
+    expect(receipt).not.toContain('fictional-reviewer-');
+    expect(receipt).not.toContain('fictional_security_reviewer');
+  });
+});
+
+describe('QL-230 four-company reviewer follow-up recurrence and hold continuity interface', () => {
+  it('renders navigation, twelve held prerequisites, contextual help and redacted receipt', async () => {
+    await act(async () => root.render(<OperatorShell />));
+    await click('Reviewer recurrence & hold continuity', '.ql172-nav-button');
+    expect(host.querySelector(`[data-ql230-release="${QL230_RELEASE}"]`)).not.toBeNull();
+    expect(host.textContent).toContain('12/12 HELD');
+    await click('ⓘ Reviewer recurrence help');
+    expect(host.textContent).toContain('case-only reset');
+    await click('Show local QL-230 continuity receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-230 reviewer continuity receipt"]')?.value ?? '';
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    await click('iCamp', '.ql172-brand');
+    expect(host.querySelector('[data-organization="icamp"][data-ql230-release]')).not.toBeNull();
+    await click('Open owner trial');
+    expect(host.querySelector('#ql211-title')).not.toBeNull();
+  });
+
+  it('prepares a held fictional reviewer audit only after gap outcomes and checks', async () => {
+    const sources = reviewerContinuityFixture('rosiedazzlers', true);
+    function Harness() {
+      const [ledger, setLedger] = useState<Ql230Ledger>({});
+      return <Ql230ReviewerContinuityAudit organization={operatorOrganizations[0]} sources={sources}
+        ledger={ledger} setLedger={setLedger} onNavigate={() => undefined} />;
+    }
+    await act(async () => root.render(<Harness />));
+    await click('Begin fictional reviewer decision aging & recurrence review');
+    await select('#ql230-outcome', 'SIMULATED_RECURRENT_FOLLOWUP_UNVERIFIED');
+    await select('#ql230-decision', 'REFER_SEPARATE_REVIEWER_DRAFT');
+    await type('#ql230-note', 'Fictional repair evidence repeated and needs an unsent separate reviewer');
+    await click('Record fictional follow-up & reviewer decision · UNSENT');
+    await select('#ql230-gap', 'accessibility');
+    await select('#ql230-outcome', 'REASSIGNMENT_FOLLOWUP_OPEN_UNVERIFIED');
+    await select('#ql230-decision', 'CONTINUE_REVIEW_HELD_DRAFT');
+    await type('#ql230-note', 'Fictional accessibility evidence remains held and unverified');
+    await click('Record fictional follow-up & reviewer decision · UNSENT');
+    for (const check of QL230_CHECKS) await click('Acknowledge hold continuity · UNVERIFIED');
+    const prepare = [...host.querySelectorAll<HTMLButtonElement>('button')].find((button) =>
+      button.textContent?.includes('Prepare reviewer decision & hold continuity packet'))!;
+    expect(prepare.disabled).toBe(false);
+    await click('Prepare reviewer decision & hold continuity packet');
+    expect(host.textContent).toContain('packet prepared locally');
+    await click('Show local QL-230 continuity receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-230 reviewer continuity receipt"]')?.value ?? '';
+    expect(receipt).toContain('"prepared": 1');
+    expect(receipt).not.toContain('Fictional repair evidence repeated');
     expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
   });
 });
