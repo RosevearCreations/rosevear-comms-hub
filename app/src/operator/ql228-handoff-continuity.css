@@ -1,0 +1,4 @@
+.ql228-workbench .ql218-metrics strong { font-variant-numeric: tabular-nums; }
+.ql228-workbench .ql218-gap p { overflow-wrap: anywhere; }
+.ql228-workbench .ql218-panel textarea[readonly] { width: 100%; min-height: 12rem; }
+.ql228-workbench .ql218-scroll { max-width: 100%; }
