@@ -83,6 +83,7 @@ import { Ql235RenewalWatchAudit } from './Ql235RenewalWatchAudit';
 import { type Ql235Ledger } from './ql235RenewalWatch';
 import { Ql236ReceiptHandoffAudit } from './Ql236ReceiptHandoffAudit';
 import { type Ql236Ledger } from './ql236ReceiptHandoff';
+import { Ql237IntegrationOptions } from './Ql237IntegrationOptions';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -99,6 +100,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'calendar', label: 'Tasks & calendar', description: 'Fictional calendar board, task schedule and local reminder rehearsals' },
   { id: 'reports', label: 'Reporting centre', description: 'Fictional communication breakdowns and session-only task totals' },
   { id: 'connectors', label: 'Connector centre', description: 'Company-scoped mock integration contracts, gates and mapping rehearsals' },
+  { id: 'integration_options', label: 'Free phone options & integration v1', description: 'Research-backed free option limits, shared integration handoff and safe four-business gateway event tests' },
   { id: 'samples', label: 'Synthetic conversations', description: 'Brand-safe triage, unsent drafts, mock intake handoffs and follow-up tasks' },
   { id: 'evidence', label: 'Safety & hold review', description: 'Four-company preview acceptance, synthetic evidence and unresolved pilot prerequisites' },
   { id: 'trial', label: 'Owner trial & gap triage', description: 'Guided four-company manual preview observations, mobile review and prioritized gap follow-up' },
@@ -305,6 +307,7 @@ export function OperatorShell() {
           {workspace === 'calendar' && <Ql197TaskCalendar key={`task-calendar-${organization.id}`} organization={organization} queue={queueState} setQueue={setQueueState} reminderIds={reminderIds} setReminderIds={setReminderIds} onOpenThread={openThread} onOpenQueue={openQueue} />}
           {workspace === 'reports' && <Ql198Reports key={`reports-${organization.id}`} organization={organization} queue={queueState} onNavigate={setWorkspace} />}
           {workspace === 'connectors' && <Ql199ConnectorCentre key={`connectors-${organization.id}`} organization={organization} onOpenThread={openThread} />}
+          {workspace === 'integration_options' && <Ql237IntegrationOptions key={'integration-v1-' + organization.id} organization={organization} />}
           {workspace === 'samples' && brandId !== null && (
             <>
               <Ql174BrandSafeTriagePreview brandId={brandId} />
