@@ -12,6 +12,7 @@ import { Ql227DecisionEvidenceAudit } from '../Ql227DecisionEvidenceAudit';
 import { Ql228HandoffContinuityAudit } from '../Ql228HandoffContinuityAudit';
 import { Ql229ReassignmentAudit } from '../Ql229ReassignmentAudit';
 import { Ql230ReviewerContinuityAudit } from '../Ql230ReviewerContinuityAudit';
+import { Ql231DispositionOversight } from '../Ql231DispositionOversight';
 import { operatorOrganizations, type OrganizationId } from '../ql191Organizations';
 import { recordQl211Observation } from '../ql211OwnerTrial';
 import { queueQl212Finding, replayQl212Finding, writeQl212RepairNote, requestQl212Retest, recordQl212Retest } from '../ql212RepairQueue';
@@ -56,6 +57,10 @@ import { QL230_RELEASE, QL230_CHECKS, beginQl230ReviewerReview, recordQl230Decis
   advanceQl230Cycle, acknowledgeQl230Check, prepareQl230HoldAudit,
   ql230CompanyReview, ql230CompanyReceipt, ql230Portfolio,
   type Ql230Sources, type Ql230Ledger } from '../ql230ReviewerContinuity';
+import { QL231_RELEASE, QL231_CHECKS, beginQl231Disposition, recordQl231Recheck,
+  advanceQl231Cycle, acknowledgeQl231Check, prepareQl231Oversight,
+  ql231CompanyDisposition, ql231CompanyReceipt, ql231Portfolio,
+  type Ql231Sources, type Ql231Ledger } from '../ql231DispositionOversight';
 
 /** Real contract construction from the synthetic QL-211→QL-221 chain, never a live connector. */
 function fixture(company: OrganizationId, recurring = false): Ql222Sources {
@@ -1759,6 +1764,207 @@ describe('QL-230 four-company reviewer follow-up recurrence and hold continuity 
     const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-230 reviewer continuity receipt"]')?.value ?? '';
     expect(receipt).toContain('"prepared": 1');
     expect(receipt).not.toContain('Fictional repair evidence repeated');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+  });
+});
+
+function ql231Fixture(company: OrganizationId, recurring = false): Ql231Sources {
+  const sources = reviewerContinuityFixture(company, recurring);
+  let reviewerContinuity = beginQl230ReviewerReview(sources, {}, company, 'inbox');
+  for (const category of ['actual_repair', 'accessibility'] as const) reviewerContinuity = recordQl230Decision(
+    sources, reviewerContinuity, company, 'inbox', category,
+    category === 'actual_repair' ? 'SIMULATED_RECURRENT_FOLLOWUP_UNVERIFIED' : 'REASSIGNMENT_FOLLOWUP_OPEN_UNVERIFIED',
+    category === 'actual_repair' ? 'REFER_SEPARATE_REVIEWER_DRAFT' : 'CONTINUE_REVIEW_HELD_DRAFT',
+    `Invented QL-230 ${category} reviewer follow-up remains unverified`);
+  for (const check of QL230_CHECKS) reviewerContinuity = acknowledgeQl230Check(sources, reviewerContinuity,
+    company, 'inbox', check.id);
+  reviewerContinuity = prepareQl230HoldAudit(sources, reviewerContinuity, company, 'inbox');
+  expect(reviewerContinuity[company]?.inbox?.phase).toBe('conditional_hold_continuity_audit_prepared');
+  return { ...sources, reviewerContinuity };
+}
+
+describe('QL-231 four-company reviewer recurrence disposition and overdue evidence recheck contract', () => {
+  it('keeps all twelve real holds, four independent company scopes and zero external activity', () => {
+    const empty: Ql231Sources = { trial: {}, repair: {}, review: {}, intake: {}, audit: {}, handoff: {},
+      reassessment: {}, recurrence: {}, closure: {}, reopen: {}, refresh: {}, exception: {},
+      aging: {}, overdue: {}, disposition: {}, reopenReview: {}, evidenceAudit: {},
+      handoffContinuity: {}, reassignmentAudit: {}, reviewerContinuity: {} };
+    const portfolio = ql231Portfolio(empty, {});
+    expect(portfolio.companies.map((item) => item.company)).toEqual(operatorOrganizations.map((item) => item.id));
+    expect(portfolio.prerequisites).toHaveLength(12);
+    expect(portfolio).toMatchObject({ release: QL231_RELEASE, eligible: 0, prepared: 0,
+      allReleaseHoldsPreserved: true, actualIndependentDisposition: false,
+      actualEvidenceVerified: false, actualOwnerAuthorization: false, livePilotReady: false,
+      providerConnected: false, externalWrites: 0, callsPlaced: 0, messagesSent: 0 });
+    expect(beginQl231Disposition(empty, {}, 'icamp', 'inbox')).toEqual({});
+    expect(prepareQl231Oversight(empty, {}, 'icamp', 'inbox')).toEqual({});
+  });
+
+  it('requires current QL-230, coded dispositions, separate rechecks and all held-review checks', () => {
+    const sources = ql231Fixture('devilndove', true);
+    let ledger = beginQl231Disposition(sources, {}, 'devilndove', 'inbox');
+    expect(ledger.devilndove?.inbox?.phase).toBe('reviewer_recurrence_disposition_recheck_draft');
+    expect(recordQl231Recheck(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_RECHECK_EXCEPTION_UNVERIFIED', 'REOPEN_EVIDENCE_EXCEPTION_DRAFT',
+      'REFER_SEPARATE_RECHECK_DRAFT', 'short')).toBe(ledger);
+    expect(recordQl231Recheck(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'INVALID' as never, 'REOPEN_EVIDENCE_EXCEPTION_DRAFT', 'REFER_SEPARATE_RECHECK_DRAFT',
+      'Fictional invalid recheck outcome')).toBe(ledger);
+    expect(recordQl231Recheck(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_RECHECK_EXCEPTION_UNVERIFIED', 'CONTINUE_HELD_REVIEW_DRAFT',
+      'REFER_SEPARATE_RECHECK_DRAFT', 'Cannot leave recurring exception undispositioned')).toBe(ledger);
+    ledger = recordQl231Recheck(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_RECHECK_EXCEPTION_UNVERIFIED', 'REOPEN_EVIDENCE_EXCEPTION_DRAFT',
+      'RECHECK_MONITOR_HELD_DRAFT', 'Fictional repair evidence recurred again');
+    ledger = recordQl231Recheck(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'EVIDENCE_RECHECK_PENDING_UNVERIFIED', 'CONTINUE_HELD_REVIEW_DRAFT',
+      'RECHECK_MONITOR_HELD_DRAFT', 'Fictional accessibility evidence still pending');
+    expect(ql231CompanyDisposition(sources, ledger, 'devilndove')).toMatchObject({
+      recurring: 1, recurrenceEvents: 1, unreviewed: 0, separateRechecksDue: 1 });
+    for (const check of QL231_CHECKS) ledger = acknowledgeQl231Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    expect(prepareQl231Oversight(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    ledger = recordQl231Recheck(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_RECHECK_EXCEPTION_UNVERIFIED', 'REOPEN_EVIDENCE_EXCEPTION_DRAFT',
+      'REFER_SEPARATE_RECHECK_DRAFT', 'Fictional separate recheck referral not transmitted');
+    ledger = prepareQl231Oversight(sources, ledger, 'devilndove', 'inbox');
+    expect(ql231CompanyDisposition(sources, ledger, 'devilndove')).toMatchObject({
+      prepared: 1, separateRechecksDue: 0, holdAudit: { held: 12, allHeld: true, conditionalRelease: 'BLOCKED' } });
+    expect(advanceQl231Cycle(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    expect(recordQl231Recheck(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'SIMULATED_RECHECK_MATCH_UNVERIFIED', 'CONTINUE_HELD_REVIEW_DRAFT',
+      'RECHECK_MONITOR_HELD_DRAFT', 'Prepared fictional packet is locked')).toBe(ledger);
+  });
+
+  it('ages rechecks independently and retains overdue history after escalation', () => {
+    const sources = ql231Fixture('yw');
+    let ledger = beginQl231Disposition(sources, {}, 'yw', 'inbox');
+    ledger = recordQl231Recheck(sources, ledger, 'yw', 'inbox', 'actual_repair',
+      'EVIDENCE_RECHECK_PENDING_UNVERIFIED', 'REFER_FURTHER_INDEPENDENT_REVIEW_DRAFT',
+      'REFER_SEPARATE_RECHECK_DRAFT', 'Invented independent repair recheck referral');
+    ledger = recordQl231Recheck(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'EVIDENCE_RECHECK_PENDING_UNVERIFIED', 'CONTINUE_HELD_REVIEW_DRAFT',
+      'RECHECK_MONITOR_HELD_DRAFT', 'Imaginary accessible recheck held');
+    for (let i = 0; i < 2; i++) ledger = advanceQl231Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql231CompanyDisposition(sources, ledger, 'yw')).toMatchObject({ dueSoon: 2, overdue: 0 });
+    ledger = advanceQl231Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql231CompanyDisposition(sources, ledger, 'yw')).toMatchObject({ dueSoon: 0, overdue: 2 });
+    expect(recordQl231Recheck(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'SIMULATED_RECHECK_MATCH_UNVERIFIED', 'CONTINUE_HELD_REVIEW_DRAFT',
+      'REFER_SEPARATE_RECHECK_DRAFT', 'Late independent review requires overdue escalation')).toBe(ledger);
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl231Recheck(
+      sources, ledger, 'yw', 'inbox', category, 'SIMULATED_RECHECK_MATCH_UNVERIFIED',
+      'REFER_FURTHER_INDEPENDENT_REVIEW_DRAFT', 'ESCALATE_OVERDUE_RECHECK_DRAFT',
+      `Fictional ${category} overdue recheck escalated without delivery`);
+    expect(ql231CompanyDisposition(sources, ledger, 'yw')).toMatchObject({
+      overdue: 0, overdueRecheckEpisodes: 2, separateRechecksDue: 0 });
+    for (const check of QL231_CHECKS) ledger = acknowledgeQl231Check(sources, ledger, 'yw', 'inbox', check.id);
+    ledger = prepareQl231Oversight(sources, ledger, 'yw', 'inbox');
+    expect(ql231Portfolio(sources, ledger)).toMatchObject({
+      prepared: 1, overdueRecheckEpisodes: 2, actualIndependentDisposition: false, externalWrites: 0 });
+  });
+
+  it('counts identical recurring evidence once per gap per simulated cycle', () => {
+    const sources = ql231Fixture('rosiedazzlers');
+    let ledger = beginQl231Disposition(sources, {}, 'rosiedazzlers', 'inbox');
+    for (const note of ['Invented first recurring evidence exception', 'Invented changed same-cycle exception'])
+      ledger = recordQl231Recheck(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+        'SIMULATED_RECHECK_EXCEPTION_UNVERIFIED', 'REOPEN_EVIDENCE_EXCEPTION_DRAFT',
+        'REFER_SEPARATE_RECHECK_DRAFT', note);
+    expect(ql231CompanyDisposition(sources, ledger, 'rosiedazzlers').recurrenceEvents).toBe(1);
+    ledger = advanceQl231Cycle(sources, ledger, 'rosiedazzlers', 'inbox');
+    ledger = recordQl231Recheck(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_RECHECK_EXCEPTION_UNVERIFIED', 'REOPEN_EVIDENCE_EXCEPTION_DRAFT',
+      'REFER_SEPARATE_RECHECK_DRAFT', 'Invented later cycle exception remains unresolved');
+    expect(ql231CompanyDisposition(sources, ledger, 'rosiedazzlers').recurrenceEvents).toBe(2);
+  });
+
+  it('freezes changed QL-230 evidence and isolates case-only reset and orphaned records', () => {
+    const a = ql231Fixture('rosiedazzlers');
+    const b = ql231Fixture('icamp');
+    const sources = Object.fromEntries((Object.keys(a) as Array<keyof Ql231Sources>).map((key) =>
+      [key, { ...a[key], ...b[key] }])) as unknown as Ql231Sources;
+    let ledger = beginQl231Disposition(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = beginQl231Disposition(sources, ledger, 'icamp', 'inbox');
+    const other = ledger.rosiedazzlers?.inbox;
+    const revised: Ql231Sources = { ...sources, reviewerContinuity: { ...sources.reviewerContinuity, icamp: {
+      ...sources.reviewerContinuity.icamp, inbox: { ...sources.reviewerContinuity.icamp?.inbox!, gaps: {
+        ...sources.reviewerContinuity.icamp?.inbox?.gaps, actual_repair: {
+          ...sources.reviewerContinuity.icamp?.inbox?.gaps.actual_repair!, note: 'Revised invented independent reviewer note' } } } } } };
+    expect(ql231CompanyDisposition(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('QL230_REVIEWER_OUTCOME_REVISED');
+    expect(recordQl231Recheck(revised, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_RECHECK_EXCEPTION_UNVERIFIED', 'REOPEN_EVIDENCE_EXCEPTION_DRAFT',
+      'REFER_SEPARATE_RECHECK_DRAFT', 'Cannot mutate stale recheck evidence')).toBe(ledger);
+    ledger = beginQl231Disposition(revised, ledger, 'icamp', 'inbox');
+    expect(ledger.rosiedazzlers?.inbox).toBe(other);
+    expect(ledger.icamp?.inbox?.gaps).toEqual({});
+    expect(ql231CompanyDisposition(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('SOURCE_CURRENT');
+    const removed: Ql231Sources = { ...revised, trial: { ...revised.trial, icamp: {} } };
+    expect(ql231CompanyDisposition(removed, ledger, 'icamp').stale).toBeGreaterThan(0);
+    expect(beginQl231Disposition(removed, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('redacts reviewer identities, local notes and source tokens from held-recheck receipts', () => {
+    const sources = ql231Fixture('icamp');
+    let ledger = beginQl231Disposition(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl231Recheck(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_RECHECK_EXCEPTION_UNVERIFIED', 'REOPEN_EVIDENCE_EXCEPTION_DRAFT',
+      'REFER_SEPARATE_RECHECK_DRAFT', 'Secret fictional reviewer recheck notes must not be exported');
+    const receipt = ql231CompanyReceipt(sources, ledger, 'icamp');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    expect(receipt).toContain('"notesIncluded": false');
+    expect(receipt).not.toContain('Secret fictional reviewer recheck notes');
+    expect(receipt).not.toContain('fictional-disposition-');
+    expect(receipt).not.toContain('fictional_security_reviewer');
+  });
+});
+
+describe('QL-231 four-company reviewer recurrence disposition and hold exception operator UI', () => {
+  it('shows four-company navigation, all release holds, help, source and privacy-minimized receipt', async () => {
+    await act(async () => root.render(<OperatorShell />));
+    await click('Reviewer disposition & evidence recheck', '.ql172-nav-button');
+    expect(host.querySelector(`[data-ql231-release="${QL231_RELEASE}"]`)).not.toBeNull();
+    expect(host.textContent).toContain('12/12 HELD');
+    await click('ⓘ Disposition & hold help');
+    expect(host.textContent).toContain('case-only reset');
+    await click('Show local QL-231 oversight receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-231 disposition oversight receipt"]')?.value ?? '';
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    await click('iCamp', '.ql172-brand');
+    expect(host.querySelector('[data-organization="icamp"][data-ql231-release]')).not.toBeNull();
+    await click('Open owner trial');
+    expect(host.querySelector('#ql211-title')).not.toBeNull();
+  });
+
+  it('prepares only reconciled fictional dispositions with independent recheck drafts and all checks', async () => {
+    const sources = ql231Fixture('rosiedazzlers', true);
+    function Harness() {
+      const [ledger, setLedger] = useState<Ql231Ledger>({});
+      return <Ql231DispositionOversight organization={operatorOrganizations[0]} sources={sources}
+        ledger={ledger} setLedger={setLedger} onNavigate={() => undefined} />;
+    }
+    await act(async () => root.render(<Harness />));
+    await click('Begin fictional recurrence disposition & overdue evidence recheck');
+    await select('#ql231-evidence', 'SIMULATED_RECHECK_EXCEPTION_UNVERIFIED');
+    await select('#ql231-disposition', 'REOPEN_EVIDENCE_EXCEPTION_DRAFT');
+    await select('#ql231-recheck', 'REFER_SEPARATE_RECHECK_DRAFT');
+    await type('#ql231-note', 'Fictional repeated repair exception needs an unsent separate recheck');
+    await click('Record fictional disposition & evidence recheck · UNSENT');
+    await select('#ql231-gap', 'accessibility');
+    await select('#ql231-evidence', 'EVIDENCE_RECHECK_PENDING_UNVERIFIED');
+    await select('#ql231-disposition', 'CONTINUE_HELD_REVIEW_DRAFT');
+    await select('#ql231-recheck', 'RECHECK_MONITOR_HELD_DRAFT');
+    await type('#ql231-note', 'Invented accessibility recheck outcome still not independently verified');
+    await click('Record fictional disposition & evidence recheck · UNSENT');
+    for (const check of QL231_CHECKS) await click('Acknowledge disposition hold · UNVERIFIED');
+    const prepare = [...host.querySelectorAll<HTMLButtonElement>('button')].find((button) =>
+      button.textContent?.includes('Prepare disposition & hold exception oversight packet'))!;
+    expect(prepare.disabled).toBe(false);
+    await click('Prepare disposition & hold exception oversight packet');
+    expect(host.textContent).toContain('packet prepared locally');
+    await click('Show local QL-231 oversight receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-231 disposition oversight receipt"]')?.value ?? '';
+    expect(receipt).toContain('"prepared": 1');
+    expect(receipt).not.toContain('Fictional repeated repair exception');
     expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
   });
 });

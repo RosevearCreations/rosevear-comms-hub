@@ -71,6 +71,8 @@ import { Ql229ReassignmentAudit } from './Ql229ReassignmentAudit';
 import { type Ql229Ledger } from './ql229ReassignmentAudit';
 import { Ql230ReviewerContinuityAudit } from './Ql230ReviewerContinuityAudit';
 import { type Ql230Ledger } from './ql230ReviewerContinuity';
+import { Ql231DispositionOversight } from './Ql231DispositionOversight';
+import { type Ql231Ledger } from './ql231DispositionOversight';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -109,6 +111,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'handoff_continuity', label: 'Evidence recurrence & handoff continuity', description: 'Four-company fictional evidence exception recurrence, independent handoff follow-up and blocked conditional release' },
   { id: 'reassignment_audit', label: 'Reassignment aging & hold reassessment', description: 'Four-company fictional independent handoff aging, reassignment outcome reconciliation and conditional release hold recheck' },
   { id: 'reviewer_continuity', label: 'Reviewer recurrence & hold continuity', description: 'Four-company fictional reassignment follow-up recurrence, reviewer decision aging and conditional hold continuity audit' },
+  { id: 'disposition_oversight', label: 'Reviewer disposition & evidence recheck', description: 'Four-company fictional reviewer recurrence disposition, overdue evidence recheck and conditional held-release exception oversight' },
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
 ];
 
@@ -144,6 +147,7 @@ export function OperatorShell() {
   const [handoffContinuityLedger, setHandoffContinuityLedger] = useState<Ql228Ledger>({});
   const [reassignmentAuditLedger, setReassignmentAuditLedger] = useState<Ql229Ledger>({});
   const [reviewerContinuityLedger, setReviewerContinuityLedger] = useState<Ql230Ledger>({});
+  const [dispositionOversightLedger, setDispositionOversightLedger] = useState<Ql231Ledger>({});
   const [reminderIds, setReminderIds] = useState<ReadonlySet<string>>(() => new Set());
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
@@ -312,6 +316,7 @@ export function OperatorShell() {
           {workspace === 'handoff_continuity' && <Ql228HandoffContinuityAudit key={`handoff-continuity-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger, recurrence: recurrenceLedger, closure: closureLedger, reopen: reopenLedger, refresh: refreshLedger, exception: exceptionLedger, aging: agingLedger, overdue: overdueLedger, disposition: dispositionLedger, reopenReview: reopenReviewLedger, evidenceAudit: evidenceAuditLedger }} ledger={handoffContinuityLedger} setLedger={setHandoffContinuityLedger} onNavigate={setWorkspace} />}
           {workspace === 'reassignment_audit' && <Ql229ReassignmentAudit key={`reassignment-audit-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger, recurrence: recurrenceLedger, closure: closureLedger, reopen: reopenLedger, refresh: refreshLedger, exception: exceptionLedger, aging: agingLedger, overdue: overdueLedger, disposition: dispositionLedger, reopenReview: reopenReviewLedger, evidenceAudit: evidenceAuditLedger, handoffContinuity: handoffContinuityLedger }} ledger={reassignmentAuditLedger} setLedger={setReassignmentAuditLedger} onNavigate={setWorkspace} />}
           {workspace === 'reviewer_continuity' && <Ql230ReviewerContinuityAudit key={`reviewer-continuity-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger, recurrence: recurrenceLedger, closure: closureLedger, reopen: reopenLedger, refresh: refreshLedger, exception: exceptionLedger, aging: agingLedger, overdue: overdueLedger, disposition: dispositionLedger, reopenReview: reopenReviewLedger, evidenceAudit: evidenceAuditLedger, handoffContinuity: handoffContinuityLedger, reassignmentAudit: reassignmentAuditLedger }} ledger={reviewerContinuityLedger} setLedger={setReviewerContinuityLedger} onNavigate={setWorkspace} />}
+          {workspace === 'disposition_oversight' && <Ql231DispositionOversight key={`disposition-oversight-${organization.id}`} organization={organization} sources={{ trial: trialLedger, repair: repairLedger, review: reviewLedger, intake: intakeLedger, audit: auditLedger, handoff: handoffLedger, reassessment: reassessmentLedger, recurrence: recurrenceLedger, closure: closureLedger, reopen: reopenLedger, refresh: refreshLedger, exception: exceptionLedger, aging: agingLedger, overdue: overdueLedger, disposition: dispositionLedger, reopenReview: reopenReviewLedger, evidenceAudit: evidenceAuditLedger, handoffContinuity: handoffContinuityLedger, reassignmentAudit: reassignmentAuditLedger, reviewerContinuity: reviewerContinuityLedger }} ledger={dispositionOversightLedger} setLedger={setDispositionOversightLedger} onNavigate={setWorkspace} />}
           {workspace === 'evidence' && brandId !== null && (
             <>
               <Ql190IndependentReviewPacketPreview key={`prepilot-packet-${brandId}`} brandId={brandId} />
