@@ -1,0 +1,4 @@
+@import './ql226-recurrence-reopen-audit.css';
+
+.ql227-workbench .ql218-metrics strong { font-variant-numeric: tabular-nums; }
+.ql227-workbench .ql218-gap strong { overflow-wrap: anywhere; }

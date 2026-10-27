@@ -8,6 +8,7 @@ import { Ql223DecisionAgingAudit } from '../Ql223DecisionAgingAudit';
 import { Ql224OverdueHoldAudit } from '../Ql224OverdueHoldAudit';
 import { Ql225DispositionAudit } from '../Ql225DispositionAudit';
 import { Ql226RecurrenceReopenAudit } from '../Ql226RecurrenceReopenAudit';
+import { Ql227DecisionEvidenceAudit } from '../Ql227DecisionEvidenceAudit';
 import { operatorOrganizations, type OrganizationId } from '../ql191Organizations';
 import { recordQl211Observation } from '../ql211OwnerTrial';
 import { queueQl212Finding, replayQl212Finding, writeQl212RepairNote, requestQl212Retest, recordQl212Retest } from '../ql212RepairQueue';
@@ -38,6 +39,9 @@ import { QL225_RELEASE, QL225_CHECKS, beginQl225Disposition, recordQl225Disposit
 import { QL226_RELEASE, QL226_CHECKS, beginQl226Reopen, recordQl226Reopen, advanceQl226Cycle,
   acknowledgeQl226Check, prepareQl226HoldRecheck, ql226CompanyReopens, ql226CompanyReceipt,
   ql226Portfolio, type Ql226Sources, type Ql226Ledger } from '../ql226RecurrenceReopen';
+import { QL227_RELEASE, QL227_CHECKS, beginQl227Audit, recordQl227Decision, advanceQl227Cycle,
+  acknowledgeQl227Check, prepareQl227HeldAudit, ql227CompanyDecisions, ql227CompanyReceipt,
+  ql227Portfolio, type Ql227Sources, type Ql227Ledger } from '../ql227DecisionEvidenceAudit';
 
 /** Real contract construction from the synthetic QL-211→QL-221 chain, never a live connector. */
 function fixture(company: OrganizationId, recurring = false): Ql222Sources {
@@ -1007,6 +1011,189 @@ describe('QL-226 operator independent recurrence and owner reopening interface',
     const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-226 recurrence reopen receipt"]')?.value ?? '';
     expect(receipt).toContain('"prepared": 1');
     expect(receipt).not.toContain('Invented repeated independent evidence exception');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+  });
+});
+
+function evidenceAuditFixture(company: OrganizationId, recurring = false): Ql227Sources {
+  const sources = reopenFixture(company, recurring);
+  let reopenReview = beginQl226Reopen(sources, {}, company, 'inbox');
+  for (const category of ['actual_repair', 'accessibility'] as const) reopenReview = recordQl226Reopen(
+    sources, reopenReview, company, 'inbox', category,
+    category === 'actual_repair' ? 'REOPENED_EXCEPTION_UNVERIFIED' : 'MONITOR_OPEN_UNVERIFIED',
+    category === 'actual_repair' ? 'REFER_INDEPENDENT_DRAFT' : 'MAINTAIN_HOLD_DRAFT',
+    `Invented QL-226 ${category} reopened outcome still needs actual evidence`);
+  for (const check of QL226_CHECKS) reopenReview = acknowledgeQl226Check(sources, reopenReview, company, 'inbox', check.id);
+  reopenReview = prepareQl226HoldRecheck(sources, reopenReview, company, 'inbox');
+  expect(reopenReview[company]?.inbox?.phase).toBe('conditional_release_hold_recheck_packet_prepared');
+  return { ...sources, reopenReview };
+}
+
+describe('QL-227 four-company reopened owner decision aging and independent evidence contract', () => {
+  it('holds all twelve actual QL-181 prerequisites and never treats a fictional receipt as real evidence', () => {
+    const empty: Ql227Sources = { trial: {}, repair: {}, review: {}, intake: {}, audit: {},
+      handoff: {}, reassessment: {}, recurrence: {}, closure: {}, reopen: {}, refresh: {},
+      exception: {}, aging: {}, overdue: {}, disposition: {}, reopenReview: {} };
+    const portfolio = ql227Portfolio(empty, {});
+    expect(portfolio.companies.map((row) => row.company)).toEqual(operatorOrganizations.map((org) => org.id));
+    expect(portfolio.prerequisites).toHaveLength(12);
+    expect(portfolio).toMatchObject({ release: QL227_RELEASE, eligible: 0, prepared: 0,
+      allReleaseHoldsPreserved: true, actualEvidenceVerified: false,
+      actualIndependentReview: false, actualOwnerAuthorization: false, livePilotReady: false,
+      providerConnected: false, externalWrites: 0, callsPlaced: 0, messagesSent: 0 });
+    expect(beginQl227Audit(empty, {}, 'icamp', 'inbox')).toEqual({});
+    expect(prepareQl227HeldAudit(empty, {}, 'icamp', 'inbox')).toEqual({});
+  });
+
+  it('gates local preparation on current QL-226, gap reconciliation, independent referrals and unverified checks', () => {
+    const sources = evidenceAuditFixture('devilndove', true);
+    let ledger = beginQl227Audit(sources, {}, 'devilndove', 'inbox');
+    expect(ledger.devilndove?.inbox?.phase).toBe('reopened_owner_decision_evidence_reconciliation_draft');
+    expect(recordQl227Decision(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_CONFLICT_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT', 'short')).toBe(ledger);
+    expect(recordQl227Decision(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'INVALID' as never, 'REFER_INDEPENDENT_RECHECK_DRAFT', 'Invented invalid status')).toBe(ledger);
+    ledger = recordQl227Decision(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_CONFLICT_UNVERIFIED', 'CONTINUE_HELD_FOLLOW_UP_DRAFT', 'Fictional reopened evidence still unverified');
+    ledger = recordQl227Decision(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'EVIDENCE_STILL_OPEN_UNVERIFIED', 'CONTINUE_HELD_FOLLOW_UP_DRAFT', 'Invented accessibility still on hold');
+    for (const check of QL227_CHECKS) ledger = acknowledgeQl227Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    expect(ql227CompanyDecisions(sources, ledger, 'devilndove')).toMatchObject({
+      undecided: 0, conflicts: 1, conflictEvents: 1, referralsDue: 1 });
+    expect(prepareQl227HeldAudit(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    ledger = recordQl227Decision(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_CONFLICT_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT', 'Fictional independent referral unsent');
+    ledger = prepareQl227HeldAudit(sources, ledger, 'devilndove', 'inbox');
+    expect(ql227CompanyDecisions(sources, ledger, 'devilndove')).toMatchObject({
+      prepared: 1, referralsDue: 0, holdAudit: { held: 12, allHeld: true, conditionalRelease: 'BLOCKED' } });
+    expect(advanceQl227Cycle(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    expect(recordQl227Decision(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'SIMULATED_MATCH_UNVERIFIED', 'CONTINUE_HELD_FOLLOW_UP_DRAFT', 'Prepared packet is locked')).toBe(ledger);
+  });
+
+  it('ages owner decisions, requires an independent late referral, and retains historical overdue counts', () => {
+    const sources = evidenceAuditFixture('yw');
+    let ledger = beginQl227Audit(sources, {}, 'yw', 'inbox');
+    ledger = recordQl227Decision(sources, ledger, 'yw', 'inbox', 'actual_repair',
+      'EVIDENCE_STILL_OPEN_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT', 'Fictional repair evidence held for recheck');
+    ledger = recordQl227Decision(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'EVIDENCE_STILL_OPEN_UNVERIFIED', 'CONTINUE_HELD_FOLLOW_UP_DRAFT', 'Invented accessibility evidence unverified');
+    for (let i = 0; i < 2; i++) ledger = advanceQl227Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql227CompanyDecisions(sources, ledger, 'yw')).toMatchObject({ dueSoon: 2, overdue: 0 });
+    ledger = advanceQl227Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql227CompanyDecisions(sources, ledger, 'yw')).toMatchObject({ dueSoon: 0, overdue: 2 });
+    expect(recordQl227Decision(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'SIMULATED_MATCH_UNVERIFIED', 'CONTINUE_HELD_FOLLOW_UP_DRAFT',
+      'Late invented evidence cannot bypass an independent referral')).toBe(ledger);
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl227Decision(
+      sources, ledger, 'yw', 'inbox', category, 'SIMULATED_MATCH_UNVERIFIED',
+      'REFER_INDEPENDENT_RECHECK_DRAFT', `Invented ${category} independent late recheck unsent`);
+    expect(ql227CompanyDecisions(sources, ledger, 'yw')).toMatchObject({
+      overdue: 0, overdueDecisions: 2, referralsDue: 0 });
+    for (const check of QL227_CHECKS) ledger = acknowledgeQl227Check(sources, ledger, 'yw', 'inbox', check.id);
+    ledger = prepareQl227HeldAudit(sources, ledger, 'yw', 'inbox');
+    expect(ql227Portfolio(sources, ledger)).toMatchObject({
+      prepared: 1, overdueDecisions: 2, actualIndependentReview: false, externalWrites: 0 });
+  });
+
+  it('counts invented evidence source conflicts at most once per gap per synthetic cycle', () => {
+    const sources = evidenceAuditFixture('rosiedazzlers');
+    let ledger = beginQl227Audit(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = recordQl227Decision(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_CONFLICT_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT', 'Invented source mismatch first event');
+    ledger = recordQl227Decision(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_CONFLICT_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT', 'Reworded invented source conflict same cycle');
+    expect(ql227CompanyDecisions(sources, ledger, 'rosiedazzlers').conflictEvents).toBe(1);
+    ledger = advanceQl227Cycle(sources, ledger, 'rosiedazzlers', 'inbox');
+    ledger = recordQl227Decision(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_CONFLICT_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT', 'Invented source conflict next cycle');
+    expect(ql227CompanyDecisions(sources, ledger, 'rosiedazzlers').conflictEvents).toBe(2);
+  });
+
+  it('freezes QL-226 source revisions, resets one case only and keeps orphaned sources held', () => {
+    const a = evidenceAuditFixture('rosiedazzlers');
+    const b = evidenceAuditFixture('icamp');
+    const sources = Object.fromEntries((Object.keys(a) as Array<keyof Ql227Sources>).map((key) =>
+      [key, { ...a[key], ...b[key] }])) as unknown as Ql227Sources;
+    let ledger = beginQl227Audit(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = beginQl227Audit(sources, ledger, 'icamp', 'inbox');
+    const otherCompany = ledger.rosiedazzlers?.inbox;
+    const revised: Ql227Sources = { ...sources, reopenReview: { ...sources.reopenReview, icamp: {
+      ...sources.reopenReview.icamp, inbox: { ...sources.reopenReview.icamp?.inbox!, gaps: {
+        ...sources.reopenReview.icamp?.inbox?.gaps, actual_repair: {
+          ...sources.reopenReview.icamp?.inbox?.gaps.actual_repair!, note: 'Revised invented QL-226 owner follow-up evidence' } } } } } };
+    expect(ql227CompanyDecisions(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('QL226_REOPEN_OUTCOME_REVISED');
+    expect(recordQl227Decision(revised, ledger, 'icamp', 'inbox', 'actual_repair',
+      'EVIDENCE_STILL_OPEN_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT', 'Cannot act on stale source')).toBe(ledger);
+    ledger = beginQl227Audit(revised, ledger, 'icamp', 'inbox');
+    expect(ledger.rosiedazzlers?.inbox).toBe(otherCompany);
+    expect(ledger.icamp?.inbox?.gaps).toEqual({});
+    expect(ql227CompanyDecisions(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('SOURCE_CURRENT');
+    const removed: Ql227Sources = { ...revised, trial: { ...revised.trial, icamp: {} } };
+    expect(ql227CompanyDecisions(removed, ledger, 'icamp').stale).toBeGreaterThan(0);
+    expect(beginQl227Audit(removed, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('exports only PII-minimized status without notes, reviewers or source revision fingerprints', () => {
+    const sources = evidenceAuditFixture('icamp');
+    let ledger = beginQl227Audit(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl227Decision(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_CONFLICT_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT',
+      'Secret fictional independent reviewer details must not be exported');
+    const receipt = ql227CompanyReceipt(sources, ledger, 'icamp');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    expect(receipt).toContain('"notesIncluded": false');
+    expect(receipt).not.toContain('Secret fictional independent reviewer details');
+    expect(receipt).not.toContain('synthetic-reconciliation-');
+    expect(receipt).not.toContain('fictional_security_reviewer');
+  });
+});
+
+describe('QL-227 operator owner decision aging and independent evidence UI', () => {
+  it('shows held release, help, source navigation and redacted receipt across companies', async () => {
+    await act(async () => root.render(<OperatorShell />));
+    await click('Owner aging & independent evidence audit', '.ql172-nav-button');
+    expect(host.querySelector(`[data-ql227-release="${QL227_RELEASE}"]`)).not.toBeNull();
+    expect(host.textContent).toContain('12/12 HELD');
+    await click('ⓘ Owner decision aging help');
+    expect(host.textContent).toContain('explicit case-only reset');
+    await click('Show local QL-227 audit receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-227 independent evidence receipt"]')?.value ?? '';
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    await click('iCamp', '.ql172-brand');
+    expect(host.querySelector('[data-organization="icamp"][data-ql227-release]')).not.toBeNull();
+    await click('Open owner trial');
+    expect(host.querySelector('#ql211-title')).not.toBeNull();
+  });
+
+  it('prepares only a source-current fictional packet after both evidence decisions and held audit checks', async () => {
+    const sources = evidenceAuditFixture('rosiedazzlers', true);
+    function Harness() {
+      const [ledger, setLedger] = useState<Ql227Ledger>({});
+      return <Ql227DecisionEvidenceAudit organization={operatorOrganizations[0]} sources={sources}
+        ledger={ledger} setLedger={setLedger} onNavigate={() => undefined} />;
+    }
+    await act(async () => root.render(<Harness />));
+    await click('Begin fictional owner decision & evidence audit');
+    await select('#ql227-evidence', 'SIMULATED_CONFLICT_UNVERIFIED');
+    await select('#ql227-decision', 'REFER_INDEPENDENT_RECHECK_DRAFT');
+    await type('#ql227-note', 'Invented reopened source conflict requires independent review');
+    await click('Record fictional owner decision & evidence reconciliation · UNSENT');
+    await select('#ql227-gap', 'accessibility');
+    await select('#ql227-evidence', 'EVIDENCE_STILL_OPEN_UNVERIFIED');
+    await select('#ql227-decision', 'CONTINUE_HELD_FOLLOW_UP_DRAFT');
+    await type('#ql227-note', 'Fictional accessibility evidence remains pending');
+    await click('Record fictional owner decision & evidence reconciliation · UNSENT');
+    for (const check of QL227_CHECKS) await click('Acknowledge held-release audit · UNVERIFIED');
+    const prepare = [...host.querySelectorAll<HTMLButtonElement>('button')].find((button) =>
+      button.textContent?.includes('Prepare owner evidence reconciliation & held-release audit packet'))!;
+    expect(prepare.disabled).toBe(false);
+    await click('Prepare owner evidence reconciliation & held-release audit packet');
+    expect(host.textContent).toContain('packet prepared locally');
+    await click('Show local QL-227 audit receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-227 independent evidence receipt"]')?.value ?? '';
+    expect(receipt).toContain('"prepared": 1');
+    expect(receipt).not.toContain('Invented reopened source conflict');
     expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
   });
 });
