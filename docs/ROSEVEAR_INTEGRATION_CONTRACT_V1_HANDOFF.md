@@ -95,4 +95,15 @@ These are *names for future review*, not automatic subscription or write grants.
 | 6. Commands | Per-operation owner consent, dry-run, rollback, fresh audit review | Blocked until separate approval |
 | 7. Comms provider pilot | Provider contract, consent/privacy, 12 QL-181 gates, independent approval | **Not part of QL-237** |
 
-**Next expected Comms Hub build:** QL-238 — Integration Contract v1 Health/Capabilities Handshake Readiness, Four-Company Tenant Isolation & Owner-Safe No-Dispatch Evidence Gate.
+## QL-238 readiness handoff (not an enabled connector)
+
+The QL-238 Comms Hub screen and isolated Node-only synthetic HMAC harness now demonstrate what a **server-only** read-only handshake must deny. The gateway must insist on this sequence:
+
+1. Independently authenticated GET /api/integration/v1/health for the exact registered application, tenant, environment and version; return HOLD until real policy checks complete.
+2. Independently authenticated GET /api/integration/v1/capabilities for that same registered app/tenant after health, with **read-reference capabilities only**. Do not expose create_handoff_preview, payment, product updates, reservations or phone/SMS dispatch as an enabled operation.
+3. Persist an atomic nonce/idempotency audit receipt on the **real server**; reject replay, wrong route, stale timestamp, wrong key, revoked key, changed body, wrong app, cross-business/tenant and unexpected fields.
+4. Publish an independent evidence packet showing expected response, exact environment, denied negative tests, permissions, key rotation and rollback. This packet is not actual owner approval.
+
+The current mock and Node sandbox use fabricated IDs and randomly generated test keys **only**. They are not proof that any connected app endpoint exists. Keep all actual Comms Hub connections DISCONNECTED and all twelve QL-181 live-pilot gates held until separately approved.
+
+**Next expected Comms Hub build:** QL-239 — Integration Contract v1 Read-Only Gateway Proof Intake, Credential Rotation Dry Run & Independent Four-Company Connection Review.

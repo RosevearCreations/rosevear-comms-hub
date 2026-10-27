@@ -1,0 +1,24 @@
+.ql238-screen { display: grid; gap: 1rem; color: #ecf2fa; }
+.ql238-header { display: flex; gap: 1rem; justify-content: space-between; align-items: flex-start; }
+.ql238-header h3 { margin: .3rem 0; }
+.ql238-header button, .ql238-actions button, .ql238-panel > button { padding: .65rem .8rem; border-radius: .6rem; background: #1e4056; color: #fff; border: 1px solid #8cb0c6; cursor: pointer; }
+.ql238-screen button:disabled { opacity: .48; cursor: not-allowed; }
+.ql238-screen button:focus-visible, .ql238-screen select:focus-visible { outline: 3px solid #ffe092; outline-offset: 3px; }
+.ql238-warning { border: 2px solid #e0ba6e; border-radius: .8rem; background: #4b3928; padding: 1rem; color: #fff3d0; }
+.ql238-panel { border-radius: .9rem; background: #182c3c; border: 1px solid #65819a; padding: 1rem; min-width: 0; }
+.ql238-panel h4 { margin: 0 0 .6rem; color: #fff; }
+.ql238-info { border-left: 4px solid #8ccdad; background: #26424d; border-radius: .3rem; padding: .8rem; }
+.ql238-table-scroll { overflow-x: auto; }
+.ql238-table-scroll table { border-collapse: collapse; min-width: 680px; width: 100%; }
+.ql238-table-scroll th, .ql238-table-scroll td { text-align: left; padding: .6rem; border-bottom: 1px solid #54748e; vertical-align: top; }
+.ql238-table-scroll th { color: #fff; }
+.ql238-controls { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+.ql238-controls > div { display: grid; gap: .35rem; flex: 1 1 200px; }
+.ql238-controls select { min-width: 0; width: 100%; color: #20364a; background: #fff; border-radius: .4rem; padding: .6rem; }
+.ql238-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.ql238-result { border-left: 4px solid #e0ba6e; background: #2a4556; margin: .9rem 0; padding: .85rem; border-radius: .35rem; overflow-wrap: anywhere; }
+.ql238-result p { margin: .5rem 0 0; }
+.ql238-prerequisites { padding-left: 1.5rem; }
+.ql238-prerequisites li { margin: .4rem 0; }
+@media (max-width: 650px) { .ql238-header { flex-direction: column; } .ql238-actions { display: grid; grid-template-columns: 1fr; } }
+@media (forced-colors: active) { .ql238-warning, .ql238-panel, .ql238-result { border: 1px solid CanvasText; } }
