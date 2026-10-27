@@ -10,6 +10,7 @@ import { Ql225DispositionAudit } from '../Ql225DispositionAudit';
 import { Ql226RecurrenceReopenAudit } from '../Ql226RecurrenceReopenAudit';
 import { Ql227DecisionEvidenceAudit } from '../Ql227DecisionEvidenceAudit';
 import { Ql228HandoffContinuityAudit } from '../Ql228HandoffContinuityAudit';
+import { Ql229ReassignmentAudit } from '../Ql229ReassignmentAudit';
 import { operatorOrganizations, type OrganizationId } from '../ql191Organizations';
 import { recordQl211Observation } from '../ql211OwnerTrial';
 import { queueQl212Finding, replayQl212Finding, writeQl212RepairNote, requestQl212Retest, recordQl212Retest } from '../ql212RepairQueue';
@@ -46,6 +47,10 @@ import { QL227_RELEASE, QL227_CHECKS, beginQl227Audit, recordQl227Decision, adva
 import { QL228_RELEASE, QL228_CHECKS, beginQl228FollowUp, recordQl228FollowUp, advanceQl228Cycle,
   acknowledgeQl228Check, prepareQl228Continuity, ql228CompanyContinuity, ql228CompanyReceipt,
   ql228Portfolio, type Ql228Sources, type Ql228Ledger } from '../ql228HandoffContinuity';
+import { QL229_RELEASE, QL229_CHECKS, beginQl229Reassessment, recordQl229Reassignment,
+  advanceQl229Cycle, acknowledgeQl229Check, prepareQl229HoldReassessment,
+  ql229CompanyReassignment, ql229CompanyReceipt, ql229Portfolio,
+  type Ql229Sources, type Ql229Ledger } from '../ql229ReassignmentAudit';
 
 /** Real contract construction from the synthetic QL-211→QL-221 chain, never a live connector. */
 function fixture(company: OrganizationId, recurring = false): Ql222Sources {
@@ -1380,6 +1385,190 @@ describe('QL-228 operator evidence exception and independent handoff interface',
     const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-228 held handoff receipt"]')?.value ?? '';
     expect(receipt).toContain('"prepared": 1');
     expect(receipt).not.toContain('Fictional repaired evidence repeated');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+  });
+});
+
+function reassignmentFixture(company: OrganizationId, recurring = false): Ql229Sources {
+  const sources = handoffContinuityFixture(company, recurring);
+  let handoffContinuity = beginQl228FollowUp(sources, {}, company, 'inbox');
+  for (const category of ['actual_repair', 'accessibility'] as const) handoffContinuity = recordQl228FollowUp(
+    sources, handoffContinuity, company, 'inbox', category,
+    category === 'actual_repair' ? 'SIMULATED_RECURRENT_EXCEPTION_UNVERIFIED' : 'EVIDENCE_EXCEPTION_STILL_OPEN_UNVERIFIED',
+    category === 'actual_repair' ? 'REASSIGN_INDEPENDENT_HANDOFF_DRAFT' : 'MAINTAIN_HELD_HANDOFF_DRAFT',
+    `Invented QL-228 ${category} independent handoff remains unverified`);
+  for (const check of QL228_CHECKS) handoffContinuity = acknowledgeQl228Check(sources, handoffContinuity,
+    company, 'inbox', check.id);
+  handoffContinuity = prepareQl228Continuity(sources, handoffContinuity, company, 'inbox');
+  expect(handoffContinuity[company]?.inbox?.phase).toBe('conditional_hold_continuity_packet_prepared');
+  return { ...sources, handoffContinuity };
+}
+
+describe('QL-229 four-company independent handoff aging and reassignment reconciliation contract', () => {
+  it('preserves all twelve real holds, company boundaries and zero external communications', () => {
+    const empty: Ql229Sources = { trial: {}, repair: {}, review: {}, intake: {}, audit: {},
+      handoff: {}, reassessment: {}, recurrence: {}, closure: {}, reopen: {}, refresh: {},
+      exception: {}, aging: {}, overdue: {}, disposition: {}, reopenReview: {}, evidenceAudit: {}, handoffContinuity: {} };
+    const portfolio = ql229Portfolio(empty, {});
+    expect(portfolio.companies.map((company) => company.company)).toEqual(operatorOrganizations.map((organization) => organization.id));
+    expect(portfolio.prerequisites).toHaveLength(12);
+    expect(portfolio).toMatchObject({ release: QL229_RELEASE, eligible: 0, prepared: 0,
+      allReleaseHoldsPreserved: true, actualIndependentReassignment: false,
+      actualEvidenceVerified: false, actualOwnerAuthorization: false,
+      livePilotReady: false, providerConnected: false, externalWrites: 0, callsPlaced: 0, messagesSent: 0 });
+    expect(beginQl229Reassessment(empty, {}, 'icamp', 'inbox')).toEqual({});
+    expect(prepareQl229HoldReassessment(empty, {}, 'icamp', 'inbox')).toEqual({});
+  });
+
+  it('requires prepared current QL-228, reassignment outcomes, independent referrals and all checks', () => {
+    const sources = reassignmentFixture('devilndove', true);
+    let ledger = beginQl229Reassessment(sources, {}, 'devilndove', 'inbox');
+    expect(ledger.devilndove?.inbox?.phase).toBe('independent_handoff_exception_reassignment_review_draft');
+    expect(recordQl229Reassignment(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_REASSIGNMENT_CONFLICT_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT', 'short')).toBe(ledger);
+    expect(recordQl229Reassignment(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'INVALID' as never, 'REFER_INDEPENDENT_RECHECK_DRAFT', 'Invented invalid status must not be saved')).toBe(ledger);
+    ledger = recordQl229Reassignment(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_REASSIGNMENT_CONFLICT_UNVERIFIED', 'MAINTAIN_HELD_REVIEW_DRAFT', 'Fictional reviewer reassignment mismatch');
+    ledger = recordQl229Reassignment(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'REASSIGNMENT_EVIDENCE_OPEN_UNVERIFIED', 'MAINTAIN_HELD_REVIEW_DRAFT', 'Invented accessibility decision still held');
+    for (const check of QL229_CHECKS) ledger = acknowledgeQl229Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    expect(ql229CompanyReassignment(sources, ledger, 'devilndove')).toMatchObject({
+      unreviewed: 0, conflicting: 1, conflictEvents: 1, rechecksDue: 1 });
+    expect(prepareQl229HoldReassessment(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    ledger = recordQl229Reassignment(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_REASSIGNMENT_CONFLICT_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT', 'Fictional reviewer recheck referral remains unsent');
+    ledger = prepareQl229HoldReassessment(sources, ledger, 'devilndove', 'inbox');
+    expect(ql229CompanyReassignment(sources, ledger, 'devilndove')).toMatchObject({
+      prepared: 1, rechecksDue: 0, holdAudit: { held: 12, allHeld: true, conditionalRelease: 'BLOCKED' } });
+    expect(advanceQl229Cycle(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    expect(recordQl229Reassignment(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'SIMULATED_REASSIGNMENT_MATCH_UNVERIFIED', 'MAINTAIN_HELD_REVIEW_DRAFT', 'Prepared local packet is locked')).toBe(ledger);
+  });
+
+  it('ages independently reassigned handoffs and requires late independent review while retaining history', () => {
+    const sources = reassignmentFixture('yw');
+    let ledger = beginQl229Reassessment(sources, {}, 'yw', 'inbox');
+    ledger = recordQl229Reassignment(sources, ledger, 'yw', 'inbox', 'actual_repair',
+      'REASSIGNMENT_EVIDENCE_OPEN_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT', 'Imaginary repair reassignment under review');
+    ledger = recordQl229Reassignment(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'REASSIGNMENT_EVIDENCE_OPEN_UNVERIFIED', 'MAINTAIN_HELD_REVIEW_DRAFT', 'Fictional accessibility handoff held');
+    for (let i = 0; i < 2; i++) ledger = advanceQl229Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql229CompanyReassignment(sources, ledger, 'yw')).toMatchObject({ dueSoon: 2, overdue: 0 });
+    ledger = advanceQl229Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql229CompanyReassignment(sources, ledger, 'yw')).toMatchObject({ dueSoon: 0, overdue: 2 });
+    expect(recordQl229Reassignment(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'SIMULATED_REASSIGNMENT_MATCH_UNVERIFIED', 'MAINTAIN_HELD_REVIEW_DRAFT',
+      'Late fictional review cannot avoid independent recheck')).toBe(ledger);
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl229Reassignment(
+      sources, ledger, 'yw', 'inbox', category, 'SIMULATED_REASSIGNMENT_MATCH_UNVERIFIED',
+      'REFER_INDEPENDENT_RECHECK_DRAFT', `Invented ${category} overdue independent reassessment`);
+    expect(ql229CompanyReassignment(sources, ledger, 'yw')).toMatchObject({
+      overdue: 0, overdueEpisodes: 2, rechecksDue: 0 });
+    for (const check of QL229_CHECKS) ledger = acknowledgeQl229Check(sources, ledger, 'yw', 'inbox', check.id);
+    ledger = prepareQl229HoldReassessment(sources, ledger, 'yw', 'inbox');
+    expect(ql229Portfolio(sources, ledger)).toMatchObject({
+      prepared: 1, overdueEpisodes: 2, actualIndependentReassignment: false, externalWrites: 0 });
+  });
+
+  it('counts simulated reassignment conflict only once per gap and fictional cycle', () => {
+    const sources = reassignmentFixture('rosiedazzlers');
+    let ledger = beginQl229Reassessment(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = recordQl229Reassignment(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_REASSIGNMENT_CONFLICT_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT', 'First invented handoff conflict');
+    ledger = recordQl229Reassignment(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_REASSIGNMENT_CONFLICT_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT', 'Revised invented conflict in same cycle');
+    expect(ql229CompanyReassignment(sources, ledger, 'rosiedazzlers').conflictEvents).toBe(1);
+    ledger = advanceQl229Cycle(sources, ledger, 'rosiedazzlers', 'inbox');
+    ledger = recordQl229Reassignment(sources, ledger, 'rosiedazzlers', 'inbox', 'actual_repair',
+      'SIMULATED_REASSIGNMENT_CONFLICT_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT', 'Later invented reassignment mismatch');
+    expect(ql229CompanyReassignment(sources, ledger, 'rosiedazzlers').conflictEvents).toBe(2);
+  });
+
+  it('freezes revised upstream evidence and resets only one company case without closing orphans', () => {
+    const a = reassignmentFixture('rosiedazzlers');
+    const b = reassignmentFixture('icamp');
+    const sources = Object.fromEntries((Object.keys(a) as Array<keyof Ql229Sources>).map((key) =>
+      [key, { ...a[key], ...b[key] }])) as unknown as Ql229Sources;
+    let ledger = beginQl229Reassessment(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = beginQl229Reassessment(sources, ledger, 'icamp', 'inbox');
+    const other = ledger.rosiedazzlers?.inbox;
+    const revised: Ql229Sources = { ...sources, handoffContinuity: { ...sources.handoffContinuity, icamp: {
+      ...sources.handoffContinuity.icamp, inbox: { ...sources.handoffContinuity.icamp?.inbox!, gaps: {
+        ...sources.handoffContinuity.icamp?.inbox?.gaps, actual_repair: {
+          ...sources.handoffContinuity.icamp?.inbox?.gaps.actual_repair!, note: 'Changed fictional QL-228 independent follow-up note' } } } } } };
+    expect(ql229CompanyReassignment(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('QL228_HANDOFF_OUTCOME_REVISED');
+    expect(recordQl229Reassignment(revised, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_REASSIGNMENT_CONFLICT_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT', 'Cannot alter stale evidence')).toBe(ledger);
+    ledger = beginQl229Reassessment(revised, ledger, 'icamp', 'inbox');
+    expect(ledger.rosiedazzlers?.inbox).toBe(other);
+    expect(ledger.icamp?.inbox?.gaps).toEqual({});
+    expect(ql229CompanyReassignment(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('SOURCE_CURRENT');
+    const removed: Ql229Sources = { ...revised, trial: { ...revised.trial, icamp: {} } };
+    expect(ql229CompanyReassignment(removed, ledger, 'icamp').stale).toBeGreaterThan(0);
+    expect(beginQl229Reassessment(removed, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('exports coded statuses only without private notes, revision fingerprints or reviewer identities', () => {
+    const sources = reassignmentFixture('icamp');
+    let ledger = beginQl229Reassessment(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl229Reassignment(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_REASSIGNMENT_CONFLICT_UNVERIFIED', 'REFER_INDEPENDENT_RECHECK_DRAFT',
+      'Secret imaginary reviewer comments should never enter audit export');
+    const receipt = ql229CompanyReceipt(sources, ledger, 'icamp');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    expect(receipt).toContain('"notesIncluded": false');
+    expect(receipt).not.toContain('Secret imaginary reviewer comments');
+    expect(receipt).not.toContain('fictional-reassignment-');
+    expect(receipt).not.toContain('fictional_security_reviewer');
+  });
+});
+
+describe('QL-229 operator reassignment outcome and conditional hold interface', () => {
+  it('shows new navigation, held release matrix, help, source links and privacy-minimized receipt', async () => {
+    await act(async () => root.render(<OperatorShell />));
+    await click('Reassignment aging & hold reassessment', '.ql172-nav-button');
+    expect(host.querySelector(`[data-ql229-release="${QL229_RELEASE}"]`)).not.toBeNull();
+    expect(host.textContent).toContain('12/12 HELD');
+    await click('ⓘ Reassignment & hold help');
+    expect(host.textContent).toContain('case-only reset');
+    await click('Show local QL-229 reassessment receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-229 reassignment receipt"]')?.value ?? '';
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    await click('iCamp', '.ql172-brand');
+    expect(host.querySelector('[data-organization="icamp"][data-ql229-release]')).not.toBeNull();
+    await click('Open owner trial');
+    expect(host.querySelector('#ql211-title')).not.toBeNull();
+  });
+
+  it('prepares locally only after two gap outcomes, independent draft and UNVERIFIED checks', async () => {
+    const sources = reassignmentFixture('rosiedazzlers', true);
+    function Harness() {
+      const [ledger, setLedger] = useState<Ql229Ledger>({});
+      return <Ql229ReassignmentAudit organization={operatorOrganizations[0]} sources={sources}
+        ledger={ledger} setLedger={setLedger} onNavigate={() => undefined} />;
+    }
+    await act(async () => root.render(<Harness />));
+    await click('Begin fictional reassignment outcome & held-release reassessment');
+    await select('#ql229-outcome', 'SIMULATED_REASSIGNMENT_CONFLICT_UNVERIFIED');
+    await select('#ql229-followup', 'REFER_INDEPENDENT_RECHECK_DRAFT');
+    await type('#ql229-note', 'Invented independent handoff conflict with no real reviewer');
+    await click('Record fictional reassignment & independent review · UNSENT');
+    await select('#ql229-gap', 'accessibility');
+    await select('#ql229-outcome', 'REASSIGNMENT_EVIDENCE_OPEN_UNVERIFIED');
+    await select('#ql229-followup', 'MAINTAIN_HELD_REVIEW_DRAFT');
+    await type('#ql229-note', 'Fictional accessibility reassignment outcome remains held');
+    await click('Record fictional reassignment & independent review · UNSENT');
+    for (const check of QL229_CHECKS) await click('Acknowledge reassessment · UNVERIFIED');
+    const prepare = [...host.querySelectorAll<HTMLButtonElement>('button')].find((button) =>
+      button.textContent?.includes('Prepare reassignment & conditional hold reassessment packet'))!;
+    expect(prepare.disabled).toBe(false);
+    await click('Prepare reassignment & conditional hold reassessment packet');
+    expect(host.textContent).toContain('packet prepared locally');
+    await click('Show local QL-229 reassessment receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-229 reassignment receipt"]')?.value ?? '';
+    expect(receipt).toContain('"prepared": 1');
+    expect(receipt).not.toContain('Invented independent handoff conflict');
     expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
   });
 });
