@@ -1,7 +1,7 @@
 import type { BrandId } from '../types';
 
 export type OrganizationId = BrandId | 'icamp' | 'yw';
-export type OperatorWorkspace = 'dashboard' | 'inbox' | 'contacts' | 'queue' | 'phone' | 'composer' | 'calendar' | 'reports' | 'connectors' | 'integration_options' | 'handshake_readiness' | 'gateway_proof_review' | 'samples' | 'evidence' | 'trial' | 'repair' | 'review' | 'intake' | 'audit' | 'handoff' | 'reassessment' | 'recurrence' | 'closure' | 'reopen' | 'refresh' | 'exception' | 'aging' | 'overdue' | 'disposition' | 'reopen_review' | 'evidence_audit' | 'handoff_continuity' | 'reassignment_audit' | 'reviewer_continuity' | 'disposition_oversight' | 'escalation_proof' | 'held_integrity' | 'source_drift' | 'renewal_watch' | 'receipt_handoff' | 'telephony';
+export type OperatorWorkspace = 'dashboard' | 'inbox' | 'contacts' | 'queue' | 'phone' | 'composer' | 'calendar' | 'reports' | 'connectors' | 'integration_options' | 'handshake_readiness' | 'gateway_proof_review' | 'receipt_pilot_gate' | 'samples' | 'evidence' | 'trial' | 'repair' | 'review' | 'intake' | 'audit' | 'handoff' | 'reassessment' | 'recurrence' | 'closure' | 'reopen' | 'refresh' | 'exception' | 'aging' | 'overdue' | 'disposition' | 'reopen_review' | 'evidence_audit' | 'handoff_continuity' | 'reassignment_audit' | 'reviewer_continuity' | 'disposition_oversight' | 'escalation_proof' | 'held_integrity' | 'source_drift' | 'renewal_watch' | 'receipt_handoff' | 'telephony';
 
 export interface OperatorOrganization {
   id: OrganizationId;
