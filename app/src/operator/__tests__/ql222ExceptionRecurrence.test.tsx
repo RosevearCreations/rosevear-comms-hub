@@ -76,6 +76,11 @@ import { QL234_RELEASE, QL234_CHECKS, beginQl234DriftAudit, recordQl234Drift,
   advanceQl234Cycle, acknowledgeQl234Check, prepareQl234HeldRecheck,
   ql234CompanyContinuity, ql234CompanyReceipt, ql234Portfolio,
   type Ql234Sources, type Ql234Ledger } from '../ql234SourceDriftContinuity';
+import { Ql235RenewalWatchAudit } from '../Ql235RenewalWatchAudit';
+import { QL235_RELEASE, QL235_CHECKS, beginQl235Renewal, recordQl235Renewal,
+  advanceQl235Cycle, acknowledgeQl235Check, prepareQl235HeldAudit,
+  ql235CompanyWatch, ql235CompanyReceipt, ql235Portfolio,
+  type Ql235Sources, type Ql235Ledger } from '../ql235RenewalWatch';
 
 /** Real contract construction from the synthetic QL-211→QL-221 chain, never a live connector. */
 function fixture(company: OrganizationId, recurring = false): Ql222Sources {
@@ -2657,6 +2662,180 @@ describe('QL-234 source drift continuity operator UI', () => {
     const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-234 held-release receipt"]')?.value ?? '';
     expect(receipt).toContain('"prepared": 1');
     expect(receipt).not.toContain('Imaginary independent held-source follow-up remains unsent');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+  });
+});
+
+function renewalWatchFixture(company: OrganizationId): Ql235Sources {
+  const sources = sourceDriftFixture(company);
+  let sourceDrift = beginQl234DriftAudit(sources, {}, company, 'inbox');
+  for (const category of ['actual_repair', 'accessibility'] as const) sourceDrift = recordQl234Drift(
+    sources, sourceDrift, company, 'inbox', category, 'SIMULATED_SOURCE_IDENTITY_MATCH_UNVERIFIED',
+    category === 'actual_repair' ? 'REFER_FRESH_INDEPENDENT_FOLLOW_UP_DRAFT' : 'CONTINUE_INDEPENDENT_HELD_WATCH_DRAFT',
+    'SIMULATED_CONDITIONAL_HOLD_MATCH_UNVERIFIED', 'Fictional prepared QL-234 evidence never independently verified');
+  for (const check of QL234_CHECKS) sourceDrift = acknowledgeQl234Check(sources, sourceDrift, company, 'inbox', check.id);
+  sourceDrift = prepareQl234HeldRecheck(sources, sourceDrift, company, 'inbox');
+  expect(sourceDrift[company]?.inbox?.phase).toBe('held_conditional_release_integrity_packet_prepared');
+  return { ...sources, sourceDrift };
+}
+
+describe('QL-235 reopened drift aging, independent renewal and conditional hold watch', () => {
+  it('shows four disabled-preview companies and blocks any review without prepared QL-234', () => {
+    const fixture = renewalWatchFixture('icamp');
+    const sources: Ql235Sources = { ...fixture, sourceDrift: {} };
+    const portfolio = ql235Portfolio(sources, {});
+    expect(portfolio.companies.map((row) => row.company)).toEqual(operatorOrganizations.map((org) => org.id));
+    expect(portfolio.prerequisites).toHaveLength(12);
+    expect(portfolio).toMatchObject({ release: QL235_RELEASE, eligible: 0, prepared: 0,
+      allReleaseHoldsPreserved: true, actualIndependentReview: false,
+      actualOwnerAuthorization: false, livePilotReady: false, providerConnected: false,
+      externalWrites: 0, callsPlaced: 0, messagesSent: 0 });
+    expect(beginQl235Renewal(sources, {}, 'icamp', 'inbox')).toEqual({});
+  });
+
+  it('blocks reopened drift and pending hold proof; closes only with independent renewal and fresh checks', () => {
+    const sources = renewalWatchFixture('devilndove');
+    let ledger = beginQl235Renewal(sources, {}, 'devilndove', 'inbox');
+    expect(ledger.devilndove?.inbox?.phase).toBe('independent_renewal_watch_draft');
+    expect(recordQl235Renewal(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_DRIFT_EXCEPTION_REOPENED_UNVERIFIED', 'MAINTAIN_HELD_RENEWAL_WATCH_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Incorrect unsupported watch')).toBe(ledger);
+    expect(recordQl235Renewal(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'INVALID' as never, 'REFER_INDEPENDENT_RENEWAL_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Invalid enum rejected')).toBe(ledger);
+    for (const note of ['Initial imaginary reopened drift', 'Edited imaginary drift in same cycle']) ledger = recordQl235Renewal(
+      sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_DRIFT_EXCEPTION_REOPENED_UNVERIFIED', 'REOPEN_INDEPENDENT_EXCEPTION_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', note);
+    ledger = recordQl235Renewal(sources, ledger, 'devilndove', 'inbox', 'accessibility',
+      'SIMULATED_RENEWAL_MATCH_UNVERIFIED', 'MAINTAIN_HELD_RENEWAL_WATCH_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Imaginary accessibility evidence held');
+    for (const check of QL235_CHECKS) ledger = acknowledgeQl235Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    expect(ql235CompanyWatch(sources, ledger, 'devilndove')).toMatchObject({ reopened: 1, reopenEvents: 1, prepared: 0 });
+    expect(prepareQl235HeldAudit(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+    ledger = recordQl235Renewal(sources, ledger, 'devilndove', 'inbox', 'actual_repair',
+      'SIMULATED_RENEWAL_MATCH_UNVERIFIED', 'REFER_INDEPENDENT_RENEWAL_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Imaginary reopened source locally rechecked');
+    expect(ql235CompanyWatch(sources, ledger, 'devilndove').cases[0].checksComplete).toBe(false);
+    for (const check of QL235_CHECKS) ledger = acknowledgeQl235Check(sources, ledger, 'devilndove', 'inbox', check.id);
+    ledger = prepareQl235HeldAudit(sources, ledger, 'devilndove', 'inbox');
+    expect(ql235CompanyWatch(sources, ledger, 'devilndove')).toMatchObject({
+      reopened: 0, reopenEvents: 1, prepared: 1, holdAudit: { held: 12, conditionalRelease: 'BLOCKED' } });
+    expect(advanceQl235Cycle(sources, ledger, 'devilndove', 'inbox')).toBe(ledger);
+  });
+
+  it('ages due-soon then overdue, requires a new independent referral and preserves late history', () => {
+    const sources = renewalWatchFixture('yw');
+    let ledger = beginQl235Renewal(sources, {}, 'yw', 'inbox');
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl235Renewal(
+      sources, ledger, 'yw', 'inbox', category, 'SIMULATED_RENEWAL_MATCH_UNVERIFIED',
+      category === 'actual_repair' ? 'REFER_INDEPENDENT_RENEWAL_DRAFT' : 'MAINTAIN_HELD_RENEWAL_WATCH_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Fictional initial renewal retained held release');
+    for (let i = 0; i < 2; i++) ledger = advanceQl235Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql235CompanyWatch(sources, ledger, 'yw')).toMatchObject({ dueSoon: 2, overdue: 0 });
+    ledger = advanceQl235Cycle(sources, ledger, 'yw', 'inbox');
+    expect(ql235CompanyWatch(sources, ledger, 'yw')).toMatchObject({ dueSoon: 0, overdue: 2 });
+    expect(recordQl235Renewal(sources, ledger, 'yw', 'inbox', 'accessibility',
+      'SIMULATED_RENEWAL_MATCH_UNVERIFIED', 'MAINTAIN_HELD_RENEWAL_WATCH_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Overdue referral cannot be skipped')).toBe(ledger);
+    for (const category of ['actual_repair', 'accessibility'] as const) ledger = recordQl235Renewal(
+      sources, ledger, 'yw', 'inbox', category, 'SIMULATED_RENEWAL_MATCH_UNVERIFIED',
+      'REFER_INDEPENDENT_RENEWAL_DRAFT', 'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED',
+      'Fictional overdue independent renewal draft is unsent');
+    expect(ql235CompanyWatch(sources, ledger, 'yw')).toMatchObject({ overdue: 0, overdueEpisodes: 2 });
+    for (const check of QL235_CHECKS) ledger = acknowledgeQl235Check(sources, ledger, 'yw', 'inbox', check.id);
+    ledger = prepareQl235HeldAudit(sources, ledger, 'yw', 'inbox');
+    expect(ql235Portfolio(sources, ledger)).toMatchObject({ prepared: 1, livePilotReady: false, externalWrites: 0 });
+  });
+
+  it('freezes upstream revisions and separates company reset from other companies', () => {
+    const a = renewalWatchFixture('rosiedazzlers');
+    const b = renewalWatchFixture('icamp');
+    const sources = Object.fromEntries((Object.keys(a) as Array<keyof Ql235Sources>).map((key) =>
+      [key, { ...a[key], ...b[key] }])) as unknown as Ql235Sources;
+    let ledger = beginQl235Renewal(sources, {}, 'rosiedazzlers', 'inbox');
+    ledger = beginQl235Renewal(sources, ledger, 'icamp', 'inbox');
+    const unaffected = ledger.rosiedazzlers?.inbox;
+    const revised: Ql235Sources = { ...sources, sourceDrift: { ...sources.sourceDrift, icamp: {
+      ...sources.sourceDrift.icamp, inbox: { ...sources.sourceDrift.icamp?.inbox!, gaps: {
+        ...sources.sourceDrift.icamp?.inbox?.gaps, actual_repair: {
+          ...sources.sourceDrift.icamp?.inbox?.gaps.actual_repair!, note: 'Source proof changed after QL-235 review began' } } } } } };
+    expect(ql235CompanyWatch(revised, ledger, 'icamp').cases[0].sourceStatus).toBe('QL234_EVIDENCE_REVISED');
+    expect(recordQl235Renewal(revised, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_RENEWAL_MATCH_UNVERIFIED', 'REFER_INDEPENDENT_RENEWAL_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'Frozen source must remain unchanged')).toBe(ledger);
+    ledger = beginQl235Renewal(revised, ledger, 'icamp', 'inbox');
+    expect(ledger.rosiedazzlers?.inbox).toBe(unaffected);
+    expect(ledger.icamp?.inbox?.gaps).toEqual({});
+    const tampered: Ql235Ledger = { ...ledger, icamp: { ...ledger.icamp, inbox: {
+      ...ledger.icamp?.inbox!, holdToken: 'forged-hold' } } };
+    expect(ql235CompanyWatch(revised, tampered, 'icamp').cases[0].sourceStatus).toBe('ACTUAL_HOLD_REVISED');
+    expect(prepareQl235HeldAudit(revised, tampered, 'icamp', 'inbox')).toBe(tampered);
+    const stale: Ql235Sources = { ...revised, trial: { ...revised.trial, icamp: {} } };
+    expect(ql235CompanyWatch(stale, ledger, 'icamp').stale).toBeGreaterThan(0);
+    expect(beginQl235Renewal(stale, ledger, 'icamp', 'inbox')).toBe(ledger);
+  });
+
+  it('exports only fictional status and hold states, never notes, tokens or identities', () => {
+    const sources = renewalWatchFixture('icamp');
+    let ledger = beginQl235Renewal(sources, {}, 'icamp', 'inbox');
+    ledger = recordQl235Renewal(sources, ledger, 'icamp', 'inbox', 'actual_repair',
+      'SIMULATED_DRIFT_EXCEPTION_REOPENED_UNVERIFIED', 'REOPEN_INDEPENDENT_EXCEPTION_DRAFT',
+      'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED', 'PRIVATE fictional reviewer identity must not be exported');
+    const receipt = ql235CompanyReceipt(sources, ledger, 'icamp');
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    expect(receipt).toContain('"sourceTokensIncluded": false');
+    expect(receipt).not.toContain('PRIVATE fictional reviewer');
+    expect(receipt).not.toContain('fictional-renewal-');
+    expect(receipt).not.toContain('forged-hold');
+  });
+});
+
+describe('QL-235 operator renewal watch UI', () => {
+  it('navigates to QL-235 with help, matrix, QL-234 source link and status-only receipt', async () => {
+    await act(async () => root.render(<OperatorShell />));
+    await click('Independent renewal & hold watch', '.ql172-nav-button');
+    expect(host.querySelector(`[data-ql235-release="${QL235_RELEASE}"]`)).not.toBeNull();
+    expect(host.textContent).toContain('12/12 HELD');
+    await click('ⓘ Renewal watch help');
+    expect(host.textContent).toContain('case-only reset');
+    await click('Show local QL-235 renewal receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-235 renewal receipt"]')?.value ?? '';
+    expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
+    await click('iCamp', '.ql172-brand');
+    expect(host.querySelector('[data-organization="icamp"][data-ql235-release]')).not.toBeNull();
+    await click('Open owner trial');
+    expect(host.querySelector('#ql211-title')).not.toBeNull();
+  }, 15_000);
+
+  it('prepares a local audit only after renewed gaps, independent referral and acknowledgement', async () => {
+    const sources = renewalWatchFixture('rosiedazzlers');
+    function Harness() {
+      const [ledger, setLedger] = useState<Ql235Ledger>({});
+      return <Ql235RenewalWatchAudit organization={operatorOrganizations[0]} sources={sources}
+        ledger={ledger} setLedger={setLedger} onNavigate={() => undefined} />;
+    }
+    await act(async () => root.render(<Harness />));
+    await click('Begin fictional renewal watch & held recheck');
+    await select('#ql235-renewal', 'SIMULATED_RENEWAL_MATCH_UNVERIFIED');
+    await select('#ql235-referral', 'REFER_INDEPENDENT_RENEWAL_DRAFT');
+    await select('#ql235-hold', 'SIMULATED_HELD_PROOF_MATCH_UNVERIFIED');
+    await type('#ql235-note', 'Imaginary independent renewal remains unsent');
+    await click('Record fictional renewal & held proof · UNSENT');
+    await select('#ql235-gap', 'accessibility');
+    await select('#ql235-referral', 'MAINTAIN_HELD_RENEWAL_WATCH_DRAFT');
+    await type('#ql235-note', 'Imaginary accessibility renewed under hold');
+    await click('Record fictional renewal & held proof · UNSENT');
+    for (const check of QL235_CHECKS) await click('Acknowledge renewal check · UNVERIFIED');
+    const prepare = [...host.querySelectorAll<HTMLButtonElement>('button')].find((button) =>
+      button.textContent?.includes('Prepare independent renewal & held audit'))!;
+    expect(prepare.disabled).toBe(false);
+    await click('Prepare independent renewal & held audit');
+    expect(host.textContent).toContain('packet prepared locally');
+    await click('Show local QL-235 renewal receipt');
+    const receipt = host.querySelector<HTMLTextAreaElement>('[aria-label="Fixture-only QL-235 renewal receipt"]')?.value ?? '';
+    expect(receipt).toContain('"prepared": 1');
+    expect(receipt).not.toContain('Imaginary independent renewal remains unsent');
     expect(receipt).toContain('"conditionalRelease": "BLOCKED"');
   });
 });
