@@ -1,7 +1,7 @@
 import type { BrandId } from '../types';
 
 export type OrganizationId = BrandId | 'icamp' | 'yw';
-export type OperatorWorkspace = 'dashboard' | 'inbox' | 'contacts' | 'queue' | 'phone' | 'composer' | 'calendar' | 'reports' | 'connectors' | 'samples' | 'evidence' | 'trial' | 'repair' | 'review' | 'intake' | 'audit' | 'handoff' | 'reassessment' | 'recurrence' | 'closure' | 'reopen' | 'refresh' | 'exception' | 'aging' | 'overdue' | 'disposition' | 'reopen_review' | 'evidence_audit' | 'handoff_continuity' | 'reassignment_audit' | 'telephony';
+export type OperatorWorkspace = 'dashboard' | 'inbox' | 'contacts' | 'queue' | 'phone' | 'composer' | 'calendar' | 'reports' | 'connectors' | 'samples' | 'evidence' | 'trial' | 'repair' | 'review' | 'intake' | 'audit' | 'handoff' | 'reassessment' | 'recurrence' | 'closure' | 'reopen' | 'refresh' | 'exception' | 'aging' | 'overdue' | 'disposition' | 'reopen_review' | 'evidence_audit' | 'handoff_continuity' | 'reassignment_audit' | 'reviewer_continuity' | 'telephony';
 
 export interface OperatorOrganization {
   id: OrganizationId;
