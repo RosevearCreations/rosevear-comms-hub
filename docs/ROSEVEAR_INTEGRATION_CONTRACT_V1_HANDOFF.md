@@ -195,3 +195,11 @@ The new QL-249 bounded, public-only source retriever can, when later proofs exis
 **Decision: 0 verified gateway GETs; 0 independently authenticated pins; all four company connections DISCONNECTED; 12/12 communications pilot gates HELD.** No writes, calls, SMS or dispatch were enabled.
 
 **Next expected Comms Hub build:** QL-250 — Independent Six-App Proof/CI Refresh, Key-Pin Custody Challenge & Owner-Approved Nonproduction GET Window Witnessing (HELD).
+
+## QL-250 — six-app public source refresh, offline key-control challenge and held GET window
+
+The QL-250 source check on 28 October independently observed six new companion GitHub `main` revisions (AI Data Platform advanced during the QL-250 refresh). The required public QL-246 proof returned **404 at all six inspected full SHAs**. No proof-bearing source-to-CI chain could therefore be independently accepted at that snapshot. See [QL-250 source and custody report](QL-250_SIX_APP_PROOF_REFRESH_KEY_CUSTODY_AND_NONPRODUCTION_WINDOW_HELD.md).
+
+QL-250 includes a strict **offline Ed25519 nonce challenge verifier** bound to each app's source/proof SHAs, business, tenant and public-key pin, and an **unexecuted UTC test-window proposal checker** limited to two read-only paths. Key-control signatures cannot independently prove signer custody or owner identity. An owner approval receipt *claim* is not authenticated permission; no test is scheduled. All actual gateway GETs remain zero, all four company connections DISCONNECTED, 12/12 live communications release gates HELD. Share the [QL-250 six-app return handoff](ROSEVEAR_QL250_CUSTODY_CHALLENGE_AND_NONPRODUCTION_WINDOW_HANDOFF.md) once companion proof publication is ready.
+
+**Next expected Comms Hub build:** QL-251 — Six-App Signed Source-Proof Publication Recheck, Independent Custody Witness Returns & Explicit Nonproduction GET Trial Authorization Review (HELD).
