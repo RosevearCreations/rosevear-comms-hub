@@ -1,0 +1,21 @@
+.ql243-screen { display: grid; gap: 1rem; color: #edf5ff; }
+.ql243-header { display: flex; gap: 1rem; align-items: flex-start; justify-content: space-between; }
+.ql243-header h3 { margin: .35rem 0; }
+.ql243-warning { padding: 1rem; color: #fff0d0; background: #483826; border: 2px solid #e6c47f; border-radius: .85rem; }
+.ql243-help { padding: 1rem; border-left: 4px solid #8ce5b8; background: #24444d; border-radius: .5rem; overflow-wrap: anywhere; }
+.ql243-panel { min-width: 0; padding: 1rem; background: #182f40; border: 1px solid #7292ab; border-radius: .9rem; }
+.ql243-panel h4 { margin: 0 0 .65rem; }
+.ql243-chips, .ql243-actions { display: flex; flex-wrap: wrap; gap: .65rem; }
+.ql243-chips span { display: inline-block; padding: .55rem .7rem; background: #294a60; border: 1px solid #769ab1; border-radius: .45rem; }
+.ql243-scroll { overflow-x: auto; }
+.ql243-scroll table { width: 100%; min-width: 620px; border-collapse: collapse; }
+.ql243-scroll th, .ql243-scroll td { padding: .65rem; border-bottom: 1px solid #5d839d; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+.ql243-form, .ql243-form label { display: grid; gap: .65rem; min-width: 0; }
+.ql243-screen textarea { box-sizing: border-box; width: 100%; padding: .7rem; color: #132f40; background: #fff; border: 1px solid #9bb9ca; border-radius: .4rem; }
+.ql243-screen button { min-height: 44px; padding: .68rem .8rem; color: #fff; background: #24546b; border: 1px solid #8eb4ce; border-radius: .6rem; cursor: pointer; }
+.ql243-screen button:disabled { opacity: .5; cursor: not-allowed; }
+.ql243-screen button:focus-visible, .ql243-screen textarea:focus-visible { outline: 3px solid #ffe18d; outline-offset: 3px; }
+.ql243-notice { color: #ffe8ae; font-weight: 700; }
+.ql243-result { margin: .8rem 0; padding: .85rem; background: #294b5b; border-left: 4px solid #e6c47f; border-radius: .5rem; overflow-wrap: anywhere; }
+@media (max-width: 650px) { .ql243-header { flex-direction: column; } .ql243-actions { display: grid; } }
+@media (forced-colors: active) { .ql243-panel, .ql243-warning, .ql243-result, .ql243-chips span { border: 1px solid CanvasText; } }
