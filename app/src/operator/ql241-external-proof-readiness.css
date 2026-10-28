@@ -1,0 +1,25 @@
+.ql241-screen { display: grid; gap: 1rem; color: #edf5ff; }
+.ql241-header { display: flex; justify-content: space-between; align-items: start; gap: 1rem; }
+.ql241-header h3 { margin: .35rem 0; }
+.ql241-warning { border: 2px solid #e6c47f; background: #493826; color: #fff0d0; padding: 1rem; border-radius: .85rem; }
+.ql241-help { border-left: 4px solid #8ce5b8; border-radius: .5rem; padding: .85rem; background: #24444d; overflow-wrap: anywhere; }
+.ql241-panel { background: #182f40; border: 1px solid #7292ab; border-radius: .9rem; padding: 1rem; min-width: 0; }
+.ql241-panel h4 { margin: 0 0 .7rem; }
+.ql241-table-scroll { overflow-x: auto; }
+.ql241-table-scroll table { border-collapse: collapse; min-width: 680px; width: 100%; }
+.ql241-table-scroll th, .ql241-table-scroll td { border-bottom: 1px solid #5d839d; text-align: left; padding: .6rem; vertical-align: top; overflow-wrap: anywhere; }
+.ql241-meta, .ql241-actions { display: flex; gap: .6rem; flex-wrap: wrap; align-items: end; margin: .8rem 0; }
+.ql241-meta span { background: #294a60; padding: .55rem; border-radius: .4rem; overflow-wrap: anywhere; }
+.ql241-form { display: grid; gap: .7rem; }
+.ql241-form label, .ql241-actions label { display: grid; gap: .3rem; min-width: 0; flex: 1; }
+.ql241-screen textarea, .ql241-screen input[type=text], .ql241-actions input { box-sizing: border-box; color: #172d3d; background: #fff; width: 100%; border: 1px solid #9bb9ca; border-radius: .4rem; padding: .65rem; }
+.ql241-screen button { border: 1px solid #8eb4ce; border-radius: .6rem; padding: .68rem .8rem; background: #24546b; color: #fff; cursor: pointer; }
+.ql241-screen button:disabled { opacity: .5; cursor: not-allowed; }
+.ql241-screen button:focus-visible, .ql241-screen input:focus-visible, .ql241-screen textarea:focus-visible { outline: 3px solid #ffe18d; outline-offset: 3px; }
+.ql241-result { margin: .8rem 0; border-left: 4px solid #e6c47f; border-radius: .4rem; background: #294b5b; padding: .8rem; overflow-wrap: anywhere; }
+.ql241-message { color: #ffe8ae; font-weight: 700; }
+.ql241-checks { display: grid; gap: .5rem; border: 1px solid #819db3; border-radius: .6rem; }
+.ql241-checks label { display: flex; gap: .5rem; align-items: baseline; }
+.ql241-checks input { flex: none; }
+@media (max-width: 650px) { .ql241-header { flex-direction: column; } .ql241-actions { display: grid; } .ql241-table-scroll table { min-width: 620px; } }
+@media (forced-colors: active) { .ql241-panel, .ql241-warning, .ql241-result { border: 1px solid CanvasText; } }
