@@ -151,3 +151,11 @@ QL-243 implements an explicitly invoked **Node-only four-GET nonproduction probe
 **All four business connections remain `DISCONNECTED` and all twelve QL-181 live-communications prerequisites remain `HELD_UNVERIFIED`.** No live nonproduction test has been performed without real endpoints and authorized test credentials. No cross-app writes, phone/SMS, Etsy changes, provider dispatch or actual owner approval has been enabled.
 
 **Next expected:** **QL-244 — Independently Witnessed Nonproduction Handshake Acceptance, Per-App Credential Exchange Review & Conditional Read-Only Pilot Authorization Decision.**
+
+## QL-244 — six independent app replies, assessor proof and conditional review only
+
+The owner confirms the QL-243 Markdown was delivered to all six companion apps. Their *actual* source/CI responses, server-side credential exchange, independent assessor evidence and real owner permission must still be verified. Share the [new QL-244 handoff for the six apps](ROSEVEAR_INTEGRATION_V1_QL244_WITNESSED_HANDSHAKE_HANDOFF.md); it includes six per-app evidence-return checklists, four separately trusted signer fingerprints, original gateway receipt and negative-denial evidence, and exact non-secret assessor and owner **review-request** packet schemas.
+
+QL-244 ships a strict offline two-additional-signature verifier and a session-only operator panel for credential registry metadata. Its result remains `TWO_ADDITIONAL_SIGNATURES_CHECKED_HELD`; no signature or metadata claim is treated as actual consent, durable backend proof or a secret transfer. All companies stay `DISCONNECTED`, no real owner authorization is given, and all 12 QL-181 prerequisites remain held. See the [QL-244 acceptance note](QL-244_WITNESSED_HANDSHAKE_CREDENTIAL_REVIEW_HELD.md).
+
+**Next expected:** **QL-245 — Verified Six-App Nonproduction Evidence Returns, Owner Decision Exception Triage & Read-Only Connection Activation Preconditions.** Actual connection activation needs separate independently verified owner approval; a green deployment alone does not unlock it.
