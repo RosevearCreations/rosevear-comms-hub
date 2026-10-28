@@ -12,6 +12,8 @@ import { QL245_RELEASE, QL245_SOURCE_CLAIMS, QL245_SUMMARY_ORIGIN,
 import { QL247_RELEASE, QL247_OBSERVED, QL247_SOURCE_CENSUS,
   QL247_DECISION } from './ql247SourceCensus';
 import { QL248_RELEASE, QL248_STAGES, QL248_HOLD } from './ql248ProofCommitReadiness';
+import { QL249_RELEASE, QL249_OBSERVED, QL249_SOURCE_SNAPSHOT,
+  QL249_TEST_SLOT_GATE } from './ql249OriginRetest';
 import './ql245-six-app-evidence.css';
 
 export function Ql245SixAppEvidence({ organization, source, audit, external,
@@ -115,6 +117,38 @@ export function Ql245SixAppEvidence({ organization, source, audit, external,
         prerequisites HELD. No writes, calls, SMS or dispatch.</p>
       <p>Next handoff: <code>docs/ROSEVEAR_QL248_PROOF_COMMIT_AMENDMENT_HANDOFF.md</code>.
         No current six-app source proof has been accepted by this offline-only preview.</p>
+    </section>
+    <section className="ql245-panel" data-ql249-release={QL249_RELEASE}
+      aria-labelledby="ql249-github-origin-title">
+      <h4 id="ql249-github-origin-title">QL-249 · Immutable GitHub proof retest &amp; nonproduction GET schedule gate</h4>
+      <p>Independently checked the six companion GitHub <code>main</code> revisions on
+        {' '}{QL249_OBSERVED}. Their code has advanced, but the required public signed
+        proof path still returned <strong>404 for all six</strong> at these immutable
+        revisions. This is a dated observation while the companion builds are underway,
+        not a claim about future updates.</p>
+      <div className="ql245-scroll"><table>
+        <caption>Source GitHub snapshots only; no gateway or home-network connection made.</caption>
+        <thead><tr><th scope="col">App</th><th scope="col">Observed main SHA</th>
+          <th scope="col">Proof file at SHA</th><th scope="col">Test slot</th></tr></thead>
+        <tbody>{QL249_SOURCE_SNAPSHOT.map(row=><tr key={row.repository}>
+          <th scope="row">{row.system}</th>
+          <td><a href={`https://github.com/RosevearCreations/${row.repository}/commit/${row.mainSha}`}
+            target="_blank" rel="noopener noreferrer">{row.mainSha.slice(0, 12)}</a></td>
+          <td><strong>{row.proof}</strong></td><td>NOT SCHEDULED / HOLD</td>
+        </tr>)}</tbody>
+      </table></div>
+      <p>Public-only retest command: <code>node scripts/ql249-retest-six-app-public-github.mjs --public-get</code>.
+        A real proof would trigger independent GitHub source-commit, proof ancestry and exact-CI
+        verification. Even then a self-signed public key is <strong>not</strong> an independently
+        authenticated key pin or evidence that the seven gateway denials really occurred.</p>
+      <p>Test scheduling: <strong>{QL249_TEST_SLOT_GATE.status}</strong>;
+        owner-scoped test authorization: <strong>{QL249_TEST_SLOT_GATE.ownerTestAuthorization}</strong>;
+        GitHub source/CI proofs confirmed: <strong>{QL249_TEST_SLOT_GATE.githubOriginAndCiConfirmed}/6</strong>;
+        actual authenticated gateway GETs: <strong>{QL249_TEST_SLOT_GATE.actualGatewayTests}/6</strong>.
+        Every application remains <strong>{QL249_TEST_SLOT_GATE.connectionState}</strong>;
+        {QL249_TEST_SLOT_GATE.realPilotHolds}/12 real communications pilot prerequisites HELD.</p>
+      <p>Next handoff: <code>docs/ROSEVEAR_QL249_SIX_APP_ORIGIN_RETEST_AND_OWNER_TEST_SLOT_HANDOFF.md</code>.
+        No endpoint, time window, credentials or owner consent have been inferred from a build.</p>
     </section>
     {showHelp&&<aside id="ql245-help" className="ql245-help">
       <p>Source: {QL245_SUMMARY_ORIGIN} Source-code changes and a GREEN CI pipeline do not

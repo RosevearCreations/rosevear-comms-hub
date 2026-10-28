@@ -11,7 +11,9 @@
     "integration:ql247-census": "node scripts/ql247-retrieve-six-app-census.mjs",
     "verify:ql247": "node scripts/__tests__/ql247-six-app-github-census.test.mjs",
     "verify:ql248": "node scripts/__tests__/ql248-proof-commit-reconciliation.test.mjs",
-    "integration:ql248-offline-proof": "node scripts/ql248-verify-source-proof-bundle.mjs"
+    "integration:ql248-offline-proof": "node scripts/ql248-verify-source-proof-bundle.mjs",
+    "verify:ql249": "node scripts/__tests__/ql249-public-github-origin-retest.test.mjs",
+    "integration:ql249-public-origin": "node scripts/ql249-retest-six-app-public-github.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.40.0"
