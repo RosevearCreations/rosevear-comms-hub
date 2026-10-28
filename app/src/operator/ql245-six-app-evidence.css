@@ -1,0 +1,20 @@
+.ql245-screen { display: grid; gap: 1rem; color: #edf5ff; }
+.ql245-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.ql245-header h3 { margin: .35rem 0; }
+.ql245-warning { padding: 1rem; border: 2px solid #efd083; border-radius: .8rem; background: #4b3622; color: #fff3d5; }
+.ql245-help { padding: 1rem; border-left: 4px solid #a2edc7; border-radius: .5rem; background: #24444d; overflow-wrap: anywhere; }
+.ql245-panel { padding: 1rem; min-width: 0; border: 1px solid #7292ab; border-radius: .85rem; background: #182f40; }
+.ql245-panel h4 { margin: 0 0 .7rem; }
+.ql245-scroll { overflow-x: auto; }
+.ql245-scroll table { width: 100%; min-width: 680px; border-collapse: collapse; }
+.ql245-scroll th,.ql245-scroll td { padding: .65rem; text-align: left; vertical-align: top; border-bottom: 1px solid #5d839d; overflow-wrap: anywhere; }
+.ql245-form,.ql245-form label { display: grid; gap: .6rem; min-width: 0; }
+.ql245-screen textarea { box-sizing: border-box; padding: .7rem; width: 100%; color: #132f40; background: #fff; border: 1px solid #9bb9ca; border-radius: .4rem; }
+.ql245-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.ql245-screen button { min-height: 44px; padding: .7rem .85rem; border: 1px solid #8eb4ce; border-radius: .6rem; color: #fff; background: #24546b; cursor: pointer; }
+.ql245-screen button:disabled { opacity: .5; cursor: not-allowed; }
+.ql245-screen button:focus-visible,.ql245-screen textarea:focus-visible { outline: 3px solid #ffe18d; outline-offset: 3px; }
+.ql245-message { color: #ffe8ae; font-weight: 700; }
+.ql245-result { margin: .8rem 0; padding: .85rem; background: #294b5b; border-left: 4px solid #efd083; border-radius: .5rem; overflow-wrap: anywhere; }
+@media (max-width: 650px) { .ql245-header { flex-direction: column; } .ql245-actions { display: grid; } }
+@media (forced-colors: active) { .ql245-panel,.ql245-warning,.ql245-result { border: 1px solid CanvasText; } }
