@@ -9,6 +9,8 @@ import type { Ql244Ledger } from './ql244WitnessedHandshake';
 import { QL245_RELEASE, QL245_SOURCE_CLAIMS, QL245_SUMMARY_ORIGIN,
   QL245_BLOCKERS, type Ql245Ledger, inspectQl245Summary,
   ql245CurrentStatus, ql245Portfolio } from './ql245SixAppEvidence';
+import { QL247_RELEASE, QL247_OBSERVED, QL247_SOURCE_CENSUS,
+  QL247_DECISION } from './ql247SourceCensus';
 import './ql245-six-app-evidence.css';
 
 export function Ql245SixAppEvidence({ organization, source, audit, external,
@@ -65,6 +67,32 @@ export function Ql245SixAppEvidence({ organization, source, audit, external,
     <p role="note" className="ql245-warning"><strong>6/6 HANDOFF SUMMARIES RECEIVED; 0/6 INDEPENDENT CONNECTIONS VERIFIED.</strong>
       {' '}OWNER APPROVAL NOT GIVEN. Four company integrations remain DISCONNECTED, 12/12 communications
       prerequisites HELD. No secrets, live GETs, external writes, phone/SMS or provider dispatch occur here.</p>
+    <section className="ql245-panel" data-ql247-release={QL247_RELEASE}
+      aria-labelledby="ql247-census-title">
+      <h4 id="ql247-census-title">QL-247 · Independent six-repository source census</h4>
+      <p>GitHub source snapshot observed {QL247_OBSERVED}. The latest attachment includes five
+        application updates; AI Data Platform was checked separately in GitHub. All six
+        required public QL-246 source-proof files were <strong>missing (404)</strong> at the
+        observed commits. These commit IDs may change with later builds.</p>
+      <div className="ql245-scroll"><table>
+        <caption>Public GitHub code provenance only — no runtime request, signing-key trust or pilot release.</caption>
+        <thead><tr><th scope="col">Source</th><th scope="col">Repo / SHA prefix</th>
+          <th scope="col">Signed public proof</th><th scope="col">Next blocker</th></tr></thead>
+        <tbody>{QL247_SOURCE_CENSUS.map(row=><tr key={row.repository}>
+          <th scope="row">{row.system}</th>
+          <td><a href={`https://github.com/RosevearCreations/${row.repository}/commit/${row.mainSha}`}
+            target="_blank" rel="noopener noreferrer">{row.repository} · {row.mainSha.slice(0, 12)}</a></td>
+          <td><strong>MISSING / HOLD</strong></td><td>{row.blocker}</td>
+        </tr>)}</tbody>
+      </table></div>
+      <p>Actual connections: <strong>{QL247_DECISION.actualConnection}</strong>.
+        {' '}Owner pilot authorization: <strong>{QL247_DECISION.actualOwnerApproval}</strong>.
+        {' '}Independently verified public signatures: <strong>{QL247_DECISION.independentlyVerifiedSignatures}/6</strong>.
+        {' '}Real communications prerequisites: <strong>{QL247_DECISION.livePilotHolds}/12 HELD</strong>.</p>
+      <p>Next handoff: <code>docs/ROSEVEAR_QL247_SIX_APP_CONNECTION_TEST_HANDOFF.md</code>.
+        Separate per-app credentials and independently witnessed nonproduction-only GETs are
+        required; sharing a GitHub owner does not create trusted connections.</p>
+    </section>
     {showHelp&&<aside id="ql245-help" className="ql245-help">
       <p>Source: {QL245_SUMMARY_ORIGIN} Source-code changes and a GREEN CI pipeline do not
         independently prove a deployed endpoint, credential exchange, gateway signature

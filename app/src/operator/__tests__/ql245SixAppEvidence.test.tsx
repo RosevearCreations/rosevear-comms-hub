@@ -203,7 +203,10 @@ describe('QL-245 operator exception-triage page',()=>{
     await click('Six-app evidence & activation HOLD','.ql172-nav-button');
     const section=host.querySelector<HTMLElement>('[data-ql245-release]')!;
     expect(section.dataset.ql245Release).toBe(QL245_RELEASE);
-    expect(section.querySelectorAll('tbody tr')).toHaveLength(10);
+    expect(section.querySelector('#ql245-sources')?.closest('section')?.querySelectorAll('tbody tr')).toHaveLength(6);
+    expect(section.querySelector('#ql245-companies')?.closest('section')?.querySelectorAll('tbody tr')).toHaveLength(4);
+    expect(section.querySelectorAll('[data-ql247-release] tbody tr')).toHaveLength(6);
+    expect(section.textContent).toContain('missing (404)');
     expect(section.textContent).toContain('6/6 HANDOFF SUMMARIES RECEIVED');
     expect(section.textContent).toContain('OWNER APPROVAL NOT GIVEN');
     expect(section.querySelector<HTMLButtonElement>('form button[type=submit]')?.disabled).toBe(true);
