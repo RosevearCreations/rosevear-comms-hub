@@ -14,6 +14,8 @@ import { QL247_RELEASE, QL247_OBSERVED, QL247_SOURCE_CENSUS,
 import { QL248_RELEASE, QL248_STAGES, QL248_HOLD } from './ql248ProofCommitReadiness';
 import { QL249_RELEASE, QL249_OBSERVED, QL249_SOURCE_SNAPSHOT,
   QL249_TEST_SLOT_GATE } from './ql249OriginRetest';
+import { QL250_RELEASE, QL250_OBSERVED, QL250_SOURCE_REFRESH,
+  QL250_READ_ONLY_GATES } from './ql250CustodyWindowReview';
 import './ql245-six-app-evidence.css';
 
 export function Ql245SixAppEvidence({ organization, source, audit, external,
@@ -149,6 +151,43 @@ export function Ql245SixAppEvidence({ organization, source, audit, external,
         {QL249_TEST_SLOT_GATE.realPilotHolds}/12 real communications pilot prerequisites HELD.</p>
       <p>Next handoff: <code>docs/ROSEVEAR_QL249_SIX_APP_ORIGIN_RETEST_AND_OWNER_TEST_SLOT_HANDOFF.md</code>.
         No endpoint, time window, credentials or owner consent have been inferred from a build.</p>
+    </section>
+    <section className="ql245-panel" data-ql250-release={QL250_RELEASE}
+      aria-labelledby="ql250-source-custody-title">
+      <h4 id="ql250-source-custody-title">QL-250 · Six-app proof refresh, key custody challenge &amp; proposed GET witnessing</h4>
+      <p>Fresh, independently retrieved public GitHub source snapshot: <strong>{QL250_OBSERVED}</strong>.
+        All six repositories have now advanced since the QL-249 snapshot.
+        The exact signed public proof path was <strong>404 in all six at the listed revisions</strong>.
+        Other teams may publish newer evidence after this snapshot.</p>
+      <div className="ql245-scroll"><table>
+        <caption>Public GitHub observations only — no gateway, owner identity or signing-key custody verified.</caption>
+        <thead><tr><th scope="col">Application</th><th scope="col">Observed main SHA</th>
+          <th scope="col">Since QL-249</th><th scope="col">QL-246 proof</th><th scope="col">Test window</th></tr></thead>
+        <tbody>{QL250_SOURCE_REFRESH.map(row=><tr key={row.repository}>
+          <th scope="row">{row.system}</th>
+          <td><a href={`https://github.com/RosevearCreations/${row.repository}/commit/${row.mainSha}`}
+            target="_blank" rel="noopener noreferrer">{row.mainSha.slice(0, 12)}</a></td>
+          <td>{row.changedSinceQl249?'Advanced':'Same SHA'}</td>
+          <td><strong>{row.proof} / HOLD</strong></td>
+          <td>NOT SCHEDULED</td>
+        </tr>)}</tbody>
+      </table></div>
+      <p>The new <code>ql250-pin-custody-window-witness.mjs</code> offline checker verifies an
+        Ed25519 response to a short-lived nonce tied to source SHA, proof SHA, business and
+        tenant. It <strong>does not independently attest who owns the key</strong>. A proposed
+        nonproduction window must be future UTC, at most 30 minutes and limited to the two
+        documented GET paths. Even a signed-looking owner test receipt stays an unverified
+        claim until authenticated independently. No timer, gateway request or approval action
+        exists in this preview.</p>
+      <p>Public proofs: <strong>{QL250_READ_ONLY_GATES.publicProofsPresent}/6</strong>;
+        independently witnessed signer custody: <strong>{QL250_READ_ONLY_GATES.independentlyPinnedSignerCustody}/6</strong>;
+        authenticated owner test decisions: <strong>{QL250_READ_ONLY_GATES.authenticatedTestOnlyOwnerDecisions}/6</strong>;
+        test windows scheduled: <strong>{QL250_READ_ONLY_GATES.gatewayGetWindowsScheduled}</strong>;
+        witnessed real gateway GETs: <strong>{QL250_READ_ONLY_GATES.independentlyWitnessedGatewayGets}</strong>.
+        All connections <strong>{QL250_READ_ONLY_GATES.connectionState}</strong>;
+        <strong> {QL250_READ_ONLY_GATES.realPilotHolds}/12</strong> live communications gates HELD.</p>
+      <p>Companion handoff: <code>docs/ROSEVEAR_QL250_CUSTODY_CHALLENGE_AND_NONPRODUCTION_WINDOW_HANDOFF.md</code>.
+        A successful source build is not owner test consent and is not owner pilot consent.</p>
     </section>
     {showHelp&&<aside id="ql245-help" className="ql245-help">
       <p>Source: {QL245_SUMMARY_ORIGIN} Source-code changes and a GREEN CI pipeline do not
