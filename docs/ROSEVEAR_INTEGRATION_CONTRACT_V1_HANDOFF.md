@@ -169,3 +169,11 @@ QL-245 now provides a [six-app signed-evidence return handoff](ROSEVEAR_INTEGRAT
 **All four real integrations stay DISCONNECTED, with owner authorization NOT GIVEN and all twelve QL-181 communications gates held.** No external nonproduction GETs, connector activation, customer data transfer or provider messaging was performed by this build.
 
 **Next expected:** **QL-246 — Independently Retrieved Six-App Source Proof, Trusted Pin Challenge & Owner-Safe Nonproduction Test Decision Reconciliation.**
+
+## QL-247 — independently inspected six-repository source census and true connection blockers
+
+The owner's latest `ROSEVEAR_QL246_SIX_APP_SOURCE_PROOF_HANDOFF(6).md` contains **five** app implementation updates and no AI Data Platform status paragraph. QL-247 separately inspected all **six actual GitHub companion repositories**, including the correct `devilndove-site` and case-sensitive `iCamp` repository slugs. At the observed main SHAs, all six required `docs/integration/ql246-source-proof.json` signed public envelopes were **missing (404)**. There is no independently provisioned six-app HMAC registry, actual signed nonproduction gateway GET, trusted public signer-pin challenge, observed durable audit or authenticated owner pilot authorization. Repository co-ownership is insufficient to establish any of these.
+
+The [QL-247 independent source census](QL-247_SIX_APP_PUBLIC_SOURCE_CENSUS_AND_CONNECTION_BLOCKERS.md) records the exact observed revisions, one per-app exception and a bounded operator-only GitHub public GET checker. The [QL-247 six-app handoff](ROSEVEAR_QL247_SIX_APP_CONNECTION_TEST_HANDOFF.md) is ready to send to every application. The public UI's QL-247 evidence panel shows this historical snapshot and cannot fetch secrets or activate a connection. No code or approval is fabricated to fill missing evidence.
+
+**Decision remains `DISCONNECTED / HOLD`: all four companies and all 12 QL-181 real pilot scenarios stay held.** A GREEN `main` deployment only releases the disabled-preview operator code and source inspection tools. Actual nonproduction network testing requires distinct server-side credentials, separately verified public pins, independently witnessed read-only requests and a separate, narrow test authorization. A later owner-authenticated pilot approval is a distinct decision.
