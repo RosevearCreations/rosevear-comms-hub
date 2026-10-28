@@ -185,3 +185,13 @@ The AI Data Platform QL-246 source-proof handoff has a self-reference problem: a
 The [QL-248 six-app amendment handoff](ROSEVEAR_QL248_PROOF_COMMIT_AMENDMENT_HANDOFF.md) is ready to distribute. The [QL-248 independent verification note](QL-248_IMMUTABLE_PROOF_COMMIT_RECONCILIATION_AND_PIN_REVIEW_HELD.md) describes the new offline Ed25519 source-signature verifier and test coverage. A positive offline signature result still cannot establish independently sourced GitHub provenance, authentic original gateway tests, actual source-key ownership, durable audit or owner approval. **All four company connections remain DISCONNECTED; all 12 live communications prerequisites remain held.**
 
 **Next expected Comms Hub build:** QL-249 — Six-App Immutable Proof Publication Retest, Independent GitHub Origin Attestation & Owner-Scoped Nonproduction GET Scheduling (HELD).
+
+## QL-249 — independently refreshed GitHub source provenance and unscheduled test candidates
+
+After QL-248's two-revision transport clarification was forwarded, the six companion applications began further builds. QL-249 independently retrieved each application's newer GitHub `main` SHA and checked the required exact QL-246 source-proof path. **All six were still missing (404)** at the observed 28 October source revisions; see the [QL-249 six-app source report](QL-249_SIX_APP_IMMUTABLE_PROOF_ORIGIN_RETEST_AND_OWNER_TEST_SCHEDULING_HELD.md). This is a point-in-time observation while the other builds continue, not a claim about their subsequent completion.
+
+The new QL-249 bounded, public-only source retriever can, when later proofs exist, separately inspect each GitHub proof-bearing commit, signed older audited source SHA, GitHub ancestry and exact successful source-CI run. A proof's self-signature is not the independently authenticated public key pin. No real gateway or private household endpoint is contacted. All six candidate nonproduction GET test slots remain **NOT SCHEDULED** pending separate owner-scoped test authorization; live pilot authorization is a different later decision. Send the [QL-249 companion handoff](ROSEVEAR_QL249_SIX_APP_ORIGIN_RETEST_AND_OWNER_TEST_SLOT_HANDOFF.md) to all six apps.
+
+**Decision: 0 verified gateway GETs; 0 independently authenticated pins; all four company connections DISCONNECTED; 12/12 communications pilot gates HELD.** No writes, calls, SMS or dispatch were enabled.
+
+**Next expected Comms Hub build:** QL-250 — Independent Six-App Proof/CI Refresh, Key-Pin Custody Challenge & Owner-Approved Nonproduction GET Window Witnessing (HELD).

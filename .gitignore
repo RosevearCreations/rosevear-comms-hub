@@ -2,6 +2,7 @@
 .env.*
 !.env.example
 private-ql247-*.json
+private-ql249-*.json
 local-ql247-*.json
 node_modules/
 .pnpm-store/
