@@ -84,6 +84,7 @@
   // QL-170: source-only Worker release receipt validation marker; live provider and private intake remain disabled.
   // QL-197: source-only Workers build recheck after the calendar UI promotion; no runtime setting or live channel is enabled.
   // QL-247: source-only Workers release verification marker; six-app census and all live connections remain HOLD.
+  // QL-248: source-only Workers check marker; proof reconciliation is offline and connections remain HOLD.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "previews": {},

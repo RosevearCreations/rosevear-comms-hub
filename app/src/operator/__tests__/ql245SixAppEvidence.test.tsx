@@ -206,6 +206,8 @@ describe('QL-245 operator exception-triage page',()=>{
     expect(section.querySelector('#ql245-sources')?.closest('section')?.querySelectorAll('tbody tr')).toHaveLength(6);
     expect(section.querySelector('#ql245-companies')?.closest('section')?.querySelectorAll('tbody tr')).toHaveLength(4);
     expect(section.querySelectorAll('[data-ql247-release] tbody tr')).toHaveLength(6);
+    expect(section.querySelectorAll('[data-ql248-release] ol li')).toHaveLength(6);
+    expect(section.querySelector('[data-ql248-release]')?.textContent).toContain('two immutable commits');
     expect(section.textContent).toContain('missing (404)');
     expect(section.textContent).toContain('6/6 HANDOFF SUMMARIES RECEIVED');
     expect(section.textContent).toContain('OWNER APPROVAL NOT GIVEN');
