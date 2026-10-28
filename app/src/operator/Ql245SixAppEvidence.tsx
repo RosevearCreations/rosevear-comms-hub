@@ -11,6 +11,7 @@ import { QL245_RELEASE, QL245_SOURCE_CLAIMS, QL245_SUMMARY_ORIGIN,
   ql245CurrentStatus, ql245Portfolio } from './ql245SixAppEvidence';
 import { QL247_RELEASE, QL247_OBSERVED, QL247_SOURCE_CENSUS,
   QL247_DECISION } from './ql247SourceCensus';
+import { QL248_RELEASE, QL248_STAGES, QL248_HOLD } from './ql248ProofCommitReadiness';
 import './ql245-six-app-evidence.css';
 
 export function Ql245SixAppEvidence({ organization, source, audit, external,
@@ -92,6 +93,28 @@ export function Ql245SixAppEvidence({ organization, source, audit, external,
       <p>Next handoff: <code>docs/ROSEVEAR_QL247_SIX_APP_CONNECTION_TEST_HANDOFF.md</code>.
         Separate per-app credentials and independently witnessed nonproduction-only GETs are
         required; sharing a GitHub owner does not create trusted connections.</p>
+    </section>
+    <section className="ql245-panel" data-ql248-release={QL248_RELEASE}
+      aria-labelledby="ql248-proof-commit-title">
+      <h4 id="ql248-proof-commit-title">QL-248 · Proof-commit reconciliation &amp; independently pinned source review</h4>
+      <p>A signed proof cannot contain the SHA of the same Git commit that contains
+        the proof file. The corrected handoff tracks <strong>two immutable commits</strong>:
+        the audited source revision, then a later proof-bearing revision.
+        The proof payload signs the first; the operator independently pins both.</p>
+      <ol>{QL248_STAGES.map(stage=><li key={stage.title}>
+        <strong>{stage.title}:</strong> {stage.evidence}
+      </li>)}</ol>
+      <p>QL-248 offline verification command: <code>node scripts/ql248-verify-source-proof-bundle.mjs</code>.
+        This screen does not read local files, contact companion applications,
+        accept owner signatures or provision keys.</p>
+      <p>At the latest independently reviewed source snapshot: <strong>{QL248_HOLD.offlineSignedProofsAvailable}/6</strong> independently collected signed proofs,
+        <strong> {QL248_HOLD.independentlyAuthenticatedPins}/6</strong> independently authenticated key pins,
+        <strong> {QL248_HOLD.independentlyVerifiedGateways}/6</strong> real source gateway checks.
+        Actual connections <strong>{QL248_HOLD.connection}</strong>; owner pilot authorization
+        <strong> {QL248_HOLD.ownerAuthorization}</strong>; <strong>{QL248_HOLD.realPilotHolds}/12</strong> live
+        prerequisites HELD. No writes, calls, SMS or dispatch.</p>
+      <p>Next handoff: <code>docs/ROSEVEAR_QL248_PROOF_COMMIT_AMENDMENT_HANDOFF.md</code>.
+        No current six-app source proof has been accepted by this offline-only preview.</p>
     </section>
     {showHelp&&<aside id="ql245-help" className="ql245-help">
       <p>Source: {QL245_SUMMARY_ORIGIN} Source-code changes and a GREEN CI pipeline do not
