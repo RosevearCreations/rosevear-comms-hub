@@ -92,6 +92,8 @@ import { Ql240PilotDecision } from './Ql240PilotDecision';
 import { type Ql240Ledger } from './ql240PilotDecision';
 import { Ql241ExternalProofReadiness } from './Ql241ExternalProofReadiness';
 import { type Ql241Ledger } from './ql241ExternalProofReadiness';
+import { Ql242OwnerSignedRollout } from './Ql242OwnerSignedRollout';
+import { type Ql242Ledger } from './ql242OwnerSignedRollout';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
@@ -113,6 +115,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'gateway_proof_review', label: 'Gateway proof intake & rotation', description: 'Four-company read-only source proof intake, invented-key rotation checklist and independent HELD review' },
   { id: 'receipt_pilot_gate', label: 'Nonproduction receipts & pilot HOLD', description: 'Pinned-key nonproduction evidence reconciliation, separate audit draft and owner-safe read-only pilot candidate HOLD' },
   { id: 'external_proof_readiness', label: 'External GET proof & owner HOLD', description: 'Sanitized nonproduction GET report, separately pinned public-key evidence and Devil n Dove owner authorization request draft' },
+  { id: 'owner_signed_rollout', label: 'Gateway audit & rollback HOLD', description: 'Two independently pinned signatures, owner rehearsal-request receipt and locally reversible read-only rollout simulation' },
   { id: 'samples', label: 'Synthetic conversations', description: 'Brand-safe triage, unsent drafts, mock intake handoffs and follow-up tasks' },
   { id: 'evidence', label: 'Safety & hold review', description: 'Four-company preview acceptance, synthetic evidence and unresolved pilot prerequisites' },
   { id: 'trial', label: 'Owner trial & gap triage', description: 'Guided four-company manual preview observations, mobile review and prioritized gap follow-up' },
@@ -186,6 +189,7 @@ export function OperatorShell() {
   const [ql239Ledger, setQl239Ledger] = useState<Ql239Ledger>({});
   const [ql240Ledger, setQl240Ledger] = useState<Ql240Ledger>({});
   const [ql241Ledger, setQl241Ledger] = useState<Ql241Ledger>({});
+  const [ql242Ledger, setQl242Ledger] = useState<Ql242Ledger>({});
   const [reminderIds, setReminderIds] = useState<ReadonlySet<string>>(() => new Set());
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
@@ -328,6 +332,7 @@ export function OperatorShell() {
           {workspace === 'gateway_proof_review' && <Ql239GatewayProofReview key={'gateway-proof-v1-' + organization.id} organization={organization} ledger={ql239Ledger} setLedger={setQl239Ledger} onNavigate={setWorkspace} />}
           {workspace === 'receipt_pilot_gate' && <Ql240PilotDecision key={'receipt-pilot-v1-' + organization.id} organization={organization} sourceLedger={ql239Ledger} ledger={ql240Ledger} setLedger={setQl240Ledger} onNavigate={setWorkspace} />}
           {workspace === 'external_proof_readiness' && <Ql241ExternalProofReadiness key={'external-proof-v1-' + organization.id} organization={organization} sourceLedger={ql239Ledger} auditLedger={ql240Ledger} ledger={ql241Ledger} setLedger={setQl241Ledger} onNavigate={setWorkspace} />}
+          {workspace === 'owner_signed_rollout' && <Ql242OwnerSignedRollout key={'owner-rollout-v1-' + organization.id} organization={organization} source={ql239Ledger} audit={ql240Ledger} external={ql241Ledger} ledger={ql242Ledger} setLedger={setQl242Ledger} onNavigate={setWorkspace} />}
           {workspace === 'samples' && brandId !== null && (
             <>
               <Ql174BrandSafeTriagePreview brandId={brandId} />

@@ -1,0 +1,22 @@
+.ql242-screen { display: grid; gap: 1rem; color: #edf5ff; }
+.ql242-header { display: flex; gap: 1rem; justify-content: space-between; align-items: flex-start; }
+.ql242-header h3 { margin: .35rem 0; }
+.ql242-warning { background: #483826; border: 2px solid #e6c47f; border-radius: .85rem; padding: 1rem; color: #fff0d0; }
+.ql242-help { border-left: 4px solid #8ce5b8; background: #24444d; padding: .9rem; border-radius: .45rem; overflow-wrap: anywhere; }
+.ql242-panel { background: #182f40; border: 1px solid #7292ab; padding: 1rem; border-radius: .9rem; min-width: 0; }
+.ql242-panel h4 { margin: 0 0 .65rem; }
+.ql242-scroll { overflow-x: auto; }
+.ql242-scroll table { border-collapse: collapse; width: 100%; min-width: 685px; }
+.ql242-scroll th, .ql242-scroll td { padding: .65rem; text-align: left; border-bottom: 1px solid #5d839d; vertical-align: top; overflow-wrap: anywhere; }
+.ql242-meta, .ql242-actions { display: flex; flex-wrap: wrap; gap: .65rem; margin: .8rem 0; align-items: end; }
+.ql242-meta span { background: #294a60; padding: .55rem; border-radius: .45rem; overflow-wrap: anywhere; }
+.ql242-form, .ql242-form label, .ql242-actions label { display: grid; gap: .5rem; min-width: 0; }
+.ql242-actions label { flex: 1; }
+.ql242-screen textarea, .ql242-screen input { box-sizing: border-box; background: #fff; color: #142d3c; border: 1px solid #9bb9ca; border-radius: .4rem; width: 100%; padding: .65rem; }
+.ql242-screen button { cursor: pointer; background: #24546b; border: 1px solid #8eb4ce; color: #fff; padding: .68rem .8rem; border-radius: .6rem; }
+.ql242-screen button:disabled { opacity: .48; cursor: not-allowed; }
+.ql242-screen button:focus-visible, .ql242-screen input:focus-visible, .ql242-screen textarea:focus-visible { outline: 3px solid #ffe18d; outline-offset: 3px; }
+.ql242-result { margin: .8rem 0; background: #294b5b; padding: .8rem; border-left: 4px solid #e6c47f; border-radius: .4rem; overflow-wrap: anywhere; }
+.ql242-message { color: #ffe8ae; font-weight: 700; }
+@media (max-width: 650px) { .ql242-header { flex-direction: column; } .ql242-actions { display: grid; } }
+@media (forced-colors: active) { .ql242-panel, .ql242-warning, .ql242-result { border: 1px solid CanvasText; } }
