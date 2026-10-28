@@ -13,7 +13,9 @@
     "verify:ql248": "node scripts/__tests__/ql248-proof-commit-reconciliation.test.mjs",
     "integration:ql248-offline-proof": "node scripts/ql248-verify-source-proof-bundle.mjs",
     "verify:ql249": "node scripts/__tests__/ql249-public-github-origin-retest.test.mjs",
-    "integration:ql249-public-origin": "node scripts/ql249-retest-six-app-public-github.mjs"
+    "integration:ql249-public-origin": "node scripts/ql249-retest-six-app-public-github.mjs",
+    "verify:ql250": "node scripts/__tests__/ql250-pin-custody-window-witness.test.mjs",
+    "integration:ql250-public-origin": "node scripts/ql250-review-six-app-source.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.40.0"
