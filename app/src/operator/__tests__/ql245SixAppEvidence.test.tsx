@@ -238,6 +238,9 @@ describe('QL-245 operator exception-triage page',()=>{
     expect(section.querySelectorAll('[data-ql259-release] tbody tr')).toHaveLength(6);
     expect(section.querySelector('[data-ql259-release]')?.textContent)
       .toContain('0/6 self-reported packets received');
+    expect(section.querySelectorAll('[data-ql260-release] tbody tr')).toHaveLength(6);
+    expect(section.querySelector('[data-ql260-release]')?.textContent)
+      .toContain('0/6 actual QL-258 sanitized owner-status JSON packets');
     expect(section.querySelector('[data-ql248-release]')?.textContent).toContain('two immutable commits');
     expect(section.textContent).toContain('missing (404)');
     expect(section.textContent).toContain('6/6 HANDOFF SUMMARIES RECEIVED');
