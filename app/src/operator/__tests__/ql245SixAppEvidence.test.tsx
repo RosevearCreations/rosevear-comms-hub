@@ -211,6 +211,8 @@ describe('QL-245 operator exception-triage page',()=>{
     expect(section.querySelector('[data-ql249-release]')?.textContent).toContain('NOT SCHEDULED');
     expect(section.querySelectorAll('[data-ql250-release] tbody tr')).toHaveLength(6);
     expect(section.querySelector('[data-ql250-release]')?.textContent).toContain('NOT SCHEDULED');
+    expect(section.querySelectorAll('[data-ql251-release] tbody tr')).toHaveLength(6);
+    expect(section.querySelector('[data-ql251-release]')?.textContent).toContain('NOT AUTHORIZED');
     expect(section.querySelector('[data-ql248-release]')?.textContent).toContain('two immutable commits');
     expect(section.textContent).toContain('missing (404)');
     expect(section.textContent).toContain('6/6 HANDOFF SUMMARIES RECEIVED');
