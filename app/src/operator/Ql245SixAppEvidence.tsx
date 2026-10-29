@@ -22,6 +22,8 @@ import { QL252_RELEASE, QL252_OBSERVED, QL252_PUBLIC_PROOF_PATH,
   QL252_SIX_APP_SOURCE_ESCALATION, QL252_REVIEW_GATES } from './ql252ProofEscalationReview';
 import { QL253_RELEASE, QL253_OBSERVED, QL253_PUBLIC_PROOF_PATH,
   QL253_SIX_APP_ORIGIN_RECHECK, QL253_TRUST_AND_TEST_GATES } from './ql253ProofOriginReview';
+import { QL254_RELEASE, QL254_OBSERVED, QL254_PUBLIC_PROOF_PATH,
+  QL254_SIX_APP_FOLLOWUP, QL254_GATES } from './ql254ProofFollowupReview';
 import './ql245-six-app-evidence.css';
 
 export function Ql245SixAppEvidence({ organization, source, audit, external,
@@ -311,6 +313,50 @@ export function Ql245SixAppEvidence({ organization, source, audit, external,
         Public-only opt-in: <code>npm run integration:ql253-public-proof -- --public-get</code>.
         Offline safeguard tests: <code>npm run verify:ql253</code>. Owner TEST approval
         and subsequent pilot release remain separate, independently authenticated acts.</p>
+    </section>
+    <section className="ql245-panel" data-ql254-release={QL254_RELEASE}
+      aria-labelledby="ql254-private-witness-relay-title">
+      <h4 id="ql254-private-witness-relay-title">QL-254 · Original proof follow-up, independent pin witness &amp; reversible private relay (HELD)</h4>
+      <p>Latest dated <strong>public GitHub-only</strong> follow-up: <strong>{QL254_OBSERVED}</strong>.
+        All six companion apps advanced their main commits since QL-253, but
+        {' '}<code>{QL254_PUBLIC_PROOF_PATH}</code> still returned <strong>HTTP 404 at every
+        observed SHA</strong>. These checks concern original signed proof publication,
+        not application deployment health. Each new commit needs its own independent check.</p>
+      <div className="ql245-scroll"><table>
+        <caption>Public immutable source-code observations only; no authenticated gateway connection.</caption>
+        <thead><tr><th scope="col">Application</th><th scope="col">Observed main SHA</th>
+          <th scope="col">QL-246 proof</th><th scope="col">Next action</th></tr></thead>
+        <tbody>{QL254_SIX_APP_FOLLOWUP.map(r=><tr key={r.repository}>
+          <th scope="row">{r.system}</th>
+          <td><a href={`https://github.com/RosevearCreations/${r.repository}/commit/${r.mainSha}`}
+            target="_blank" rel="noopener noreferrer">{r.mainSha.slice(0,12)}</a></td>
+          <td><strong>{r.proof} / HELD</strong></td>
+          <td>Genuine source A, exact GREEN CI, signed proof descendant B, public raw proof bytes digest</td>
+        </tr>)}</tbody>
+      </table></div>
+      <p>The new offline checker links a signed witness claim to a renewed five-minute
+        pin challenge, exact A/B source, tenant, registry snapshot digest and distinct
+        Ed25519 witness key. Even valid cryptography remains <strong>independently
+        unverified</strong> until a separate custodian authenticates the witness and
+        public key privately. A chat reply or a GitHub merge is not owner TEST permission.</p>
+      <p><strong>Rosevear AI Hub 24/7 relay:</strong> {QL254_GATES.privateRelayRehearsal}.
+        A reversible four-step sequence (disabled baseline, simulated enable,
+        simulated stop, confirmed disabled) can be checked without accessing the PC.
+        An eventual relay would use private Tailscale/LAN or outbound-only routing,
+        isolate tenants, and have no public inbound port or vault/camera permissions.
+        No service, credential exchange or gateway is enabled by this build.</p>
+      <p>Original published proofs: <strong>{QL254_GATES.publicOriginalProofs}/6</strong>;
+        independently trusted pins: <strong>{QL254_GATES.independentlyTrustedPins}/6</strong>;
+        verified independent witnesses: <strong>{QL254_GATES.independentlyVerifiedWitnesses}/6</strong>;
+        real GET pairs: <strong>{QL254_GATES.verifiedGatewayGetPairs}</strong>.
+        TEST permission <strong>{QL254_GATES.ownerTestAuthorization}</strong>;
+        connections <strong>{QL254_GATES.connectionState}</strong>;
+        <strong> {QL254_GATES.livePilotHolds}/12</strong> live prerequisites HELD.</p>
+      <p>Companion handoff: <code>docs/ROSEVEAR_QL254_SIX_APP_ORIGINAL_PROOF_WITNESS_PRIVATE_RELAY_HANDOFF.md</code>.
+        Offline safeguards: <code>npm run verify:ql254</code>.
+        Opt-in <em>public GitHub only</em> check:
+        {' '}<code>npm run integration:ql254-public-proof -- --public-get</code>.
+        No owner pilot, private runner, scheduling, calls, SMS or external writes.</p>
     </section>
     {showHelp&&<aside id="ql245-help" className="ql245-help">
       <p>Source: {QL245_SUMMARY_ORIGIN} Source-code changes and a GREEN CI pipeline do not
