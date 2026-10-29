@@ -232,6 +232,9 @@ describe('QL-245 operator exception-triage page',()=>{
     expect(section.querySelectorAll('[data-ql256-release] tbody tr')).toHaveLength(6);
     expect(section.querySelector('[data-ql256-release]')?.textContent).toContain('staged test');
     expect(section.querySelector('[data-ql256-release]')?.textContent).toContain('NOT_GIVEN');
+    expect(section.querySelectorAll('[data-ql257-release] tbody tr')).toHaveLength(10);
+    expect(section.querySelector('[data-ql257-release]')?.textContent).toContain('Build variables and secrets');
+    expect(section.querySelector('[data-ql257-release]')?.textContent).toContain('candidate');
     expect(section.querySelector('[data-ql248-release]')?.textContent).toContain('two immutable commits');
     expect(section.textContent).toContain('missing (404)');
     expect(section.textContent).toContain('6/6 HANDOFF SUMMARIES RECEIVED');

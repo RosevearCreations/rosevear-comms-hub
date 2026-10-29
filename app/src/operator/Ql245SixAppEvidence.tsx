@@ -27,6 +27,8 @@ import { QL254_RELEASE, QL254_OBSERVED, QL254_PUBLIC_PROOF_PATH,
 import { QL255_RELEASE, QL255_OBSERVED, QL255_PROOF_PATH,
   QL255_RESPONSE_DISPOSITIONS, QL255_OWNER_RELAY_GATES } from './ql255ProofDispositionReview';
 import { QL256_RELEASE, QL256_GUIDES, QL256_GATES } from './ql256ConnectionReadiness';
+import { QL257_RELEASE, QL257_OBSERVED, QL257_PROOF_PATH,
+  QL257_SOURCES, QL257_BUILD_CONFIG, QL257_GATES } from './ql257SixResponseConfigReview';
 import './ql245-six-app-evidence.css';
 
 export function Ql245SixAppEvidence({ organization, source, audit, external,
@@ -452,6 +454,56 @@ export function Ql245SixAppEvidence({ organization, source, audit, external,
       <p>Offline self-check: <code>npm run verify:ql256</code>.
         Static source-status summary: <code>npm run integration:ql256-readiness</code>.
         No live calls, SMS, dispatch, home server, customer data or Etsy writes.</p>
+    </section>
+    <section className="ql245-panel" data-ql257-release={QL257_RELEASE}
+      aria-labelledby="ql257-six-app-return-title">
+      <h4 id="ql257-six-app-return-title">QL-257 · Six returned signer decisions &amp; where variables belong (HELD)</h4>
+      <p>The owner provided six individual QL-256 responses. A fresh independent
+        {' '}<strong>public GitHub-only</strong> check on <strong>{QL257_OBSERVED}</strong>
+        {' '}still found HTTP 404 at <code>{QL257_PROOF_PATH}</code> on each
+        {' '}current <code>main</code> SHA. One app reported an existing candidate
+        {' '}signer, but nobody independently authenticated its custody or public-key pin.
+        The owner has not entered new variables or approved TEST.</p>
+      <div className="ql245-scroll"><table>
+        <caption>Owner-provided signer statuses, current immutable source and next real action—not private proof.</caption>
+        <thead><tr><th scope="col">Application</th><th scope="col">Current main</th>
+          <th scope="col">Returned signer state</th><th scope="col">Next action</th></tr></thead>
+        <tbody>{QL257_SOURCES.map(row=><tr key={row.repository}>
+          <th scope="row">{row.name}</th>
+          <td><a href={`https://github.com/RosevearCreations/${row.repository}/commit/${row.mainSha}`}
+            target="_blank" rel="noopener noreferrer">{row.mainSha.slice(0,12)}</a></td>
+          <td>{row.signer} · <strong>Proof 404</strong></td><td>{row.next}</td>
+        </tr>)}</tbody>
+      </table></div>
+      <p><strong>Why Cloudflare refused the variable:</strong> this site is currently
+        {' '}a static-assets-only Worker, so its <em>runtime</em> variable/binding
+        section is unavailable. Public values actually needed in the Cloudflare
+        {' '}<em>production build</em> belong under <strong>Settings → Builds →
+        Build variables and secrets</strong>, not under GitHub Actions. GitHub
+        Actions variables supply our separate GitHub Pages preview when referenced
+        by its workflow. No new variable is required to process the six handoffs.</p>
+      <div className="ql245-scroll"><table>
+        <caption>Location decisions only; no values are read or stored by this screen.</caption>
+        <thead><tr><th scope="col">Configuration</th><th scope="col">Correct location</th>
+          <th scope="col">Decision</th></tr></thead>
+        <tbody>{QL257_BUILD_CONFIG.map(row=><tr key={row.setting}>
+          <th scope="row">{row.setting}</th><td>{row.location}</td><td>{row.action}</td>
+        </tr>)}</tbody>
+      </table></div>
+      <p><strong>Do not fix the disabled-preview Supabase banner by turning on
+        {' '}authentication or entering secret keys.</strong> It describes an intentional
+        {' '}local-only state, not the reason six source proofs are 404.
+        Never put an Ed25519 private key, HMAC credential, database secret or
+        {' '}home-server address into <code>VITE_*</code> build variables.</p>
+      <p>Independent original proofs: <strong>{QL257_GATES.originalSignedProofs}/6</strong>;
+        trusted custodians: <strong>{QL257_GATES.independentlyVerifiedCustodians}/6</strong>;
+        owner TEST permission: <strong>NOT_GIVEN</strong>;
+        actual GETs: <strong>{QL257_GATES.actualGatewayGets}</strong>;
+        connections: <strong>{QL257_GATES.connections}</strong>;
+        <strong> {QL257_GATES.livePilotHolds}/12 HELD</strong>.
+        Owner action sheet:
+        {' '}<code>docs/ROSEVEAR_QL257_SIX_RESPONSE_VARIABLE_PLACEMENT_OWNER_ACTIONS.md</code>.
+        Offline tests: <code>npm run verify:ql257</code>. No runtime changes.</p>
     </section>
     {showHelp&&<aside id="ql245-help" className="ql245-help">
       <p>Source: {QL245_SUMMARY_ORIGIN} Source-code changes and a GREEN CI pipeline do not
