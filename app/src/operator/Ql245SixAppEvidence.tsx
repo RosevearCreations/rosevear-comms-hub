@@ -18,6 +18,8 @@ import { QL250_RELEASE, QL250_OBSERVED, QL250_SOURCE_REFRESH,
   QL250_READ_ONLY_GATES } from './ql250CustodyWindowReview';
 import { QL251_RELEASE, QL251_OBSERVED, QL251_SIX_APP_PROOF_SNAPSHOT,
   QL251_TEST_GATE } from './ql251WitnessTestReview';
+import { QL252_RELEASE, QL252_OBSERVED, QL252_PUBLIC_PROOF_PATH,
+  QL252_SIX_APP_SOURCE_ESCALATION, QL252_REVIEW_GATES } from './ql252ProofEscalationReview';
 import './ql245-six-app-evidence.css';
 
 export function Ql245SixAppEvidence({ organization, source, audit, external,
@@ -227,6 +229,44 @@ export function Ql245SixAppEvidence({ organization, source, audit, external,
         <strong> {QL251_TEST_GATE.realPilotHolds}/12</strong> live communications gates HELD.</p>
       <p>Six-app handoff: <code>docs/ROSEVEAR_QL251_SOURCE_WITNESS_TEST_AUTHORIZATION_HANDOFF.md</code>.
         Actual test approval and later read-only pilot approval are separate decisions.</p>
+    </section>
+    <section className="ql245-panel" data-ql252-release={QL252_RELEASE}
+      aria-labelledby="ql252-proof-escalation-title">
+      <h4 id="ql252-proof-escalation-title">QL-252 · Publication escalation, independent pin custody &amp; TEST-only owner review (HELD)</h4>
+      <p>New public GitHub recheck on <strong>{QL252_OBSERVED}</strong>: the six applications
+        have again advanced, but the required <code>{QL252_PUBLIC_PROOF_PATH}</code> is still
+        <strong> missing (404)</strong> at all six checked main revisions. This does not
+        mean their application builds failed: their source proof publication is a separate
+        prerequisite. The results below are a dated snapshot, not live status.</p>
+      <div className="ql245-scroll"><table>
+        <caption>Actionable per-app source-proof publication queue; no gateway calls or credentials.</caption>
+        <thead><tr><th scope="col">Application</th><th scope="col">GitHub main SHA</th>
+          <th scope="col">Proof</th><th scope="col">Next required action</th></tr></thead>
+        <tbody>{QL252_SIX_APP_SOURCE_ESCALATION.map(s=><tr key={s.repository}>
+          <th scope="row">{s.system}</th>
+          <td><a href={`https://github.com/RosevearCreations/${s.repository}/commit/${s.mainSha}`}
+            target="_blank" rel="noopener noreferrer">{s.mainSha.slice(0, 12)}</a></td>
+          <td><strong>{s.publicProof} / HOLD</strong></td>
+          <td>Publish authentic signed QL-246 proof; verify exact source SHA and CI first</td>
+        </tr>)}</tbody>
+      </table></div>
+      <p>Source proof first; then confirm independent signer-key custody and a distinct
+        reviewer outside GitHub. QL-252 checks an offline custody provenance record and a
+        signed <strong>test-only owner decision claim</strong> against the QL-251 witness
+        and narrowly scoped GET request. Even internally matching signatures and a
+        claimed out-of-band channel do <strong>not</strong> authenticate the owner or
+        authorize any request. No approval control, key provisioning, scheduler or
+        gateway fetch exists in this preview.</p>
+      <p>Published proofs at this snapshot: <strong>{QL252_REVIEW_GATES.sourceProofsAtObservedMain}/6</strong>;
+        independently verified custodian pins: <strong>{QL252_REVIEW_GATES.independentlyTrustedCustodyPins}/6</strong>;
+        verified owner test approvals: <strong>{QL252_REVIEW_GATES.independentlyVerifiedOwnerDecisions}</strong>;
+        original gateway GETs: <strong>{QL252_REVIEW_GATES.originalAuthenticatedGatewayGets}</strong>;
+        scheduled windows: <strong>{QL252_REVIEW_GATES.scheduledGatewayGetWindows}</strong>.
+        All connections <strong>{QL252_REVIEW_GATES.connectionState}</strong>;
+        <strong> {QL252_REVIEW_GATES.realPilotHolds}/12</strong> live prerequisites HELD.</p>
+      <p>Forward <code>docs/ROSEVEAR_QL252_PUBLICATION_ESCALATION_AND_OWNER_TEST_HANDOFF.md</code>
+        to each app. Public GitHub-only checker: <code>node scripts/ql252-publication-escalation.mjs --public-get</code>.
+        A future authenticated owner TEST decision is <em>not</em> pilot release.</p>
     </section>
     {showHelp&&<aside id="ql245-help" className="ql245-help">
       <p>Source: {QL245_SUMMARY_ORIGIN} Source-code changes and a GREEN CI pipeline do not
