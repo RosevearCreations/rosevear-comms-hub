@@ -16,6 +16,8 @@ import { QL249_RELEASE, QL249_OBSERVED, QL249_SOURCE_SNAPSHOT,
   QL249_TEST_SLOT_GATE } from './ql249OriginRetest';
 import { QL250_RELEASE, QL250_OBSERVED, QL250_SOURCE_REFRESH,
   QL250_READ_ONLY_GATES } from './ql250CustodyWindowReview';
+import { QL251_RELEASE, QL251_OBSERVED, QL251_SIX_APP_PROOF_SNAPSHOT,
+  QL251_TEST_GATE } from './ql251WitnessTestReview';
 import './ql245-six-app-evidence.css';
 
 export function Ql245SixAppEvidence({ organization, source, audit, external,
@@ -188,6 +190,43 @@ export function Ql245SixAppEvidence({ organization, source, audit, external,
         <strong> {QL250_READ_ONLY_GATES.realPilotHolds}/12</strong> live communications gates HELD.</p>
       <p>Companion handoff: <code>docs/ROSEVEAR_QL250_CUSTODY_CHALLENGE_AND_NONPRODUCTION_WINDOW_HANDOFF.md</code>.
         A successful source build is not owner test consent and is not owner pilot consent.</p>
+    </section>
+    <section className="ql245-panel" data-ql251-release={QL251_RELEASE}
+      aria-labelledby="ql251-witness-test-title">
+      <h4 id="ql251-witness-test-title">QL-251 · Signed source proof recheck &amp; separate witness/test permission review</h4>
+      <p>Independently rechecked all six public GitHub <code>main</code> revisions on
+        {' '}{QL251_OBSERVED}. All six companion repos have newer source SHAs than the QL-250
+        snapshot, but the immutable QL-246 proof URL still returned <strong>404 for every
+        checked SHA</strong>. No real original signed proof, source CI chain, witness identity
+        or test authorization was accepted.</p>
+      <div className="ql245-scroll"><table>
+        <caption>Dated GitHub public source check; signed proof and independent custody proof remain absent.</caption>
+        <thead><tr><th scope="col">Application</th><th scope="col">Main revision</th>
+          <th scope="col">Since QL-250</th><th scope="col">Public proof</th>
+          <th scope="col">External GET test</th></tr></thead>
+        <tbody>{QL251_SIX_APP_PROOF_SNAPSHOT.map(s=><tr key={s.repository}>
+          <th scope="row">{s.system}</th>
+          <td><a href={`https://github.com/RosevearCreations/${s.repository}/commit/${s.mainSha}`}
+            target="_blank" rel="noopener noreferrer">{s.mainSha.slice(0, 12)}</a></td>
+          <td>{s.advanced?'Advanced':'Same SHA'}</td>
+          <td><strong>{s.publicProof} / HOLD</strong></td><td>NOT AUTHORIZED / NOT SCHEDULED</td>
+        </tr>)}</tbody>
+      </table></div>
+      <p>The new QL-251 offline witness-return verifier binds a separate witness
+        signature to a valid QL-250 custody challenge, exact source/proof SHAs, tenant and
+        custody response digest. Its signed test-review form is explicitly a <strong>request
+        for independent owner review</strong>, never owner approval. Matching two public
+        signatures cannot prove real-world identity or authorize a gateway request.
+        This preview contains <strong>no live fetch, approval button or scheduler</strong>.</p>
+      <p>Original public signed proofs: <strong>{QL251_TEST_GATE.publishedSignedSourceProofs}/6</strong>;
+        independently authenticated custody witnesses: <strong>{QL251_TEST_GATE.originalCustodyWitnessesIndependentlyAttested}/6</strong>;
+        authenticated owner test decisions: <strong>{QL251_TEST_GATE.authenticatedOwnerNonproductionTestDecisions}</strong>;
+        scheduled windows: <strong>{QL251_TEST_GATE.windowsScheduled}</strong>;
+        real authenticated GET pairs: <strong>{QL251_TEST_GATE.authenticatedGatewayGetPairs}</strong>.
+        All integrations <strong>{QL251_TEST_GATE.connectionState}</strong>;
+        <strong> {QL251_TEST_GATE.realPilotHolds}/12</strong> live communications gates HELD.</p>
+      <p>Six-app handoff: <code>docs/ROSEVEAR_QL251_SOURCE_WITNESS_TEST_AUTHORIZATION_HANDOFF.md</code>.
+        Actual test approval and later read-only pilot approval are separate decisions.</p>
     </section>
     {showHelp&&<aside id="ql245-help" className="ql245-help">
       <p>Source: {QL245_SUMMARY_ORIGIN} Source-code changes and a GREEN CI pipeline do not
