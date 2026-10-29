@@ -27,7 +27,9 @@
     "verify:ql255": "node scripts/__tests__/ql255-response-disposition-owner-relay.test.mjs",
     "integration:ql255-public-proof": "node scripts/ql255-public-disposition.mjs",
     "verify:ql256": "node scripts/__tests__/ql256-connection-readiness.test.mjs",
-    "integration:ql256-readiness": "node scripts/ql256-readiness-summary.mjs"
+    "integration:ql256-readiness": "node scripts/ql256-readiness-summary.mjs",
+    "verify:ql257": "node scripts/__tests__/ql257-six-response-config-routing.test.mjs",
+    "integration:ql257-readiness": "node scripts/ql257-config-routing-summary.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.40.0"
