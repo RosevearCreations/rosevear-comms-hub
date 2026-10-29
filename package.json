@@ -29,7 +29,8 @@
     "verify:ql256": "node scripts/__tests__/ql256-connection-readiness.test.mjs",
     "integration:ql256-readiness": "node scripts/ql256-readiness-summary.mjs",
     "verify:ql257": "node scripts/__tests__/ql257-six-response-config-routing.test.mjs",
-    "integration:ql257-readiness": "node scripts/ql257-config-routing-summary.mjs"
+    "integration:ql257-readiness": "node scripts/ql257-config-routing-summary.mjs",
+    "verify:ql258": "npm --prefix app run test -- src/operator/__tests__/ql258OwnerActionIntake.test.tsx"
   },
   "devDependencies": {
     "wrangler": "^4.40.0"
