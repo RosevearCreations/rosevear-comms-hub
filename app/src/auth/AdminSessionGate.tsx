@@ -73,7 +73,9 @@ function LocalOnlyBanner({ reasons }: { reasons: string[] }) {
   return (
     <div style={bannerStyle}>
       <span>
-        Local-only mode. Supabase login/reference reads are not enabled yet{reasons.length ? `: ${reasons.join(' ')}` : '.'}
+        Disabled preview — local samples only. Supabase login/reference reads
+        {' '}are intentionally off; adding a key is not required for the six-app
+        {' '}proof handoff.{reasons.length ? ` Configuration: ${reasons.join(' ')}` : ''}
       </span>
     </div>
   );

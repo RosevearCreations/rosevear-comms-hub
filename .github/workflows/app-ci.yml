@@ -41,6 +41,7 @@ jobs:
       - run: node ../scripts/__tests__/ql254-proof-followup-witness-relay.test.mjs
       - run: node ../scripts/__tests__/ql255-response-disposition-owner-relay.test.mjs
       - run: node ../scripts/__tests__/ql256-connection-readiness.test.mjs
+      - run: node ../scripts/__tests__/ql257-six-response-config-routing.test.mjs
       - run: node --test ../scripts/__tests__/ql189-operations-safety-harness.test.mjs
       - run: node ../scripts/ql190-packet-integrity-audit.mjs
       - run: node --test ../scripts/__tests__/ql190-packet-integrity-audit.test.mjs
