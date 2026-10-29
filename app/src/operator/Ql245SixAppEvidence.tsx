@@ -24,6 +24,8 @@ import { QL253_RELEASE, QL253_OBSERVED, QL253_PUBLIC_PROOF_PATH,
   QL253_SIX_APP_ORIGIN_RECHECK, QL253_TRUST_AND_TEST_GATES } from './ql253ProofOriginReview';
 import { QL254_RELEASE, QL254_OBSERVED, QL254_PUBLIC_PROOF_PATH,
   QL254_SIX_APP_FOLLOWUP, QL254_GATES } from './ql254ProofFollowupReview';
+import { QL255_RELEASE, QL255_OBSERVED, QL255_PROOF_PATH,
+  QL255_RESPONSE_DISPOSITIONS, QL255_OWNER_RELAY_GATES } from './ql255ProofDispositionReview';
 import './ql245-six-app-evidence.css';
 
 export function Ql245SixAppEvidence({ organization, source, audit, external,
@@ -357,6 +359,53 @@ export function Ql245SixAppEvidence({ organization, source, audit, external,
         Opt-in <em>public GitHub only</em> check:
         {' '}<code>npm run integration:ql254-public-proof -- --public-get</code>.
         No owner pilot, private runner, scheduling, calls, SMS or external writes.</p>
+    </section>
+    <section className="ql245-panel" data-ql255-release={QL255_RELEASE}
+      aria-labelledby="ql255-six-app-disposition-title">
+      <h4 id="ql255-six-app-disposition-title">QL-255 · Owner-received six-app responses, custody exception &amp; mini-server TEST preparation (HELD)</h4>
+      <p>The six source-team responses were reconciled against independent <strong>public
+        GitHub-only</strong> retrieval on <strong>{QL255_OBSERVED}</strong>. Every checked
+        immutable <code>main</code> SHA still returned <strong>HTTP 404</strong> for
+        {' '}<code>{QL255_PROOF_PATH}</code>. Their messages indicate application-build
+        progress, not original signed source-proof publication, trusted signing-key
+        custody or authenticated owner consent. This is a dated snapshot.</p>
+      <div className="ql245-scroll"><table>
+        <caption>Owner-reported state compared with independent GitHub proof path; no source runtime contacted.</caption>
+        <thead><tr><th scope="col">Source</th><th scope="col">Immutable main SHA</th>
+          <th scope="col">Source report</th><th scope="col">Proof</th></tr></thead>
+        <tbody>{QL255_RESPONSE_DISPOSITIONS.map(row=><tr key={row.repository}>
+          <th scope="row">{row.system}</th>
+          <td><a href={`https://github.com/RosevearCreations/${row.repository}/commit/${row.mainSha}`}
+            target="_blank" rel="noopener noreferrer">{row.mainSha.slice(0,12)}</a></td>
+          <td>{row.response}</td><td><strong>{row.proof} / HOLD</strong></td>
+        </tr>)}</tbody>
+      </table></div>
+      <p><strong>One concrete blocker:</strong> each source app needs genuine source A
+        and matching GREEN CI, an authentic Ed25519 envelope in descendant proof
+        commit B, and an independently pinned signer and different private witness.
+        QL-255 accepts a separately reviewed custody exception only as a
+        <strong> private review request</strong>, not completed signer ownership.
+        It rejects cross-tenant, duplicate receipt, expired and self-approved claims.</p>
+      <p><strong>24/7 Rosevear AI Hub mini-server:</strong> {QL255_OWNER_RELAY_GATES.stopAndRollback}.
+        We can prepare an offline request for one owner-scoped nonproduction GET window
+        of at most 30 minutes. A dedicated service account, isolated tenant, no public
+        inbound ports and documented stop/rollback are mandatory. A signed-looking
+        request, general GitHub change permission or a simulated rollback is
+        <strong> not</strong> real TEST authorization. Nothing has been installed
+        or started on the PC.</p>
+      <p>Original signed proofs: <strong>{QL255_OWNER_RELAY_GATES.originalSignedProofs}/6</strong>;
+        independently pinned signers: <strong>{QL255_OWNER_RELAY_GATES.independentlyPinnedSigners}/6</strong>;
+        real-world verified custody witnesses: <strong>{QL255_OWNER_RELAY_GATES.independentlyAuthenticatedWitnesses}/6</strong>;
+        original GETs: <strong>{QL255_OWNER_RELAY_GATES.actualGatewayGets}</strong>;
+        owner TEST decision: <strong>{QL255_OWNER_RELAY_GATES.ownerTestAuthorization}</strong>;
+        connection: <strong>{QL255_OWNER_RELAY_GATES.connections}</strong>;
+        <strong> {QL255_OWNER_RELAY_GATES.livePilotHolds}/12</strong> safeguards HELD.</p>
+      <p>Updated owner handoff:
+        {' '}<code>docs/ROSEVEAR_QL255_SIX_APP_SIGNER_CUSTODY_OWNER_TEST_ACTION_SHEET.md</code>.
+        Offline tests: <code>npm run verify:ql255</code>.
+        Explicit public-only check:
+        {' '}<code>npm run integration:ql255-public-proof -- --public-get</code>.
+        Never enable a private gateway, owner trial, Etsy writes, calls or SMS here.</p>
     </section>
     {showHelp&&<aside id="ql245-help" className="ql245-help">
       <p>Source: {QL245_SUMMARY_ORIGIN} Source-code changes and a GREEN CI pipeline do not
