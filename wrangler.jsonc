@@ -89,6 +89,7 @@
   // QL-250: source-only Worker verification marker; key-custody and future GET-window review remain offline HELD.
   // QL-251: source-only Workers release marker; witness and owner-test request signatures remain offline HELD.
   // QL-252: source-only Workers release marker; proof escalation and test-only approval claim intake remain HELD.
+  // QL-253: source-only Workers release marker; six-app trusted pins, TEST-only approval and private relay remain HELD.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "previews": {},
