@@ -26,6 +26,7 @@ import { QL254_RELEASE, QL254_OBSERVED, QL254_PUBLIC_PROOF_PATH,
   QL254_SIX_APP_FOLLOWUP, QL254_GATES } from './ql254ProofFollowupReview';
 import { QL255_RELEASE, QL255_OBSERVED, QL255_PROOF_PATH,
   QL255_RESPONSE_DISPOSITIONS, QL255_OWNER_RELAY_GATES } from './ql255ProofDispositionReview';
+import { QL256_RELEASE, QL256_GUIDES, QL256_GATES } from './ql256ConnectionReadiness';
 import './ql245-six-app-evidence.css';
 
 export function Ql245SixAppEvidence({ organization, source, audit, external,
@@ -406,6 +407,51 @@ export function Ql245SixAppEvidence({ organization, source, audit, external,
         Explicit public-only check:
         {' '}<code>npm run integration:ql255-public-proof -- --public-get</code>.
         Never enable a private gateway, owner trial, Etsy writes, calls or SMS here.</p>
+    </section>
+    <section className="ql245-panel" data-ql256-release={QL256_RELEASE}
+      aria-labelledby="ql256-signer-custodian-title">
+      <h4 id="ql256-signer-custodian-title">QL-256 · Original signer, independent custodian and owner TEST window (HELD)</h4>
+      <p><strong>One actionable queue for all six apps.</strong> The independently checked
+        {' '}<code>main</code> commits still lacked original QL-246 signed proof at the
+        {' '}29 October 2026 snapshot. The next question is whether a <em>real</em>
+        app-specific signer even exists. Private custodian/witness/reviewer identities
+        are not assigned or verified here. Do not generate mock signatures or repeat
+        generic HOLD reports.</p>
+      <div className="ql245-scroll"><table>
+        <caption>Six QL-256 source-specific handoffs; dated public source check, not a live private probe.</caption>
+        <thead><tr><th scope="col">App</th><th scope="col">Main source</th>
+          <th scope="col">Signer / private roles</th><th scope="col">Original proof</th>
+          <th scope="col">Guide</th></tr></thead>
+        <tbody>{QL256_GUIDES.map(row=><tr key={row.repository}>
+          <th scope="row">{row.name}</th>
+          <td><a href={`https://github.com/RosevearCreations/${row.repository}/commit/${row.mainSha}`}
+            target="_blank" rel="noopener noreferrer">{row.mainSha?.slice(0,12)}</a></td>
+          <td>{row.signer} / {row.roles}</td><td><strong>{row.proof}</strong></td>
+          <td><a href={`https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/ql256-apps/${row.file}`}
+            target="_blank" rel="noopener noreferrer">App instructions</a></td>
+        </tr>)}</tbody>
+      </table></div>
+      <p><strong>Owner walkthrough:</strong>
+        {' '}<a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/ROSEVEAR_QL256_MASTER_CONNECTION_WALKTHROUGH.md"
+          target="_blank" rel="noopener noreferrer">7 steps to connect all six safely</a>.
+        {' '}First confirm genuine signer provisioning, then independent private custody.
+        A staged test requires independent agreement to resolve the earlier
+        proof-before-test circular dependency. After a separately authenticated owner
+        TEST decision, a future maximum 30-minute nonproduction window may use
+        GET health/capabilities only, with isolated credentials and rollback.
+        <strong> No test is authorized, scheduled or executed by this build.</strong></p>
+      <p>Original proofs: <strong>{QL256_GATES.signedProofs}/6</strong>;
+        authenticated custodians: <strong>{QL256_GATES.realCustodiansVerified}/6</strong>;
+        independent witnesses: <strong>{QL256_GATES.independentWitnessesVerified}/6</strong>;
+        authorized TEST: <strong>{QL256_GATES.ownerTestAuthorization}</strong>;
+        scheduled tests: <strong>{QL256_GATES.trialWindowsScheduled}</strong>;
+        gateway GETs: <strong>{QL256_GATES.gatewayGets}</strong>;
+        private relay: <strong>OFF</strong>;
+        integration: <strong>{QL256_GATES.connection}</strong>;
+        live gates: <strong>{QL256_GATES.livePilotHolds}/12 HELD</strong>.</p>
+      <p>Offline self-check: <code>npm run verify:ql256</code>.
+        Static source-status summary: <code>npm run integration:ql256-readiness</code>.
+        No live calls, SMS, dispatch, home server, customer data or Etsy writes.</p>
     </section>
     {showHelp&&<aside id="ql245-help" className="ql245-help">
       <p>Source: {QL245_SUMMARY_ORIGIN} Source-code changes and a GREEN CI pipeline do not
