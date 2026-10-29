@@ -235,17 +235,20 @@ describe('QL-245 operator exception-triage page',()=>{
     expect(section.querySelectorAll('[data-ql257-release] tbody tr')).toHaveLength(10);
     expect(section.querySelector('[data-ql257-release]')?.textContent).toContain('Build variables and secrets');
     expect(section.querySelector('[data-ql257-release]')?.textContent).toContain('candidate');
+    expect(section.querySelectorAll('[data-ql259-release] tbody tr')).toHaveLength(6);
+    expect(section.querySelector('[data-ql259-release]')?.textContent)
+      .toContain('0/6 self-reported packets received');
     expect(section.querySelector('[data-ql248-release]')?.textContent).toContain('two immutable commits');
     expect(section.textContent).toContain('missing (404)');
     expect(section.textContent).toContain('6/6 HANDOFF SUMMARIES RECEIVED');
     expect(section.textContent).toContain('OWNER APPROVAL NOT GIVEN');
-    expect(section.querySelector<HTMLButtonElement>('form button[type=submit]')?.disabled).toBe(true);
+    expect(section.querySelector<HTMLButtonElement>('[aria-labelledby="ql245-intake"] form button[type=submit]')?.disabled).toBe(true);
     await click('Independent evidence help');
     expect(section.textContent).toContain('ql245-verify-six-app-evidence.mjs');
     await click('six independent release blockers');
     expect(section.querySelectorAll('#ql245-blockers li')).toHaveLength(6);
     await click('Devil n Dove','.ql172-brand');
-    expect(host.querySelector<HTMLButtonElement>('[data-ql245-release] form button[type=submit]')?.disabled)
+    expect(host.querySelector<HTMLButtonElement>('[data-ql245-release] [aria-labelledby="ql245-intake"] form button[type=submit]')?.disabled)
       .toBe(false);
   });
   it('has no browser gateway network, client secret storage, owner approval or dispatch',async()=>{
@@ -256,7 +259,7 @@ describe('QL-245 operator exception-triage page',()=>{
     const section=host.querySelector<HTMLElement>('[data-ql245-release]')!;
     expect(section.dataset.company).toBe('icamp');
     expect(section.textContent).toContain('DISCONNECTED');
-    expect(section.querySelector<HTMLButtonElement>('form button[type=submit]')?.disabled).toBe(true);
+    expect(section.querySelector<HTMLButtonElement>('[aria-labelledby="ql245-intake"] form button[type=submit]')?.disabled).toBe(true);
     expect(fetchSpy).not.toHaveBeenCalled();
     expect(storageSpy).not.toHaveBeenCalled();
     const css=readFileSync('src/operator/ql245-six-app-evidence.css','utf8');
