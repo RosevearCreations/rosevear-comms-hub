@@ -31,7 +31,8 @@
     "verify:ql257": "node scripts/__tests__/ql257-six-response-config-routing.test.mjs",
     "integration:ql257-readiness": "node scripts/ql257-config-routing-summary.mjs",
     "verify:ql258": "npm --prefix app run test -- src/operator/__tests__/ql258OwnerActionIntake.test.tsx",
-    "verify:ql259": "npm --prefix app run test -- src/operator/__tests__/ql259SixAppReturnIntake.test.tsx"
+    "verify:ql259": "npm --prefix app run test -- src/operator/__tests__/ql259SixAppReturnIntake.test.tsx",
+    "verify:ql260": "npm --prefix app run test -- src/operator/__tests__/ql260NarrativeTriage.test.tsx"
   },
   "devDependencies": {
     "wrangler": "^4.40.0"
