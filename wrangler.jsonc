@@ -92,6 +92,7 @@
   // QL-253: source-only Workers release marker; six-app trusted pins, TEST-only approval and private relay remain HELD.
   // QL-254: source-only Workers release marker; original proof witnesses and private 24/7 relay remain HELD.
   // QL-255: source-only Workers release marker; real signer custody, owner TEST and mini-server activation remain HELD.
+  // QL-255 production Worker retry: trigger independent rebuild after main-only Cloudflare failure; runtime, permissions and HELD gates unchanged.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "previews": {},
