@@ -88,6 +88,7 @@
   // QL-249: source-only Workers check marker; GitHub-only proof retest and all live app connections remain HOLD.
   // QL-250: source-only Worker verification marker; key-custody and future GET-window review remain offline HELD.
   // QL-251: source-only Workers release marker; witness and owner-test request signatures remain offline HELD.
+  // QL-252: source-only Workers release marker; proof escalation and test-only approval claim intake remain HELD.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "previews": {},
