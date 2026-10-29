@@ -220,6 +220,10 @@ describe('QL-245 operator exception-triage page',()=>{
     expect(section.querySelector('[data-ql253-release]')?.textContent).toContain('404 for every application');
     expect(section.querySelector('[data-ql253-release]')?.textContent).toContain('OPTIONAL PRIVATE RELAY DESIGN ONLY / HELD');
     expect(section.querySelector('[data-ql253-release]')?.textContent).toContain('12/12');
+    expect(section.querySelectorAll('[data-ql254-release] tbody tr')).toHaveLength(6);
+    expect(section.querySelector('[data-ql254-release]')?.textContent).toContain('HTTP 404 at every');
+    expect(section.querySelector('[data-ql254-release]')?.textContent).toContain('OFFLINE ONLY / HELD');
+    expect(section.querySelector('[data-ql254-release]')?.textContent).toContain('12/12');
     expect(section.querySelector('[data-ql248-release]')?.textContent).toContain('two immutable commits');
     expect(section.textContent).toContain('missing (404)');
     expect(section.textContent).toContain('6/6 HANDOFF SUMMARIES RECEIVED');
