@@ -30,6 +30,7 @@ import { QL256_RELEASE, QL256_GUIDES, QL256_GATES } from './ql256ConnectionReadi
 import { QL257_RELEASE, QL257_OBSERVED, QL257_PROOF_PATH,
   QL257_SOURCES, QL257_BUILD_CONFIG, QL257_GATES } from './ql257SixResponseConfigReview';
 import { Ql258OwnerActionIntake } from './Ql258OwnerActionIntake';
+import { Ql259SixAppReturnIntake } from './Ql259SixAppReturnIntake';
 import './ql245-six-app-evidence.css';
 
 export function Ql245SixAppEvidence({ organization, source, audit, external,
@@ -87,6 +88,7 @@ export function Ql245SixAppEvidence({ organization, source, audit, external,
       {' '}OWNER APPROVAL NOT GIVEN. Four company integrations remain DISCONNECTED, 12/12 communications
       prerequisites HELD. No secrets, live GETs, external writes, phone/SMS or provider dispatch occur here.</p>
     <Ql258OwnerActionIntake />
+    <Ql259SixAppReturnIntake />
     <section className="ql245-panel" data-ql247-release={QL247_RELEASE}
       aria-labelledby="ql247-census-title">
       <h4 id="ql247-census-title">QL-247 · Independent six-repository source census</h4>
