@@ -20,6 +20,8 @@ import { QL251_RELEASE, QL251_OBSERVED, QL251_SIX_APP_PROOF_SNAPSHOT,
   QL251_TEST_GATE } from './ql251WitnessTestReview';
 import { QL252_RELEASE, QL252_OBSERVED, QL252_PUBLIC_PROOF_PATH,
   QL252_SIX_APP_SOURCE_ESCALATION, QL252_REVIEW_GATES } from './ql252ProofEscalationReview';
+import { QL253_RELEASE, QL253_OBSERVED, QL253_PUBLIC_PROOF_PATH,
+  QL253_SIX_APP_ORIGIN_RECHECK, QL253_TRUST_AND_TEST_GATES } from './ql253ProofOriginReview';
 import './ql245-six-app-evidence.css';
 
 export function Ql245SixAppEvidence({ organization, source, audit, external,
@@ -267,6 +269,48 @@ export function Ql245SixAppEvidence({ organization, source, audit, external,
       <p>Forward <code>docs/ROSEVEAR_QL252_PUBLICATION_ESCALATION_AND_OWNER_TEST_HANDOFF.md</code>
         to each app. Public GitHub-only checker: <code>node scripts/ql252-publication-escalation.mjs --public-get</code>.
         A future authenticated owner TEST decision is <em>not</em> pilot release.</p>
+    </section>
+    <section className="ql245-panel" data-ql253-release={QL253_RELEASE}
+      aria-labelledby="ql253-pin-registry-title">
+      <h4 id="ql253-pin-registry-title">QL-253 · Six-app proof origin, independent pin registry &amp; owner TEST-only exception (HELD)</h4>
+      <p>Independent <strong>public GitHub only</strong> check: <strong>{QL253_OBSERVED}</strong>.
+        At the six observed <code>main</code> SHAs, <code>{QL253_PUBLIC_PROOF_PATH}</code>
+        {' '}was <strong>404 for every application</strong>. This is not a statement about newer
+        commits or application deployment health. A passing build does not supply an
+        authentic signed source proof.</p>
+      <div className="ql245-scroll"><table>
+        <caption>Immutable public GitHub file results; no signed-key pin, owner permission or private server request.</caption>
+        <thead><tr><th scope="col">Application</th><th scope="col">Observed main SHA</th>
+          <th scope="col">Signed proof</th><th scope="col">Exception owner</th></tr></thead>
+        <tbody>{QL253_SIX_APP_ORIGIN_RECHECK.map(row=><tr key={row.repository}>
+          <th scope="row">{row.system}</th>
+          <td><a href={`https://github.com/RosevearCreations/${row.repository}/commit/${row.mainSha}`}
+            target="_blank" rel="noopener noreferrer">{row.mainSha.slice(0,12)}</a></td>
+          <td><strong>{row.publicProof} / HELD</strong></td>
+          <td>Source app: publish real A/B signed proof, exact CI and independently verifiable provenance</td>
+        </tr>)}</tbody>
+      </table></div>
+      <p>After an original proof is published, the offline pin-registry renewal checker
+        binds source A, proof B, business/tenant, matching public SPKI fingerprint, a
+        five-minute nonce and three distinct receipt IDs. <strong>Matching metadata
+        is not independent key custody.</strong> It still requires a separately trusted
+        out-of-band registry and witness. The TEST-only exception intake will accept
+        only a request for private owner review, never an approval claim or a live GET.</p>
+      <p>Published proofs: <strong>{QL253_TRUST_AND_TEST_GATES.publishedProofsAtSnapshot}/6</strong>;
+        independent pins: <strong>{QL253_TRUST_AND_TEST_GATES.independentlyPinnedKeys}/6</strong>;
+        verified custody witnesses: <strong>{QL253_TRUST_AND_TEST_GATES.independentCustodyWitnesses}/6</strong>;
+        owner TEST-only approvals: <strong>{QL253_TRUST_AND_TEST_GATES.authenticatedOwnerTestApprovals}</strong>;
+        real authenticated GETs: <strong>{QL253_TRUST_AND_TEST_GATES.authenticatedGatewayGets}</strong>.
+        Connection <strong>{QL253_TRUST_AND_TEST_GATES.connectionState}</strong>;
+        <strong> {QL253_TRUST_AND_TEST_GATES.realPilotHolds}/12</strong> live pilot conditions HELD.</p>
+      <p><strong>Rosevear AI Hub PC:</strong> {QL253_TRUST_AND_TEST_GATES.miniServerRole}.
+        An eventual always-on connector could use existing private Tailscale/LAN routing
+        and outbound-only requests; no public inbound port, home vault/camera exposure,
+        credential exchange, connector or daemon is enabled here.</p>
+      <p>Forward <code>docs/ROSEVEAR_QL253_SIX_APP_PROOF_ORIGIN_PIN_REGISTRY_OWNER_TEST_HANDOFF.md</code>.
+        Public-only opt-in: <code>npm run integration:ql253-public-proof -- --public-get</code>.
+        Offline safeguard tests: <code>npm run verify:ql253</code>. Owner TEST approval
+        and subsequent pilot release remain separate, independently authenticated acts.</p>
     </section>
     {showHelp&&<aside id="ql245-help" className="ql245-help">
       <p>Source: {QL245_SUMMARY_ORIGIN} Source-code changes and a GREEN CI pipeline do not

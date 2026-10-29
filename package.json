@@ -19,7 +19,9 @@
     "verify:ql251": "node scripts/__tests__/ql251-witness-return-test-authorization.test.mjs",
     "integration:ql251-public-proof": "node scripts/ql251-recheck-six-app-public-proofs.mjs",
     "verify:ql252": "node scripts/__tests__/ql252-proof-custody-owner-intake.test.mjs",
-    "integration:ql252-public-proof": "node scripts/ql252-publication-escalation.mjs"
+    "integration:ql252-public-proof": "node scripts/ql252-publication-escalation.mjs",
+    "verify:ql253": "node scripts/__tests__/ql253-proof-origin-pin-registry-owner-test.test.mjs",
+    "integration:ql253-public-proof": "node scripts/ql253-public-proof-recheck.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.40.0"
