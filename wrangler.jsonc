@@ -93,6 +93,8 @@
   // QL-254: source-only Workers release marker; original proof witnesses and private 24/7 relay remain HELD.
   // QL-255: source-only Workers release marker; real signer custody, owner TEST and mini-server activation remain HELD.
   // QL-255 production Worker retry: trigger independent rebuild after main-only Cloudflare failure; runtime, permissions and HELD gates unchanged.
+  // QL-256: source-only Worker deployment check for signer/role/TEST readiness guides; no private relay, live gateway or permission enabled.
+  // QL-256 Workers retry: repeat exact disabled release build after branch-side external check failed; no runtime or secret changes.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "previews": {},

@@ -25,7 +25,9 @@
     "verify:ql254": "node scripts/__tests__/ql254-proof-followup-witness-relay.test.mjs",
     "integration:ql254-public-proof": "node scripts/ql254-public-proof-followup.mjs",
     "verify:ql255": "node scripts/__tests__/ql255-response-disposition-owner-relay.test.mjs",
-    "integration:ql255-public-proof": "node scripts/ql255-public-disposition.mjs"
+    "integration:ql255-public-proof": "node scripts/ql255-public-disposition.mjs",
+    "verify:ql256": "node scripts/__tests__/ql256-connection-readiness.test.mjs",
+    "integration:ql256-readiness": "node scripts/ql256-readiness-summary.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.40.0"
