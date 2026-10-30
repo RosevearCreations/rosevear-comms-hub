@@ -1,45 +1,19 @@
 import {useState} from 'react';
 import type {OperatorWorkspace} from './ql191Organizations';
-import {QL270_SOURCES,ql270ClassifyPublicResponse,ql270PrepareLocalPlan,
+import {QL270_SOURCES,ql270PrepareLocalPlan,
   ql270PublicProofUrl,QL270_PROOF_SNAPSHOT,QL270_OBSERVED_ON,
-  type Ql270SourceId,type Ql270PublicStatus}
+  type Ql270SourceId}
   from './ql270ConnectionCentre';
 import './ql270-connections.css';
 
-const statusLabels:Record<Ql270PublicStatus,string>={
-  NOT_CHECKED:'Not refreshed in this session',CHECKING:'Checking public GitHub file…',
-  MISSING_404:'Public signed proof missing (404)',
-  PUBLIC_FILE_PRESENT_UNVERIFIED:'File exists · signer not authenticated',
-  GITHUB_RATE_LIMITED_OR_FORBIDDEN:'GitHub blocked or rate-limited check',
-  PUBLIC_CHECK_ERROR:'Public check unavailable'
-};
-
 export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspace)=>void}){
   const [selected,setSelected]=useState<Ql270SourceId>('rosiedazzlers');
-  const [publicResults,setPublicResults]=useState<Partial<Record<Ql270SourceId,Ql270PublicStatus>>>({});
   const [aliases,setAliases]=useState<Partial<Record<Ql270SourceId,string>>>({});
   const [planStatus,setPlanStatus]=useState<Partial<Record<Ql270SourceId,ReturnType<typeof ql270PrepareLocalPlan>>>>({});
   const [help,setHelp]=useState(false);
   const source=QL270_SOURCES.find(row=>row.id===selected)??QL270_SOURCES[0];
   const sourceSnapshot=QL270_PROOF_SNAPSHOT.find(row=>row.source===selected);
-  const currentStatus=publicResults[selected]??'NOT_CHECKED';
   const readyDrafts=Object.values(planStatus).filter(x=>x?.tenantAliasValid).length;
-
-  async function checkPublicProof(id:Ql270SourceId){
-    // Public source-provenance lookup only. No authorization headers, secrets,
-    // server endpoint or company data can be sent through this fixed URL.
-    setPublicResults(old=>({...old,[id]:'CHECKING'}));
-    const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),8000);
-    try{
-      const response=await fetch(ql270PublicProofUrl(id),{
-        method:'GET',headers:{Accept:'application/vnd.github+json'},
-        credentials:'omit',cache:'no-store',signal:controller.signal});
-      setPublicResults(old=>({...old,[id]:ql270ClassifyPublicResponse(response.status)}));
-    }catch{
-      setPublicResults(old=>({...old,[id]:'PUBLIC_CHECK_ERROR'}));
-    }finally{clearTimeout(timeout);}
-  }
 
   function prepare(){
     setPlanStatus(old=>({...old,[selected]:ql270PrepareLocalPlan(selected,(aliases[selected]??'').trim())}));
@@ -135,10 +109,10 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
         <div className="ql270-form-panel">
           <h5>Validate the public source file</h5>
           <p>QL-270 immutable commit ({QL270_OBSERVED_ON}): <code>{sourceSnapshot?.sha.slice(0,12)}</code> · original signed proof HTTP 404.
-            You can check the current public GitHub file without contacting an application gateway.</p>
-          <button type="button" disabled={currentStatus==='CHECKING'} onClick={()=>void checkPublicProof(selected)}>
-            {currentStatus==='CHECKING'?'Checking public repository…':'Check public Proof-B file'}</button>
-          <p className="ql270-public-result" role="status">{statusLabels[currentStatus]}</p>
+            We can manually inspect the current public file in a separate GitHub tab without contacting an application gateway.</p>
+          <a className="ql270-public-check" href={ql270PublicProofUrl(selected)} target="_blank" rel="noopener noreferrer">
+            Open current public Proof-B source ↗</a>
+          <p className="ql270-public-result" role="status">Last verified snapshot: HTTP 404. Current response must be reviewed independently.</p>
           <small>Even HTTP 200 would only confirm a file exists. It would not authenticate
             its signer, independent key pin, human witness, or tenant boundary.</small>
           <p><a href={`https://github.com/RosevearCreations/${sourceSnapshot?.repo}/tree/main`}

@@ -47,13 +47,14 @@ describe('QL-270 six-app connection centre and fail-closed public checks',()=>{
     expect(ql270ClassifyPublicResponse(404)).toBe('MISSING_404');
     expect(ql270ClassifyPublicResponse(403)).toBe('GITHUB_RATE_LIMITED_OR_FORBIDDEN');
   });
-  it('runs one public GET without credentials and does not claim a live connection',async()=>{
-    const fetchMock=vi.spyOn(globalThis,'fetch').mockResolvedValue({status:404} as Response);
-    await act(async()=>button('Check public Proof-B file').click());
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(fetchMock.mock.calls[0][0]).toBe(ql270PublicProofUrl('rosiedazzlers'));
-    expect(fetchMock.mock.calls[0][1]).toMatchObject({method:'GET',credentials:'omit'});
-    expect(host.textContent).toContain('Public signed proof missing (404)');
+  it('links to an allowlisted public source without making hidden network requests',()=>{
+    const fetchMock=vi.spyOn(globalThis,'fetch');
+    const link=host.querySelector<HTMLAnchorElement>('.ql270-public-check');
+    expect(link?.href).toBe(ql270PublicProofUrl('rosiedazzlers'));
+    expect(link?.target).toBe('_blank');
+    expect(link?.rel).toBe('noopener noreferrer');
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(host.textContent).toContain('Last verified snapshot: HTTP 404');
     expect(host.textContent).toContain('GET trial cannot be scheduled');
   });
   it('prepares only session-local generic alias drafts and never authorizes GETs',()=>{
@@ -66,10 +67,10 @@ describe('QL-270 six-app connection centre and fail-closed public checks',()=>{
     expect(plan.gatewayRequestCount).toBe(0);
     expect(plan.release).toBe('DISCONNECTED / HOLD');
   });
-  it('keeps the real gateway offline when GitHub is unavailable',async()=>{
+  it('keeps the real gateway offline even if public GitHub is unavailable',()=>{
     vi.spyOn(globalThis,'fetch').mockRejectedValue(new Error('offline'));
-    await act(async()=>button('Check public Proof-B file').click());
-    expect(host.textContent).toContain('Public check unavailable');
+    expect(host.querySelector('.ql270-public-check')).not.toBeNull();
+    expect(host.textContent).toContain('Current response must be reviewed independently');
     expect(host.textContent).toContain('GET trial cannot be scheduled');
   });
 });

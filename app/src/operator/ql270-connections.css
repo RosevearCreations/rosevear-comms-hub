@@ -71,6 +71,8 @@
 .ql270-form-panel code { color:#a9eeeb; font-size:.8rem; overflow-wrap:anywhere; }
 .ql270-form-panel small { color:#b8cfe5; line-height:1.5; display:block; margin-top:10px; }
 .ql270-form-panel a { color:#8aeafb; text-underline-offset:3px; }
+.ql270-form-panel .ql270-public-check { display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:10px 16px; margin-top:6px; border:1px solid #70d3ef; border-radius:12px; background:#15bad1; color:#052335; font-weight:800; text-decoration:none; box-shadow:0 5px 18px #00b3d22c; }
+.ql270-form-panel .ql270-public-check:hover,.ql270-form-panel .ql270-public-check:focus-visible { background:#83e3f2; }
 .ql270-note-good { color:#9af1d6!important; }.ql270-note-error { color:#ffb7a4!important; }
 .ql270-public-result { color:#ffd5a6!important; font-weight:800; margin:14px 0 0; }
 .ql270-inspector-footer { display:flex; flex-wrap:wrap; gap:12px; align-items:center; border-top:1px solid #365879; margin-top:20px; padding-top:18px; color:#aac6dc; font-size:.84rem; line-height:1.5; }
