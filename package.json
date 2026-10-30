@@ -36,7 +36,8 @@
     "verify:ql261": "npm --prefix app run test -- src/operator/__tests__/ql261SixAppPreflight.test.tsx && node --test scripts/__tests__/ql261-six-app-guide-integrity.test.mjs",
     "verify:ql262": "npm --prefix app run test -- src/operator/__tests__/ql262EvidenceIsolationReview.test.tsx",
     "verify:ql263": "npm --prefix app run test -- src/operator/__tests__/ql263OriginalReceiptReadiness.test.tsx",
-    "verify:ql264": "npm --prefix app run test -- src/operator/__tests__/ql264SixRepoDirectHandoff.test.tsx"
+    "verify:ql264": "npm --prefix app run test -- src/operator/__tests__/ql264SixRepoDirectHandoff.test.tsx",
+    "verify:ql265": "npm --prefix app run test -- src/operator/__tests__/ql265LocalSixAppPreflight.test.ts"
   },
   "devDependencies": {
     "wrangler": "^4.40.0"
