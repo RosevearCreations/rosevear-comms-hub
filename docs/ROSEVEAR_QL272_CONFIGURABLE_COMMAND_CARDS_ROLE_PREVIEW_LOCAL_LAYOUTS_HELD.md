@@ -17,6 +17,7 @@ This release extends QL-271's four themed command views (IT Command, Management,
 - A versioned `rosevear-comms-hub:ql272-command-layouts:v1` browser-local record is stored through the existing `app/src/storage/localRepository.ts` boundary. It contains only profile ID/name, UI density, role **preview**, per-view card order/visibility and panel visibility.
 - No password, signing key, tenant ID, customer record, proof receipt, token, external URL or credential is collected by this editor. It never calls an API or worker.
 - Invalid schema, role injection, duplicate IDs or attempts to hide all four cards fall back to known-safe defaults. Storage failures leave a working session with a visible warning.
+- The historical QL-171 source inventory now expects **five** reviewed `localStorage` operations rather than three: the existing three and the two new strictly scoped layout read/write operations. The source scan still denies browser persistence outside `localRepository.ts`, raw network paths and Supabase writes.
 - Profiles are local to one browser/device; they are not shared between staff, and do not grant any privileges. The disabled-preview authentication posture remains unchanged.
 
 ## Security status — separate from deployment

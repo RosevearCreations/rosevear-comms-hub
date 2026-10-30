@@ -27,13 +27,27 @@ test('QL-171 baseline inventories all surfaces, data paths and gaps without auth
   assert.equal(new Set(SURFACE_IDS).size, SURFACE_IDS.length);
   assert.equal(new Set(DATA_PATH_IDS).size, DATA_PATH_IDS.length);
   assert.equal(new Set(GAP_IDS).size, GAP_IDS.length);
-  assert.equal(report.sinkCounts['browser-storage'], 3);
+  // QL-272 reviews two additional localStorage operations in the preexisting
+  // allowlisted localRepository: one get and one set for versioned UI layouts.
+  assert.equal(report.sinkCounts['browser-storage'], 5);
   assert.equal(report.sinkCounts['supabase-query'], 5);
   assert.equal(report.sinkCounts['supabase-mutation'], 0);
   assert.equal(report.sinkCounts['raw-network'], 0);
   assert.equal(report.liveCallsEnabled, false);
   assert.equal(report.smsEnabled, false);
   assert.equal(report.realOwnerApprovalsAuthorized, false);
+});
+
+test('QL-272 scoped local layout storage expands the reviewed boundary without introducing unreviewed operators', () => {
+  const source = baseline.sources['app/src/storage/localRepository.ts'];
+  assert.match(source, /rosevear-comms-hub:ql272-command-layouts:v1/);
+  assert.match(source, /export function loadQl272LocalLayout\(/);
+  assert.match(source, /export function saveQl272LocalLayout\(/);
+  assert.match(source, /serialized\.length > 12000/);
+  const report = assessQl171Baseline(baseline);
+  assert.equal(report.status, 'PASS', report.issues.join('\n'));
+  assert.equal(report.sinkCounts['raw-network'], 0);
+  assert.equal(report.sinkCounts['supabase-mutation'], 0);
 });
 
 test('entrypoint drift fails if a mounted preview or the gate disappears', () => {
