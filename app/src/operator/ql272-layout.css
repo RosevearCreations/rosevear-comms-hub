@@ -1,0 +1,50 @@
+/* QL-272: focused local layout preferences and read-only role preview. */
+.ql272-layout { color:#ecf5ff; border:1px solid #325877; border-radius:13px; background:linear-gradient(120deg,#0d243b,#152947); box-shadow:inset 0 1px #ffffff12; }
+.ql272-toolbar { min-height:65px; padding:11px 15px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+.ql272-toolbar-label { display:flex; align-items:center; gap:11px; }
+.ql272-toolbar-label>span { display:grid; place-items:center; width:39px; height:39px; border:1px solid #7961c8; border-radius:9px; background:#372460; color:#d8b8ff; font-size:1.35rem; }
+.ql272-toolbar-label strong,.ql272-toolbar-label small { display:block; }
+.ql272-toolbar-label strong { font-size:.84rem; }
+.ql272-toolbar-label small { margin-top:4px; color:#a8c4dc; font-size:.72rem; }
+.ql272-toolbar-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.ql272-local-pill { color:#79e8d2; border:1px solid #277e72; background:#0b403b; border-radius:6px; padding:6px 8px; font-size:.65rem; font-weight:850; letter-spacing:.07em; }
+.ql272-toolbar button,.ql272-save-row button { cursor:pointer; border:1px solid #8061c7; border-radius:9px; padding:10px 13px; color:#f3eaff; background:#362464; font-size:.75rem; font-weight:800; }
+.ql272-toolbar button.active { background:#6440ad; }
+.ql272-toolbar button:hover,.ql272-save-row button:hover { filter:brightness(1.17); }
+.ql272-editor { display:grid; gap:15px; padding:18px; border-top:1px solid #365a78; background:#0a1b30; border-radius:0 0 13px 13px; }
+.ql272-editor-warning { margin:0; padding:10px 13px; line-height:1.4; font-size:.73rem; color:#ffdfa6; border:1px solid #816441; border-radius:8px; background:#332b20; }
+.ql272-editor-settings { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.ql272-editor-settings label,.ql272-save-row label { display:grid; gap:6px; color:#d5e5f2; font-weight:750; font-size:.72rem; }
+.ql272-editor select,.ql272-editor input[type='text'] { border:1px solid #496c8a; color:#eefaff; background:#142c45; border-radius:8px; min-height:38px; padding:8px 10px; width:100%; font:inherit; }
+.ql272-editor select:focus-visible,.ql272-editor input:focus-visible,.ql272-editor button:focus-visible { outline:3px solid #6fe4f8; outline-offset:2px; }
+.ql272-editor-columns { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(240px,1fr); align-items:stretch; gap:13px; }
+.ql272-card-editor,.ql272-role-panel { min-width:0; padding:14px; border:1px solid #2c4b6a; border-radius:10px; background:#10273e; }
+.ql272-editor h4 { display:flex; gap:8px; align-items:center; justify-content:space-between; font-size:.92rem; margin:0 0 6px; }
+.ql272-editor h4 small { color:#b2c7df; font-size:.67rem; }
+.ql272-card-editor>p,.ql272-role-panel>p { margin:0 0 13px; font-size:.7rem; line-height:1.45; color:#9ebbd2; }
+.ql272-card-editor-row { display:grid; align-items:center; grid-template-columns:18px minmax(120px,1fr) 65px 32px 32px; gap:6px; padding:7px 0; border-bottom:1px solid #2d4963; }
+.ql272-card-editor-row>span { color:#af86fe; font-size:.75rem; font-weight:800; }
+.ql272-card-editor-row strong { font-size:.72rem; line-height:1.3; }
+.ql272-card-editor-row button { cursor:pointer; min-height:30px; border:1px solid #536f9d; border-radius:6px; color:#d9eaff; background:#183957; font-size:.68rem; font-weight:800; }
+.ql272-card-editor-row button[aria-pressed='true'] { background:#154a48; color:#77efd3; border-color:#267c72; }
+.ql272-card-editor-row button:disabled { opacity:.35; cursor:not-allowed; }
+.ql272-panel-toggle { display:flex; gap:9px; align-items:center; margin-top:12px; font-size:.74rem; color:#d4e7f7; }
+.ql272-panel-toggle input { accent-color:#ae6bff; width:17px; height:17px; }
+.ql272-role-panel .ql272-role-allow { color:#7ee1bd; border-left:3px solid #2cca93; padding-left:9px; }
+.ql272-role-panel h5 { margin:16px 0 7px; font-size:.7rem; color:#ffdb9f; text-transform:uppercase; letter-spacing:.08em; }
+.ql272-role-panel ul { display:grid; gap:8px; list-style:none; margin:0; padding:0; font-size:.71rem; color:#f1b7b6; }
+.ql272-save-row { display:grid; grid-template-columns:minmax(160px,1fr) auto auto; align-items:end; gap:10px; }
+.ql272-save-row button { min-height:38px; }
+.ql272-save-row button:disabled { opacity:.5; cursor:not-allowed; }
+.ql272-save-row .ql272-reset { border-color:#617c98; background:#1e354b; color:#bdd2e5; }
+.ql272-error,.ql272-limit { font-size:.72rem; margin:0; color:#ffb1ad; }
+.ql271-command[data-ql272-density='compact'] { gap:9px; }
+.ql271-command[data-ql272-density='compact'] .ql271-hero { min-height:170px; padding:17px 23px; }
+.ql271-command[data-ql272-density='compact'] .ql271-hero-art { max-height:170px; }
+.ql271-command[data-ql272-density='compact'] .ql271-kpi { min-height:111px; padding:11px 12px; }
+.ql271-command[data-ql272-density='compact'] .ql271-kpi>strong { font-size:1.6rem; }
+.ql271-command[data-ql272-density='compact'] .ql271-panel { padding:12px; }
+@media(max-width:1100px) { .ql272-editor-columns { grid-template-columns:1fr; } }
+@media(max-width:760px) { .ql272-editor-settings { grid-template-columns:1fr; } .ql272-save-row { grid-template-columns:1fr; } .ql272-save-row button { width:100%; } }
+@media(max-width:480px) { .ql272-card-editor-row { grid-template-columns:14px minmax(85px,1fr) 55px 25px 25px; gap:4px; } .ql272-card-editor-row button { font-size:.62rem; padding:0; } .ql272-editor { padding:11px; } }
+@media(forced-colors:active) { .ql272-layout button[aria-pressed='true'] { outline:2px solid Highlight; } }
