@@ -33,7 +33,8 @@
     "verify:ql258": "npm --prefix app run test -- src/operator/__tests__/ql258OwnerActionIntake.test.tsx",
     "verify:ql259": "npm --prefix app run test -- src/operator/__tests__/ql259SixAppReturnIntake.test.tsx",
     "verify:ql260": "npm --prefix app run test -- src/operator/__tests__/ql260NarrativeTriage.test.tsx",
-    "verify:ql261": "npm --prefix app run test -- src/operator/__tests__/ql261SixAppPreflight.test.tsx && node --test scripts/__tests__/ql261-six-app-guide-integrity.test.mjs"
+    "verify:ql261": "npm --prefix app run test -- src/operator/__tests__/ql261SixAppPreflight.test.tsx && node --test scripts/__tests__/ql261-six-app-guide-integrity.test.mjs",
+    "verify:ql262": "npm --prefix app run test -- src/operator/__tests__/ql262EvidenceIsolationReview.test.tsx"
   },
   "devDependencies": {
     "wrangler": "^4.40.0"
