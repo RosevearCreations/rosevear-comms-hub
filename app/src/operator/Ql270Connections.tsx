@@ -1,0 +1,155 @@
+import {useState} from 'react';
+import type {OperatorWorkspace} from './ql191Organizations';
+import {QL270_SOURCES,ql270ClassifyPublicResponse,ql270PrepareLocalPlan,
+  ql270PublicProofUrl,QL270_PROOF_SNAPSHOT,QL270_OBSERVED_ON,
+  type Ql270SourceId,type Ql270PublicStatus}
+  from './ql270ConnectionCentre';
+import './ql270-connections.css';
+
+const statusLabels:Record<Ql270PublicStatus,string>={
+  NOT_CHECKED:'Not refreshed in this session',CHECKING:'Checking public GitHub file…',
+  MISSING_404:'Public signed proof missing (404)',
+  PUBLIC_FILE_PRESENT_UNVERIFIED:'File exists · signer not authenticated',
+  GITHUB_RATE_LIMITED_OR_FORBIDDEN:'GitHub blocked or rate-limited check',
+  PUBLIC_CHECK_ERROR:'Public check unavailable'
+};
+
+export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspace)=>void}){
+  const [selected,setSelected]=useState<Ql270SourceId>('rosiedazzlers');
+  const [publicResults,setPublicResults]=useState<Partial<Record<Ql270SourceId,Ql270PublicStatus>>>({});
+  const [aliases,setAliases]=useState<Partial<Record<Ql270SourceId,string>>>({});
+  const [planStatus,setPlanStatus]=useState<Partial<Record<Ql270SourceId,ReturnType<typeof ql270PrepareLocalPlan>>>>({});
+  const [help,setHelp]=useState(false);
+  const source=QL270_SOURCES.find(row=>row.id===selected)??QL270_SOURCES[0];
+  const sourceSnapshot=QL270_PROOF_SNAPSHOT.find(row=>row.source===selected);
+  const currentStatus=publicResults[selected]??'NOT_CHECKED';
+  const readyDrafts=Object.values(planStatus).filter(x=>x?.tenantAliasValid).length;
+
+  async function checkPublicProof(id:Ql270SourceId){
+    // Public source-provenance lookup only. No authorization headers, secrets,
+    // server endpoint or company data can be sent through this fixed URL.
+    setPublicResults(old=>({...old,[id]:'CHECKING'}));
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),8000);
+    try{
+      const response=await fetch(ql270PublicProofUrl(id),{
+        method:'GET',headers:{Accept:'application/vnd.github+json'},
+        credentials:'omit',cache:'no-store',signal:controller.signal});
+      setPublicResults(old=>({...old,[id]:ql270ClassifyPublicResponse(response.status)}));
+    }catch{
+      setPublicResults(old=>({...old,[id]:'PUBLIC_CHECK_ERROR'}));
+    }finally{clearTimeout(timeout);}
+  }
+
+  function prepare(){
+    setPlanStatus(old=>({...old,[selected]:ql270PrepareLocalPlan(selected,(aliases[selected]??'').trim())}));
+  }
+
+  return <section className="ql270-connect" data-ql270-mode="disabled-preview" aria-labelledby="ql270-title">
+    <header className="ql270-hero">
+      <div>
+        <p className="ql270-overline">QL-270 / IT Command / Connection orchestration</p>
+        <h3 id="ql270-title">One hub. Six systems. Zero shortcuts around security.</h3>
+        <p>Set up and inspect nonproduction connection plans here. Four apps serve our businesses;
+          two shared systems support analytics and private local automation. Nothing is live yet.</p>
+        <div className="ql270-hero-actions">
+          <button type="button" onClick={()=>onNavigate('six_app_evidence')}>Open security evidence <span aria-hidden="true">↗</span></button>
+          <button type="button" className="ql270-secondary" onClick={()=>setHelp(v=>!v)}
+            aria-expanded={help} aria-controls="ql270-help">ⓘ How connecting works</button>
+        </div>
+      </div>
+      <div className="ql270-orb" aria-hidden="true"><span>QL</span><small>HUB</small></div>
+    </header>
+
+    {help&&<aside className="ql270-explain" id="ql270-help" role="note">
+      <h4>What happens when we connect?</h4>
+      <p>Each business keeps its own customers, permissions and tenant. The Comms Hub would
+        receive explicitly permitted message/quote/booking events. AI Data Platform would
+        summarize authorized events across systems without silently merging customer records.
+        Rosevear AI Hub would optionally power private, approved local AI workflows;
+        its Windows relay is not installed for these tests. Neither supporting service is a fifth business.</p>
+      <p>First, a genuine original signed source proof must be published and independently verified.
+        A separate nonproduction tenant, scoped GET identity, human witness/reviewer and owner
+        TEST-only permission must follow. Only then may an operator schedule a bounded read-only
+        gateway trial. This UI cannot issue keys or grant authorization.</p>
+    </aside>}
+
+    <div className="ql270-metrics" aria-label="Real integration readiness">
+      <article><span>Registered sources</span><strong>6 <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:'100%'}}/></div><small>Known repository mappings only</small></article>
+      <article><span>Signed proofs accepted</span><strong>0 <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:'0%'}}/></div><small>Original Proof-B missing at QL-270 check</small></article>
+      <article><span>Local TEST drafts</span><strong>{readyDrafts} <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:`${readyDrafts/6*100}%`}}/></div><small>Session-only plans, not connections</small></article>
+      <article><span>Live pilot holds</span><strong>12 <small>/ 12</small></strong><div className="ql270-meter ql270-meter-alert"><i style={{width:'100%'}}/></div><small>Calls, messaging and dispatch OFF</small></article>
+    </div>
+
+    <div className="ql270-map" role="group" aria-label="Integration roles and separation">
+      <div className="ql270-map-centre"><span>◆</span><strong>Comms Hub</strong><small>Orchestrator · HELD</small></div>
+      <div className="ql270-map-spokes"><div><strong>4 business apps</strong><small>Customer-specific operations</small></div>
+        <span aria-hidden="true">⇄</span><div><strong>AI Data Platform</strong><small>Optional shared reporting</small></div>
+        <span aria-hidden="true">⇄</span><div><strong>Rosevear AI Hub</strong><small>Optional private edge AI</small></div></div>
+      <p>Planned data flows only · tenant boundaries remain separate · no deployed integration traffic</p>
+    </div>
+
+    <div className="ql270-section-heading"><div><p className="ql270-overline">Source registry</p><h4>Business applications</h4></div><span>4 customer-facing workspaces</span></div>
+    <div className="ql270-source-grid">
+      {QL270_SOURCES.filter(s=>s.kind==='Business app').map(s=><button type="button" key={s.id}
+        className={`ql270-source ql270-${s.tone}${selected===s.id?' active':''}`}
+        aria-pressed={selected===s.id} onClick={()=>setSelected(s.id)}>
+        <span className="ql270-source-icon">{s.icon}</span><span><strong>{s.label}</strong><small>{s.benefit}</small></span>
+        <em>HOLD</em>
+      </button>)}
+    </div>
+    <div className="ql270-section-heading"><div><p className="ql270-overline">Shared infrastructure</p><h4>Supporting applications</h4></div><span>2 optional services, separately authorized</span></div>
+    <div className="ql270-source-grid ql270-support-grid">
+      {QL270_SOURCES.filter(s=>s.kind!=='Business app').map(s=><button type="button" key={s.id}
+        className={`ql270-source ql270-${s.tone}${selected===s.id?' active':''}`}
+        aria-pressed={selected===s.id} onClick={()=>setSelected(s.id)}>
+        <span className="ql270-source-icon">{s.icon}</span><span><strong>{s.label}</strong><small>{s.benefit}</small></span>
+        <em>HOLD</em>
+      </button>)}
+    </div>
+
+    <section className="ql270-inspector" aria-labelledby="ql270-inspector-title">
+      <div className="ql270-inspector-heading"><div><p className="ql270-overline">IT / Connection inspector</p>
+        <h4 id="ql270-inspector-title">{source.label} <span>— {source.kind}</span></h4>
+        <p>{source.scope}</p></div><span className="ql270-hold">● DISCONNECTED / HOLD</span></div>
+      <div className="ql270-preflight">
+        <div className="ql270-preflight-step"><span>01</span><strong>Create a TEST plan</strong><small>Alias &amp; nonproduction scope, local only</small></div>
+        <div className="ql270-preflight-step"><span>02</span><strong>Verify source proof</strong><small>Public GitHub check ≠ authenticated signer</small></div>
+        <div className="ql270-preflight-step"><span>03</span><strong>Independent approval</strong><small>Signer, reviewer, witness, tenant &amp; owner</small></div>
+        <div className="ql270-preflight-step"><span>04</span><strong>Authorized GET trial</strong><small>2 positive + 7 denials, 15 min maximum</small></div>
+      </div>
+      <div className="ql270-form-grid">
+        <div className="ql270-form-panel">
+          <h5>Prepare a nonproduction profile</h5>
+          <p>Use a generic alias only (for example <code>np-demo-lab</code>). Never enter a real
+            tenant ID, password, token, domain or customer information.</p>
+          <label htmlFor="ql270-tenant-alias">TEST tenant alias <span>(not provisioned)</span></label>
+          <input id="ql270-tenant-alias" value={aliases[selected]??''} maxLength={35}
+            placeholder="np-demo-lab" onChange={e=>{setAliases(old=>({...old,[selected]:e.currentTarget.value}));
+              setPlanStatus(old=>({...old,[selected]:undefined}));}}/>
+          <button type="button" onClick={prepare}>Validate local TEST plan</button>
+          {planStatus[selected]&&<p role="status" className={planStatus[selected]?.tenantAliasValid?'ql270-note-good':'ql270-note-error'}>
+            {planStatus[selected]?.tenantAliasValid?'Local plan prepared. Connection remains OFF; no tenant or credentials were created.':
+              'Enter a non-secret alias starting np- (4–32 lowercase letters, digits or dashes after the prefix).'}</p>}
+        </div>
+        <div className="ql270-form-panel">
+          <h5>Validate the public source file</h5>
+          <p>QL-270 immutable commit ({QL270_OBSERVED_ON}): <code>{sourceSnapshot?.sha.slice(0,12)}</code> · original signed proof HTTP 404.
+            You can check the current public GitHub file without contacting an application gateway.</p>
+          <button type="button" disabled={currentStatus==='CHECKING'} onClick={()=>void checkPublicProof(selected)}>
+            {currentStatus==='CHECKING'?'Checking public repository…':'Check public Proof-B file'}</button>
+          <p className="ql270-public-result" role="status">{statusLabels[currentStatus]}</p>
+          <small>Even HTTP 200 would only confirm a file exists. It would not authenticate
+            its signer, independent key pin, human witness, or tenant boundary.</small>
+          <p><a href={`https://github.com/RosevearCreations/${sourceSnapshot?.repo}/tree/main`}
+            target="_blank" rel="noopener noreferrer">View source repository ↗</a></p>
+        </div>
+      </div>
+      <footer className="ql270-inspector-footer"><strong>GET trial cannot be scheduled.</strong>
+        Missing original proof-B and private independent authorization. No server configuration
+        or live app connection can be created from this disabled preview.
+        <button type="button" onClick={()=>onNavigate('six_app_evidence')}>Review full security gates</button>
+      </footer>
+    </section>
+  </section>;
+}

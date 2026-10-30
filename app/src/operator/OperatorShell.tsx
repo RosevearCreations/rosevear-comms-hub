@@ -99,6 +99,7 @@ import { type Ql243Ledger } from './ql243ConnectionTesting';
 import { Ql244WitnessedHandshake } from './Ql244WitnessedHandshake';
 import { type Ql244Ledger } from './ql244WitnessedHandshake';
 import { Ql245SixAppEvidence } from './Ql245SixAppEvidence';
+import { Ql270Connections } from './Ql270Connections';
 import { type Ql245Ledger } from './ql245SixAppEvidence';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
@@ -108,6 +109,7 @@ import './operator-shell.css';
 
 const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; description: string }> = [
   { id: 'dashboard', label: 'Dashboard', description: 'Company overview, synthetic activity and quick navigation' },
+  { id: 'connections', label: 'Connections · six apps', description: 'Six-app topology, nonproduction TEST profile planning, public proof status and the independent GET release gates' },
   { id: 'inbox', label: 'Unified inbox', description: 'Company-scoped multi-channel threads, filters and review-only timelines' },
   { id: 'contacts', label: 'Customer 360', description: 'Explicitly linked fictional customer context and cross-channel history' },
   { id: 'queue', label: 'Assignments & follow-ups', description: 'Fictional owners, due windows, triage and conversation-linked sample tasks' },
@@ -156,6 +158,23 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
 ];
 
+/** Compact navigation: keep every historical screen but hide deep audits in
+ * collapsed categories until requested. No permission or feature is removed. */
+const NAVIGATION_GROUPS = [
+  {id:'operations',label:'Operations',hint:'Daily workspaces',primary:true,
+    ids:['dashboard','inbox','contacts','queue','phone','composer','calendar','reports']},
+  {id:'it',label:'IT & Connections',hint:'Six-app setup and evidence',primary:true,
+    ids:['connections','connectors','six_app_evidence','connection_testing','integration_options']},
+  {id:'admin',label:'Admin & Reviews',hint:'Safety, owner trial and audits',primary:false,
+    ids:['evidence','trial','review','audit']},
+  {id:'archive',label:'Advanced / Historical',hint:'Older technical and audit workspaces',primary:false,
+    ids:workspaces.filter(entry=>!new Set([
+      'dashboard','inbox','contacts','queue','phone','composer','calendar','reports',
+      'connections','connectors','six_app_evidence','connection_testing','integration_options',
+      'evidence','trial','review','audit'
+    ]).has(entry.id)).map(entry=>entry.id)}
+] as const;
+
 const firstOrganization = initialOperatorOrganization(import.meta.env.VITE_DEFAULT_BRAND).id;
 
 export function OperatorShell() {
@@ -163,6 +182,7 @@ export function OperatorShell() {
   const [usabilityFeedback, setUsabilityFeedback] = useState<Record<string, Ql183Feedback>>({});
   const [showLegacyTools, setShowLegacyTools] = useState(false);
   const [workspace, setWorkspace] = useState<OperatorWorkspace>('dashboard');
+  const [navigationSearch,setNavigationSearch] = useState('');
   const [contactJump, setContactJump] = useState<string | null>(null);
   const [threadJump, setThreadJump] = useState<string | null>(null);
   const [queueJump, setQueueJump] = useState<string | null>(null);
@@ -255,13 +275,13 @@ export function OperatorShell() {
   }, [workspace]);
 
   return (
-    <div className="ql172-shell" data-organization={organization.id} data-ql191-release="ql191-four-organization-console-v2">
+    <div className="ql172-shell" data-organization={organization.id} data-ql191-release="ql191-four-organization-console-v2" data-ql270-shell="categorized">
       <a className="ql172-skip-link" href="#ql172-workspace">Skip to operator workspace</a>
       <header className="ql172-header">
         <div>
-          <p className="ql172-kicker">Rosevear Comms Hub · QL-191</p>
-          <h1>Communications command centre</h1>
-          <p>One operator console for Rosie Dazzlers, Devil n Dove, iCamp and YW.</p>
+          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-270</p>
+          <h1>Communications Command Centre</h1>
+          <p>One control surface · four businesses · two supporting systems.</p>
         </div>
         <div className="ql172-status" role="status">
           <strong>DISABLED PREVIEW</strong>
@@ -272,7 +292,7 @@ export function OperatorShell() {
       <div className="ql172-layout">
         <aside className="ql172-sidebar" aria-label="Workspace controls">
           <div className="ql172-brand-group" role="group" aria-label="Active company context">
-            <h2>Company</h2>
+            <h2>Active business</h2>
             {operatorOrganizations.map((entry) => (
               <button
                 className={entry.id === organizationId ? 'ql172-brand active' : 'ql172-brand'}
@@ -287,20 +307,30 @@ export function OperatorShell() {
             ))}
           </div>
           <nav className="ql172-navigation" aria-label="Operator workspaces">
-            <h2>Workspaces</h2>
-            {workspaces.map((entry) => (
-              <button
-                className={entry.id === workspace ? 'ql172-nav-button active' : 'ql172-nav-button'}
-                type="button"
-                key={entry.id}
-                aria-current={entry.id === workspace ? 'page' : undefined}
-                aria-controls="ql172-workspace"
-                onClick={() => setWorkspace(entry.id)}
-              >
-                <strong>{entry.label}</strong>
-                <small>{entry.description}</small>
-              </button>
-            ))}
+            <label className="ql172-nav-search-label" htmlFor="ql172-nav-search">Find a workspace</label>
+            <input id="ql172-nav-search" className="ql172-nav-search" type="search"
+              placeholder="Search tools…" value={navigationSearch}
+              onChange={event=>setNavigationSearch(event.currentTarget.value)} />
+            {NAVIGATION_GROUPS.map(group=>{
+              const groupItems=workspaces.filter(entry=>group.ids.some(id=>id===entry.id)&&
+                (!navigationSearch.trim()||`${entry.label} ${entry.description}`.toLowerCase()
+                  .includes(navigationSearch.trim().toLowerCase())));
+              if(!groupItems.length)return null;
+              return <details className="ql172-nav-group" key={group.id}
+                open={navigationSearch.trim()?true:group.primary}>
+                <summary><span>{group.label}</span><small>{groupItems.length}</small></summary>
+                <div className="ql172-nav-items">
+                  {groupItems.map(entry=><button
+                    className={entry.id===workspace?'ql172-nav-button active':'ql172-nav-button'}
+                    type="button" key={entry.id}
+                    aria-current={entry.id===workspace?'page':undefined}
+                    aria-controls="ql172-workspace" title={entry.description}
+                    onClick={()=>setWorkspace(entry.id)}>
+                    <strong>{entry.label}</strong><small>{entry.description}</small>
+                  </button>)}
+                </div>
+              </details>;
+            })}
           </nav>
           <p className="ql172-sidebar-warning">No live calls, SMS, owner approvals, or customer-data processing is authorized.</p>
         </aside>
@@ -315,6 +345,7 @@ export function OperatorShell() {
             <span className="ql172-context-badge">Preview only · no dispatch</span>
           </div>
           {workspace === 'dashboard' && <Ql191OperatorDashboard key={`dashboard-${organization.id}`} organization={organization} onNavigate={setWorkspace} />}
+          {workspace === 'connections' && <Ql270Connections onNavigate={setWorkspace} />}
           {workspace === 'inbox' && (
             <>
               <p className="ql172-local-warning" role="note">QL-192 is a synthetic unified inbox. Do not enter real names, phone numbers, messages, or owner decisions. No communications are sent or saved.</p>
