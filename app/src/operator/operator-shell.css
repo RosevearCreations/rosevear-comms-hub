@@ -111,3 +111,12 @@
 .ql270-config-banner details { max-width:480px; }
 .ql270-config-banner summary { color:#a2dbee; cursor:pointer; font-weight:700; }
 .ql270-config-banner details p { margin:8px 0 0; color:#d7eafa; line-height:1.45; overflow-wrap:anywhere; }
+
+/* QL-271 immersive management / IT / analytics / status workspace frame. */
+.ql172-shell[data-ql271-command='true'] { background:#071524; }
+.ql172-shell[data-ql270-shell='categorized'][data-ql271-command='true'] .ql172-main { background:radial-gradient(circle at 92% -10%,#203e5e55,transparent 40%),linear-gradient(160deg,#071726,#081321); min-height:calc(100dvh - 130px); }
+.ql172-shell[data-ql270-shell='categorized'][data-ql271-command='true'] .ql172-context { color:#f4f9ff; border:1px solid #284d6a; border-top:3px solid #9b63f8; background:linear-gradient(110deg,#101f34,#0a2036); box-shadow:0 8px 20px #00000030; }
+.ql172-shell[data-ql270-shell='categorized'][data-ql271-command='true'] .ql172-context .ql172-kicker { color:#b69bfc; }
+.ql172-shell[data-ql270-shell='categorized'][data-ql271-command='true'] .ql172-context h2 { color:#fff; }
+.ql172-shell[data-ql270-shell='categorized'][data-ql271-command='true'] .ql172-context p { color:#bdd1e8; }
+.ql172-shell[data-ql270-shell='categorized'][data-ql271-command='true'] .ql172-context-badge { color:#ffd99a; background:#44331c; border-color:#84612d; }
