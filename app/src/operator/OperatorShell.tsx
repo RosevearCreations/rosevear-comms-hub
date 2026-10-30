@@ -100,6 +100,7 @@ import { Ql244WitnessedHandshake } from './Ql244WitnessedHandshake';
 import { type Ql244Ledger } from './ql244WitnessedHandshake';
 import { Ql245SixAppEvidence } from './Ql245SixAppEvidence';
 import { Ql270Connections } from './Ql270Connections';
+import { Ql271CommandSurfaces, type Ql271CommandMode } from './Ql271CommandSurfaces';
 import { type Ql245Ledger } from './ql245SixAppEvidence';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
 import { findOperatorOrganization, initialOperatorOrganization, operatorOrganizations, type OperatorWorkspace, type OrganizationId } from './ql191Organizations';
@@ -110,6 +111,10 @@ import './operator-shell.css';
 const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; description: string }> = [
   { id: 'dashboard', label: 'Dashboard', description: 'Company overview, synthetic activity and quick navigation' },
   { id: 'connections', label: 'Connections · six apps', description: 'Six-app topology, nonproduction TEST profile planning, public proof status and the independent GET release gates' },
+  { id: 'it_command', label: 'IT Command', description: 'Six-app source registry, independent proof status and safe connection release controls' },
+  { id: 'management', label: 'Management', description: 'Four isolated company workspaces, staff-free sample workload and pilot safeguards' },
+  { id: 'analytics', label: 'Analytics & statistics', description: 'Graphical synthetic activity breakdowns and actual six-app approval funnel' },
+  { id: 'system_status', label: 'System status', description: 'Original Proof-B source ledger, runtime switches and reversible integration HOLD monitoring' },
   { id: 'inbox', label: 'Unified inbox', description: 'Company-scoped multi-channel threads, filters and review-only timelines' },
   { id: 'contacts', label: 'Customer 360', description: 'Explicitly linked fictional customer context and cross-channel history' },
   { id: 'queue', label: 'Assignments & follow-ups', description: 'Fictional owners, due windows, triage and conversation-linked sample tasks' },
@@ -164,16 +169,22 @@ const NAVIGATION_GROUPS = [
   {id:'operations',label:'Operations',hint:'Daily workspaces',primary:true,
     ids:['dashboard','inbox','contacts','queue','phone','composer','calendar','reports']},
   {id:'it',label:'IT & Connections',hint:'Six-app setup and evidence',primary:true,
-    ids:['connections','connectors','six_app_evidence','connection_testing','integration_options']},
-  {id:'admin',label:'Admin & Reviews',hint:'Safety, owner trial and audits',primary:false,
-    ids:['evidence','trial','review','audit']},
+    ids:['it_command','connections','connectors','six_app_evidence','connection_testing','integration_options']},
+  {id:'admin',label:'Management & Reviews',hint:'Company oversight, safety, trial and audits',primary:false,
+    ids:['management','evidence','trial','review','audit']},
+  {id:'insights',label:'Analytics & Status',hint:'Statistics and six-app safety',primary:true,
+    ids:['analytics','system_status']},
   {id:'archive',label:'Advanced / Historical',hint:'Older technical and audit workspaces',primary:false,
     ids:workspaces.filter(entry=>!new Set([
       'dashboard','inbox','contacts','queue','phone','composer','calendar','reports',
-      'connections','connectors','six_app_evidence','connection_testing','integration_options',
-      'evidence','trial','review','audit'
+      'it_command','connections','connectors','six_app_evidence','connection_testing','integration_options',
+      'management','evidence','trial','review','audit','analytics','system_status'
     ]).has(entry.id)).map(entry=>entry.id)}
 ] as const;
+
+const QL271_COMMAND_WORKSPACES: ReadonlySet<OperatorWorkspace> = new Set([
+  'it_command', 'management', 'analytics', 'system_status'
+]);
 
 const firstOrganization = initialOperatorOrganization(import.meta.env.VITE_DEFAULT_BRAND).id;
 
@@ -226,6 +237,7 @@ export function OperatorShell() {
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
   const activeWorkspace = workspaces.find((entry) => entry.id === workspace) ?? workspaces[0];
+  const commandWorkspace = QL271_COMMAND_WORKSPACES.has(workspace);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const previouslySelected = useRef<OperatorWorkspace | null>(null);
 
@@ -275,11 +287,11 @@ export function OperatorShell() {
   }, [workspace]);
 
   return (
-    <div className="ql172-shell" data-organization={organization.id} data-ql191-release="ql191-four-organization-console-v2" data-ql270-shell="categorized">
+    <div className="ql172-shell" data-organization={organization.id} data-ql191-release="ql191-four-organization-console-v2" data-ql270-shell="categorized" data-ql271-command={commandWorkspace?'true':'false'}>
       <a className="ql172-skip-link" href="#ql172-workspace">Skip to operator workspace</a>
       <header className="ql172-header">
         <div>
-          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-270</p>
+          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-271</p>
           <h1>Communications Command Centre</h1>
           <p>One control surface · four businesses · two supporting systems.</p>
         </div>
@@ -346,6 +358,7 @@ export function OperatorShell() {
           </div>
           {workspace === 'dashboard' && <Ql191OperatorDashboard key={`dashboard-${organization.id}`} organization={organization} onNavigate={setWorkspace} />}
           {workspace === 'connections' && <Ql270Connections onNavigate={setWorkspace} />}
+          {commandWorkspace && <Ql271CommandSurfaces mode={workspace as Ql271CommandMode} organizationId={organization.id} onNavigate={setWorkspace} onSelectOrganization={changeOrganization} />}
           {workspace === 'inbox' && (
             <>
               <p className="ql172-local-warning" role="note">QL-192 is a synthetic unified inbox. Do not enter real names, phone numbers, messages, or owner decisions. No communications are sent or saved.</p>
