@@ -43,7 +43,8 @@
     "verify:ql268": "npm --prefix app run test -- src/operator/__tests__/ql268ProofBIsolationReleaseLedger.test.ts",
     "verify:ql269": "npm --prefix app run test -- src/operator/__tests__/ql269AuthenticatedProofReview.test.ts",
     "verify:ql270": "npm --prefix app run test -- src/operator/__tests__/ql270Connections.test.tsx src/operator/__tests__/ql270ShellLayout.test.tsx",
-    "verify:ql271": "npm --prefix app run test -- src/operator/__tests__/ql271CommandSurfaces.test.tsx src/operator/__tests__/ql270ShellLayout.test.tsx"
+    "verify:ql271": "npm --prefix app run test -- src/operator/__tests__/ql271CommandSurfaces.test.tsx src/operator/__tests__/ql270ShellLayout.test.tsx",
+    "verify:ql272": "npm --prefix app run test -- src/operator/__tests__/ql272LayoutPreferences.test.tsx src/operator/__tests__/ql271CommandSurfaces.test.tsx"
   },
   "devDependencies": {
     "wrangler": "^4.40.0"

@@ -1,7 +1,12 @@
+import { useState } from 'react';
 import type { OperatorWorkspace, OrganizationId } from './ql191Organizations';
 import { operatorOrganizations } from './ql191Organizations';
 import { dashboardQueues, type QueueCategory } from './ql191DashboardData';
 import { QL270_SOURCES, QL270_PROOF_SNAPSHOT } from './ql270ConnectionCentre';
+import { Ql272LayoutControls } from './Ql272LayoutControls';
+import { activeQl272Profile, defaultQl272Preferences, parseQl272Preferences,
+  type Ql272PreferenceEnvelope } from './ql272LayoutPreferences';
+import { loadQl272LocalLayout, saveQl272LocalLayout } from '../storage/localRepository';
 import './ql271-command.css';
 
 export type Ql271CommandMode = 'it_command' | 'management' | 'analytics' | 'system_status';
@@ -85,13 +90,23 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
   onSelectOrganization: (organization: OrganizationId) => void;
 }) {
   const copy = pageCopy[mode];
+  const [preferences, setPreferences] = useState(() => parseQl272Preferences(loadQl272LocalLayout()));
+  const [saved, setSaved] = useState(true);
+  const profile = activeQl272Profile(preferences);
+  const view = profile.views[mode];
+
+  function updatePreferences(next: Ql272PreferenceEnvelope) {
+    setPreferences(next);
+    setSaved(saveQl272LocalLayout(next));
+  }
 
   function openBusiness(id: OrganizationId) {
     onSelectOrganization(id);
     onNavigate('queue');
   }
 
-  return <section className="ql271-command" data-command-view={mode} aria-labelledby="ql271-title">
+  return <section className="ql271-command" data-command-view={mode} data-ql272-density={profile.density}
+    data-ql272-role-preview={profile.rolePreview} aria-labelledby="ql271-title">
     <nav className="ql271-tabs" aria-label="Command centre views">
       {tabs.map(tab => <button key={tab.id} type="button" aria-current={mode === tab.id ? 'page' : undefined}
         className={mode === tab.id ? 'active' : ''} onClick={() => onNavigate(tab.id)}>
@@ -99,9 +114,13 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
       </button>)}
     </nav>
 
+    <Ql272LayoutControls preferences={preferences} mode={mode} saved={saved}
+      metricLabels={metricCopy[mode].map(metric => metric.label)} onChange={updatePreferences}
+      onReset={() => updatePreferences(defaultQl272Preferences())} />
+
     <header className="ql271-hero">
       <div className="ql271-hero-copy">
-        <p className="ql271-eyebrow">QL-271 · {copy.eyebrow}</p>
+        <p className="ql271-eyebrow">QL-272 · {copy.eyebrow}</p>
         <h3 id="ql271-title">{copy.title}</h3>
         <p>{copy.intro}</p>
         <div className="ql271-hero-actions">
@@ -124,16 +143,19 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
     <p className="ql271-truth" role="note"><span aria-hidden="true">◆</span> SYNTHETIC / READ-ONLY VIEW — charts use the 16 fictional training events and six known repository mappings. No live customer, finance, staffing, device or gateway telemetry is connected.</p>
 
     <div className="ql271-kpis" aria-label="Command centre metrics">
-      {metricCopy[mode].map((metric,index)=><article className={`ql271-kpi tone-${metric.tone}`} key={metric.label}>
+      {view.order.filter(index => !view.hidden.includes(index)).map(index=>{
+        const metric = metricCopy[mode][index];
+        return <article className={`ql271-kpi tone-${metric.tone}`} key={metric.label}>
         <div className="ql271-kpi-top"><span className="ql271-kpi-icon" aria-hidden="true">{['▧','◇','◉','⚑'][index]}</span><span className="ql271-kpi-label">{metric.label}</span></div>
         <strong>{metric.value}</strong><small>{metric.note}</small>
         <div className="ql271-track" role="meter" aria-label={metric.label} aria-valuemin={0} aria-valuemax={metric.max} aria-valuenow={metric.current}>
           <span style={{ width: `${metric.current / metric.max * 100}%` }}/>
         </div>
-      </article>)}
+      </article>;
+      })}
     </div>
 
-    {mode === 'it_command' && <div className="ql271-columns">
+    {view.showPanels && mode === 'it_command' && <div className="ql271-columns">
       <section className="ql271-panel ql271-wide" aria-labelledby="ql271-it-sources"><div className="ql271-panel-header"><div><p className="ql271-eyebrow">Connection registry</p><h4 id="ql271-it-sources">Six application interfaces</h4></div><span className="ql271-badge amber">0 authenticated</span></div>
         <div className="ql271-source-list">{QL270_SOURCES.map(source=><div className="ql271-source-row" key={source.id}>
           <span className={`ql271-source-glyph tone-${source.tone}`} aria-hidden="true">{source.icon}</span>
@@ -147,7 +169,7 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
       </section>
     </div>}
 
-    {mode === 'management' && <div className="ql271-columns">
+    {view.showPanels && mode === 'management' && <div className="ql271-columns">
       <section className="ql271-panel ql271-wide" aria-labelledby="ql271-management-desks"><div className="ql271-panel-header"><div><p className="ql271-eyebrow">Company-isolated views</p><h4 id="ql271-management-desks">Four business workspaces</h4></div><span className="ql271-badge">16 fictional records</span></div>
         <div className="ql271-company-table" role="table" aria-label="Sample business workload">
           <div className="ql271-table-head" role="row"><span role="columnheader">Business</span><span role="columnheader">Examples</span><span role="columnheader">Follow-ups</span><span role="columnheader">Review</span></div>
@@ -164,7 +186,7 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
       </section>
     </div>}
 
-    {mode === 'analytics' && <div className="ql271-columns">
+    {view.showPanels && mode === 'analytics' && <div className="ql271-columns">
       <section className="ql271-panel ql271-wide" aria-labelledby="ql271-category-chart"><div className="ql271-panel-header"><div><p className="ql271-eyebrow">Synthetic training distribution</p><h4 id="ql271-category-chart">Activity by category</h4></div><span className="ql271-badge">16 sample events</span></div>
         <div className="ql271-chart-bars">{categories.map(category=>{
           const count=examples.filter(x=>x.category===category.id).length;
@@ -180,7 +202,7 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
       </section>
     </div>}
 
-    {mode === 'system_status' && <div className="ql271-columns">
+    {view.showPanels && mode === 'system_status' && <div className="ql271-columns">
       <section className="ql271-panel ql271-wide" aria-labelledby="ql271-status-ledger"><div className="ql271-panel-header"><div><p className="ql271-eyebrow">Six-app proof register</p><h4 id="ql271-status-ledger">Original Proof-B status</h4></div><span className="ql271-badge amber">All 6 HELD</span></div>
         <div className="ql271-status-table">{QL270_SOURCES.map(source=>{
           const proof=QL270_PROOF_SNAPSHOT.find(p=>p.source===source.id);
