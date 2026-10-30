@@ -10,6 +10,7 @@ import {QL263_FUTURE_GET_PLAN,QL263_ROSIE_ATTACHMENT_SHA256}
 export const QL264_RELEASE='ql264-six-source-repository-direct-docs-and-private-proof-test-gate-held-v1';
 export const QL264_OBSERVED='29 October 2026 Eastern';
 export const QL264_GUIDE_PATH='docs/integration/ROSEVEAR_COMMS_QL264_CONNECTION_HANDOFF.md';
+export const QL264_YW_GUIDE_PATH='docs/ACTIVE_PROJECT_HANDBOOK.md';
 export const QL264_REPO_OBSERVATIONS=[
   {system:'ai-data-platform',repository:'ai-data-platform',sha:'a28a4874497a416613bc4182b5f895a5132fe0b9'},
   {system:'devilndove',repository:'devilndove-site',sha:'f8c60a8c28c3d5a172f621722e33f2546efbd9d0'},
@@ -44,7 +45,10 @@ export const QL264_TEST_SLOT={
 export function ql264GuideUrl(repository:string):string{
   if(!QL264_REPO_OBSERVATIONS.some(r=>r.repository===repository))
     throw new Error('Unknown source repository');
-  return `https://github.com/RosevearCreations/${repository}/blob/main/${QL264_GUIDE_PATH}`;
+  const path=repository==='yw'?QL264_YW_GUIDE_PATH:QL264_GUIDE_PATH;
+  const anchor=repository==='yw'
+    ?'#rosevear-comms-hub-source-integration-disabled-nonproduction-only':'';
+  return `https://github.com/RosevearCreations/${repository}/blob/main/${path}${anchor}`;
 }
 
 /** Never promote a public text/JSON receipt into proof of external private identity. */
@@ -75,6 +79,7 @@ export function ql264SixAppCoordinationReport(){
       system:app.system,name:app.name,repository:app.repository,
       historicalPreHandoffMainSha:observed.sha,
       originalProofAtHistoricalSha:'HTTP_404',
+      guidePath:app.repository==='yw'?QL264_YW_GUIDE_PATH:QL264_GUIDE_PATH,
       directGitHubGuide:ql264GuideUrl(app.repository),
       sourceSpecificAction:QL264_APP_BLOCKERS[app.system],
       ownerPacket:app.system==='rosiedazzlers'

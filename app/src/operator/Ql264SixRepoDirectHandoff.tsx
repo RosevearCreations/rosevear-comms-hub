@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {QL264_RELEASE,QL264_GUIDE_PATH,QL264_TEST_SLOT,
+import {QL264_RELEASE,QL264_TEST_SLOT,
   ql264SixAppCoordinationReport} from './ql264SixRepoDirectHandoff';
 
 export function Ql264SixRepoDirectHandoff(){
@@ -27,7 +27,7 @@ export function Ql264SixRepoDirectHandoff(){
       <tbody>{report.rows.map(row=><tr key={row.system}>
         <th scope="row">{row.name}</th>
         <td><a href={row.directGitHubGuide} rel="noopener noreferrer" target="_blank">
-          Open source-repo handoff</a><p><code>{QL264_GUIDE_PATH}</code></p></td>
+          Open source-repo handoff</a><p><code>{row.guidePath}</code></p></td>
         <td><code>{row.historicalPreHandoffMainSha.slice(0,12)}</code><p>
           {row.originalProofAtHistoricalSha}</p></td>
         <td>{row.sourceSpecificAction}</td>

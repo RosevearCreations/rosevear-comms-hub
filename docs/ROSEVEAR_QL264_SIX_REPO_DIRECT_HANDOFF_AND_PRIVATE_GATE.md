@@ -4,14 +4,14 @@
 
 ## What changed in the owner workflow
 
-The owner requested that Comms Hub write the source-specific integration instructions **directly into all six source GitHub repositories**, removing the need to copy or attach guides across six conversations. We did that as a **documentation-only, narrow change** under the same path in each source repository. A source team can now read its own guide in GitHub and begin the real implementation and private evidence process there. No operator action is required to distribute a Markdown file.
+The owner requested that Comms Hub write the source-specific integration instructions **directly into all six source GitHub repositories**, removing the need to copy or attach guides across six conversations. We did that as a **documentation-only, narrow change** in each source repository. Five apps received a dedicated file under `docs/integration/`. **Yard Workers enforces exactly three active Markdown documents**, so its handoff is embedded in its existing `docs/ACTIVE_PROJECT_HANDBOOK.md` under *Rosevear Comms Hub source integration*, preserving that repository's mandatory source checks. A source team can now read its own guide in GitHub and begin the real implementation and private evidence process there.
 
 | Source application | GitHub source-specific QL-264 handoff | Source-specific immediate need |
 | --- | --- | --- |
 | AI Data Platform | [Source handoff](https://github.com/RosevearCreations/ai-data-platform/blob/main/docs/integration/ROSEVEAR_COMMS_QL264_CONNECTION_HANDOFF.md) | Verify existing signer custody and isolated nonproduction gateway |
 | Devil n Dove | [Source handoff](https://github.com/RosevearCreations/devilndove-site/blob/main/docs/integration/ROSEVEAR_COMMS_QL264_CONNECTION_HANDOFF.md) | Separate D1/Etsy/Marketplace from any future GET-only test |
 | Rosie Dazzlers | [Source handoff](https://github.com/RosevearCreations/rosiedazzlers/blob/main/docs/integration/ROSEVEAR_COMMS_QL264_CONNECTION_HANDOFF.md) | Resolve private roles from genuine evidence; prevent booking/Gift actions |
-| Yard Workers | [Source handoff](https://github.com/RosevearCreations/yw/blob/main/docs/integration/ROSEVEAR_COMMS_QL264_CONNECTION_HANDOFF.md) | Independently establish a different nonproduction Supabase project and tenant |
+| Yard Workers | [Source handbook section](https://github.com/RosevearCreations/yw/blob/main/docs/ACTIVE_PROJECT_HANDBOOK.md#rosevear-comms-hub-source-integration-disabled-nonproduction-only) | Independently establish a different nonproduction Supabase project and tenant |
 | iCamp | [Source handoff](https://github.com/RosevearCreations/iCamp/blob/main/docs/integration/ROSEVEAR_COMMS_QL264_CONNECTION_HANDOFF.md) | Separate test campground and nonproduction guest environment |
 | Rosevear AI Hub | [Source handoff](https://github.com/RosevearCreations/rosevear-ai-hub/blob/main/docs/integration/ROSEVEAR_COMMS_QL264_CONNECTION_HANDOFF.md) | Privately verify signer/witness and keep Windows relay OFF |
 

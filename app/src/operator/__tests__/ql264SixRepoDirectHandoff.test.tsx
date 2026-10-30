@@ -3,7 +3,7 @@ import {act} from 'react';
 import {createRoot} from 'react-dom/client';
 import {describe,expect,it,vi} from 'vitest';
 import {Ql264SixRepoDirectHandoff} from '../Ql264SixRepoDirectHandoff';
-import {QL264_GUIDE_PATH,QL264_REPO_OBSERVATIONS,QL264_TEST_SLOT,
+import {QL264_GUIDE_PATH,QL264_YW_GUIDE_PATH,QL264_REPO_OBSERVATIONS,QL264_TEST_SLOT,
   ql264ClassifyReceipt,ql264GuideUrl,ql264SixAppCoordinationReport}
   from '../ql264SixRepoDirectHandoff';
 
@@ -15,8 +15,11 @@ describe('QL-264 six direct GitHub source handoffs and original private security
     expect(new Set(QL264_REPO_OBSERVATIONS.map(row=>row.repository)).size).toBe(6);
     expect(report.rows.map(row=>row.directGitHubGuide)).toEqual(
       report.rows.map(row=>ql264GuideUrl(row.repository)));
-    expect(report.rows.every(row=>row.directGitHubGuide.endsWith(`/blob/main/${QL264_GUIDE_PATH}`)))
-      .toBe(true);
+    expect(report.rows.filter(row=>row.repository!=='yw').every(row=>
+      row.directGitHubGuide.endsWith(`/blob/main/${QL264_GUIDE_PATH}`))).toBe(true);
+    expect(report.rows.find(row=>row.repository==='yw')?.guidePath).toBe(QL264_YW_GUIDE_PATH);
+    expect(report.rows.find(row=>row.repository==='yw')?.directGitHubGuide)
+      .toContain(`/blob/main/${QL264_YW_GUIDE_PATH}#`);
     expect(()=>ql264GuideUrl('unknown')).toThrow();
     expect(report.rows.find(row=>row.system==='yw')?.sourceSpecificAction)
       .toContain('nonproduction Supabase');
