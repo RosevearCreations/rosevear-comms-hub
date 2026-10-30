@@ -71,12 +71,15 @@ function StatusBanner({ admin, readModel, onSignOut }: { admin: AppAdminRow; rea
 
 function LocalOnlyBanner({ reasons }: { reasons: string[] }) {
   return (
-    <div style={bannerStyle}>
-      <span>
-        Disabled preview — local samples only. Supabase login/reference reads
-        {' '}are intentionally off; adding a key is not required for the six-app
-        {' '}proof handoff.{reasons.length ? ` Configuration: ${reasons.join(' ')}` : ''}
-      </span>
+    <div style={bannerStyle} className="ql270-config-banner" role="status">
+      <strong>● PREVIEW MODE</strong>
+      <span>Disabled preview — local samples only. Supabase login/reference reads
+        {' '}are intentionally off. No live calls, customer records or six-app connections.</span>
+      {reasons.length>0&&<details>
+        <summary>Technical configuration</summary>
+        <p>Adding a key is not required for the six-app proof handoff.
+          {' '}Configuration: {reasons.join(' ')}</p>
+      </details>}
     </div>
   );
 }

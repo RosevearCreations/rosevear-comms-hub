@@ -32,6 +32,20 @@ export function Ql191OperatorDashboard({ organization, onNavigate }: {
 
   return (
     <section className="ql191-dashboard" aria-labelledby="ql191-dashboard-title" data-organization={organization.id}>
+      <section className="ql270-dashboard-overview" aria-label="Six-application integration command overview">
+        <div>
+          <p className="ql191-eyebrow">Network telemetry · planning only</p>
+          <h3>Six systems. One command view.</h3>
+          <p>Four company apps plus AI Data Platform and Rosevear AI Hub. All six
+            remain disconnected until an independently verified TEST release.</p>
+          <button type="button" onClick={()=>onNavigate('connections')}>Open IT · Connections <span aria-hidden="true">↗</span></button>
+        </div>
+        <div className="ql270-dashboard-signals">
+          <div><span>Registered sources</span><strong>6/6</strong><meter min="0" max="6" value="6">6 of 6 registered</meter></div>
+          <div><span>Verified integration proofs</span><strong>0/6</strong><meter min="0" max="6" value="0">0 of 6 verified</meter></div>
+          <div><span>Live connections</span><strong>0</strong><small>12 pilot prerequisites held</small></div>
+        </div>
+      </section>
       <div className="ql191-hero">
         <div>
           <p className="ql191-eyebrow">QL-191 · Operator Console V2</p>
@@ -96,6 +110,7 @@ export function Ql191OperatorDashboard({ organization, onNavigate }: {
               <div><p className="ql191-eyebrow">Where to next</p><h4 id="ql191-shortcuts-heading">Workspace shortcuts</h4></div>
             </div>
             <div className="ql191-actions">
+              <button type="button" onClick={() => onNavigate('connections')}>Six-app connection manager <span aria-hidden="true">›</span></button>
               <button type="button" onClick={() => onNavigate('inbox')}>Open inbox preview <span aria-hidden="true">›</span></button>
               <button type="button" onClick={() => onNavigate('samples')}>Review workflow examples <span aria-hidden="true">›</span></button>
               <button type="button" onClick={() => onNavigate('telephony')}>Phone/SMS safety <span aria-hidden="true">›</span></button>
