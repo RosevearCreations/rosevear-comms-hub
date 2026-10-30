@@ -31,6 +31,10 @@
 .ql262-isolation-controls { margin: 1rem 0; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); }
 .ql262-isolation-controls select { box-sizing: border-box; width: 100%; padding: .7rem; color: #132f40; background: #fff; border: 1px solid #9bb9ca; border-radius: .4rem; }
 .ql262-isolation-controls select:focus-visible { outline: 3px solid #ffe18d; outline-offset: 3px; }
+.ql263-role-controls,.ql263-role-controls label { display: grid; gap: .6rem; min-width: 0; }
+.ql263-role-controls { grid-template-columns: repeat(auto-fit,minmax(min(100%,250px),1fr)); margin: 1rem 0; }
+.ql263-role-controls select { box-sizing: border-box; padding: .7rem; color: #132f40; background: #fff; border: 1px solid #9bb9ca; border-radius: .4rem; width: 100%; }
+.ql263-role-controls select:focus-visible { outline: 3px solid #ffe18d; outline-offset: 3px; }
 .ql245-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
 .ql245-screen button { min-height: 44px; padding: .7rem .85rem; border: 1px solid #8eb4ce; border-radius: .6rem; color: #fff; background: #24546b; cursor: pointer; }
 .ql245-screen button:disabled { opacity: .5; cursor: not-allowed; }
