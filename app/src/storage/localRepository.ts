@@ -12,6 +12,31 @@ import type {
 } from '../types';
 
 const STORAGE_KEY = import.meta.env.VITE_STORAGE_KEY ?? 'rosevear-comms-hub:v1';
+const QL272_LAYOUT_KEY = 'rosevear-comms-hub:ql272-command-layouts:v1';
+
+// Deliberately separate from the historical demo CRM database. This record can
+// contain UI layout choices only; never persist roles, tenants, secrets or proof.
+export function loadQl272LocalLayout(): unknown {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.localStorage.getItem(QL272_LAYOUT_KEY);
+    return raw ? JSON.parse(raw) as unknown : null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveQl272LocalLayout(value: unknown): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    const serialized = JSON.stringify(value);
+    if (serialized.length > 12000) return false;
+    window.localStorage.setItem(QL272_LAYOUT_KEY, serialized);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
