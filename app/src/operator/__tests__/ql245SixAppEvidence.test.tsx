@@ -251,6 +251,11 @@ describe('QL-245 operator exception-triage page',()=>{
       .toContain('Test current main + original proof');
     expect(section.querySelector('[data-ql262-release]')?.textContent)
       .toContain('12/12 HELD');
+    expect(section.querySelectorAll('[data-ql263-release] tbody tr')).toHaveLength(6);
+    expect(section.querySelector('[data-ql263-release]')?.textContent)
+      .toContain('Received original packets: 1/6');
+    expect(section.querySelector('[data-ql263-release]')?.textContent)
+      .toContain('NOT_REPORTED');
     expect(section.querySelector('[data-ql248-release]')?.textContent).toContain('two immutable commits');
     expect(section.textContent).toContain('missing (404)');
     expect(section.textContent).toContain('6/6 HANDOFF SUMMARIES RECEIVED');
