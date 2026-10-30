@@ -14,11 +14,11 @@ afterEach(async()=>{await act(async()=>root.unmount());host.remove();});
 describe('QL-270 modern categorized operator shell',()=>{
   it('retains all workspaces while showing only compact Operations and IT categories',()=>{
     const groups=[...host.querySelectorAll<HTMLDetailsElement>('.ql172-nav-group')];
-    expect(groups).toHaveLength(4);
+    expect(groups).toHaveLength(5);
     expect(groups.map(g=>g.querySelector('summary')?.textContent)).toEqual([
-      'Operations8','IT & Connections5','Admin & Reviews4','Advanced / Historical31']);
-    expect(groups.map(g=>g.open)).toEqual([true,true,false,false]);
-    expect(host.querySelectorAll('.ql172-nav-button')).toHaveLength(48);
+      'Operations8','IT & Connections6','Management & Reviews5','Analytics & Status2','Advanced / Historical31']);
+    expect(groups.map(g=>g.open)).toEqual([true,true,false,true,false]);
+    expect(host.querySelectorAll('.ql172-nav-button')).toHaveLength(52);
     expect(host.querySelectorAll('.ql172-brand')).toHaveLength(4);
     expect(host.querySelector('.ql172-nav-search')).not.toBeNull();
   });
