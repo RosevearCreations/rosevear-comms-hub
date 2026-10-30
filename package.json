@@ -40,7 +40,8 @@
     "verify:ql265": "npm --prefix app run test -- src/operator/__tests__/ql265LocalSixAppPreflight.test.ts",
     "verify:ql266": "npm --prefix app run test -- src/operator/__tests__/ql266SixAppProductionAcceptance.test.ts && node scripts/__tests__/ql266-private-witness-crypto-check.test.mjs",
     "verify:ql267": "npm --prefix app run test -- src/operator/__tests__/ql267SixAppReceiptReconciliation.test.ts",
-    "verify:ql268": "npm --prefix app run test -- src/operator/__tests__/ql268ProofBIsolationReleaseLedger.test.ts"
+    "verify:ql268": "npm --prefix app run test -- src/operator/__tests__/ql268ProofBIsolationReleaseLedger.test.ts",
+    "verify:ql269": "npm --prefix app run test -- src/operator/__tests__/ql269AuthenticatedProofReview.test.ts"
   },
   "devDependencies": {
     "wrangler": "^4.40.0"

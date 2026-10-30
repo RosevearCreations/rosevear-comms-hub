@@ -40,6 +40,7 @@ import { Ql265LocalSixAppPreflight } from './Ql265LocalSixAppPreflight';
 import { Ql266SixAppProductionAcceptance } from './Ql266SixAppProductionAcceptance';
 import { Ql267SixAppReceiptReconciliation } from './Ql267SixAppReceiptReconciliation';
 import { Ql268ProofBIsolationReleaseLedger } from './Ql268ProofBIsolationReleaseLedger';
+import { Ql269AuthenticatedProofReview } from './Ql269AuthenticatedProofReview';
 import './ql245-six-app-evidence.css';
 
 export function Ql245SixAppEvidence({ organization, source, audit, external,
@@ -107,6 +108,7 @@ export function Ql245SixAppEvidence({ organization, source, audit, external,
     <Ql266SixAppProductionAcceptance />
     <Ql267SixAppReceiptReconciliation />
     <Ql268ProofBIsolationReleaseLedger />
+    <Ql269AuthenticatedProofReview />
     <section className="ql245-panel" data-ql247-release={QL247_RELEASE}
       aria-labelledby="ql247-census-title">
       <h4 id="ql247-census-title">QL-247 · Independent six-repository source census</h4>
