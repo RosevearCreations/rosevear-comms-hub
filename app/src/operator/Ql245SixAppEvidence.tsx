@@ -34,6 +34,7 @@ import { Ql259SixAppReturnIntake } from './Ql259SixAppReturnIntake';
 import { Ql260NarrativeTriage } from './Ql260NarrativeTriage';
 import { Ql261SixAppPreflight } from './Ql261SixAppPreflight';
 import { Ql262EvidenceIsolationReview } from './Ql262EvidenceIsolationReview';
+import { Ql263OriginalReceiptReadiness } from './Ql263OriginalReceiptReadiness';
 import './ql245-six-app-evidence.css';
 
 export function Ql245SixAppEvidence({ organization, source, audit, external,
@@ -95,6 +96,7 @@ export function Ql245SixAppEvidence({ organization, source, audit, external,
     <Ql260NarrativeTriage />
     <Ql261SixAppPreflight />
     <Ql262EvidenceIsolationReview />
+    <Ql263OriginalReceiptReadiness />
     <section className="ql245-panel" data-ql247-release={QL247_RELEASE}
       aria-labelledby="ql247-census-title">
       <h4 id="ql247-census-title">QL-247 · Independent six-repository source census</h4>

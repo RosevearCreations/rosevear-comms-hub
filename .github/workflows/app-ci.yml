@@ -47,6 +47,7 @@ jobs:
       - run: npm run test -- src/operator/__tests__/ql260NarrativeTriage.test.tsx
       - run: npm run test -- src/operator/__tests__/ql261SixAppPreflight.test.tsx
       - run: npm run test -- src/operator/__tests__/ql262EvidenceIsolationReview.test.tsx
+      - run: npm run test -- src/operator/__tests__/ql263OriginalReceiptReadiness.test.tsx
       - run: node --test ../scripts/__tests__/ql261-six-app-guide-integrity.test.mjs
       - run: node --test ../scripts/__tests__/ql189-operations-safety-harness.test.mjs
       - run: node ../scripts/ql190-packet-integrity-audit.mjs
