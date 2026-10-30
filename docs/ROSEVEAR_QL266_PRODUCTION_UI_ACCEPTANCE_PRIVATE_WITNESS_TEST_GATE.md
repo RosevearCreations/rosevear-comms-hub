@@ -34,6 +34,8 @@ In an approved **private channel, not GitHub, chat or a browser form**:
 
 1. Owner separately appoints and authenticates a genuine signing-key custodian, **different** nonce witness and independent reviewer for each source, and approves a persistent restricted signer host. Determine signer existence there. Do not automatically generate or publish a key.
 2. Witness issues a fresh bounded challenge; custodian proves real private-key possession; the independent reviewer verifies witness independence, nonce freshness and the public Ed25519 SPKI fingerprint from a separate trusted channel. Store private material only in approved restricted custody.
+   - QL-266 provides an **optional offline cryptographic check**: `scripts/ql266-private-witness-crypto-check.mjs` accepts one private witness receipt file and an independently sourced public SPKI SHA-256 fingerprint via `QL266_TRUSTED_SPKI_SHA256`. It validates a fresh, signed Ed25519 nonce bound to the source and immutable SHA; it never prints the receipt contents, key material, private file path or challenge nonce.
+   - Even when its output says `SIGNATURE_VALID_ONLY`, the human custodian/witness/reviewer remain `NOT_VERIFIED` and TEST stays `HELD_UNSCHEDULED`. The private reviewer must authenticate people and nonce uniqueness out of band. CI uses ephemeral **synthetic** signing keys only to test code and never creates a real source signer.
 3. With real signed-source authorization, publish original immutable `docs/integration/ql246-source-proof.json` proof B and recheck at the **new exact `main` SHA**. Never equate source A, generated test keys or an owner status label with original signed proof B.
 4. Independently verify **isolated nonproduction tenants**, least-privilege per-app read-only service identities, no production business/customer/home-data scope, and approved stop/rollback procedure.
 5. Receive separately authenticated owner **TEST-only** authorization. Only an authorized operator may then schedule at most **two positive and seven denial GETs per app within 15 minutes**. No live actions.
@@ -42,6 +44,6 @@ Until all five are complete and independently reviewed, six-app integration is *
 
 ## Verification and next build
 
-`npm run verify:ql266` checks the fail-closed source snapshot and owner-review behavior; full app Vitest and Vite build protect the software promotion. Source-app Green CI is separate from actual integration authorization.
+`npm run verify:ql266` checks the fail-closed source snapshot, owner-review behavior and cryptographic receipt validation against synthetic CI fixtures; full app Vitest and Vite build protect the software promotion. Source-app Green CI is separate from actual integration authorization.
 
 **Next suggested: QL-267 — Six-App Owner Walkthrough Receipt Reconciliation, Private Witness Proof Return Intake & Independently Authorized Nonproduction Gateway Dry-Run Scheduling (HELD).**
