@@ -48,3 +48,25 @@
 @media (max-width: 1100px) { .ql191-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); } .ql191-grid { grid-template-columns: 1fr; } .ql191-side-panels { grid-template-columns: repeat(2,minmax(0,1fr)); } .ql191-safety { grid-column: 1/-1; } }
 @media (max-width: 650px) { .ql191-metrics, .ql191-side-panels, .ql191-additional-layout { grid-template-columns: 1fr; } .ql191-hero { padding: 18px; } .ql191-panel { padding: 14px; } .ql191-filter { flex: 1 1 auto; } }
 @media (forced-colors: active) { .ql191-filter.active, .ql191-queue-entry.active { outline: 2px solid Highlight; } .ql191-help-button { border: 2px solid ButtonText; } }
+
+/* QL-270 · compact futuristic command telemetry, genuine HOLD indicators. */
+.ql270-dashboard-overview { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(250px,1fr); gap:18px; min-width:0; overflow:hidden; border:1px solid #3e86ac; border-radius:20px; padding:clamp(19px,2.6vw,32px); background:radial-gradient(circle at 95% -20%,#27a5d033,transparent 48%),linear-gradient(125deg,#0b1730,#14304d 75%,#10243f); box-shadow:0 16px 36px #13345326; }
+.ql270-dashboard-overview .ql191-eyebrow { color:#83e6f0; letter-spacing:.14em; }
+.ql270-dashboard-overview h3 { color:#f2fbff; font-size:clamp(1.5rem,2.7vw,2.2rem); letter-spacing:-.04em; line-height:1.1; margin:8px 0 14px; }
+.ql270-dashboard-overview p:not(.ql191-eyebrow) { color:#b9d4e9; max-width:570px; line-height:1.55; }
+.ql270-dashboard-overview button { background:#21c0d6; color:#062b3b; border:1px solid #9af0ff; border-radius:11px; padding:11px 16px; min-height:43px; font-weight:850; margin-top:9px; cursor:pointer; }
+.ql270-dashboard-overview button:hover { background:#7ce4f1; }
+.ql270-dashboard-signals { display:grid; gap:10px; }
+.ql270-dashboard-signals>div { border:1px solid #355d7c; background:#173250a8; border-radius:12px; padding:12px 15px; display:grid; gap:5px; grid-template-columns:minmax(0,1fr) auto; }
+.ql270-dashboard-signals span { color:#b8d5e8; font-size:.8rem; font-weight:650; }
+.ql270-dashboard-signals strong { color:#f2fbff; font-size:1.25rem; font-variant-numeric:tabular-nums; }
+.ql270-dashboard-signals meter { grid-column:1/-1; width:100%; height:7px; accent-color:#38d6df; }
+.ql270-dashboard-signals small { grid-column:1/-1; color:#ffcd8b; font-size:.75rem; }
+.ql191-dashboard .ql191-hero { background:linear-gradient(125deg,#1c3553,#244661 70%,#274a66); border:1px solid #446c8e; box-shadow:0 10px 26px #0d24431f; }
+.ql191-dashboard .ql191-hero h3 { font-size:clamp(1.25rem,2.1vw,1.8rem); }
+.ql191-dashboard .ql191-metric { border:1px solid #d0e0ee; border-top:3px solid #35aec9; box-shadow:0 8px 18px #14345310; }
+.ql191-dashboard .ql191-metric strong { color:#116d9f; }
+.ql191-dashboard .ql191-panel { border:1px solid #cfdeeb; box-shadow:0 8px 24px #112d4b11; }
+.ql191-dashboard .ql191-filter.active { background:#126b96; border-color:#126b96; }
+@media (max-width:950px) { .ql270-dashboard-overview { grid-template-columns:1fr; } .ql270-dashboard-signals { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media (max-width:650px) { .ql270-dashboard-signals { grid-template-columns:1fr; } .ql270-dashboard-overview { padding:18px; } }
