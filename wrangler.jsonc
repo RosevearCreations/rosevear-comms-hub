@@ -96,6 +96,7 @@
   // QL-256: source-only Worker deployment check for signer/role/TEST readiness guides; no private relay, live gateway or permission enabled.
   // QL-256 Workers retry: repeat exact disabled release build after branch-side external check failed; no runtime or secret changes.
   // QL-257: source-only Worker rebuild for six real signer responses and static build-variable routing; live runtime remains disabled.
+  // QL-270: source-only production Workers rebuild marker for the modern command UI and six-app connection inspector; live integrations, provider routes and private gateways remain disabled.
   "name": "rosevear-comms-hub",
   "compatibility_date": "2026-10-10",
   "previews": {},
