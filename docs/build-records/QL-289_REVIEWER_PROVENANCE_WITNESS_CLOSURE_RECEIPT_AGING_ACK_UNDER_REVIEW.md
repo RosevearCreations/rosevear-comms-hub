@@ -36,3 +36,5 @@ At **2026-10-31T16:48:10Z (12:48 Eastern)** each registered GitHub source reposi
 ## Next planned build
 
 **QL-290 — Independent Reviewer Challenge Origin Reconciliation, Original Proof-B Witness Attestation Preconditions & Six-App Source Recheck Exception Priority Queue (ACK Delivery Evidence Under Review).** No external evidence or source publication is presumed.
+
+QL-290 is now the first entry in the **15-build planned batch QL-290–304**. See the [active future queue](../QL-290-304-REQUIRED_BUILD_QUEUE.md) and its [build-sequence index](../08_BUILD_SEQUENCE.md) for the numbered scopes and completion ledger. Planning these builds does not change any source integration or ACK permission.
