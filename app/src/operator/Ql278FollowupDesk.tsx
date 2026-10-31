@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type Dispatch, type SetStateAction } from 'react';
 import { QL270_SOURCES, type Ql270SourceId } from './ql270ConnectionCentre';
 import { QL275_OWNER_CHECKS } from './ql275OperatorWalkthrough';
 import { ql276CaptureOwnerObservation, type Ql276OwnerEvidenceInput,
@@ -16,12 +16,12 @@ const initialObservation: Ql276OwnerEvidenceInput = {
   checkId: 'keyboard', outcome: 'issue', device: 'desktop', assistiveMethod: 'keyboard', note: ''
 };
 
-export function Ql278FollowupDesk({ onOpenEvidence }: { onOpenEvidence: () => void }) {
+export function Ql278FollowupDesk({ onOpenEvidence, tickets, setTickets }: { onOpenEvidence: () => void;
+  tickets: Ql278RetestTicket[]; setTickets: Dispatch<SetStateAction<Ql278RetestTicket[]>> }) {
   const [topic, setTopic] = useState<Topic>('retest');
   const [observation, setObservation] = useState<Ql276OwnerEvidenceInput>(initialObservation);
   const [baseline, setBaseline] = useState<Ql276OwnerObservation | null>(null);
   const [comparison, setComparison] = useState<Ql277Comparison | null>(null);
-  const [tickets, setTickets] = useState<Ql278RetestTicket[]>([]);
   const [source, setSource] = useState<Ql270SourceId>('rosiedazzlers');
   const [reference, setReference] = useState('');
   const [custody, setCustody] = useState<Ql278CustodyPacket[]>([]);
