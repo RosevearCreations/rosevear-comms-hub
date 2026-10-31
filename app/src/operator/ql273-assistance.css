@@ -1,0 +1,44 @@
+/* QL-273: accessible command help and local-only saved-view recovery. */
+.ql273-assist { color:#f0f7ff; border:1px solid #365879; border-radius:13px; background:linear-gradient(115deg,#101e36,#192c48); overflow:hidden; }
+.ql273-assist-toolbar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; padding:13px 16px; }
+.ql273-assist-intro { display:flex; align-items:center; gap:11px; }
+.ql273-assist-intro>span { width:40px; height:40px; display:grid; place-items:center; border:1px solid #9171d5; border-radius:11px; background:#3c2868; color:#e0beff; font-size:1.42rem; }
+.ql273-assist-intro strong,.ql273-assist-intro small { display:block; }
+.ql273-assist-intro strong { font-size:.83rem; }
+.ql273-assist-intro small { color:#aac6db; margin-top:3px; font-size:.71rem; }
+.ql273-assist-actions,.ql273-audit-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.ql273-assist button { min-height:38px; padding:8px 11px; cursor:pointer; border:1px solid #5c79a1; border-radius:8px; background:#16334d; color:#e8f6ff; font-size:.74rem; font-weight:750; }
+.ql273-assist button[aria-expanded='true'] { border-color:#ac80ff; background:#463078; color:#fff; }
+.ql273-assist button:focus-visible,.ql273-metric-help:focus-visible { outline:3px solid #7ae9fb; outline-offset:3px; }
+.ql273-assist button:hover:not(:disabled) { background:#3c3268; }
+.ql273-assist button:disabled { opacity:.48; cursor:not-allowed; }
+.ql273-assist-panel { padding:16px 18px 19px; border-top:1px solid #3d6081; background:#0c2037; }
+.ql273-assist-panel h4 { font-size:1rem; margin:0 0 10px; }
+.ql273-assist-panel>p,.ql273-audit-heading p { color:#bcd1e2; font-size:.78rem; line-height:1.55; margin:4px 0 12px; }
+.ql273-help-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:11px; }
+.ql273-help-grid p { display:grid; align-content:start; gap:7px; padding:13px; margin:0; border:1px solid #31526f; border-radius:10px; background:#162d45; color:#c5daec; font-size:.76rem; line-height:1.55; }
+.ql273-help-grid strong { font-size:.76rem; color:#f2e7ff; }
+.ql273-held-note { color:#ffd9a0!important; border-left:3px solid #e9a649; padding-left:11px; margin-top:14px!important; }
+.ql273-shortcut-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px 12px; margin:13px 0; }
+.ql273-shortcut-list>div { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 12px; background:#162e48; border:1px solid #315573; border-radius:8px; }
+.ql273-shortcut-list dt,.ql273-shortcut-list dd { margin:0; font-size:.74rem; }
+.ql273-shortcut-list dd { color:#c5d8e8; text-align:right; }
+.ql273-shortcut-list kbd { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; color:#e7d3ff; white-space:nowrap; font-size:.74rem; }
+.ql273-audit-heading { display:flex; align-items:flex-start; gap:10px; justify-content:space-between; }
+.ql273-audit-badge { font-size:.65rem; letter-spacing:.04em; font-weight:850; padding:7px 9px; border:1px solid #387c72; border-radius:7px; background:#104c42; color:#9ff5d3; }
+.ql273-audit-badge:not(.status-valid) { background:#49321f; color:#ffdaa4; border-color:#98703e; }
+.ql273-audit-result { padding:13px 15px; border:1px solid #335a74; border-radius:10px; background:#132b43; margin:5px 0 13px; }
+.ql273-audit-result strong { font-size:.84rem; }
+.ql273-audit-result p { font-size:.77rem; color:#bfd5e9; line-height:1.45; margin:6px 0; }
+.ql273-audit-result small { color:#89ead9; font-size:.72rem; }
+.ql273-audit-actions .ql273-repair { color:#ffdfbd; border-color:#bd854c; background:#50331d; }
+.ql273-assist-panel .ql273-recovery-event { margin:10px 0; font-size:.73rem; color:#a9d9f1; }
+.ql271-kpi-top { flex-wrap:wrap; }
+.ql271-kpi-label { flex:1; }
+.ql273-metric-help { width:28px; height:28px; flex:none; display:grid; place-items:center; border:1px solid #5b669f; background:#292c58; color:#e0beff; border-radius:50%; cursor:pointer; font-weight:800; line-height:1; font-size:.83rem; }
+.ql273-metric-help[aria-expanded='true'] { color:#fff; border-color:#bc89ff; background:#623d96; }
+.ql273-metric-explanation { flex:1 0 100%; margin:4px 0 6px; padding:10px; font-size:.71rem; line-height:1.43; border:1px solid #5e5c9a; background:#262b4e; color:#e3e9ff; border-radius:7px; }
+@media(max-width:960px) { .ql273-help-grid { grid-template-columns:1fr; } }
+@media(max-width:620px) { .ql273-assist-actions,.ql273-assist-actions button { width:100%; } .ql273-shortcut-list { grid-template-columns:1fr; } .ql273-assist-panel { padding:13px; } .ql273-audit-heading { flex-wrap:wrap; } }
+@media(forced-colors:active) { .ql273-assist button[aria-expanded='true'],.ql273-audit-badge { outline:2px solid Highlight; } }
+@media(prefers-reduced-motion:reduce) { .ql273-assist *, .ql273-assist *::before, .ql273-assist *::after { animation:none!important; transition:none!important; } }
