@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,type Dispatch,type SetStateAction } from 'react';
 import { QL270_SOURCES,type Ql270SourceId } from './ql270ConnectionCentre';
 import { QL275_OWNER_CHECKS } from './ql275OperatorWalkthrough';
 import { type Ql279ArrivalClaim,type Ql279EscalationDraft,type Ql279ReviewerDraft } from './ql279ReviewerCustodyEscalation';
@@ -13,19 +13,20 @@ import './ql280-receipt-reconciliation.css';
 type Topic='reviewer'|'returns'|'ack';
 const escalationKey=(row:Ql279EscalationDraft)=>`${row.source}|${row.reason}`;
 
-export function Ql280ReceiptReconciliation({reviewerDrafts,arrivalClaims,escalations,onOpenQl279,onOpenEvidence}: {
+export function Ql280ReceiptReconciliation({reviewerDrafts,arrivalClaims,escalations,reviewerReceipts,setReviewerReceipts,
+  reconciliations,setReconciliations,ackClaims,setAckClaims,onOpenQl279,onOpenEvidence}: {
   reviewerDrafts:readonly Ql279ReviewerDraft[];arrivalClaims:readonly Ql279ArrivalClaim[];
   escalations:readonly Ql279EscalationDraft[];onOpenQl279:()=>void;onOpenEvidence:()=>void;
+  reviewerReceipts:Ql280ReviewerReceiptClaim[];setReviewerReceipts:Dispatch<SetStateAction<Ql280ReviewerReceiptClaim[]>>;
+  reconciliations:Ql280ArrivalReconciliation[];setReconciliations:Dispatch<SetStateAction<Ql280ArrivalReconciliation[]>>;
+  ackClaims:Ql280AckClaim[];setAckClaims:Dispatch<SetStateAction<Ql280AckClaim[]>>;
 }) {
   const [topic,setTopic]=useState<Topic>('reviewer');
   const [selectedCheck,setSelectedCheck]=useState<Ql279ReviewerDraft['checkId']>('keyboard');
   const [reviewerRef,setReviewerRef]=useState('');
-  const [reviewerReceipts,setReviewerReceipts]=useState<Ql280ReviewerReceiptClaim[]>([]);
   const [selectedSource,setSelectedSource]=useState<Ql270SourceId>('rosiedazzlers');
-  const [reconciliations,setReconciliations]=useState<Ql280ArrivalReconciliation[]>([]);
   const [selectedEscalation,setSelectedEscalation]=useState('');
   const [ackReference,setAckReference]=useState('');
-  const [ackClaims,setAckClaims]=useState<Ql280AckClaim[]>([]);
   const [asOf,setAsOf]=useState(()=>new Date());
   const [feedback,setFeedback]=useState('No original reviewer receipt accepted, no Proof-B returned and no real escalation acknowledgement verified.');
   const report=ql280ProofReturns(asOf,arrivalClaims);
