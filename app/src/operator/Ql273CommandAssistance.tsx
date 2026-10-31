@@ -18,6 +18,7 @@ import { Ql284ReviewerCrosscheckOwnerResponse } from './Ql284ReviewerCrosscheckO
 import { Ql285IssuerAuthorityProvenanceDelta } from './Ql285IssuerAuthorityProvenanceDelta';
 import { Ql286AuthorityOutcomeConflictAging } from './Ql286AuthorityOutcomeConflictAging';
 import { Ql287DecisionCustodianDrift } from './Ql287DecisionCustodianDrift';
+import { Ql288ReceiptCustodianSourceQueue } from './Ql288ReceiptCustodianSourceQueue';
 import type { Ql278RetestTicket } from './ql278FollowupDesk';
 import type { Ql279ReviewerDraft,Ql279ArrivalClaim,Ql279EscalationDraft } from './ql279ReviewerCustodyEscalation';
 import type { Ql280ReviewerReceiptClaim,Ql280ArrivalReconciliation,Ql280AckClaim } from './ql280ReceiptReconciliation';
@@ -27,9 +28,11 @@ import type { Ql283TrustReference,Ql283OwnerFollowup,Ql283RecheckDraft } from '.
 import type { Ql284ReviewerCrossCheck,Ql284OwnerResponse,Ql284SourceFollowup } from './ql284ReviewerCrosscheckOwnerResponse';
 import type { Ql285AuthorityAudit,Ql285ProvenanceReview,Ql285DeltaWorkItem } from './ql285IssuerAuthorityProvenanceDelta';
 import type { Ql286OutcomeComparison,Ql286ConflictFollowup,Ql286AgingFollowup } from './ql286AuthorityOutcomeConflictAging';
+import type { Ql287DecisionReadback,Ql287CustodianQueue,Ql287DriftFollowup } from './ql287DecisionCustodianDrift';
+import type { Ql288ReviewerIndependenceAudit,Ql288CustodianResolutionPreflight,Ql288ImmutableExceptionQueue } from './ql288ReceiptCustodianSourceQueue';
 import './ql273-assistance.css';
 
-type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | 'intake' | 'drift' | 'followup' | 'escalation' | 'receipts' | 'custody' | 'issuer' | 'trust' | 'crosscheck' | 'authority' | 'outcome' | 'decision' | null;
+type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | 'intake' | 'drift' | 'followup' | 'escalation' | 'receipts' | 'custody' | 'issuer' | 'trust' | 'crosscheck' | 'authority' | 'outcome' | 'decision' | 'independence' | null;
 
 function editableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return false;
@@ -77,6 +80,13 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
   const [outcomeDrafts,setOutcomeDrafts]=useState<Ql286OutcomeComparison[]>([]);
   const [conflictDrafts,setConflictDrafts]=useState<Ql286ConflictFollowup[]>([]);
   const [agingDrafts,setAgingDrafts]=useState<Ql286AgingFollowup[]>([]);
+  // QL-287 unverified local references survive switching into QL-288 preflight queues.
+  const [decisionReadbacks,setDecisionReadbacks]=useState<Ql287DecisionReadback[]>([]);
+  const [custodianDispositions,setCustodianDispositions]=useState<Ql287CustodianQueue[]>([]);
+  const [sourceRefreshes,setSourceRefreshes]=useState<Ql287DriftFollowup[]>([]);
+  const [reviewerAudits,setReviewerAudits]=useState<Ql288ReviewerIndependenceAudit[]>([]);
+  const [custodianPreflights,setCustodianPreflights]=useState<Ql288CustodianResolutionPreflight[]>([]);
+  const [immutableQueue,setImmutableQueue]=useState<Ql288ImmutableExceptionQueue[]>([]);
   const help = QL273_VIEW_HELP[mode];
 
   function checkSavedView() {
@@ -146,6 +156,7 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
         <button type="button" aria-expanded={panel === 'authority'} aria-controls="ql285-authority" onClick={() => toggle('authority')}>◇ Issuer authority, owner provenance &amp; source deltas</button>
         <button type="button" aria-expanded={panel === 'outcome'} aria-controls="ql286-outcome" onClick={() => toggle('outcome')}>◇ Reviewer outcomes, Proof-B conflicts &amp; exception aging</button>
         <button type="button" aria-expanded={panel === 'decision'} aria-controls="ql287-decision" onClick={() => toggle('decision')}>◇ Reviewer decision evidence, custodian queue &amp; six-source drift</button>
+        <button type="button" aria-expanded={panel === 'independence'} aria-controls="ql288-independence" onClick={() => toggle('independence')}>◇ Reviewer receipt independence, custody preflight &amp; immutable source recheck</button>
       </div>
     </div>
     {panel === 'help' && <div id="ql273-help" className="ql273-assist-panel" role="region" aria-label="Help for this command view">
@@ -239,7 +250,18 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
     {panel === 'decision' && <div id="ql287-decision" className="ql273-assist-panel" role="region" aria-label="QL-287 independent reviewer authority decision readback, original Proof-B custodian conflict dispositions and six-app source drift follow-up">
       <Ql287DecisionCustodianDrift authorityOutcomes={outcomeDrafts} custodianConflicts={conflictDrafts}
         sourceAging={agingDrafts} arrivalClaims={arrivalClaims}
+        decisionDrafts={decisionReadbacks} setDecisionDrafts={setDecisionReadbacks}
+        custodianDrafts={custodianDispositions} setCustodianDrafts={setCustodianDispositions}
+        refreshDrafts={sourceRefreshes} setRefreshDrafts={setSourceRefreshes}
         onOpenQl286={()=>setPanel('outcome')} onOpenEvidence={onOpenEvidence}/>
+    </div>}
+    {panel === 'independence' && <div id="ql288-independence" className="ql273-assist-panel" role="region" aria-label="QL-288 independent reviewer receipt audit, original Proof-B custody preflight and six-app immutable source exception recheck queue">
+      <Ql288ReceiptCustodianSourceQueue decisionReadbacks={decisionReadbacks}
+        custodianDispositions={custodianDispositions} sourceRefreshes={sourceRefreshes}
+        reviewerAudits={reviewerAudits} setReviewerAudits={setReviewerAudits}
+        custodianPreflights={custodianPreflights} setCustodianPreflights={setCustodianPreflights}
+        immutableQueue={immutableQueue} setImmutableQueue={setImmutableQueue}
+        onOpenQl287={()=>setPanel('decision')} onOpenEvidence={onOpenEvidence}/>
     </div>}
   </section>;
 }
