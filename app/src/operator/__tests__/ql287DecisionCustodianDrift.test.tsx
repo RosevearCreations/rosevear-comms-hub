@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import {act} from 'react';
+import {act,useState} from 'react';
 import {createRoot,type Root} from 'react-dom/client';
 import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest';
 import {OperatorShell} from '../OperatorShell';
@@ -12,7 +12,8 @@ import {QL286_OBSERVED_AT,QL286_PUBLIC_SOURCE_RECHECK,
   type Ql286OutcomeComparison,type Ql286ConflictFollowup,type Ql286AgingFollowup} from '../ql286AuthorityOutcomeConflictAging';
 import {QL287_OBSERVED_AT,QL287_PUBLIC_SOURCE_RECHECK,QL287_DECISION_REFERENCE_TYPES,
   QL287_CUSTODIAN_DISPOSITIONS,ql287PinnedProofUrl,ql287SourceDrift,ql287PrepareDecisionReadback,
-  ql287PrepareCustodianQueue,ql287PrepareDriftFollowup,ql287AuditPacket} from '../ql287DecisionCustodianDrift';
+  ql287PrepareCustodianQueue,ql287PrepareDriftFollowup,ql287AuditPacket,
+  type Ql287DecisionReadback,type Ql287CustodianQueue,type Ql287DriftFollowup} from '../ql287DecisionCustodianDrift';
 
 const t=(s:string)=>new Date(s);
 function outcomeFixture():Ql286OutcomeComparison{return {checkId:'keyboard',previousCase:'AUTHORITY-286-CASE',
@@ -50,9 +51,16 @@ function input(selector:string,value:string){const element=host.querySelector<HT
   Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value')!.set!.call(element,value);
   element.dispatchEvent(new Event('input',{bubbles:true}));element.dispatchEvent(new Event('change',{bubbles:true}));}
 async function renderSeeded(){await act(async()=>root.unmount());root=createRoot(host);
-  await act(async()=>root.render(<Ql287DecisionCustodianDrift authorityOutcomes={[outcomeFixture()]}
-    custodianConflicts={[conflictFixture()]} sourceAging={[agingFixture()]}
-    arrivalClaims={[]} onOpenQl286={()=>{}} onOpenEvidence={()=>{}}/>));}
+  function Seeded(){const [decisionDrafts,setDecisionDrafts]=useState<Ql287DecisionReadback[]>([]);
+    const [custodianDrafts,setCustodianDrafts]=useState<Ql287CustodianQueue[]>([]);
+    const [refreshDrafts,setRefreshDrafts]=useState<Ql287DriftFollowup[]>([]);
+    return <Ql287DecisionCustodianDrift authorityOutcomes={[outcomeFixture()]}
+      custodianConflicts={[conflictFixture()]} sourceAging={[agingFixture()]}
+      arrivalClaims={[]} decisionDrafts={decisionDrafts} setDecisionDrafts={setDecisionDrafts}
+      custodianDrafts={custodianDrafts} setCustodianDrafts={setCustodianDrafts}
+      refreshDrafts={refreshDrafts} setRefreshDrafts={setRefreshDrafts}
+      onOpenQl286={()=>{}} onOpenEvidence={()=>{}}/>;}
+  await act(async()=>root.render(<Seeded/>));}
 
 describe('QL-287 independent reviewer decision readback, custodian queue and six-app drift',()=>{
   it('records six actual new immutable main SHA pins and six HTTP 404 original-proof paths',()=>{

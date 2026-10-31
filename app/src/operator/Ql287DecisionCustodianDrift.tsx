@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState,type Dispatch,type SetStateAction} from 'react';
 import {QL270_SOURCES,type Ql270SourceId} from './ql270ConnectionCentre';
 import type {Ql279ArrivalClaim} from './ql279ReviewerCustodyEscalation';
 import type {Ql286OutcomeComparison,Ql286ConflictFollowup,Ql286AgingFollowup} from './ql286AuthorityOutcomeConflictAging';
@@ -23,9 +23,13 @@ type Filter='all'|'moved'|'unchanged';
 const nameFor=(id:Ql270SourceId)=>QL270_SOURCES.find(row=>row.id===id)?.label??id;
 
 export function Ql287DecisionCustodianDrift({authorityOutcomes,custodianConflicts,sourceAging,
-  arrivalClaims,onOpenQl286,onOpenEvidence}:{
+  arrivalClaims,decisionDrafts,setDecisionDrafts,custodianDrafts,setCustodianDrafts,
+  refreshDrafts,setRefreshDrafts,onOpenQl286,onOpenEvidence}:{
   authorityOutcomes:readonly Ql286OutcomeComparison[];custodianConflicts:readonly Ql286ConflictFollowup[];
   sourceAging:readonly Ql286AgingFollowup[];arrivalClaims:readonly Ql279ArrivalClaim[];
+  decisionDrafts:Ql287DecisionReadback[];setDecisionDrafts:Dispatch<SetStateAction<Ql287DecisionReadback[]>>;
+  custodianDrafts:Ql287CustodianQueue[];setCustodianDrafts:Dispatch<SetStateAction<Ql287CustodianQueue[]>>;
+  refreshDrafts:Ql287DriftFollowup[];setRefreshDrafts:Dispatch<SetStateAction<Ql287DriftFollowup[]>>;
   onOpenQl286:()=>void;onOpenEvidence:()=>void;
 }){
   const [topic,setTopic]=useState<Topic>('reviewer');
@@ -33,14 +37,11 @@ export function Ql287DecisionCustodianDrift({authorityOutcomes,custodianConflict
   const [selectedOutcome,setSelectedOutcome]=useState('');
   const [decisionType,setDecisionType]=useState<Ql287DecisionReferenceType>('CLAIMED_ISSUER_DECISION_REFERENCE');
   const [decisionRef,setDecisionRef]=useState('');
-  const [decisionDrafts,setDecisionDrafts]=useState<Ql287DecisionReadback[]>([]);
   const [selectedConflict,setSelectedConflict]=useState<Ql270SourceId>('rosiedazzlers');
   const [queueReason,setQueueReason]=useState<Ql287CustodianDispositionType>('ORIGINAL_ARTIFACT_STILL_MISSING');
   const [custodianRef,setCustodianRef]=useState('');
-  const [custodianDrafts,setCustodianDrafts]=useState<Ql287CustodianQueue[]>([]);
   const [selectedRefresh,setSelectedRefresh]=useState<Ql270SourceId>('rosiedazzlers');
   const [refreshRef,setRefreshRef]=useState('');
-  const [refreshDrafts,setRefreshDrafts]=useState<Ql287DriftFollowup[]>([]);
   const [asOf,setAsOf]=useState(()=>new Date());
   const [feedback,setFeedback]=useState('QL-287 public-only source refresh: six SHA pins moved; all six immutable original Proof-B paths still HTTP 404. ACK evidence remains Under Review and parked.');
   const drift=ql287SourceDrift(asOf,arrivalClaims,sourceAging);

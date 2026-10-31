@@ -1,0 +1,17 @@
+.ql288-desk .ql277-heading{border-left:4px solid #75b9d7}
+.ql288-desk .ql277-tabs{flex-wrap:wrap}
+.ql288-desk .ql277-tabs button{flex:1 1 13rem;min-height:44px}
+.ql288-desk .ql277-form-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr))}
+.ql288-desk .ql277-form-grid label{min-width:0}
+.ql288-desk .ql277-form-grid input,.ql288-desk .ql277-form-grid select{max-width:100%}
+.ql288-checkpoints{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:.65rem;margin:1rem 0}
+.ql288-checkpoints span{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;border:1px solid var(--ops-border,#5d6671);border-radius:.55rem;padding:.65rem;min-width:0}
+.ql288-checkpoints b{display:inline-flex;align-items:center;justify-content:center;min-width:1.75rem;min-height:1.75rem;border-radius:50%;background:#17384e;color:#cdeeff}
+.ql288-checkpoints em{font-size:.68rem;font-style:normal;font-weight:750;letter-spacing:.02em;color:#f1bf79;margin-left:auto}
+.ql288-desk .ql283-source-list{overflow-x:auto}
+.ql288-desk .ql283-source-row{min-width:660px}
+.ql288-desk .ql277-results article{overflow-wrap:anywhere}
+.ql288-desk :is(button,input,select,textarea,a):focus-visible{outline:3px solid #78cce4;outline-offset:3px}
+@media (max-width:720px){.ql288-desk .ql277-heading{padding-left:1rem}.ql288-desk .ql277-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.ql288-desk .ql277-tabs button{flex-basis:100%}}
+@media (prefers-reduced-motion:reduce){.ql288-desk :is(button,a){transition:none!important;animation:none!important}}
+@media (forced-colors:active){.ql288-desk .ql277-heading,.ql288-checkpoints span{border-color:CanvasText}.ql288-checkpoints b{background:Canvas;color:CanvasText;border:1px solid CanvasText}.ql288-checkpoints em{color:CanvasText}.ql288-desk :is(button,input,select,textarea,a):focus-visible{outline-color:Highlight}}

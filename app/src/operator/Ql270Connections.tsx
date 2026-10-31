@@ -17,6 +17,7 @@ import {QL284_OBSERVED_AT,QL284_PUBLIC_SOURCE_RECHECK,ql284PinnedProofUrl} from 
 import {QL285_OBSERVED_AT,QL285_PUBLIC_SOURCE_RECHECK,ql285PinnedProofUrl} from './ql285IssuerAuthorityProvenanceDelta';
 import {QL286_OBSERVED_AT,QL286_PUBLIC_SOURCE_RECHECK,ql286PinnedProofUrl} from './ql286AuthorityOutcomeConflictAging';
 import {QL287_OBSERVED_AT,QL287_PUBLIC_SOURCE_RECHECK,ql287PinnedProofUrl} from './ql287DecisionCustodianDrift';
+import {QL288_OBSERVED_AT,QL288_PUBLIC_SOURCE_RECHECK,ql288PinnedProofUrl} from './ql288ReceiptCustodianSourceQueue';
 import './ql270-connections.css';
 
 export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspace)=>void}){
@@ -39,6 +40,7 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
   const authorityProof=QL285_PUBLIC_SOURCE_RECHECK.find(row=>row.source===selected);
   const outcomeProof=QL286_PUBLIC_SOURCE_RECHECK.find(row=>row.source===selected);
   const decisionProof=QL287_PUBLIC_SOURCE_RECHECK.find(row=>row.source===selected);
+  const independentProof=QL288_PUBLIC_SOURCE_RECHECK.find(row=>row.source===selected);
   const readyDrafts=Object.values(planStatus).filter(x=>x?.tenantAliasValid).length;
 
   function prepare(){
@@ -76,7 +78,7 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
 
     <div className="ql270-metrics" aria-label="Real integration readiness">
       <article><span>Registered sources</span><strong>6 <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:'100%'}}/></div><small>Known repository mappings only</small></article>
-      <article><span>Signed proofs accepted</span><strong>0 <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:'0%'}}/></div><small>QL-287 public source drift: six HTTP 404s</small></article>
+      <article><span>Signed proofs accepted</span><strong>0 <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:'0%'}}/></div><small>QL-288 immutable source recheck: six HTTP 404s</small></article>
       <article><span>Local TEST drafts</span><strong>{readyDrafts} <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:`${readyDrafts/6*100}%`}}/></div><small>Session-only plans, not connections</small></article>
       <article><span>Live pilot holds</span><strong>12 <small>/ 12</small></strong><div className="ql270-meter ql270-meter-alert"><i style={{width:'100%'}}/></div><small>Calls, messaging and dispatch OFF</small></article>
     </div>
@@ -169,7 +171,9 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
           <a className="ql270-public-check ql274-public-pin" href={ql286PinnedProofUrl(selected)} target="_blank" rel="noopener noreferrer">Open immutable QL-286 original Proof-B recheck ↗</a>
           <p>QL-287 independent reviewer decision evidence readback, original Proof-B custodian disposition queue and fresh six-app source drift ({new Date(QL287_OBSERVED_AT).toLocaleString('en-CA',{dateStyle:'medium',timeStyle:'short',timeZone:'America/Toronto'})} Eastern): latest immutable main <code>{decisionProof?.sha.slice(0,12)}</code> returned HTTP {decisionProof?.http}. {decisionProof?.sha===outcomeProof?.sha?'SHA unchanged':'SHA changed'} since QL-286; all six source SHAs moved while every original Proof-B path is still absent. No custodian disposition or independent reviewer decision was authenticated; ACK evidence remains Under Review and parked.</p>
           <a className="ql270-public-check ql274-public-pin" href={ql287PinnedProofUrl(selected)} target="_blank" rel="noopener noreferrer">Open immutable QL-287 source refresh pin ↗</a>
-          <p className="ql270-public-result" role="status">Last verified snapshot: HTTP 404 (QL-270); QL-274: HTTP {recentProof?.http}; QL-276: HTTP {latestProof?.http}; QL-277: HTTP {driftProof?.http}; QL-278: HTTP {followupProof?.http}; QL-279: HTTP {arrivalProof?.http}; QL-280: HTTP {reconciledProof?.http}; QL-281: HTTP {signatureProof?.http}; QL-282: HTTP {exceptionProof?.http}; QL-283: HTTP {trustProof?.http}; QL-284: HTTP {crosscheckProof?.http}; QL-285: HTTP {authorityProof?.http}; QL-286: HTTP {outcomeProof?.http}; latest dated public snapshot: HTTP {decisionProof?.http} (QL-287) · DISCONNECTED / HOLD. Current response must be reviewed independently. A source SHA change, later claim or 24-hour snapshot age requires a new independent public GET; original signed receipts, authenticated gateway and owner TEST approval remain absent.</p>
+          <p>QL-288 independent reviewer decision receipt audit, original Proof-B custodian resolution preflight and immutable source exception queue ({new Date(QL288_OBSERVED_AT).toLocaleString('en-CA',{dateStyle:'medium',timeStyle:'short',timeZone:'America/Toronto'})} Eastern): latest immutable main <code>{independentProof?.sha.slice(0,12)}</code> returned HTTP {independentProof?.http}. {independentProof?.sha===decisionProof?.sha?'SHA unchanged':'SHA changed'} since QL-287. Five source main SHAs changed; Yard Workers remained unchanged. All six originals are still missing; local receipt and resolution references do not authenticate custodians, reviewers or signers. ACK evidence remains Under Review and parked.</p>
+          <a className="ql270-public-check ql274-public-pin" href={ql288PinnedProofUrl(selected)} target="_blank" rel="noopener noreferrer">Open immutable QL-288 source exception check ↗</a>
+          <p className="ql270-public-result" role="status">Last verified snapshot: HTTP 404 (QL-270); QL-274: HTTP {recentProof?.http}; QL-276: HTTP {latestProof?.http}; QL-277: HTTP {driftProof?.http}; QL-278: HTTP {followupProof?.http}; QL-279: HTTP {arrivalProof?.http}; QL-280: HTTP {reconciledProof?.http}; QL-281: HTTP {signatureProof?.http}; QL-282: HTTP {exceptionProof?.http}; QL-283: HTTP {trustProof?.http}; QL-284: HTTP {crosscheckProof?.http}; QL-285: HTTP {authorityProof?.http}; QL-286: HTTP {outcomeProof?.http}; QL-287: HTTP {decisionProof?.http}; latest dated public snapshot: HTTP {independentProof?.http} (QL-288) · DISCONNECTED / HOLD. Current response must be reviewed independently. A source SHA change, later claim or 24-hour snapshot age requires a new independent public GET; original signed receipts, authenticated gateway and owner TEST approval remain absent.</p>
           <small>Even HTTP 200 would only confirm a file exists. It would not authenticate
             its signer, independent key pin, human witness, or tenant boundary.</small>
           <p><a href={`https://github.com/RosevearCreations/${sourceSnapshot?.repo}/tree/main`}
