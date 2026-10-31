@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState,type Dispatch,type SetStateAction} from 'react';
 import {QL270_SOURCES,type Ql270SourceId} from './ql270ConnectionCentre';
 import type {Ql279ArrivalClaim} from './ql279ReviewerCustodyEscalation';
 import type {Ql280AckClaim} from './ql280ReceiptReconciliation';
@@ -16,17 +16,17 @@ type Topic='issuer'|'publication'|'ack';
 type Filter='all'|'moved'|'unchanged';
 const label=(id:Ql270SourceId)=>QL270_SOURCES.find(row=>row.id===id)?.label??id;
 
-export function Ql282IssuerPublicationReview({challengeRequests,arrivalClaims,ackClaims,onOpenQl281,onOpenEvidence}:{
+export function Ql282IssuerPublicationReview({challengeRequests,arrivalClaims,ackClaims,issuerRequests,setIssuerRequests,exceptions,setExceptions,onOpenQl281,onOpenEvidence}:{
   challengeRequests:readonly Ql281ChallengeRequest[];arrivalClaims:readonly Ql279ArrivalClaim[];
   ackClaims:readonly Ql280AckClaim[];onOpenQl281:()=>void;onOpenEvidence:()=>void;
+  issuerRequests:Ql282IssuerRequest[];setIssuerRequests:Dispatch<SetStateAction<Ql282IssuerRequest[]>>;
+  exceptions:Ql282ExceptionDraft[];setExceptions:Dispatch<SetStateAction<Ql282ExceptionDraft[]>>;
 }) {
   const [topic,setTopic]=useState<Topic>('issuer');
   const [selectedChallenge,setSelectedChallenge]=useState('');
   const [issuerReference,setIssuerReference]=useState('');
-  const [issuerRequests,setIssuerRequests]=useState<Ql282IssuerRequest[]>([]);
   const [source,setSource]=useState<Ql270SourceId>('rosiedazzlers');
   const [exceptionReference,setExceptionReference]=useState('');
-  const [exceptions,setExceptions]=useState<Ql282ExceptionDraft[]>([]);
   const [filter,setFilter]=useState<Filter>('all');
   const [asOf,setAsOf]=useState(()=>new Date());
   const [feedback,setFeedback]=useState('No original challenge issuer authenticated; six publication exceptions open. Acknowledgement delivery evidence is under review and parked.');
