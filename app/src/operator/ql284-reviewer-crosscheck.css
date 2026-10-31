@@ -1,0 +1,10 @@
+.ql284-desk .ql284-subsection {margin:18px 0;padding:16px;border:1px solid #456b80;border-radius:14px;background:linear-gradient(145deg,#1b3548,#203d52);}
+.ql284-desk .ql284-subsection h6 {margin:0 0 11px;font-size:.92rem;color:#c3f3ec;}
+.ql284-desk .ql284-secondary-copy {font-size:.81rem;line-height:1.6;color:#bad4e1;}
+.ql284-desk .ql283-source-row b {color:#ffe4a8;}
+.ql284-desk .ql283-source-row a {font-weight:700;}
+.ql284-desk .ql277-card>p {line-height:1.66;}
+.ql284-desk button:focus-visible,.ql284-desk input:focus-visible,.ql284-desk select:focus-visible,.ql284-desk textarea:focus-visible,.ql284-desk a:focus-visible {outline:3px solid #8cf4ee;outline-offset:3px;}
+@media(max-width:640px){.ql284-desk .ql284-subsection{padding:12px;}.ql284-desk .ql277-form-grid{grid-template-columns:1fr;}}
+@media(forced-colors:active){.ql284-desk .ql284-subsection{background:Canvas;color:CanvasText;border:2px solid CanvasText;}.ql284-desk .ql283-source-row b{color:CanvasText;}}
+@media(prefers-reduced-motion:reduce){.ql284-desk *,.ql284-desk *::before,.ql284-desk *::after{transition:none!important;animation:none!important;}}

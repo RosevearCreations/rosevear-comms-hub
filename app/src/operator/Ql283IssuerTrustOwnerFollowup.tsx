@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState,type Dispatch,type SetStateAction} from 'react';
 import {QL270_SOURCES,type Ql270SourceId} from './ql270ConnectionCentre';
 import type {Ql279ArrivalClaim} from './ql279ReviewerCustodyEscalation';
 import type {Ql282IssuerRequest,Ql282ExceptionDraft} from './ql282IssuerPublicationReview';
@@ -15,20 +15,20 @@ import './ql283-issuer-trust-followup.css';
 type Topic='trust'|'owner'|'sources';
 const label=(id:Ql270SourceId)=>QL270_SOURCES.find(row=>row.id===id)?.label??id;
 
-export function Ql283IssuerTrustOwnerFollowup({issuerRequests,exceptions,arrivalClaims,onOpenQl282,onOpenEvidence}:{
+export function Ql283IssuerTrustOwnerFollowup({issuerRequests,exceptions,arrivalClaims,trustDrafts,setTrustDrafts,ownerDrafts,setOwnerDrafts,recheckDrafts,setRecheckDrafts,onOpenQl282,onOpenEvidence}:{
   issuerRequests:readonly Ql282IssuerRequest[];exceptions:readonly Ql282ExceptionDraft[];
   arrivalClaims:readonly Ql279ArrivalClaim[];onOpenQl282:()=>void;onOpenEvidence:()=>void;
+  trustDrafts:Ql283TrustReference[];setTrustDrafts:Dispatch<SetStateAction<Ql283TrustReference[]>>;
+  ownerDrafts:Ql283OwnerFollowup[];setOwnerDrafts:Dispatch<SetStateAction<Ql283OwnerFollowup[]>>;
+  recheckDrafts:Ql283RecheckDraft[];setRecheckDrafts:Dispatch<SetStateAction<Ql283RecheckDraft[]>>;
 }) {
   const [topic,setTopic]=useState<Topic>('trust');
   const [selectedIssuer,setSelectedIssuer]=useState('');
   const [trustRef,setTrustRef]=useState('');
-  const [trustDrafts,setTrustDrafts]=useState<Ql283TrustReference[]>([]);
   const [selectedException,setSelectedException]=useState<Ql270SourceId>('rosiedazzlers');
   const [ownerRef,setOwnerRef]=useState('');
-  const [ownerDrafts,setOwnerDrafts]=useState<Ql283OwnerFollowup[]>([]);
   const [selectedSource,setSelectedSource]=useState<Ql270SourceId>('rosiedazzlers');
   const [recheckRef,setRecheckRef]=useState('');
-  const [recheckDrafts,setRecheckDrafts]=useState<Ql283RecheckDraft[]>([]);
   const [asOf,setAsOf]=useState(()=>new Date());
   const [feedback,setFeedback]=useState('Public-source recheck: all six main SHAs moved; all six original Proof-B paths returned HTTP 404. ACK delivery evidence remains Under Review and parked.');
   const queue=ql283SourceQueue(asOf,arrivalClaims);
