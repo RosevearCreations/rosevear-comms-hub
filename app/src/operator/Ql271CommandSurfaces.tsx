@@ -4,9 +4,10 @@ import { operatorOrganizations } from './ql191Organizations';
 import { dashboardQueues, type QueueCategory } from './ql191DashboardData';
 import { QL270_SOURCES, QL270_PROOF_SNAPSHOT } from './ql270ConnectionCentre';
 import { Ql272LayoutControls } from './Ql272LayoutControls';
+import { Ql273CommandAssistance, Ql273MetricHelp } from './Ql273CommandAssistance';
 import { activeQl272Profile, defaultQl272Preferences, parseQl272Preferences,
   type Ql272PreferenceEnvelope } from './ql272LayoutPreferences';
-import { loadQl272LocalLayout, saveQl272LocalLayout } from '../storage/localRepository';
+import { inspectQl272LocalLayout, saveQl272LocalLayout } from '../storage/localRepository';
 import './ql271-command.css';
 
 export type Ql271CommandMode = 'it_command' | 'management' | 'analytics' | 'system_status';
@@ -90,8 +91,8 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
   onSelectOrganization: (organization: OrganizationId) => void;
 }) {
   const copy = pageCopy[mode];
-  const [preferences, setPreferences] = useState(() => parseQl272Preferences(loadQl272LocalLayout()));
-  const [saved, setSaved] = useState(true);
+  const [preferences, setPreferences] = useState(() => parseQl272Preferences(inspectQl272LocalLayout().value));
+  const [saved, setSaved] = useState(() => inspectQl272LocalLayout().state !== 'unavailable');
   const profile = activeQl272Profile(preferences);
   const view = profile.views[mode];
 
@@ -118,9 +119,12 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
       metricLabels={metricCopy[mode].map(metric => metric.label)} onChange={updatePreferences}
       onReset={() => updatePreferences(defaultQl272Preferences())} />
 
+    <Ql273CommandAssistance mode={mode} onNavigate={onNavigate} onRestore={restored => { setPreferences(restored); setSaved(true); }}
+      onReset={updatePreferences} />
+
     <header className="ql271-hero">
       <div className="ql271-hero-copy">
-        <p className="ql271-eyebrow">QL-272 · {copy.eyebrow}</p>
+        <p className="ql271-eyebrow">QL-273 · {copy.eyebrow}</p>
         <h3 id="ql271-title">{copy.title}</h3>
         <p>{copy.intro}</p>
         <div className="ql271-hero-actions">
@@ -146,7 +150,7 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
       {view.order.filter(index => !view.hidden.includes(index)).map(index=>{
         const metric = metricCopy[mode][index];
         return <article className={`ql271-kpi tone-${metric.tone}`} key={metric.label}>
-        <div className="ql271-kpi-top"><span className="ql271-kpi-icon" aria-hidden="true">{['▧','◇','◉','⚑'][index]}</span><span className="ql271-kpi-label">{metric.label}</span></div>
+        <div className="ql271-kpi-top"><span className="ql271-kpi-icon" aria-hidden="true">{['▧','◇','◉','⚑'][index]}</span><span className="ql271-kpi-label">{metric.label}</span><Ql273MetricHelp mode={mode} index={index} label={metric.label} /></div>
         <strong>{metric.value}</strong><small>{metric.note}</small>
         <div className="ql271-track" role="meter" aria-label={metric.label} aria-valuemin={0} aria-valuemax={metric.max} aria-valuenow={metric.current}>
           <span style={{ width: `${metric.current / metric.max * 100}%` }}/>
