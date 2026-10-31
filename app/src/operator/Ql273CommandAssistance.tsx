@@ -12,12 +12,14 @@ import { Ql278FollowupDesk } from './Ql278FollowupDesk';
 import { Ql279ReviewerCustodyEscalation } from './Ql279ReviewerCustodyEscalation';
 import { Ql280ReceiptReconciliation } from './Ql280ReceiptReconciliation';
 import { Ql281SignatureProofCustody } from './Ql281SignatureProofCustody';
+import { Ql282IssuerPublicationReview } from './Ql282IssuerPublicationReview';
 import type { Ql278RetestTicket } from './ql278FollowupDesk';
 import type { Ql279ReviewerDraft,Ql279ArrivalClaim,Ql279EscalationDraft } from './ql279ReviewerCustodyEscalation';
 import type { Ql280ReviewerReceiptClaim,Ql280ArrivalReconciliation,Ql280AckClaim } from './ql280ReceiptReconciliation';
+import type { Ql281ChallengeRequest } from './ql281SignatureProofCustody';
 import './ql273-assistance.css';
 
-type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | 'intake' | 'drift' | 'followup' | 'escalation' | 'receipts' | 'custody' | null;
+type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | 'intake' | 'drift' | 'followup' | 'escalation' | 'receipts' | 'custody' | 'issuer' | null;
 
 function editableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return false;
@@ -44,6 +46,8 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
   const [reviewerReceipts,setReviewerReceipts]=useState<Ql280ReviewerReceiptClaim[]>([]);
   const [reconciliations,setReconciliations]=useState<Ql280ArrivalReconciliation[]>([]);
   const [ackClaims,setAckClaims]=useState<Ql280AckClaim[]>([]);
+  // Unsigned QL-281 reference requests survive a panel switch into QL-282 issuer review.
+  const [challengeRequests,setChallengeRequests]=useState<Ql281ChallengeRequest[]>([]);
   const help = QL273_VIEW_HELP[mode];
 
   function checkSavedView() {
@@ -107,6 +111,7 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
         <button type="button" aria-expanded={panel === 'escalation'} aria-controls="ql279-escalation" onClick={() => toggle('escalation')}>◇ Reviewer decisions &amp; custody watch</button>
         <button type="button" aria-expanded={panel === 'receipts'} aria-controls="ql280-receipts" onClick={() => toggle('receipts')}>◷ Reviewer receipts &amp; acknowledgement audit</button>
         <button type="button" aria-expanded={panel === 'custody'} aria-controls="ql281-custody" onClick={() => toggle('custody')}>◇ Signature, proof freshness &amp; ACK custody</button>
+        <button type="button" aria-expanded={panel === 'issuer'} aria-controls="ql282-issuer" onClick={() => toggle('issuer')}>◇ Issuer readiness &amp; proof exception review</button>
       </div>
     </div>
     {panel === 'help' && <div id="ql273-help" className="ql273-assist-panel" role="region" aria-label="Help for this command view">
@@ -160,8 +165,13 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
     </div>}
     {panel === 'custody' && <div id="ql281-custody" className="ql273-assist-panel" role="region" aria-label="QL-281 reviewer signature challenge, Proof-B publication freshness and six-app escalation acknowledgement custody">
       <Ql281SignatureProofCustody reviewerReceipts={reviewerReceipts} arrivalClaims={arrivalClaims}
+        challengeRequests={challengeRequests} setChallengeRequests={setChallengeRequests}
         ackClaims={ackClaims} escalations={escalations} onOpenQl280={()=>setPanel('receipts')}
         onOpenQl279={()=>setPanel('escalation')} onOpenEvidence={onOpenEvidence}/>
+    </div>}
+    {panel === 'issuer' && <div id="ql282-issuer" className="ql273-assist-panel" role="region" aria-label="QL-282 reviewer challenge issuer, original source publication exception and acknowledgement workstream under review">
+      <Ql282IssuerPublicationReview challengeRequests={challengeRequests} arrivalClaims={arrivalClaims}
+        ackClaims={ackClaims} onOpenQl281={()=>setPanel('custody')} onOpenEvidence={onOpenEvidence}/>
     </div>}
   </section>;
 }
