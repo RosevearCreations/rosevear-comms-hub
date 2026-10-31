@@ -6,9 +6,10 @@ import { QL273_METRIC_HELP, QL273_SHORTCUTS, QL273_VIEW_HELP,
   auditQl273SavedView, ql273ShortcutMode, savedQl273Preferences } from './ql273CommandHelp';
 import { Ql274CommandReview } from './Ql274CommandReview';
 import { Ql275OperatorWalkthrough } from './Ql275OperatorWalkthrough';
+import { Ql276EvidenceIntake } from './Ql276EvidenceIntake';
 import './ql273-assistance.css';
 
-type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | null;
+type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | 'intake' | null;
 
 function editableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return false;
@@ -84,6 +85,7 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
         <button type="button" aria-expanded={panel === 'audit'} aria-controls="ql273-audit" onClick={() => toggle('audit')}>◷ Saved view audit</button>
         <button type="button" aria-expanded={panel === 'review'} aria-controls="ql274-review" onClick={() => toggle('review')}>✓ Help &amp; proof review</button>
         <button type="button" aria-expanded={panel === 'walkthrough'} aria-controls="ql275-walkthrough" onClick={() => toggle('walkthrough')}>◈ Guided operator walkthrough</button>
+        <button type="button" aria-expanded={panel === 'intake'} aria-controls="ql276-intake" onClick={() => toggle('intake')}>◷ Owner evidence &amp; custody intake</button>
       </div>
     </div>
     {panel === 'help' && <div id="ql273-help" className="ql273-assist-panel" role="region" aria-label="Help for this command view">
@@ -113,6 +115,9 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
     </div>}
     {panel === 'walkthrough' && <div id="ql275-walkthrough" className="ql273-assist-panel" role="region" aria-label="QL-275 guided operator, accessibility and Proof-B routing walkthrough">
       <Ql275OperatorWalkthrough mode={mode} onNavigate={onNavigate} onOpenEvidence={onOpenEvidence} onOpenConnections={onOpenConnections} />
+    </div>}
+    {panel === 'intake' && <div id="ql276-intake" className="ql273-assist-panel" role="region" aria-label="QL-276 owner accessibility evidence and Proof-B custodian intake">
+      <Ql276EvidenceIntake onOpenEvidence={onOpenEvidence} onOpenConnections={onOpenConnections} />
     </div>}
   </section>;
 }
