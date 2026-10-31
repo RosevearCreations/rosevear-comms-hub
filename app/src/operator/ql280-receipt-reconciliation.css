@@ -1,0 +1,11 @@
+.ql280-desk .ql280-ack-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px; }
+.ql280-ack-grid article { display:grid;gap:5px;padding:12px;border-radius:9px;border:1px solid #4f6987;background:linear-gradient(126deg,#172846,#1a3c56); }
+.ql280-ack-grid strong { color:#f2efff;font-size:.76rem; }
+.ql280-ack-grid span { color:#ffdcad;font-size:.7rem;font-weight:850; }
+.ql280-ack-grid small { color:#c2dbe8;font-size:.68rem; }
+.ql280-desk .ql277-actions button:disabled { color:#afc4d2;opacity:.5;cursor:not-allowed;background:#24394e;border-color:#55738f; }
+.ql280-desk .ql277-form-grid input,.ql280-desk .ql277-form-grid select,.ql280-desk .ql277-note-label textarea { min-height:40px; }
+.ql280-desk .ql277-actions button:focus-visible,.ql280-desk .ql278-aging-row a:focus-visible { outline:3px solid #7be8ff;outline-offset:3px; }
+@media(max-width:610px) { .ql280-ack-grid { grid-template-columns:1fr!important; } }
+@media(forced-colors:active) { .ql280-ack-grid article { outline:1px solid CanvasText; } .ql280-desk .ql277-actions button:disabled { color:GrayText; } }
+@media(prefers-reduced-motion:reduce) { .ql280-desk *, .ql280-desk *::before,.ql280-desk *::after { transition:none!important;animation:none!important; } }
