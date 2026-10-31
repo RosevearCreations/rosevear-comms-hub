@@ -1,0 +1,7 @@
+.ql287-desk .ql287-feedback{border:1px solid #547f95;background:#183447;color:#e0f7ff;border-radius:12px;padding:12px 14px;line-height:1.55;}
+.ql287-desk .ql286-status-list span{border-left-color:#eebd91;background:#253448;}
+.ql287-desk .ql283-source-row b{color:#ffe2b2;}
+.ql287-desk button:focus-visible,.ql287-desk input:focus-visible,.ql287-desk select:focus-visible,.ql287-desk textarea:focus-visible,.ql287-desk a:focus-visible{outline:3px solid #b1f7ea;outline-offset:3px;}
+@media(max-width:640px){.ql287-desk .ql277-form-grid{grid-template-columns:1fr;}}
+@media(forced-colors:active){.ql287-desk .ql287-feedback,.ql287-desk .ql286-status-list span{background:Canvas;color:CanvasText;border-color:CanvasText;}}
+@media(prefers-reduced-motion:reduce){.ql287-desk *,.ql287-desk *::before,.ql287-desk *::after{animation:none!important;transition:none!important;}}

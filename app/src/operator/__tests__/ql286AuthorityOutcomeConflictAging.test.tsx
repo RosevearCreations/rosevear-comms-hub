@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import {act} from 'react';
+import {act,useState} from 'react';
 import {createRoot,type Root} from 'react-dom/client';
 import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest';
 import {OperatorShell} from '../OperatorShell';
@@ -18,7 +18,8 @@ import {QL285_OBSERVED_AT,QL285_PUBLIC_SOURCE_RECHECK,ql285PrepareAuthorityAudit
   ql285PrepareDeltaWorkItem} from '../ql285IssuerAuthorityProvenanceDelta';
 import {QL286_OBSERVED_AT,QL286_PUBLIC_SOURCE_RECHECK,QL286_REVIEW_OUTCOMES,QL286_PROVENANCE_CONFLICTS,
   ql286PinnedProofUrl,ql286CompareAuthorityOutcome,ql286PrepareConflictFollowup,
-  ql286PrepareAgingFollowup,ql286ExceptionAging,ql286AuditPacket}
+  ql286PrepareAgingFollowup,ql286ExceptionAging,ql286AuditPacket,
+  type Ql286OutcomeComparison,type Ql286ConflictFollowup,type Ql286AgingFollowup}
   from '../ql286AuthorityOutcomeConflictAging';
 
 const t=(iso:string)=>new Date(iso);
@@ -77,10 +78,20 @@ function agingFixture(source:'rosiedazzlers'|'yw'='rosiedazzlers'){
   const previous=ql285PrepareDeltaWorkItem(followup.draft,'DELTA-286-CASE',t('2026-10-31T14:02:00Z'));
   if(!previous.ok)throw Error(previous.reason);return previous.draft;
 }
-async function renderSeeded(){await act(async()=>root.unmount());root=createRoot(host);
-  await act(async()=>root.render(<Ql286AuthorityOutcomeConflictAging
+function SeededQl286(){
+  const [outcomeDrafts,setOutcomeDrafts]=useState<Ql286OutcomeComparison[]>([]);
+  const [conflictDrafts,setConflictDrafts]=useState<Ql286ConflictFollowup[]>([]);
+  const [agingDrafts,setAgingDrafts]=useState<Ql286AgingFollowup[]>([]);
+  return <Ql286AuthorityOutcomeConflictAging
     authorityAudits={[authorityFixture()]} provenanceReviews={[provenanceFixture()]}
-    deltaWorkItems={[agingFixture()]} arrivalClaims={[]} onOpenQl285={()=>{}} onOpenEvidence={()=>{}}/>));}
+    deltaWorkItems={[agingFixture()]} arrivalClaims={[]}
+    outcomeDrafts={outcomeDrafts} setOutcomeDrafts={setOutcomeDrafts}
+    conflictDrafts={conflictDrafts} setConflictDrafts={setConflictDrafts}
+    agingDrafts={agingDrafts} setAgingDrafts={setAgingDrafts}
+    onOpenQl285={()=>{}} onOpenEvidence={()=>{}}/>;
+}
+async function renderSeeded(){await act(async()=>root.unmount());root=createRoot(host);
+  await act(async()=>root.render(<SeededQl286/>));}
 
 describe('QL-286 independent authority outcome comparison, original provenance conflicts and six-source aging',()=>{
   it('pins six newly observed public main refs and six exact HTTP 404s, with five moved and one unchanged',()=>{
