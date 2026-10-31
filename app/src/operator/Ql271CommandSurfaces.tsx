@@ -2,7 +2,8 @@ import { useState } from 'react';
 import type { OperatorWorkspace, OrganizationId } from './ql191Organizations';
 import { operatorOrganizations } from './ql191Organizations';
 import { dashboardQueues, type QueueCategory } from './ql191DashboardData';
-import { QL270_SOURCES, QL270_PROOF_SNAPSHOT } from './ql270ConnectionCentre';
+import { QL270_SOURCES } from './ql270ConnectionCentre';
+import { QL274_PUBLIC_PROOF_RECHECK, QL274_OBSERVED_AT } from './ql274CommandAudit';
 import { Ql272LayoutControls } from './Ql272LayoutControls';
 import { Ql273CommandAssistance, Ql273MetricHelp } from './Ql273CommandAssistance';
 import { activeQl272Profile, defaultQl272Preferences, parseQl272Preferences,
@@ -119,12 +120,13 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
       metricLabels={metricCopy[mode].map(metric => metric.label)} onChange={updatePreferences}
       onReset={() => updatePreferences(defaultQl272Preferences())} />
 
-    <Ql273CommandAssistance mode={mode} onNavigate={onNavigate} onRestore={restored => { setPreferences(restored); setSaved(true); }}
+    <Ql273CommandAssistance mode={mode} preferences={preferences} onNavigate={onNavigate} onOpenEvidence={() => onNavigate('six_app_evidence')}
+      onRestore={restored => { setPreferences(restored); setSaved(true); }}
       onReset={updatePreferences} />
 
     <header className="ql271-hero">
       <div className="ql271-hero-copy">
-        <p className="ql271-eyebrow">QL-273 · {copy.eyebrow}</p>
+        <p className="ql271-eyebrow">QL-274 · {copy.eyebrow}</p>
         <h3 id="ql271-title">{copy.title}</h3>
         <p>{copy.intro}</p>
         <div className="ql271-hero-actions">
@@ -209,9 +211,9 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
     {view.showPanels && mode === 'system_status' && <div className="ql271-columns">
       <section className="ql271-panel ql271-wide" aria-labelledby="ql271-status-ledger"><div className="ql271-panel-header"><div><p className="ql271-eyebrow">Six-app proof register</p><h4 id="ql271-status-ledger">Original Proof-B status</h4></div><span className="ql271-badge amber">All 6 HELD</span></div>
         <div className="ql271-status-table">{QL270_SOURCES.map(source=>{
-          const proof=QL270_PROOF_SNAPSHOT.find(p=>p.source===source.id);
+          const proof=QL274_PUBLIC_PROOF_RECHECK.find(p=>p.source===source.id);
           return <div key={source.id}><span className="ql271-dot amber"/><strong>{source.label}</strong><small>main · {proof?.sha.slice(0,9)}</small><span className="ql271-status-pill">HTTP 404</span></div>;
-        })}</div><p className="ql271-chart-note">Dated original GitHub proof checks from QL-270, 30 October 2026; these are not live heartbeat checks.</p>
+        })}</div><p className="ql271-chart-note">Fresh public GitHub source recheck: {new Date(QL274_OBSERVED_AT).toLocaleString('en-CA',{dateStyle:'medium',timeStyle:'short',timeZone:'America/Toronto'})} Eastern at six immutable main commits. All returned HTTP 404. These are dated public observations, not live heartbeat or signer verification. Dated original GitHub proof checks from QL-270 are retained separately.</p>
       </section>
       <section className="ql271-panel" aria-labelledby="ql271-safety-switches"><div className="ql271-panel-header"><div><p className="ql271-eyebrow">Runtime safeguards</p><h4 id="ql271-safety-switches">Safety &amp; activation</h4></div></div>
         <div className="ql271-switch-list"><p><span>Live calls and SMS</span><strong>OFF</strong></p><p><span>Customer record exchange</span><strong>OFF</strong></p><p><span>Read-only gateway GETs</span><strong>0 SENT</strong></p><p><span>Tenant authorization</span><strong>HELD</strong></p><p><span>Independent proof acceptance</span><strong>0 / 6</strong></p></div>
