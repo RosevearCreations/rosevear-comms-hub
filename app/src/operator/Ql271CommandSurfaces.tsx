@@ -121,12 +121,13 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
       onReset={() => updatePreferences(defaultQl272Preferences())} />
 
     <Ql273CommandAssistance mode={mode} preferences={preferences} onNavigate={onNavigate} onOpenEvidence={() => onNavigate('six_app_evidence')}
+      onOpenConnections={() => onNavigate('connections')}
       onRestore={restored => { setPreferences(restored); setSaved(true); }}
       onReset={updatePreferences} />
 
     <header className="ql271-hero">
       <div className="ql271-hero-copy">
-        <p className="ql271-eyebrow">QL-274 · {copy.eyebrow}</p>
+        <p className="ql271-eyebrow">QL-275 · {copy.eyebrow}</p>
         <h3 id="ql271-title">{copy.title}</h3>
         <p>{copy.intro}</p>
         <div className="ql271-hero-actions">
