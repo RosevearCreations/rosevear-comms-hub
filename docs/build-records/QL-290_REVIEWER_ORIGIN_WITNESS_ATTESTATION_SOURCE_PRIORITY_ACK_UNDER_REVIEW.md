@@ -32,6 +32,17 @@ The five P0 cases combine SHA drift and missing original; the stable Yard Worker
 - Exact tested Git tree through feature → `dev` → `main`, green final-main checks, live Cloudflare Worker asset SHA-256 comparison with locally built JS and CSS.
 - A PR, queued check or public snapshot alone does not justify claiming production GREEN.
 
+### Verified production receipt
+
+- Tested source tree: `5ab393f1d5ddb4a22bc4d3e3b92553416bcf8064`.
+- Feature → `dev`: [PR #542](https://github.com/RosevearCreations/rosevear-comms-hub/pull/542), `dev` merge `90ed74e0818a8e8bf67ee156e7f409152ee8006c`, identical tested tree; app-build and Workers checks successful.
+- `dev` → `main`: [PR #543](https://github.com/RosevearCreations/rosevear-comms-hub/pull/543), exact production commit `356208a9f4a7cbb38f85f333ae428e10f9c5d4ad`, identical tested tree.
+- Exact `main` checks: **5/5 SUCCESS** — app-build, Workers Builds, Build disabled preview, Deploy disabled preview and Supabase Preview.
+- Live Worker at `https://rosevear-comms-hub.devilndovelive.workers.dev/` served `index-odzUo_5b.js` and `index-uleXgBw4.css`; downloaded SHA-256 matched tested local bundle:
+  - JS: `ae78f67681bb380f49fcf6ec1d46ef5dd1135f18895c721c4495bec60f86e3a8`.
+  - CSS: `770ac7791e5edd474cbbb82d893dbc0a3e807f78aca4a052144c33e272fa21d2`.
+- Release verdict: **QL-290 Production GREEN**. This documents disabled-preview software promotion only; no original Proof-B or independent role evidence was accepted.
+
 ## Next planned build
 
 **QL-291 — Operator Command Centre Density, Guided Card Navigation & Role-Safe Layout Recovery.** Build compact, information-rich IT/Command cards, clear guided navigation, contextual ⓘ help and safe reuse of QL-272 local layout preferences, with keyboard/mobile/text-zoom validation and no permission escalation.

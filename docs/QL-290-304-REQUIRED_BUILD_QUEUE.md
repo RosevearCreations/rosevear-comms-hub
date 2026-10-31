@@ -1,8 +1,8 @@
-# Rosevear Comms Hub — next 15 planned builds (QL-290–QL-304)
+# Rosevear Comms Hub — active 15-build batch (QL-290–QL-304)
 
-**Planning baseline:** QL-289 was promoted to `main` with all five production checks successful at `25ea142b23057af1fad9f6b6c4fe7097e5c5429c`. The next build is **QL-290**. This document defines a **15-build implementation queue**; it is a plan, not evidence that any of QL-290–304 have been built, tested, promoted or approved for real communications.
+**Planning baseline:** QL-289 was promoted to `main` with all five production checks successful at `25ea142b23057af1fad9f6b6c4fe7097e5c5429c`. QL-290 is now **Production GREEN** at exact `main` commit `356208a9f4a7cbb38f85f333ae428e10f9c5d4ad`, with five successful production checks and matching live JS/CSS SHA-256. The next build is **QL-291**. Planning the remaining builds is not evidence that they have been implemented or approved for real communications.
 
-**Queue accounting:** 15 planned; **0/15 implemented** in this batch; **15 remaining**. After each completed build, update the count, its exact-main release record and the next queued item in `08_BUILD_SEQUENCE.md`. Do not decrement the remaining count for a PR, local test, preview deployment or simulated approval alone.
+**Queue accounting:** 15 planned; **1/15 Production GREEN** in this batch; **14 remaining**. After each completed build, update the count, its exact-main release record and the next queued item in `08_BUILD_SEQUENCE.md`. Do not decrement the remaining count for a PR, local test, preview deployment or simulated approval alone.
 
 ## Product outcome
 
@@ -14,7 +14,7 @@ The four customer-facing business contexts are Rosie Dazzlers, Devil n Dove, Yar
 
 | Build | Focus | Required feature outcome | Acceptance evidence / completion gate |
 | --- | --- | --- | --- |
-| **QL-290 — Independent Reviewer Challenge Origin Reconciliation, Original Proof-B Witness Attestation Preconditions & Six-App Source Recheck Exception Priority Queue** | Integration preconditions | Continue the previously announced QL-290 work: reconcile independent *claimed* challenge origins against QL-289's open reviewer matrix; list original witness-attestation gaps; rank six immutable public source exceptions by drift, missing original and age. Keep ACK delivery evidence Under Review. | Reject forged receipt acceptance, signer identity, witness closure, repeated references and stale SHA ancestry. Capture only actual public pinned checks; no private signer challenge, gateway GET or external delivery. All source connections remain HOLD. |
+| **QL-290 — Independent Reviewer Challenge Origin Reconciliation, Original Proof-B Witness Attestation Preconditions & Six-App Source Recheck Exception Priority Queue** · **Production GREEN** | Integration preconditions | Completed: seven-gate local reviewer origin reconciliation, six-gate original witness attestation preflight, six public immutable source priorities (five moved P0, one stable P1; six HTTP 404). ACK evidence Under Review. | Passed 1,046 app tests, focused suites, TypeScript, security baseline, production build; exact-main `356208a9f4a7cbb38f85f333ae428e10f9c5d4ad` 5/5 GREEN, live JS/CSS byte-identical. No private GET or external delivery. [Release record](build-records/QL-290_REVIEWER_ORIGIN_WITNESS_ATTESTATION_SOURCE_PRIORITY_ACK_UNDER_REVIEW.md). |
 | **QL-291 — Operator Command Centre Density, Guided Card Navigation & Role-Safe Layout Recovery** | Operator usability | Improve the IT/Command landing view with compact, actionable-looking but safe status cards, clear hierarchy, accessible ⓘ help and role-safe workspace navigation. Reuse QL-272 layout preferences. | Keyboard/zoom/mobile tests; no hidden controls or clipped labels; saved layouts recover safely; no permission elevation or real action enabled by moving cards. |
 | **QL-292 — Unified Inbox Priority Lanes, Search Precision & Saved Triage Filters** | Operator usability | Make the synthetic inbox easy to scan by brand, state, priority, assigned operator and next action. Add clear empty states, search, combinable filters and recoverable local triage presets. | Deterministic sort/filter tests; no cross-brand leakage; unknown consent stays unknown; presets restore preview state only; no inbox mutation or provider request. |
 | **QL-293 — Conversation Timeline Readability, Unsent Draft Recovery & Contextual Reply Help** | Communications workflow | Consolidate synthetic conversation events, notes, attachments metadata and draft composition into a readable timeline with recovery after safe view switching. Show delivery-state meaning at the point of use. | Draft remains **UNSENT / SIMULATED** in every path; no real content stored/exported; keyboard and screen-reader labels, error/empty-state checks, safe session-only recovery. |
@@ -32,7 +32,7 @@ The four customer-facing business contexts are Rosie Dazzlers, Devil n Dove, Yar
 
 ## Dependencies and priority
 
-1. **QL-290 is next** because the open original Proof-B/reviewer requirements already exist. It may not extend or restart the separate parked ACK delivery workstream.
+1. **QL-290 is complete**, without extending or restarting the parked ACK delivery workstream. **QL-291 is next**.
 2. **QL-291–294** establish usable operator navigation, inbox, drafts and assignments; **QL-295–298** complete connected-looking *synthetic* customer and channel journeys without activating providers.
 3. **QL-299–300** validate accessibility and preference recovery against those completed screens; **QL-301–302** build management and statistics views on explicit fixture-backed outcomes.
 4. **QL-303** consolidates source-gate readiness without bypassing it. **QL-304** performs end-to-end acceptance and reconciles the next batch; it does not itself authorize a live pilot.
@@ -45,10 +45,10 @@ The four customer-facing business contexts are Rosie Dazzlers, Devil n Dove, Yar
 - **No unreviewed persistence:** use existing reviewed local preference storage only for allowed layout settings; do not silently introduce private data into localStorage, a database, telemetry or exports.
 - **One guarded release per build:** focused tests, full app tests, security baseline, production build, exact feature→`dev`→`main` Git tree, and five successful checks on the **exact `main` commit**. Confirm the public Worker serves the same JS/CSS bytes before announcing **Production GREEN**. Record the release SHA and next queue status after completion.
 
-## Queue ledger (initial state)
+## Queue ledger (verified after QL-290)
 
 | Range | Planned | Production GREEN in this batch | Remaining | Next |
 | --- | ---: | ---: | ---: | --- |
-| QL-290–304 | **15** | **0** | **15** | **QL-290** |
+| QL-290–304 | **15** | **1** | **14** | **QL-291** |
 
 This is the **active future queue**. Previous historical queues (`QL-164–170` and `QL-171–182`) remain archived as records of their original scopes. The source-of-truth entry point is [`08_BUILD_SEQUENCE.md`](08_BUILD_SEQUENCE.md).
