@@ -1,0 +1,21 @@
+.ql278-desk .ql277-actions button:disabled { opacity:.52; cursor:not-allowed; border-color:#66849b; background:#293c52; }
+.ql278-gate-list { list-style:none; display:grid; gap:8px; padding:0; margin:0; }
+.ql278-gate-list li { display:flex; align-items:center; gap:11px; border:1px solid #4e647e; border-radius:9px; background:linear-gradient(110deg,#10233d,#1e324c); padding:11px; }
+.ql278-gate-list li>span { flex:none; display:grid; place-items:center; width:26px; height:26px; border:1px solid #ad8050; border-radius:50%; background:#523a25; color:#ffe0b4; font-weight:900; }
+.ql278-gate-list li>div { display:grid; gap:4px; }
+.ql278-gate-list strong { color:#f5f1ff; font-size:.75rem; }
+.ql278-gate-list small { color:#ffd09a; font-size:.68rem; }
+.ql278-inline-link { color:#b5eeff; font-size:.74rem; font-weight:800; text-underline-offset:3px; }
+.ql278-aging-list { display:grid; gap:6px; }
+.ql278-aging-row { display:grid; grid-template-columns:minmax(105px,1.15fr) minmax(138px,1fr) minmax(180px,1.35fr) minmax(83px,.55fr); align-items:center; gap:9px; padding:10px; border:1px solid #385b78; border-radius:8px; background:#0b253b; font-size:.69rem; }
+.ql278-aging-row.head { background:#22425c; border-color:transparent; color:#d1e7f3; text-transform:uppercase; font-size:.65rem; font-weight:850; }
+.ql278-aging-row strong { color:#f5f1ff; }
+.ql278-aging-row code { color:#c2e1ff; }
+.ql278-aging-row span { color:#ffddb0; font-weight:750; }
+.ql278-aging-row a { color:#a9ecff; font-weight:800; text-underline-offset:3px; }
+.ql278-desk .ql277-form-grid select,.ql278-desk .ql277-form-grid input,.ql278-desk .ql277-note-label textarea { min-height:40px; }
+.ql278-desk .ql277-actions button:focus-visible,.ql278-inline-link:focus-visible,.ql278-aging-row a:focus-visible { outline:3px solid #78eaff; outline-offset:3px; }
+@media(max-width:740px) { .ql278-aging-row.head { display:none; } .ql278-aging-row { grid-template-columns:1fr 1fr; } .ql278-aging-row strong { grid-column:1/-1; } }
+@media(max-width:480px) { .ql278-aging-row { grid-template-columns:1fr; } }
+@media(forced-colors:active) { .ql278-gate-list li>span { border:2px solid CanvasText; } .ql278-desk .ql277-actions button:disabled { color:GrayText; } }
+@media(prefers-reduced-motion:reduce) { .ql278-desk *, .ql278-desk *::before, .ql278-desk *::after { transition:none!important; animation:none!important; } }
