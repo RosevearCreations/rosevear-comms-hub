@@ -11,11 +11,13 @@ import { Ql277DriftReview } from './Ql277DriftReview';
 import { Ql278FollowupDesk } from './Ql278FollowupDesk';
 import { Ql279ReviewerCustodyEscalation } from './Ql279ReviewerCustodyEscalation';
 import { Ql280ReceiptReconciliation } from './Ql280ReceiptReconciliation';
+import { Ql281SignatureProofCustody } from './Ql281SignatureProofCustody';
 import type { Ql278RetestTicket } from './ql278FollowupDesk';
 import type { Ql279ReviewerDraft,Ql279ArrivalClaim,Ql279EscalationDraft } from './ql279ReviewerCustodyEscalation';
+import type { Ql280ReviewerReceiptClaim,Ql280ArrivalReconciliation,Ql280AckClaim } from './ql280ReceiptReconciliation';
 import './ql273-assistance.css';
 
-type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | 'intake' | 'drift' | 'followup' | 'escalation' | 'receipts' | null;
+type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | 'intake' | 'drift' | 'followup' | 'escalation' | 'receipts' | 'custody' | null;
 
 function editableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return false;
@@ -38,6 +40,10 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
   const [reviewerDrafts,setReviewerDrafts]=useState<Ql279ReviewerDraft[]>([]);
   const [arrivalClaims,setArrivalClaims]=useState<Ql279ArrivalClaim[]>([]);
   const [escalations,setEscalations]=useState<Ql279EscalationDraft[]>([]);
+  // QL-280 reference claims remain in memory while switching QL-279/280/281 views.
+  const [reviewerReceipts,setReviewerReceipts]=useState<Ql280ReviewerReceiptClaim[]>([]);
+  const [reconciliations,setReconciliations]=useState<Ql280ArrivalReconciliation[]>([]);
+  const [ackClaims,setAckClaims]=useState<Ql280AckClaim[]>([]);
   const help = QL273_VIEW_HELP[mode];
 
   function checkSavedView() {
@@ -100,6 +106,7 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
         <button type="button" aria-expanded={panel === 'followup'} aria-controls="ql278-followup" onClick={() => toggle('followup')}>◈ Regression retests &amp; proof follow-up</button>
         <button type="button" aria-expanded={panel === 'escalation'} aria-controls="ql279-escalation" onClick={() => toggle('escalation')}>◇ Reviewer decisions &amp; custody watch</button>
         <button type="button" aria-expanded={panel === 'receipts'} aria-controls="ql280-receipts" onClick={() => toggle('receipts')}>◷ Reviewer receipts &amp; acknowledgement audit</button>
+        <button type="button" aria-expanded={panel === 'custody'} aria-controls="ql281-custody" onClick={() => toggle('custody')}>◇ Signature, proof freshness &amp; ACK custody</button>
       </div>
     </div>
     {panel === 'help' && <div id="ql273-help" className="ql273-assist-panel" role="region" aria-label="Help for this command view">
@@ -146,7 +153,15 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
     </div>}
     {panel === 'receipts' && <div id="ql280-receipts" className="ql273-assist-panel" role="region" aria-label="QL-280 reviewer authentication preconditions, original Proof-B return reconciliation and escalation acknowledgement aging">
       <Ql280ReceiptReconciliation reviewerDrafts={reviewerDrafts} arrivalClaims={arrivalClaims} escalations={escalations}
+        reviewerReceipts={reviewerReceipts} setReviewerReceipts={setReviewerReceipts}
+        reconciliations={reconciliations} setReconciliations={setReconciliations}
+        ackClaims={ackClaims} setAckClaims={setAckClaims}
         onOpenQl279={()=>setPanel('escalation')} onOpenEvidence={onOpenEvidence} />
+    </div>}
+    {panel === 'custody' && <div id="ql281-custody" className="ql273-assist-panel" role="region" aria-label="QL-281 reviewer signature challenge, Proof-B publication freshness and six-app escalation acknowledgement custody">
+      <Ql281SignatureProofCustody reviewerReceipts={reviewerReceipts} arrivalClaims={arrivalClaims}
+        ackClaims={ackClaims} escalations={escalations} onOpenQl280={()=>setPanel('receipts')}
+        onOpenQl279={()=>setPanel('escalation')} onOpenEvidence={onOpenEvidence}/>
     </div>}
   </section>;
 }
