@@ -14,14 +14,16 @@ import { Ql280ReceiptReconciliation } from './Ql280ReceiptReconciliation';
 import { Ql281SignatureProofCustody } from './Ql281SignatureProofCustody';
 import { Ql282IssuerPublicationReview } from './Ql282IssuerPublicationReview';
 import { Ql283IssuerTrustOwnerFollowup } from './Ql283IssuerTrustOwnerFollowup';
+import { Ql284ReviewerCrosscheckOwnerResponse } from './Ql284ReviewerCrosscheckOwnerResponse';
 import type { Ql278RetestTicket } from './ql278FollowupDesk';
 import type { Ql279ReviewerDraft,Ql279ArrivalClaim,Ql279EscalationDraft } from './ql279ReviewerCustodyEscalation';
 import type { Ql280ReviewerReceiptClaim,Ql280ArrivalReconciliation,Ql280AckClaim } from './ql280ReceiptReconciliation';
 import type { Ql281ChallengeRequest } from './ql281SignatureProofCustody';
 import type { Ql282IssuerRequest,Ql282ExceptionDraft } from './ql282IssuerPublicationReview';
+import type { Ql283TrustReference,Ql283OwnerFollowup,Ql283RecheckDraft } from './ql283IssuerTrustOwnerFollowup';
 import './ql273-assistance.css';
 
-type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | 'intake' | 'drift' | 'followup' | 'escalation' | 'receipts' | 'custody' | 'issuer' | 'trust' | null;
+type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | 'intake' | 'drift' | 'followup' | 'escalation' | 'receipts' | 'custody' | 'issuer' | 'trust' | 'crosscheck' | null;
 
 function editableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return false;
@@ -53,6 +55,10 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
   // QL-282 issuer and publication exception references survive navigation into QL-283.
   const [issuerRequests,setIssuerRequests]=useState<Ql282IssuerRequest[]>([]);
   const [exceptions,setExceptions]=useState<Ql282ExceptionDraft[]>([]);
+  // QL-283 local draft provenance remains accessible while the owner opens QL-284 review.
+  const [trustDrafts,setTrustDrafts]=useState<Ql283TrustReference[]>([]);
+  const [ownerDrafts,setOwnerDrafts]=useState<Ql283OwnerFollowup[]>([]);
+  const [recheckDrafts,setRecheckDrafts]=useState<Ql283RecheckDraft[]>([]);
   const help = QL273_VIEW_HELP[mode];
 
   function checkSavedView() {
@@ -118,6 +124,7 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
         <button type="button" aria-expanded={panel === 'custody'} aria-controls="ql281-custody" onClick={() => toggle('custody')}>◇ Signature, proof freshness &amp; ACK custody</button>
         <button type="button" aria-expanded={panel === 'issuer'} aria-controls="ql282-issuer" onClick={() => toggle('issuer')}>◇ Issuer readiness &amp; proof exception review</button>
         <button type="button" aria-expanded={panel === 'trust'} aria-controls="ql283-trust" onClick={() => toggle('trust')}>◇ Issuer trust, owner follow-up &amp; SHA recheck</button>
+        <button type="button" aria-expanded={panel === 'crosscheck'} aria-controls="ql284-crosscheck" onClick={() => toggle('crosscheck')}>◇ Reviewer cross-check, owner response &amp; Proof-B revalidation</button>
       </div>
     </div>
     {panel === 'help' && <div id="ql273-help" className="ql273-assist-panel" role="region" aria-label="Help for this command view">
@@ -182,7 +189,13 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
     </div>}
     {panel === 'trust' && <div id="ql283-trust" className="ql273-assist-panel" role="region" aria-label="QL-283 issuer trust references, Proof-B publication owner follow-up and six-app SHA recheck queue">
       <Ql283IssuerTrustOwnerFollowup issuerRequests={issuerRequests} exceptions={exceptions} arrivalClaims={arrivalClaims}
+        trustDrafts={trustDrafts} setTrustDrafts={setTrustDrafts} ownerDrafts={ownerDrafts} setOwnerDrafts={setOwnerDrafts}
+        recheckDrafts={recheckDrafts} setRecheckDrafts={setRecheckDrafts}
         onOpenQl282={()=>setPanel('issuer')} onOpenEvidence={onOpenEvidence}/>
+    </div>}
+    {panel === 'crosscheck' && <div id="ql284-crosscheck" className="ql273-assist-panel" role="region" aria-label="QL-284 independent reviewer cross-check, unverified publication owner response intake, and six-app Proof-B public revalidation">
+      <Ql284ReviewerCrosscheckOwnerResponse trustDrafts={trustDrafts} ownerDrafts={ownerDrafts} recheckDrafts={recheckDrafts}
+        arrivalClaims={arrivalClaims} onOpenQl283={()=>setPanel('trust')} onOpenEvidence={onOpenEvidence}/>
     </div>}
   </section>;
 }
