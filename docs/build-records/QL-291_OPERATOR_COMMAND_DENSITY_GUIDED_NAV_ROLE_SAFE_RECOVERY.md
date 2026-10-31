@@ -25,8 +25,18 @@
 - Exact tested Git tree through feature → `dev` → `main`; all applicable production checks GREEN on the exact `main` SHA; live Worker JS/CSS downloaded SHA-256 must match the local tested build.
 - Promotion and queue counting only follow successful checks; no PR or synthetic test counts as production approval.
 
+## Verified release receipt — Production GREEN
+
+- **Local verification:** `npm run verify:ql291` passed 269 focused test results; `npm --prefix app run check`, `npm --prefix app run test` (1,057 tests, 108 files), `node scripts/__tests__/ql171-operator-baseline.test.mjs` (10 security baseline tests) and `npm --prefix app run build` all passed.
+- **Exact tested source tree:** `6a1f27df272c3c2d8f67ae846661ac402154724f`, unchanged in feature, `dev` and `main` merge commits.
+- **Feature → `dev`:** [PR #546](https://github.com/RosevearCreations/rosevear-comms-hub/pull/546), `dev` merge commit `506c137395d9b67b3079acd2f96c3b403971dd2f`; `app-build` and Workers Builds completed successfully.
+- **`dev` → `main`:** [PR #547](https://github.com/RosevearCreations/rosevear-comms-hub/pull/547), exact production code commit `12332a41d86607b1a32309e95979c8c7b81d37e4`.
+- **Exact `main` checks:** all five successful: `app-build`, `Workers Builds: rosevear-comms-hub`, `Build disabled preview`, `Deploy disabled preview`, `Supabase Preview`.
+- **Live Worker:** `https://rosevear-comms-hub.devilndovelive.workers.dev/` served `assets/index-BPLUM6yW.js` with SHA-256 `936d3e3323477965e4501b84f57f959b0128607d69ef843bf0de793fcc92c522` and `assets/index-CMTp-T_H.css` with SHA-256 `dc0124faf796c8c50bd7571f6b5ba0a2dcb2b825db434c4a80618523ab7ab82b`, byte-identical to locally tested `app/dist` output.
+- **Queue state:** QL-291 is the second of 15 planned builds promoted and verified. **2/15 GREEN; 13 remain; QL-292 next.** This receipt does not attest any new original Proof-B or send an acknowledgement; ACK Delivery Evidence is still Under Review, and integrations are still disconnected.
+
 ## Next planned build
 
 **QL-292 — Unified Inbox Priority Lanes, Search Precision & Saved Triage Filters.** Improve the fictional inbox with clear urgency/ownership lanes, precise brand-safe search, combinations of filters and recoverable local triage presets. No customer message reads or provider sends are authorized.
 
-See the [active QL-290–304 queue](../QL-290-304-REQUIRED_BUILD_QUEUE.md). QL-292 becomes next only when QL-291's main production receipt is verified.
+See the [active QL-290–304 queue](../QL-290-304-REQUIRED_BUILD_QUEUE.md). QL-292 is now next because QL-291's `main` production receipt has been verified.

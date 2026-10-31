@@ -5,12 +5,12 @@ older completed-build history and former queues remain preserved for reference.
 
 ## Current active queue — QL-290 through QL-304
 
-**Latest verified production release:** QL-290 at exact `main` commit
-`356208a9f4a7cbb38f85f333ae428e10f9c5d4ad` (five production checks GREEN;
+**Latest verified production release:** QL-291 at exact `main` code commit
+`12332a41d86607b1a32309e95979c8c7b81d37e4` (five production checks GREEN;
 live JS/CSS SHA-256 matching the tested bundle).
 
-**15 builds are in the active batch; 1/15 Production GREEN; 14 remain.**
-Next is **QL-291 — Operator Command Centre Density, Guided Card Navigation & Role-Safe Layout Recovery.** Follow the full, numbered feature scope, dependencies, test
+**15 builds are in the active batch; 2/15 Production GREEN; 13 remain.**
+Next is **QL-292 — Unified Inbox Priority Lanes, Search Precision & Saved Triage Filters.** Follow the full, numbered feature scope, dependencies, test
 evidence and queue-count rules in **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)**.
 
 | Builds | Priority area | Count |
