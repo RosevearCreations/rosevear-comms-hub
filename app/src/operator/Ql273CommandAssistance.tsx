@@ -9,9 +9,11 @@ import { Ql275OperatorWalkthrough } from './Ql275OperatorWalkthrough';
 import { Ql276EvidenceIntake } from './Ql276EvidenceIntake';
 import { Ql277DriftReview } from './Ql277DriftReview';
 import { Ql278FollowupDesk } from './Ql278FollowupDesk';
+import { Ql279ReviewerCustodyEscalation } from './Ql279ReviewerCustodyEscalation';
+import type { Ql278RetestTicket } from './ql278FollowupDesk';
 import './ql273-assistance.css';
 
-type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | 'intake' | 'drift' | 'followup' | null;
+type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | 'intake' | 'drift' | 'followup' | 'escalation' | null;
 
 function editableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return false;
@@ -30,6 +32,7 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
   const [panel, setPanel] = useState<AssistancePanel>(null);
   const [audit, setAudit] = useState(() => auditQl273SavedView(inspectQl272LocalLayout()));
   const [action, setAction] = useState('Read-only review; no saved-view changes made.');
+  const [retestTickets, setRetestTickets] = useState<Ql278RetestTicket[]>([]);
   const help = QL273_VIEW_HELP[mode];
 
   function checkSavedView() {
@@ -90,6 +93,7 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
         <button type="button" aria-expanded={panel === 'intake'} aria-controls="ql276-intake" onClick={() => toggle('intake')}>◷ Owner evidence &amp; custody intake</button>
         <button type="button" aria-expanded={panel === 'drift'} aria-controls="ql277-drift" onClick={() => toggle('drift')}>◇ Recheck &amp; source drift audit</button>
         <button type="button" aria-expanded={panel === 'followup'} aria-controls="ql278-followup" onClick={() => toggle('followup')}>◈ Regression retests &amp; proof follow-up</button>
+        <button type="button" aria-expanded={panel === 'escalation'} aria-controls="ql279-escalation" onClick={() => toggle('escalation')}>◇ Reviewer decisions &amp; custody watch</button>
       </div>
     </div>
     {panel === 'help' && <div id="ql273-help" className="ql273-assist-panel" role="region" aria-label="Help for this command view">
@@ -127,7 +131,10 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
       <Ql277DriftReview onOpenEvidence={onOpenEvidence} />
     </div>}
     {panel === 'followup' && <div id="ql278-followup" className="ql273-assist-panel" role="region" aria-label="QL-278 owner accessibility regression retests, original custody preconditions and six-app drift follow-up aging">
-      <Ql278FollowupDesk onOpenEvidence={onOpenEvidence} />
+      <Ql278FollowupDesk onOpenEvidence={onOpenEvidence} tickets={retestTickets} setTickets={setRetestTickets} />
+    </div>}
+    {panel === 'escalation' && <div id="ql279-escalation" className="ql273-assist-panel" role="region" aria-label="QL-279 independent reviewer disposition drafts, original custody artifact arrival watch and six-app escalation">
+      <Ql279ReviewerCustodyEscalation tickets={retestTickets} onOpenRetests={()=>setPanel('followup')} onOpenEvidence={onOpenEvidence} />
     </div>}
   </section>;
 }
