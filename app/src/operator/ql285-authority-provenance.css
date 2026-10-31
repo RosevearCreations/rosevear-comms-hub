@@ -1,0 +1,8 @@
+.ql285-desk .ql284-subsection {border:1px solid #5a718d;background:linear-gradient(145deg,#1b3449,#2a394f);}
+.ql285-desk .ql284-subsection h6 {font-size:.92rem;color:#b9eef0;}
+.ql285-desk .ql283-source-row b {color:#ffdda5;}
+.ql285-desk .ql277-card>p {line-height:1.66;}
+.ql285-desk button:focus-visible,.ql285-desk select:focus-visible,.ql285-desk input:focus-visible,.ql285-desk textarea:focus-visible,.ql285-desk a:focus-visible {outline:3px solid #a3f1ed;outline-offset:3px;}
+@media(max-width:640px){.ql285-desk .ql277-form-grid{grid-template-columns:1fr;}.ql285-desk .ql284-subsection{padding:12px;}}
+@media(forced-colors:active){.ql285-desk .ql284-subsection{background:Canvas;color:CanvasText;border:2px solid CanvasText;}.ql285-desk .ql283-source-row b{color:CanvasText;}}
+@media(prefers-reduced-motion:reduce){.ql285-desk *,.ql285-desk *::before,.ql285-desk *::after{transition:none!important;animation:none!important;}}

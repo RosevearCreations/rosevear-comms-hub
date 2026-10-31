@@ -14,6 +14,7 @@ import {QL281_OBSERVED_AT,QL281_PUBLIC_SOURCE_RECHECK,ql281PinnedProofUrl} from 
 import {QL282_OBSERVED_AT,QL282_PUBLIC_SOURCE_RECHECK,ql282PinnedProofUrl} from './ql282IssuerPublicationReview';
 import {QL283_OBSERVED_AT,QL283_PUBLIC_SOURCE_RECHECK,ql283PinnedProofUrl} from './ql283IssuerTrustOwnerFollowup';
 import {QL284_OBSERVED_AT,QL284_PUBLIC_SOURCE_RECHECK,ql284PinnedProofUrl} from './ql284ReviewerCrosscheckOwnerResponse';
+import {QL285_OBSERVED_AT,QL285_PUBLIC_SOURCE_RECHECK,ql285PinnedProofUrl} from './ql285IssuerAuthorityProvenanceDelta';
 import './ql270-connections.css';
 
 export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspace)=>void}){
@@ -33,6 +34,7 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
   const exceptionProof=QL282_PUBLIC_SOURCE_RECHECK.find(row=>row.source===selected);
   const trustProof=QL283_PUBLIC_SOURCE_RECHECK.find(row=>row.source===selected);
   const crosscheckProof=QL284_PUBLIC_SOURCE_RECHECK.find(row=>row.source===selected);
+  const authorityProof=QL285_PUBLIC_SOURCE_RECHECK.find(row=>row.source===selected);
   const readyDrafts=Object.values(planStatus).filter(x=>x?.tenantAliasValid).length;
 
   function prepare(){
@@ -70,7 +72,7 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
 
     <div className="ql270-metrics" aria-label="Real integration readiness">
       <article><span>Registered sources</span><strong>6 <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:'100%'}}/></div><small>Known repository mappings only</small></article>
-      <article><span>Signed proofs accepted</span><strong>0 <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:'0%'}}/></div><small>QL-284 public revalidation: six HTTP 404s</small></article>
+      <article><span>Signed proofs accepted</span><strong>0 <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:'0%'}}/></div><small>QL-285 public exception delta: six HTTP 404s</small></article>
       <article><span>Local TEST drafts</span><strong>{readyDrafts} <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:`${readyDrafts/6*100}%`}}/></div><small>Session-only plans, not connections</small></article>
       <article><span>Live pilot holds</span><strong>12 <small>/ 12</small></strong><div className="ql270-meter ql270-meter-alert"><i style={{width:'100%'}}/></div><small>Calls, messaging and dispatch OFF</small></article>
     </div>
@@ -157,7 +159,9 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
           <a className="ql270-public-check ql274-public-pin" href={ql283PinnedProofUrl(selected)} target="_blank" rel="noopener noreferrer">Open immutable QL-283 source recheck ↗</a>
           <p>QL-284 independent reviewer trust reference and original Proof-B public revalidation ({new Date(QL284_OBSERVED_AT).toLocaleString('en-CA',{dateStyle:'medium',timeStyle:'short',timeZone:'America/Toronto'})} Eastern): immutable main <code>{crosscheckProof?.sha.slice(0,12)}</code> returned HTTP {crosscheckProof?.http}; {crosscheckProof?.sha===trustProof?.sha?'SHA unchanged':'SHA changed'} since QL-283. Four of six source SHAs moved, two did not; all six original publication exceptions remain open. Owner response and reviewer cross-check records are unverified local claims only. ACK delivery evidence stays Under Review — parked.</p>
           <a className="ql270-public-check ql274-public-pin" href={ql284PinnedProofUrl(selected)} target="_blank" rel="noopener noreferrer">Open immutable QL-284 original Proof-B revalidation ↗</a>
-          <p className="ql270-public-result" role="status">Last verified snapshot: HTTP 404 (QL-270); QL-274: HTTP {recentProof?.http}; QL-276: HTTP {latestProof?.http}; QL-277: HTTP {driftProof?.http}; QL-278: HTTP {followupProof?.http}; QL-279: HTTP {arrivalProof?.http}; QL-280: HTTP {reconciledProof?.http}; QL-281: HTTP {signatureProof?.http}; QL-282: HTTP {exceptionProof?.http}; QL-283: HTTP {trustProof?.http}; latest dated public snapshot: HTTP {crosscheckProof?.http} (QL-284) · DISCONNECTED / HOLD. Current response must be reviewed independently. Any source SHA change, later claim or 24-hour snapshot age requires a new independent public GET; original signed receipts, authenticated gateway and owner TEST approval remain absent.</p>
+          <p>QL-285 original reviewer issuer authority audit, owner response provenance and six-app public publication deltas ({new Date(QL285_OBSERVED_AT).toLocaleString('en-CA',{dateStyle:'medium',timeStyle:'short',timeZone:'America/Toronto'})} Eastern): immutable main <code>{authorityProof?.sha.slice(0,12)}</code> returned HTTP {authorityProof?.http}; {authorityProof?.sha===crosscheckProof?.sha?'SHA unchanged':'SHA changed'} since QL-284. Five of six source main SHAs moved; one remained unchanged. Original signed Proof-B is still missing from every exact public path. No issuer authority or owner provenance has been verified; ACK delivery evidence stays Under Review — parked.</p>
+          <a className="ql270-public-check ql274-public-pin" href={ql285PinnedProofUrl(selected)} target="_blank" rel="noopener noreferrer">Open immutable QL-285 publication exception delta ↗</a>
+          <p className="ql270-public-result" role="status">Last verified snapshot: HTTP 404 (QL-270); QL-274: HTTP {recentProof?.http}; QL-276: HTTP {latestProof?.http}; QL-277: HTTP {driftProof?.http}; QL-278: HTTP {followupProof?.http}; QL-279: HTTP {arrivalProof?.http}; QL-280: HTTP {reconciledProof?.http}; QL-281: HTTP {signatureProof?.http}; QL-282: HTTP {exceptionProof?.http}; QL-283: HTTP {trustProof?.http}; QL-284: HTTP {crosscheckProof?.http}; latest dated public snapshot: HTTP {authorityProof?.http} (QL-285) · DISCONNECTED / HOLD. Current response must be reviewed independently. Any source SHA change, later claim or 24-hour snapshot age requires a new independent public GET; original signed receipts, authenticated gateway and owner TEST approval remain absent.</p>
           <small>Even HTTP 200 would only confirm a file exists. It would not authenticate
             its signer, independent key pin, human witness, or tenant boundary.</small>
           <p><a href={`https://github.com/RosevearCreations/${sourceSnapshot?.repo}/tree/main`}
