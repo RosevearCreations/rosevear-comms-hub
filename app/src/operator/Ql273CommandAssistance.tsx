@@ -5,20 +5,22 @@ import { defaultQl272Preferences, type Ql272PreferenceEnvelope } from './ql272La
 import { QL273_METRIC_HELP, QL273_SHORTCUTS, QL273_VIEW_HELP,
   auditQl273SavedView, ql273ShortcutMode, savedQl273Preferences } from './ql273CommandHelp';
 import { Ql274CommandReview } from './Ql274CommandReview';
+import { Ql275OperatorWalkthrough } from './Ql275OperatorWalkthrough';
 import './ql273-assistance.css';
 
-type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | null;
+type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | null;
 
 function editableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return false;
   return Boolean(target.closest('input, select, textarea, [contenteditable="true"], [role="textbox"]'));
 }
 
-export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEvidence, onRestore, onReset }: {
+export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEvidence, onOpenConnections, onRestore, onReset }: {
   mode: Ql271CommandMode;
   preferences: Ql272PreferenceEnvelope;
   onNavigate: (mode: Ql271CommandMode) => void;
   onOpenEvidence: () => void;
+  onOpenConnections: () => void;
   onRestore: (preferences: Ql272PreferenceEnvelope) => void;
   onReset: (preferences: Ql272PreferenceEnvelope) => void;
 }) {
@@ -81,6 +83,7 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
         <button type="button" aria-expanded={panel === 'shortcuts'} aria-controls="ql273-shortcuts" onClick={() => toggle('shortcuts')}>⌨ Keyboard shortcuts</button>
         <button type="button" aria-expanded={panel === 'audit'} aria-controls="ql273-audit" onClick={() => toggle('audit')}>◷ Saved view audit</button>
         <button type="button" aria-expanded={panel === 'review'} aria-controls="ql274-review" onClick={() => toggle('review')}>✓ Help &amp; proof review</button>
+        <button type="button" aria-expanded={panel === 'walkthrough'} aria-controls="ql275-walkthrough" onClick={() => toggle('walkthrough')}>◈ Guided operator walkthrough</button>
       </div>
     </div>
     {panel === 'help' && <div id="ql273-help" className="ql273-assist-panel" role="region" aria-label="Help for this command view">
@@ -107,6 +110,9 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
     </div>}
     {panel === 'review' && <div id="ql274-review" className="ql273-assist-panel" role="region" aria-label="QL-274 command help and proof assurance review">
       <Ql274CommandReview preferences={preferences} onOpenEvidence={onOpenEvidence} />
+    </div>}
+    {panel === 'walkthrough' && <div id="ql275-walkthrough" className="ql273-assist-panel" role="region" aria-label="QL-275 guided operator, accessibility and Proof-B routing walkthrough">
+      <Ql275OperatorWalkthrough mode={mode} onNavigate={onNavigate} onOpenEvidence={onOpenEvidence} onOpenConnections={onOpenConnections} />
     </div>}
   </section>;
 }
