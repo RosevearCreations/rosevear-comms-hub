@@ -24,8 +24,18 @@
 - `npm --prefix app run check`, `npm --prefix app run test`, `node scripts/__tests__/ql171-operator-baseline.test.mjs`, `npm --prefix app run build`.
 - Publish the exact tested source tree through guarded feature → `dev` → `main` merges. Record actual production check status and compare live Cloudflare Worker JS/CSS SHA-256 against the local production build before changing the queue count.
 
+## Verified release receipt — Production GREEN
+
+- **Local verification:** `npm run verify:ql292` passed 320 focused test results (220 QL-289, 16 QL-290, 33 QL-291 and 51 QL-292/inbox/contact/queue), `npm --prefix app run test` passed 1,068 app tests in 109 files, TypeScript check passed, 10 QL-171 security baseline tests passed and Vite production build passed (487 modules).
+- **Exact tested source tree:** `60276084e474f75c28abc85c84cfe9618803c179`, unchanged through feature, `dev` and `main` merges.
+- **Feature → `dev`:** [PR #550](https://github.com/RosevearCreations/rosevear-comms-hub/pull/550), exact `dev` commit `2208712171eb3c5f783782684aa1cb28ada70929`; `app-build` and Workers Builds successful.
+- **`dev` → `main`:** [PR #551](https://github.com/RosevearCreations/rosevear-comms-hub/pull/551), exact production code commit `7a73414e354025862bd1717460cf51e81cdd5561`.
+- **Exact `main` production checks:** all five successful: `app-build`, `Workers Builds: rosevear-comms-hub`, `Build disabled preview`, `Deploy disabled preview`, `Supabase Preview`.
+- **Live Worker:** `https://rosevear-comms-hub.devilndovelive.workers.dev/` served `assets/index-CThY1hG5.js` SHA-256 `0470ed40a4250ccc6f181ea955807f2316f4f78b9bb79eb053b82572747b030a`, and `assets/index-BKZwUCRT.css` SHA-256 `712d6eeeeaf510d66729ad9686d4bebb7593e27acd1a0c10471b29bbb0b2d9ac`; both match the locally tested `app/dist` bytes.
+- **Queue state:** QL-292 is third of the active 15-build batch promoted to Production GREEN. **3/15 GREEN, 12 remaining, QL-293 next.** No original Proof-B, ACK delivery, real owner approval or external application permission has been newly verified or activated.
+
 ## Next planned build
 
 **QL-293 — Conversation Timeline Readability, Unsent Draft Recovery & Contextual Reply Help.** Improve synthetic conversation events and attachment metadata, local unsent draft recovery and explanation of delivery states without ever delivering real communications.
 
-See [the active QL-290–304 queue](../QL-290-304-REQUIRED_BUILD_QUEUE.md). QL-293 becomes next only after QL-292's exact-main Production GREEN receipt is verified.
+See [the active QL-290–304 queue](../QL-290-304-REQUIRED_BUILD_QUEUE.md). QL-293 is now next because QL-292's exact-main Production GREEN receipt has been verified.
