@@ -15,15 +15,17 @@ import { Ql281SignatureProofCustody } from './Ql281SignatureProofCustody';
 import { Ql282IssuerPublicationReview } from './Ql282IssuerPublicationReview';
 import { Ql283IssuerTrustOwnerFollowup } from './Ql283IssuerTrustOwnerFollowup';
 import { Ql284ReviewerCrosscheckOwnerResponse } from './Ql284ReviewerCrosscheckOwnerResponse';
+import { Ql285IssuerAuthorityProvenanceDelta } from './Ql285IssuerAuthorityProvenanceDelta';
 import type { Ql278RetestTicket } from './ql278FollowupDesk';
 import type { Ql279ReviewerDraft,Ql279ArrivalClaim,Ql279EscalationDraft } from './ql279ReviewerCustodyEscalation';
 import type { Ql280ReviewerReceiptClaim,Ql280ArrivalReconciliation,Ql280AckClaim } from './ql280ReceiptReconciliation';
 import type { Ql281ChallengeRequest } from './ql281SignatureProofCustody';
 import type { Ql282IssuerRequest,Ql282ExceptionDraft } from './ql282IssuerPublicationReview';
 import type { Ql283TrustReference,Ql283OwnerFollowup,Ql283RecheckDraft } from './ql283IssuerTrustOwnerFollowup';
+import type { Ql284ReviewerCrossCheck,Ql284OwnerResponse,Ql284SourceFollowup } from './ql284ReviewerCrosscheckOwnerResponse';
 import './ql273-assistance.css';
 
-type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | 'intake' | 'drift' | 'followup' | 'escalation' | 'receipts' | 'custody' | 'issuer' | 'trust' | 'crosscheck' | null;
+type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | 'intake' | 'drift' | 'followup' | 'escalation' | 'receipts' | 'custody' | 'issuer' | 'trust' | 'crosscheck' | 'authority' | null;
 
 function editableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return false;
@@ -59,6 +61,10 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
   const [trustDrafts,setTrustDrafts]=useState<Ql283TrustReference[]>([]);
   const [ownerDrafts,setOwnerDrafts]=useState<Ql283OwnerFollowup[]>([]);
   const [recheckDrafts,setRecheckDrafts]=useState<Ql283RecheckDraft[]>([]);
+  // QL-284 audit references remain in browser memory while reviewing QL-285 provenance.
+  const [reviewerCrossChecks,setReviewerCrossChecks]=useState<Ql284ReviewerCrossCheck[]>([]);
+  const [ownerResponseClaims,setOwnerResponseClaims]=useState<Ql284OwnerResponse[]>([]);
+  const [sourceFollowups,setSourceFollowups]=useState<Ql284SourceFollowup[]>([]);
   const help = QL273_VIEW_HELP[mode];
 
   function checkSavedView() {
@@ -125,6 +131,7 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
         <button type="button" aria-expanded={panel === 'issuer'} aria-controls="ql282-issuer" onClick={() => toggle('issuer')}>◇ Issuer readiness &amp; proof exception review</button>
         <button type="button" aria-expanded={panel === 'trust'} aria-controls="ql283-trust" onClick={() => toggle('trust')}>◇ Issuer trust, owner follow-up &amp; SHA recheck</button>
         <button type="button" aria-expanded={panel === 'crosscheck'} aria-controls="ql284-crosscheck" onClick={() => toggle('crosscheck')}>◇ Reviewer cross-check, owner response &amp; Proof-B revalidation</button>
+        <button type="button" aria-expanded={panel === 'authority'} aria-controls="ql285-authority" onClick={() => toggle('authority')}>◇ Issuer authority, owner provenance &amp; source deltas</button>
       </div>
     </div>
     {panel === 'help' && <div id="ql273-help" className="ql273-assist-panel" role="region" aria-label="Help for this command view">
@@ -195,7 +202,14 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
     </div>}
     {panel === 'crosscheck' && <div id="ql284-crosscheck" className="ql273-assist-panel" role="region" aria-label="QL-284 independent reviewer cross-check, unverified publication owner response intake, and six-app Proof-B public revalidation">
       <Ql284ReviewerCrosscheckOwnerResponse trustDrafts={trustDrafts} ownerDrafts={ownerDrafts} recheckDrafts={recheckDrafts}
+        reviews={reviewerCrossChecks} setReviews={setReviewerCrossChecks} responses={ownerResponseClaims} setResponses={setOwnerResponseClaims}
+        followups={sourceFollowups} setFollowups={setSourceFollowups}
         arrivalClaims={arrivalClaims} onOpenQl283={()=>setPanel('trust')} onOpenEvidence={onOpenEvidence}/>
+    </div>}
+    {panel === 'authority' && <div id="ql285-authority" className="ql273-assist-panel" role="region" aria-label="QL-285 issuer authority challenge, unverified owner provenance reconciliation and six-app publication exception delta worklist">
+      <Ql285IssuerAuthorityProvenanceDelta reviewerCrossChecks={reviewerCrossChecks} ownerResponseClaims={ownerResponseClaims}
+        sourceFollowups={sourceFollowups} arrivalClaims={arrivalClaims}
+        onOpenQl284={()=>setPanel('crosscheck')} onOpenEvidence={onOpenEvidence}/>
     </div>}
   </section>;
 }

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState,type Dispatch,type SetStateAction} from 'react';
 import {QL270_SOURCES,type Ql270SourceId} from './ql270ConnectionCentre';
 import type {Ql279ArrivalClaim} from './ql279ReviewerCustodyEscalation';
 import type {Ql283TrustReference,Ql283OwnerFollowup,Ql283RecheckDraft} from './ql283IssuerTrustOwnerFollowup';
@@ -19,23 +19,23 @@ type Topic='reviewer'|'response'|'revalidation';
 type Filter='all'|'moved'|'unchanged';
 const nameFor=(id:Ql270SourceId)=>QL270_SOURCES.find(row=>row.id===id)?.label??id;
 
-export function Ql284ReviewerCrosscheckOwnerResponse({trustDrafts,ownerDrafts,recheckDrafts,arrivalClaims,onOpenQl283,onOpenEvidence}:{
+export function Ql284ReviewerCrosscheckOwnerResponse({trustDrafts,ownerDrafts,recheckDrafts,arrivalClaims,reviews,setReviews,responses,setResponses,followups,setFollowups,onOpenQl283,onOpenEvidence}:{
   trustDrafts:readonly Ql283TrustReference[];ownerDrafts:readonly Ql283OwnerFollowup[];
   recheckDrafts:readonly Ql283RecheckDraft[];arrivalClaims:readonly Ql279ArrivalClaim[];
+  reviews:Ql284ReviewerCrossCheck[];setReviews:Dispatch<SetStateAction<Ql284ReviewerCrossCheck[]>>;
+  responses:Ql284OwnerResponse[];setResponses:Dispatch<SetStateAction<Ql284OwnerResponse[]>>;
+  followups:Ql284SourceFollowup[];setFollowups:Dispatch<SetStateAction<Ql284SourceFollowup[]>>;
   onOpenQl283:()=>void;onOpenEvidence:()=>void;
 }) {
   const [topic,setTopic]=useState<Topic>('reviewer');
   const [filter,setFilter]=useState<Filter>('all');
   const [selectedTrust,setSelectedTrust]=useState('');
   const [reviewRef,setReviewRef]=useState('');
-  const [reviews,setReviews]=useState<Ql284ReviewerCrossCheck[]>([]);
   const [selectedOwner,setSelectedOwner]=useState<Ql270SourceId>('rosiedazzlers');
   const [responseRef,setResponseRef]=useState('');
   const [responseType,setResponseType]=useState<Ql284OwnerResponseType>('ORIGINAL_PUBLICATION_PENDING');
-  const [responses,setResponses]=useState<Ql284OwnerResponse[]>([]);
   const [selectedRecheck,setSelectedRecheck]=useState<Ql270SourceId>('rosiedazzlers');
   const [followupRef,setFollowupRef]=useState('');
-  const [followups,setFollowups]=useState<Ql284SourceFollowup[]>([]);
   const [asOf,setAsOf]=useState(()=>new Date());
   const [feedback,setFeedback]=useState('QL-284 public revalidation: four SHAs changed, two unchanged, all six original Proof-B paths HTTP 404. ACK delivery evidence stays Under Review — parked.');
   const revalidation=ql284SourceRevalidation(asOf,arrivalClaims);
