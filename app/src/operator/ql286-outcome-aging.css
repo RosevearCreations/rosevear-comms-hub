@@ -1,0 +1,8 @@
+.ql286-desk .ql286-status-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:16px 0;}
+.ql286-desk .ql286-status-list span{display:block;padding:12px 14px;border:1px solid #6c7894;border-left:4px solid #fbbf8b;border-radius:12px;background:#1d3045;color:#f5e6d9;font-weight:650;}
+.ql286-desk .ql286-feedback{padding:12px;border-radius:10px;border:1px solid #4d7b8d;background:#18344b;color:#dbf8ff;line-height:1.5;}
+.ql286-desk .ql283-source-row b{color:#ffdc9f;}
+.ql286-desk button:focus-visible,.ql286-desk input:focus-visible,.ql286-desk select:focus-visible,.ql286-desk a:focus-visible,.ql286-desk textarea:focus-visible{outline:3px solid #a3f1ed;outline-offset:3px;}
+@media(max-width:640px){.ql286-desk .ql277-form-grid{grid-template-columns:1fr;}.ql286-desk .ql286-status-list{grid-template-columns:1fr;}}
+@media(forced-colors:active){.ql286-desk .ql286-status-list span,.ql286-desk .ql286-feedback{background:Canvas;color:CanvasText;border-color:CanvasText;}}
+@media(prefers-reduced-motion:reduce){.ql286-desk *,.ql286-desk *::before,.ql286-desk *::after{animation:none!important;transition:none!important;}}

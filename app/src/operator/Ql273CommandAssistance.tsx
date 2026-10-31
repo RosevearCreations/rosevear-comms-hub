@@ -16,6 +16,7 @@ import { Ql282IssuerPublicationReview } from './Ql282IssuerPublicationReview';
 import { Ql283IssuerTrustOwnerFollowup } from './Ql283IssuerTrustOwnerFollowup';
 import { Ql284ReviewerCrosscheckOwnerResponse } from './Ql284ReviewerCrosscheckOwnerResponse';
 import { Ql285IssuerAuthorityProvenanceDelta } from './Ql285IssuerAuthorityProvenanceDelta';
+import { Ql286AuthorityOutcomeConflictAging } from './Ql286AuthorityOutcomeConflictAging';
 import type { Ql278RetestTicket } from './ql278FollowupDesk';
 import type { Ql279ReviewerDraft,Ql279ArrivalClaim,Ql279EscalationDraft } from './ql279ReviewerCustodyEscalation';
 import type { Ql280ReviewerReceiptClaim,Ql280ArrivalReconciliation,Ql280AckClaim } from './ql280ReceiptReconciliation';
@@ -23,9 +24,10 @@ import type { Ql281ChallengeRequest } from './ql281SignatureProofCustody';
 import type { Ql282IssuerRequest,Ql282ExceptionDraft } from './ql282IssuerPublicationReview';
 import type { Ql283TrustReference,Ql283OwnerFollowup,Ql283RecheckDraft } from './ql283IssuerTrustOwnerFollowup';
 import type { Ql284ReviewerCrossCheck,Ql284OwnerResponse,Ql284SourceFollowup } from './ql284ReviewerCrosscheckOwnerResponse';
+import type { Ql285AuthorityAudit,Ql285ProvenanceReview,Ql285DeltaWorkItem } from './ql285IssuerAuthorityProvenanceDelta';
 import './ql273-assistance.css';
 
-type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | 'intake' | 'drift' | 'followup' | 'escalation' | 'receipts' | 'custody' | 'issuer' | 'trust' | 'crosscheck' | 'authority' | null;
+type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | 'walkthrough' | 'intake' | 'drift' | 'followup' | 'escalation' | 'receipts' | 'custody' | 'issuer' | 'trust' | 'crosscheck' | 'authority' | 'outcome' | null;
 
 function editableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return false;
@@ -65,6 +67,10 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
   const [reviewerCrossChecks,setReviewerCrossChecks]=useState<Ql284ReviewerCrossCheck[]>([]);
   const [ownerResponseClaims,setOwnerResponseClaims]=useState<Ql284OwnerResponse[]>([]);
   const [sourceFollowups,setSourceFollowups]=useState<Ql284SourceFollowup[]>([]);
+  // QL-285 unverified audit continuity survives switching into QL-286 comparison workstreams.
+  const [authorityDrafts,setAuthorityDrafts]=useState<Ql285AuthorityAudit[]>([]);
+  const [provenanceDrafts,setProvenanceDrafts]=useState<Ql285ProvenanceReview[]>([]);
+  const [deltaDrafts,setDeltaDrafts]=useState<Ql285DeltaWorkItem[]>([]);
   const help = QL273_VIEW_HELP[mode];
 
   function checkSavedView() {
@@ -132,6 +138,7 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
         <button type="button" aria-expanded={panel === 'trust'} aria-controls="ql283-trust" onClick={() => toggle('trust')}>◇ Issuer trust, owner follow-up &amp; SHA recheck</button>
         <button type="button" aria-expanded={panel === 'crosscheck'} aria-controls="ql284-crosscheck" onClick={() => toggle('crosscheck')}>◇ Reviewer cross-check, owner response &amp; Proof-B revalidation</button>
         <button type="button" aria-expanded={panel === 'authority'} aria-controls="ql285-authority" onClick={() => toggle('authority')}>◇ Issuer authority, owner provenance &amp; source deltas</button>
+        <button type="button" aria-expanded={panel === 'outcome'} aria-controls="ql286-outcome" onClick={() => toggle('outcome')}>◇ Reviewer outcomes, Proof-B conflicts &amp; exception aging</button>
       </div>
     </div>
     {panel === 'help' && <div id="ql273-help" className="ql273-assist-panel" role="region" aria-label="Help for this command view">
@@ -209,7 +216,15 @@ export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEv
     {panel === 'authority' && <div id="ql285-authority" className="ql273-assist-panel" role="region" aria-label="QL-285 issuer authority challenge, unverified owner provenance reconciliation and six-app publication exception delta worklist">
       <Ql285IssuerAuthorityProvenanceDelta reviewerCrossChecks={reviewerCrossChecks} ownerResponseClaims={ownerResponseClaims}
         sourceFollowups={sourceFollowups} arrivalClaims={arrivalClaims}
+        authorityDrafts={authorityDrafts} setAuthorityDrafts={setAuthorityDrafts}
+        provenanceDrafts={provenanceDrafts} setProvenanceDrafts={setProvenanceDrafts}
+        deltaDrafts={deltaDrafts} setDeltaDrafts={setDeltaDrafts}
         onOpenQl284={()=>setPanel('crosscheck')} onOpenEvidence={onOpenEvidence}/>
+    </div>}
+    {panel === 'outcome' && <div id="ql286-outcome" className="ql273-assist-panel" role="region" aria-label="QL-286 pending authority outcome comparison, original Proof-B provenance conflict follow-up and six-app public source exception aging">
+      <Ql286AuthorityOutcomeConflictAging authorityAudits={authorityDrafts} provenanceReviews={provenanceDrafts}
+        deltaWorkItems={deltaDrafts} arrivalClaims={arrivalClaims}
+        onOpenQl285={()=>setPanel('authority')} onOpenEvidence={onOpenEvidence}/>
     </div>}
   </section>;
 }

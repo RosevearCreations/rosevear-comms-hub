@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState,type Dispatch,type SetStateAction} from 'react';
 import {QL270_SOURCES,type Ql270SourceId} from './ql270ConnectionCentre';
 import type {Ql279ArrivalClaim} from './ql279ReviewerCustodyEscalation';
 import type {Ql284ReviewerCrossCheck,Ql284OwnerResponse,Ql284SourceFollowup} from './ql284ReviewerCrosscheckOwnerResponse';
@@ -20,23 +20,24 @@ type DeltaFilter='all'|'moved'|'unchanged';
 const nameFor=(id:Ql270SourceId)=>QL270_SOURCES.find(row=>row.id===id)?.label??id;
 
 export function Ql285IssuerAuthorityProvenanceDelta({reviewerCrossChecks,ownerResponseClaims,sourceFollowups,
+  authorityDrafts,setAuthorityDrafts,provenanceDrafts,setProvenanceDrafts,deltaDrafts,setDeltaDrafts,
   arrivalClaims,onOpenQl284,onOpenEvidence}:{
   reviewerCrossChecks:readonly Ql284ReviewerCrossCheck[];ownerResponseClaims:readonly Ql284OwnerResponse[];
   sourceFollowups:readonly Ql284SourceFollowup[];arrivalClaims:readonly Ql279ArrivalClaim[];
+  authorityDrafts:Ql285AuthorityAudit[];setAuthorityDrafts:Dispatch<SetStateAction<Ql285AuthorityAudit[]>>;
+  provenanceDrafts:Ql285ProvenanceReview[];setProvenanceDrafts:Dispatch<SetStateAction<Ql285ProvenanceReview[]>>;
+  deltaDrafts:Ql285DeltaWorkItem[];setDeltaDrafts:Dispatch<SetStateAction<Ql285DeltaWorkItem[]>>;
   onOpenQl284:()=>void;onOpenEvidence:()=>void;
 }) {
   const [topic,setTopic]=useState<Topic>('authority');
   const [filter,setFilter]=useState<DeltaFilter>('all');
   const [selectedCrosscheck,setSelectedCrosscheck]=useState('');
   const [authorityRef,setAuthorityRef]=useState('');
-  const [authorityDrafts,setAuthorityDrafts]=useState<Ql285AuthorityAudit[]>([]);
   const [selectedOwner,setSelectedOwner]=useState<Ql270SourceId>('rosiedazzlers');
   const [provenanceType,setProvenanceType]=useState<Ql285ProvenanceType>('OWNER_SOURCE_REFERENCE');
   const [provenanceRef,setProvenanceRef]=useState('');
-  const [provenanceDrafts,setProvenanceDrafts]=useState<Ql285ProvenanceReview[]>([]);
   const [selectedSource,setSelectedSource]=useState<Ql270SourceId>('rosiedazzlers');
   const [deltaRef,setDeltaRef]=useState('');
-  const [deltaDrafts,setDeltaDrafts]=useState<Ql285DeltaWorkItem[]>([]);
   const [asOf,setAsOf]=useState(()=>new Date());
   const [feedback,setFeedback]=useState('QL-285 public source delta: five main SHAs changed, one unchanged, six immutable original Proof-B paths HTTP 404. ACK delivery evidence stays Under Review and parked.');
   const delta=ql285PublicationDelta(asOf,arrivalClaims);
