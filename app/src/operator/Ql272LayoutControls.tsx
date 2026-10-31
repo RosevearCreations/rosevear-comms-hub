@@ -8,11 +8,12 @@ import {
 } from './ql272LayoutPreferences';
 import './ql272-layout.css';
 
-export function Ql272LayoutControls({ preferences, mode, metricLabels, saved, onChange, onReset }: {
+export function Ql272LayoutControls({ preferences, mode, metricLabels, saved, storageAvailable, onChange, onReset }: {
   preferences: Ql272PreferenceEnvelope;
   mode: Ql271CommandMode;
   metricLabels: readonly string[];
   saved: boolean;
+  storageAvailable: boolean;
   onChange: (next: Ql272PreferenceEnvelope) => void;
   onReset: () => void;
 }) {
@@ -44,7 +45,7 @@ export function Ql272LayoutControls({ preferences, mode, metricLabels, saved, on
     <div className="ql272-toolbar">
       <div className="ql272-toolbar-label">
         <span aria-hidden="true">▦</span>
-        <div><strong>{profile.label} layout</strong><small role="status" aria-live="polite" aria-atomic="true">{role.label} preview · {profile.density === 'compact' ? 'Compact' : 'Comfortable'} · {saved ? 'Saved on this device' : 'Storage unavailable — session only'}</small></div>
+        <div><strong>{profile.label} layout</strong><small role="status" aria-live="polite" aria-atomic="true">{role.label} preview · {profile.density === 'compact' ? 'Compact' : 'Comfortable'} · {saved ? 'Saved on this device' : storageAvailable ? 'No verified saved layout — safe defaults' : 'Storage unavailable — session only'}</small></div>
       </div>
       <div className="ql272-toolbar-actions">
         <span className="ql272-local-pill">LOCAL ONLY</span>
