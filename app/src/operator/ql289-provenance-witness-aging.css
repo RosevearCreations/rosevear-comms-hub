@@ -1,0 +1,15 @@
+.ql289-desk .ql277-heading{border-left:4px solid #c59de8}
+.ql289-desk .ql277-tabs button{min-height:44px}
+.ql289-gate-matrix{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:.65rem;margin:1rem 0 1.4rem}
+.ql289-gate-matrix>div{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto auto;align-items:start;gap:.4rem .65rem;border:1px solid var(--ops-border,#576373);background:rgba(91,103,143,.08);border-radius:.6rem;padding:.75rem;min-width:0}
+.ql289-gate-matrix b{grid-row:1/3;width:2rem;height:2rem;display:grid;place-items:center;border-radius:50%;background:#253759;color:#dce8ff;font-size:.78rem}
+.ql289-gate-matrix span{font-weight:700;line-height:1.4}
+.ql289-gate-matrix strong{font-size:.66rem;line-height:1.4;color:#efc67c;letter-spacing:.025em;overflow-wrap:anywhere}
+.ql289-desk .ql283-source-list{overflow-x:auto}
+.ql289-desk .ql283-source-row{min-width:650px}
+.ql289-desk .ql277-form-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr))}
+.ql289-desk .ql277-results article{overflow-wrap:anywhere}
+.ql289-desk :is(button,input,select,textarea,a):focus-visible{outline:3px solid #a5d9f2;outline-offset:3px}
+@media(max-width:720px){.ql289-gate-matrix{grid-template-columns:1fr}.ql289-desk .ql277-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.ql289-desk .ql277-tabs button{flex-basis:100%}}
+@media(prefers-reduced-motion:reduce){.ql289-desk :is(button,a){transition:none!important;animation:none!important}}
+@media(forced-colors:active){.ql289-desk .ql277-heading,.ql289-gate-matrix>div{border-color:CanvasText}.ql289-gate-matrix b{background:Canvas;color:CanvasText;border:1px solid CanvasText}.ql289-gate-matrix strong{color:CanvasText}.ql289-desk :is(button,input,select,textarea,a):focus-visible{outline-color:Highlight}}
