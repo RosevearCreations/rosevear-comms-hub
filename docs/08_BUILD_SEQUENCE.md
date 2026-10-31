@@ -1,12 +1,42 @@
 # 08 — Build Sequence
 
-This file tracks the completed Quo-lite build path and the next queued build.
+This file is the build-sequence entry point. The active future batch is listed below;
+older completed-build history and former queues remain preserved for reference.
 
-## Current queue (after QL-166)
+## Current active queue — QL-290 through QL-304
 
-The previous sequential queue ended at QL-163. A new seven-build batch has been scoped in [QL-164–170 Required Build Queue](QL-164-170-REQUIRED_BUILD_QUEUE.md).
+**Latest verified production baseline:** QL-289 at exact `main` commit
+`25ea142b23057af1fad9f6b6c4fe7097e5c5429c` (five production checks GREEN,
+live JS/CSS matching the tested bundle).
 
-QL-164 added synthetic owner-authorization regression tests. QL-165 pins six synthetic local fixtures. QL-166 repairs keyboard focus, screen-reader labelling, responsive layout and long-text overflow in the operator preview. After its promotion, the remaining scoped builds are **QL-167 through QL-170 (four)**. No build in this batch grants live communications or owner approval.
+**15 future builds are planned; 0/15 started or promoted in this new batch; 15 remain.**
+Next is **QL-290**. Follow the full, numbered feature scope, dependencies, test
+evidence and queue-count rules in **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)**.
+
+| Builds | Priority area | Count |
+| --- | --- | ---: |
+| QL-290 | Reviewer/custodian proof preconditions and six-source priority exceptions | 1 |
+| QL-291–294 | Operator usability: modern command cards, inbox, draft recovery and task shortcuts | 4 |
+| QL-295–298 | Communications: contact context, four-business intake, mock event timeline and IVR scenarios | 4 |
+| QL-299–300 | Accessibility owner walkthrough, keyboard preferences and saved-view recovery | 2 |
+| QL-301–302 | Management/Status dashboards and source-explained statistics | 2 |
+| QL-303–304 | Six-app safe integration readiness and end-to-end synthetic acceptance/queue closure | 2 |
+| **Total** | **Active planned batch** | **15** |
+
+**Scope restriction:** these are planned software improvements, **not** live
+provider or owner-evidence authorizations. The Six-App Acknowledgement Delivery
+Evidence workstream remains **UNDER_REVIEW / PARKED_FOR_LATER**, outside this
+active queue. All six integrations remain **DISCONNECTED / HOLD**, and real
+calls/SMS, source gateway GETs, private receipts and customer-data writes stay
+disabled pending genuine independent verification and separate TEST approval.
+
+### Archived queues
+
+- [QL-164–170 Required Build Queue](QL-164-170-REQUIRED_BUILD_QUEUE.md)
+- [QL-171–182 Required Build Queue](QL-171-182-REQUIRED_BUILD_QUEUE.md)
+
+The archived QL-166/QL-167–170 status and history belong to those older batches;
+they are not active future builds as of QL-289.
 
 ## Completed builds
 
