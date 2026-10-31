@@ -291,7 +291,7 @@ export function OperatorShell() {
       <a className="ql172-skip-link" href="#ql172-workspace">Skip to operator workspace</a>
       <header className="ql172-header">
         <div>
-          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-281</p>
+          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-282</p>
           <h1>Communications Command Centre</h1>
           <p>One control surface · four businesses · two supporting systems.</p>
         </div>

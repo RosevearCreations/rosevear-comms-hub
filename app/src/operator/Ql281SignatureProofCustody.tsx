@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,type Dispatch,type SetStateAction } from 'react';
 import { QL270_SOURCES,type Ql270SourceId } from './ql270ConnectionCentre';
 import { QL275_OWNER_CHECKS } from './ql275OperatorWalkthrough';
 import type { Ql279ArrivalClaim,Ql279EscalationDraft } from './ql279ReviewerCustodyEscalation';
@@ -15,15 +15,16 @@ import './ql281-signature-proof-custody.css';
 type Topic='signature'|'proof'|'custody';
 const appLabel=(source:Ql270SourceId)=>QL270_SOURCES.find(row=>row.id===source)?.label??source;
 
-export function Ql281SignatureProofCustody({reviewerReceipts,arrivalClaims,ackClaims,escalations,onOpenQl280,onOpenQl279,onOpenEvidence}:{
+export function Ql281SignatureProofCustody({reviewerReceipts,arrivalClaims,ackClaims,escalations,challengeRequests,setChallengeRequests,
+  onOpenQl280,onOpenQl279,onOpenEvidence}:{
   reviewerReceipts:readonly Ql280ReviewerReceiptClaim[];arrivalClaims:readonly Ql279ArrivalClaim[];
   ackClaims:readonly Ql280AckClaim[];escalations:readonly Ql279EscalationDraft[];
+  challengeRequests:Ql281ChallengeRequest[];setChallengeRequests:Dispatch<SetStateAction<Ql281ChallengeRequest[]>>;
   onOpenQl280:()=>void;onOpenQl279:()=>void;onOpenEvidence:()=>void;
 }) {
   const [topic,setTopic]=useState<Topic>('signature');
   const [chosenReceipt,setChosenReceipt]=useState('');
   const [challengeReference,setChallengeReference]=useState('');
-  const [challengeRequests,setChallengeRequests]=useState<Ql281ChallengeRequest[]>([]);
   const [chosenAck,setChosenAck]=useState('');
   const [custodyReference,setCustodyReference]=useState('');
   const [custodyRequests,setCustodyRequests]=useState<Ql281AckCustodyRequest[]>([]);
