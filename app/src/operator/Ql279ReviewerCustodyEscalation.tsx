@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type Dispatch, type SetStateAction } from 'react';
 import { QL270_SOURCES, type Ql270SourceId } from './ql270ConnectionCentre';
 import { QL275_OWNER_CHECKS } from './ql275OperatorWalkthrough';
 import { QL278_CUSTODY_PRECONDITIONS, type Ql278RetestTicket } from './ql278FollowupDesk';
@@ -15,21 +15,22 @@ type Topic='reviewer'|'arrival'|'escalation';
 
 /** QL-279 never authenticates a reviewer, custodian, signed artifact or TEST approval.
  * All operator drafts are memory-only and only copied by direct user action. */
-export function Ql279ReviewerCustodyEscalation({tickets,onOpenRetests,onOpenEvidence}: {
+export function Ql279ReviewerCustodyEscalation({tickets,onOpenRetests,onOpenEvidence,
+  reviewerDrafts,setReviewerDrafts,arrivalClaims,setArrivalClaims,escalations,setEscalations}: {
   tickets:readonly Ql278RetestTicket[];onOpenRetests:()=>void;onOpenEvidence:()=>void;
+  reviewerDrafts:Ql279ReviewerDraft[];setReviewerDrafts:Dispatch<SetStateAction<Ql279ReviewerDraft[]>>;
+  arrivalClaims:Ql279ArrivalClaim[];setArrivalClaims:Dispatch<SetStateAction<Ql279ArrivalClaim[]>>;
+  escalations:Ql279EscalationDraft[];setEscalations:Dispatch<SetStateAction<Ql279EscalationDraft[]>>;
 }) {
   const [topic,setTopic]=useState<Topic>('reviewer');
   const [selectedCheck,setSelectedCheck]=useState<Ql278RetestTicket['checkId']>('keyboard');
   const [reviewerReference,setReviewerReference]=useState('');
   const [reviewerDecision,setReviewerDecision]=useState<Ql279ReviewerDecision>('EVIDENCE_INCOMPLETE');
   const [reviewerNote,setReviewerNote]=useState('');
-  const [reviewerDrafts,setReviewerDrafts]=useState<Ql279ReviewerDraft[]>([]);
   const [source,setSource]=useState<Ql270SourceId>('rosiedazzlers');
   const [arrivalKind,setArrivalKind]=useState<Ql279ArrivalKind>('CUSTODIAN_ORIGINAL_RETURN_NOTICE');
   const [arrivalReference,setArrivalReference]=useState('');
-  const [arrivalClaims,setArrivalClaims]=useState<Ql279ArrivalClaim[]>([]);
   const [reason,setReason]=useState<Ql279EscalationReason>('PROOF_STILL_404');
-  const [escalations,setEscalations]=useState<Ql279EscalationDraft[]>([]);
   const [asOf,setAsOf]=useState(()=>new Date());
   const [feedback,setFeedback]=useState('No reviewer decision authenticated, no original artifact verified and no escalation sent.');
   const report=ql279SourceWatch(asOf);
