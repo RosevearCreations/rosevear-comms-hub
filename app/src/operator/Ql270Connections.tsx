@@ -7,6 +7,7 @@ import {QL270_SOURCES,ql270PrepareLocalPlan,
 import {QL274_OBSERVED_AT,QL274_PUBLIC_PROOF_RECHECK,ql274PinnedProofUrl} from './ql274CommandAudit';
 import {QL276_OBSERVED_AT,QL276_PUBLIC_SOURCE_RECHECK,ql276PinnedProofUrl} from './ql276EvidenceIntake';
 import {QL277_OBSERVED_AT,QL277_PUBLIC_SOURCE_RECHECK,ql277PinnedProofUrl} from './ql277DriftReview';
+import {QL278_OBSERVED_AT,QL278_PUBLIC_SOURCE_RECHECK,ql278PinnedProofUrl} from './ql278FollowupDesk';
 import './ql270-connections.css';
 
 export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspace)=>void}){
@@ -19,6 +20,7 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
   const recentProof=QL274_PUBLIC_PROOF_RECHECK.find(row=>row.source===selected);
   const latestProof=QL276_PUBLIC_SOURCE_RECHECK.find(row=>row.source===selected);
   const driftProof=QL277_PUBLIC_SOURCE_RECHECK.find(row=>row.source===selected);
+  const followupProof=QL278_PUBLIC_SOURCE_RECHECK.find(row=>row.source===selected);
   const readyDrafts=Object.values(planStatus).filter(x=>x?.tenantAliasValid).length;
 
   function prepare(){
@@ -56,7 +58,7 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
 
     <div className="ql270-metrics" aria-label="Real integration readiness">
       <article><span>Registered sources</span><strong>6 <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:'100%'}}/></div><small>Known repository mappings only</small></article>
-      <article><span>Signed proofs accepted</span><strong>0 <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:'0%'}}/></div><small>QL-277 public recheck: six HTTP 404s</small></article>
+      <article><span>Signed proofs accepted</span><strong>0 <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:'0%'}}/></div><small>QL-278 public recheck: six HTTP 404s</small></article>
       <article><span>Local TEST drafts</span><strong>{readyDrafts} <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:`${readyDrafts/6*100}%`}}/></div><small>Session-only plans, not connections</small></article>
       <article><span>Live pilot holds</span><strong>12 <small>/ 12</small></strong><div className="ql270-meter ql270-meter-alert"><i style={{width:'100%'}}/></div><small>Calls, messaging and dispatch OFF</small></article>
     </div>
@@ -126,7 +128,10 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
           <p>QL-277 public recheck ({new Date(QL277_OBSERVED_AT).toLocaleString('en-CA',{dateStyle:'medium',timeStyle:'short',timeZone:'America/Toronto'})} Eastern) at a newer immutable main commit <code>{driftProof?.sha.slice(0,12)}</code>: HTTP {driftProof?.http}. This source SHA changed since QL-276 and the original proof remains absent.</p>
           <a className="ql270-public-check ql274-public-pin" href={ql277PinnedProofUrl(selected)} target="_blank" rel="noopener noreferrer">
             Open immutable QL-277 drift proof check ↗</a>
-          <p className="ql270-public-result" role="status">Last verified snapshot: HTTP 404 (QL-270); QL-274 recheck: HTTP {recentProof?.http}; QL-276 historical recheck: HTTP {latestProof?.http}; latest dated public snapshot: HTTP {driftProof?.http} (QL-277) · DISCONNECTED / HOLD. Current response must be reviewed independently. A newer main ref or an aged snapshot requires another independent recheck.</p>
+          <p>QL-278 dated follow-up ({new Date(QL278_OBSERVED_AT).toLocaleString('en-CA',{dateStyle:'medium',timeStyle:'short',timeZone:'America/Toronto'})} Eastern): immutable main <code>{followupProof?.sha.slice(0,12)}</code> returned HTTP {followupProof?.http}. {followupProof?.sha === driftProof?.sha ? 'Main SHA unchanged since QL-277.' : 'Main SHA moved since QL-277.'} No original custody receipt was verified.</p>
+          <a className="ql270-public-check ql274-public-pin" href={ql278PinnedProofUrl(selected)} target="_blank" rel="noopener noreferrer">
+            Open immutable QL-278 Proof-B follow-up ↗</a>
+          <p className="ql270-public-result" role="status">Last verified snapshot: HTTP 404 (QL-270); QL-274: HTTP {recentProof?.http}; QL-276: HTTP {latestProof?.http}; QL-277: HTTP {driftProof?.http}; latest dated public snapshot: HTTP {followupProof?.http} (QL-278) · DISCONNECTED / HOLD. Current response must be reviewed independently. This is a historical public observation, not a live gateway heartbeat or cryptographic verification. Any newer main SHA or 24-hour snapshot aging needs another independent recheck.</p>
           <small>Even HTTP 200 would only confirm a file exists. It would not authenticate
             its signer, independent key pin, human witness, or tenant boundary.</small>
           <p><a href={`https://github.com/RosevearCreations/${sourceSnapshot?.repo}/tree/main`}
