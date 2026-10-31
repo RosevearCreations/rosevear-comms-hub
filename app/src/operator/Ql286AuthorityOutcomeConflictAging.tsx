@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState,type Dispatch,type SetStateAction} from 'react';
 import {QL270_SOURCES,type Ql270SourceId} from './ql270ConnectionCentre';
 import type {Ql279ArrivalClaim} from './ql279ReviewerCustodyEscalation';
 import type {Ql285AuthorityAudit,Ql285ProvenanceReview,Ql285DeltaWorkItem} from './ql285IssuerAuthorityProvenanceDelta';
@@ -22,9 +22,13 @@ type Filter='all'|'moved'|'unchanged';
 const nameFor=(id:Ql270SourceId)=>QL270_SOURCES.find(row=>row.id===id)?.label??id;
 
 export function Ql286AuthorityOutcomeConflictAging({authorityAudits,provenanceReviews,deltaWorkItems,
+  outcomeDrafts,setOutcomeDrafts,conflictDrafts,setConflictDrafts,agingDrafts,setAgingDrafts,
   arrivalClaims,onOpenQl285,onOpenEvidence}:{
   authorityAudits:readonly Ql285AuthorityAudit[];provenanceReviews:readonly Ql285ProvenanceReview[];
   deltaWorkItems:readonly Ql285DeltaWorkItem[];arrivalClaims:readonly Ql279ArrivalClaim[];
+  outcomeDrafts:Ql286OutcomeComparison[];setOutcomeDrafts:Dispatch<SetStateAction<Ql286OutcomeComparison[]>>;
+  conflictDrafts:Ql286ConflictFollowup[];setConflictDrafts:Dispatch<SetStateAction<Ql286ConflictFollowup[]>>;
+  agingDrafts:Ql286AgingFollowup[];setAgingDrafts:Dispatch<SetStateAction<Ql286AgingFollowup[]>>;
   onOpenQl285:()=>void;onOpenEvidence:()=>void;
 }) {
   const [topic,setTopic]=useState<Topic>('outcomes');
@@ -32,14 +36,11 @@ export function Ql286AuthorityOutcomeConflictAging({authorityAudits,provenanceRe
   const [selectedAudit,setSelectedAudit]=useState('');
   const [outcome,setOutcome]=useState<Ql286ReviewOutcome>('AUTHORITY_CHAIN_UNCORROBORATED');
   const [outcomeRef,setOutcomeRef]=useState('');
-  const [outcomeDrafts,setOutcomeDrafts]=useState<Ql286OutcomeComparison[]>([]);
   const [selectedProvenance,setSelectedProvenance]=useState<Ql270SourceId>('rosiedazzlers');
   const [conflict,setConflict]=useState<Ql286ProvenanceConflictType>('SOURCE_PIN_CHANGED');
   const [conflictRef,setConflictRef]=useState('');
-  const [conflictDrafts,setConflictDrafts]=useState<Ql286ConflictFollowup[]>([]);
   const [selectedDelta,setSelectedDelta]=useState<Ql270SourceId>('rosiedazzlers');
   const [agingRef,setAgingRef]=useState('');
-  const [agingDrafts,setAgingDrafts]=useState<Ql286AgingFollowup[]>([]);
   const [asOf,setAsOf]=useState(()=>new Date());
   const [feedback,setFeedback]=useState('QL-286 public observation: five source pins moved, one unchanged, and six original Proof-B paths remain HTTP 404. ACK delivery evidence stays parked Under Review.');
   const aging=ql286ExceptionAging(asOf,arrivalClaims,deltaWorkItems);
