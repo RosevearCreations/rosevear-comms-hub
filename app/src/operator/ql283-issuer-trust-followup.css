@@ -1,0 +1,17 @@
+.ql283-desk .ql283-timestamp-strip {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0;}
+.ql283-desk .ql283-timestamp-strip span {min-width:0;background:#18394c;border:1px solid #426981;border-radius:12px;padding:12px;color:#e7f8ff;font-size:.77rem;overflow-wrap:anywhere;}
+.ql283-desk .ql283-timestamp-strip strong {display:block;color:#95dfe2;font-size:.72rem;margin-bottom:7px;}
+.ql283-desk .ql283-source-list {display:grid;gap:5px;margin:16px 0 22px;}
+.ql283-desk .ql283-source-row {display:grid;grid-template-columns:minmax(130px,1.05fr) minmax(180px,1.25fr) minmax(160px,1fr) minmax(130px,.9fr);gap:12px;align-items:center;background:#1d3448;color:#e4f5fa;padding:13px 15px;border:1px solid #47687a;border-radius:10px;font-size:.76rem;}
+.ql283-desk .ql283-source-row.heading {background:#142e42;color:#bfe7ee;font-size:.69rem;font-weight:800;text-transform:uppercase;letter-spacing:.055em;}
+.ql283-desk .ql283-source-row code {color:#d4f5c4;font-size:.73rem;overflow-wrap:anywhere;}
+.ql283-desk .ql283-source-row b {color:#ffdf9c;}
+.ql283-desk .ql283-source-row small {display:block;color:#a7c7d7;margin-top:5px;}
+.ql283-desk .ql283-source-row a {color:#96e5ff;text-underline-offset:3px;}
+.ql283-desk .ql283-parked-note {border-color:#588e92;background:linear-gradient(145deg,#1b3646,#243c4a);}
+.ql283-desk .ql283-parked-note p {line-height:1.7;color:#d7eaed;}
+.ql283-desk button:focus-visible,.ql283-desk select:focus-visible,.ql283-desk input:focus-visible,.ql283-desk textarea:focus-visible,.ql283-desk a:focus-visible {outline:3px solid #8cf4ee;outline-offset:3px;}
+@media(max-width:1080px){.ql283-desk .ql283-timestamp-strip{grid-template-columns:repeat(2,minmax(0,1fr));}.ql283-desk .ql283-source-row{grid-template-columns:minmax(120px,1fr) minmax(165px,1fr);}.ql283-desk .ql283-source-row.heading{display:none;}}
+@media(max-width:600px){.ql283-desk .ql283-timestamp-strip{grid-template-columns:1fr;}.ql283-desk .ql283-source-row{grid-template-columns:1fr;}.ql283-desk .ql283-source-row> *{min-width:0;}}
+@media(forced-colors:active){.ql283-desk .ql283-source-row,.ql283-desk .ql283-timestamp-strip span,.ql283-desk .ql283-parked-note{background:Canvas;color:CanvasText;border:2px solid CanvasText;}}
+@media(prefers-reduced-motion:reduce){.ql283-desk *,.ql283-desk *::before,.ql283-desk *::after{animation:none!important;transition:none!important;}}
