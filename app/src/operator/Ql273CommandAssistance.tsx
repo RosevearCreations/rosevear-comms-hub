@@ -4,18 +4,21 @@ import { inspectQl272LocalLayout } from '../storage/localRepository';
 import { defaultQl272Preferences, type Ql272PreferenceEnvelope } from './ql272LayoutPreferences';
 import { QL273_METRIC_HELP, QL273_SHORTCUTS, QL273_VIEW_HELP,
   auditQl273SavedView, ql273ShortcutMode, savedQl273Preferences } from './ql273CommandHelp';
+import { Ql274CommandReview } from './Ql274CommandReview';
 import './ql273-assistance.css';
 
-type AssistancePanel = 'help' | 'shortcuts' | 'audit' | null;
+type AssistancePanel = 'help' | 'shortcuts' | 'audit' | 'review' | null;
 
 function editableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return false;
   return Boolean(target.closest('input, select, textarea, [contenteditable="true"], [role="textbox"]'));
 }
 
-export function Ql273CommandAssistance({ mode, onNavigate, onRestore, onReset }: {
+export function Ql273CommandAssistance({ mode, preferences, onNavigate, onOpenEvidence, onRestore, onReset }: {
   mode: Ql271CommandMode;
+  preferences: Ql272PreferenceEnvelope;
   onNavigate: (mode: Ql271CommandMode) => void;
+  onOpenEvidence: () => void;
   onRestore: (preferences: Ql272PreferenceEnvelope) => void;
   onReset: (preferences: Ql272PreferenceEnvelope) => void;
 }) {
@@ -77,6 +80,7 @@ export function Ql273CommandAssistance({ mode, onNavigate, onRestore, onReset }:
         <button type="button" aria-expanded={panel === 'help'} aria-controls="ql273-help" onClick={() => toggle('help')}>ⓘ Help for this view</button>
         <button type="button" aria-expanded={panel === 'shortcuts'} aria-controls="ql273-shortcuts" onClick={() => toggle('shortcuts')}>⌨ Keyboard shortcuts</button>
         <button type="button" aria-expanded={panel === 'audit'} aria-controls="ql273-audit" onClick={() => toggle('audit')}>◷ Saved view audit</button>
+        <button type="button" aria-expanded={panel === 'review'} aria-controls="ql274-review" onClick={() => toggle('review')}>✓ Help &amp; proof review</button>
       </div>
     </div>
     {panel === 'help' && <div id="ql273-help" className="ql273-assist-panel" role="region" aria-label="Help for this command view">
@@ -101,6 +105,9 @@ export function Ql273CommandAssistance({ mode, onNavigate, onRestore, onReset }:
       <p className="ql273-recovery-event" aria-live="polite">Latest local action: {action}</p>
       <p className="ql273-held-note">No layout record contains or grants secrets, roles, Proof-B acceptance, tenant access, authenticated GETs, live calls or SMS.</p>
     </div>}
+    {panel === 'review' && <div id="ql274-review" className="ql273-assist-panel" role="region" aria-label="QL-274 command help and proof assurance review">
+      <Ql274CommandReview preferences={preferences} onOpenEvidence={onOpenEvidence} />
+    </div>}
   </section>;
 }
 
@@ -110,6 +117,6 @@ export function Ql273MetricHelp({ mode, index, label }: { mode: Ql271CommandMode
   return <>
     <button type="button" className="ql273-metric-help" aria-label={`Help about ${label}`} aria-expanded={open} aria-controls={id}
       onClick={() => setOpen(value => !value)}>ⓘ</button>
-    {open && <p id={id} role="note" className="ql273-metric-explanation">{QL273_METRIC_HELP[mode][index]}</p>}
+    {open && <p id={id} role="note" aria-live="polite" className="ql273-metric-explanation">{QL273_METRIC_HELP[mode][index]}</p>}
   </>;
 }
