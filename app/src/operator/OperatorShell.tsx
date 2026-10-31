@@ -23,6 +23,7 @@ import { Ql190IndependentReviewPacketPreview } from './Ql190IndependentReviewPac
 import { Ql191OperatorDashboard } from './Ql191OperatorDashboard';
 import { Ql191AdditionalOrganizationPreview } from './Ql191AdditionalOrganizationPreview';
 import { Ql192UnifiedInbox } from './Ql192UnifiedInbox';
+import { emptyInboxTriagePresets, type InboxTriagePresets } from './ql292InboxTriage';
 import { Ql193Customer360 } from './Ql193Customer360';
 import { Ql194FollowUpQueue } from './Ql194FollowUpQueue';
 import { Ql195PhoneDesk } from './Ql195PhoneDesk';
@@ -199,6 +200,7 @@ export function OperatorShell() {
   const [queueJump, setQueueJump] = useState<string | null>(null);
   const [composerJump, setComposerJump] = useState<string | null>(null);
   const [queueState, setQueueState] = useState<MockQueueState>(() => seedQueueForOrganization(firstOrganization));
+  const [inboxTriagePresets, setInboxTriagePresets] = useState<InboxTriagePresets>(emptyInboxTriagePresets);
   const [trialLedger, setTrialLedger] = useState<Ql211Ledger>({});
   const [repairLedger, setRepairLedger] = useState<Ql212Ledger>({});
   const [reviewLedger, setReviewLedger] = useState<Ql213Ledger>({});
@@ -250,6 +252,7 @@ export function OperatorShell() {
       setQueueJump(null);
       setComposerJump(null);
       setQueueState(seedQueueForOrganization(nextOrganization));
+      setInboxTriagePresets(emptyInboxTriagePresets());
       setReminderIds(new Set());
     }
     setOrganizationId(nextOrganization);
@@ -291,7 +294,7 @@ export function OperatorShell() {
       <a className="ql172-skip-link" href="#ql172-workspace">Skip to operator workspace</a>
       <header className="ql172-header">
         <div>
-          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-291</p>
+          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-292</p>
           <h1>Communications Command Centre</h1>
           <p>One control surface · four businesses · two supporting systems.</p>
         </div>
@@ -362,7 +365,7 @@ export function OperatorShell() {
           {workspace === 'inbox' && (
             <>
               <p className="ql172-local-warning" role="note">QL-192 is a synthetic unified inbox. Do not enter real names, phone numbers, messages, or owner decisions. No communications are sent or saved.</p>
-              <Ql192UnifiedInbox key={`unified-inbox-${organization.id}-${threadJump ?? 'default'}`} organization={organization} initialThreadId={threadJump} onOpenContact={openCustomer} onOpenQueue={openQueue} onOpenComposer={openComposer} />
+              <Ql192UnifiedInbox key={`unified-inbox-${organization.id}-${threadJump ?? 'default'}`} organization={organization} initialThreadId={threadJump} onOpenContact={openCustomer} onOpenQueue={openQueue} onOpenComposer={openComposer} presets={inboxTriagePresets} onSavePreset={(slot, preset) => setInboxTriagePresets((previous) => ({ ...previous, [slot]: preset }))} />
               {brandId !== null && (
                 <section className="ql192-legacy-tools" aria-label="Historical browser-local inbox tools">
                   <button type="button" aria-expanded={showLegacyTools} aria-controls="ql192-legacy-panel" onClick={() => setShowLegacyTools((open) => !open)}>{showLegacyTools ? 'Hide' : 'Open'} historical QL-004 local demo tools</button>
