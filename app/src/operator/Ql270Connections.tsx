@@ -5,6 +5,7 @@ import {QL270_SOURCES,ql270PrepareLocalPlan,
   type Ql270SourceId}
   from './ql270ConnectionCentre';
 import {QL274_OBSERVED_AT,QL274_PUBLIC_PROOF_RECHECK,ql274PinnedProofUrl} from './ql274CommandAudit';
+import {QL276_OBSERVED_AT,QL276_PUBLIC_SOURCE_RECHECK,ql276PinnedProofUrl} from './ql276EvidenceIntake';
 import './ql270-connections.css';
 
 export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspace)=>void}){
@@ -15,6 +16,7 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
   const source=QL270_SOURCES.find(row=>row.id===selected)??QL270_SOURCES[0];
   const sourceSnapshot=QL270_PROOF_SNAPSHOT.find(row=>row.source===selected);
   const recentProof=QL274_PUBLIC_PROOF_RECHECK.find(row=>row.source===selected);
+  const latestProof=QL276_PUBLIC_SOURCE_RECHECK.find(row=>row.source===selected);
   const readyDrafts=Object.values(planStatus).filter(x=>x?.tenantAliasValid).length;
 
   function prepare(){
@@ -52,7 +54,7 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
 
     <div className="ql270-metrics" aria-label="Real integration readiness">
       <article><span>Registered sources</span><strong>6 <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:'100%'}}/></div><small>Known repository mappings only</small></article>
-      <article><span>Signed proofs accepted</span><strong>0 <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:'0%'}}/></div><small>QL-274 public recheck: six HTTP 404s</small></article>
+      <article><span>Signed proofs accepted</span><strong>0 <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:'0%'}}/></div><small>QL-276 public recheck: six HTTP 404s</small></article>
       <article><span>Local TEST drafts</span><strong>{readyDrafts} <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:`${readyDrafts/6*100}%`}}/></div><small>Session-only plans, not connections</small></article>
       <article><span>Live pilot holds</span><strong>12 <small>/ 12</small></strong><div className="ql270-meter ql270-meter-alert"><i style={{width:'100%'}}/></div><small>Calls, messaging and dispatch OFF</small></article>
     </div>
@@ -116,7 +118,10 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
             Open current public Proof-B source ↗</a>
           <a className="ql270-public-check ql274-public-pin" href={ql274PinnedProofUrl(selected)} target="_blank" rel="noopener noreferrer">
             Open immutable QL-274 proof check ↗</a>
-          <p className="ql270-public-result" role="status">Last verified snapshot: HTTP 404 (QL-270). Latest dated public snapshot: HTTP {recentProof?.http} (QL-274) · DISCONNECTED / HOLD. Current response must be reviewed independently. A newer main ref or an aged snapshot requires another independent recheck.</p>
+          <p>QL-276 public recheck ({new Date(QL276_OBSERVED_AT).toLocaleString('en-CA',{dateStyle:'medium',timeStyle:'short',timeZone:'America/Toronto'})} Eastern) at <code>{latestProof?.sha.slice(0,12)}</code>: HTTP {latestProof?.http}. This reflects a newly checked immutable main commit, not live access to the source app.</p>
+          <a className="ql270-public-check ql274-public-pin" href={ql276PinnedProofUrl(selected)} target="_blank" rel="noopener noreferrer">
+            Open immutable QL-276 proof check ↗</a>
+          <p className="ql270-public-result" role="status">Last verified snapshot: HTTP 404 (QL-270); QL-274 historical recheck: HTTP {recentProof?.http}; latest dated public snapshot: HTTP {latestProof?.http} (QL-276) · DISCONNECTED / HOLD. Current response must be reviewed independently. A newer main ref or an aged snapshot requires another independent recheck.</p>
           <small>Even HTTP 200 would only confirm a file exists. It would not authenticate
             its signer, independent key pin, human witness, or tenant boundary.</small>
           <p><a href={`https://github.com/RosevearCreations/${sourceSnapshot?.repo}/tree/main`}
