@@ -11,7 +11,9 @@
 ## Verification and release gate
 
 Focused test: `app/src/operator/__tests__/ql296GuidedIntake.test.tsx`.
-Full app tests, TypeScript, QL-171 security baseline and production Vite build are required before merge. `dev` and exact `main` Git checks plus Worker live asset-byte comparison are required before any Production GREEN claim.
+**Production GREEN:** 1,099/1,099 app tests, TypeScript, QL-171 security baseline and 494-module production Vite build all passed. Feature tree `8c0619d9b3d5bf407990d37569435eb75855669b` was applied to `dev`; [PR #566](https://github.com/RosevearCreations/rosevear-comms-hub/pull/566) merged to exact `main` code commit `ea2200a9bf579a730cecde3118ab493e94cd30a4`.
+
+All five exact-main GitHub checks succeeded: `app-build`, `Workers Builds: rosevear-comms-hub`, `Build disabled preview`, `Deploy disabled preview`, and `Supabase Preview`. Public Worker `https://rosevear-comms-hub.devilndovelive.workers.dev/` served `index-3p0LZqmz.js` with SHA-256 `783bce43ca9b85296d62e4a8953de474ca1695b6f27be46c12afcf4654e2f594` and `index-Pp4gZ0QQ.css` with SHA-256 `47039213c070acf3b8a229c32953c5370a4aad8ed6e5b5f469acdf802022c769`; both were byte-identical to the tested local production bundle.
 
 Next queued after verified release: **QL-297 — Omnichannel Event Timeline Simulator, Delivery Error States & Replay Recovery**.
 
