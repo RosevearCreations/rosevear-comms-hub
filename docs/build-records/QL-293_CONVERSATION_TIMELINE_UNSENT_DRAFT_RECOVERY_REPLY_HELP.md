@@ -25,8 +25,18 @@
 - `npm --prefix app run check`, `npm --prefix app run test`, `node scripts/__tests__/ql171-operator-baseline.test.mjs`, `npm --prefix app run build`.
 - Exact tested Git tree through guarded feature → `dev` → `main` merges, five successful production checks on the exact code `main` SHA, and downloaded public Worker JS/CSS SHA-256 matching the local build before **Production GREEN**.
 
+## Verified release receipt — Production GREEN
+
+- **Local verification:** `npm run verify:ql293` passed 358 focused results (220 QL-289, 16 QL-290, 33 QL-291, 51 QL-292, 38 QL-293/176/192/196). `npm --prefix app run test` passed 1,078 application tests in 110 files; TypeScript check passed; the QL-171 security baseline passed 10 checks; and Vite production build passed (489 modules).
+- **Exact tested source tree:** `70e924dc64d909a6765c9d1071fa519cfe5cac53`, unchanged in feature, `dev` and `main` merge commits.
+- **Feature → `dev`:** [PR #554](https://github.com/RosevearCreations/rosevear-comms-hub/pull/554), exact `dev` merge commit `e2f941742756f6a2e21252bad38b1de9474e1d3a`, with app-build and Workers checks successful.
+- **`dev` → `main`:** [PR #555](https://github.com/RosevearCreations/rosevear-comms-hub/pull/555), exact production code commit `bcf380802f6ded7d7f4bc8b9edb2ed973e3fbcb2`.
+- **Exact-main production checks:** all five successful: `app-build`, `Workers Builds: rosevear-comms-hub`, `Build disabled preview`, `Deploy disabled preview`, `Supabase Preview`.
+- **Live Worker:** `https://rosevear-comms-hub.devilndovelive.workers.dev/` served `assets/index-EXzhHpOa.js` with SHA-256 `2f25478430ee406263ada645e4c78ca00d0ebdc89b8b4abaabac9666a7fcaec6` and `assets/index-ClLX03ET.css` with SHA-256 `529a8a71ecda1909ce9d7775f75a0bb40495b622294dbafaed6154b9396c62c1`, byte-identical to the locally tested production bundle.
+- **Queue state:** QL-293 is the fourth of 15 active builds verified Production GREEN. **4/15 GREEN, 11 remaining, QL-294 next.** No real owner receipt, original Proof-B, external ACK, live provider or authenticated source permission has been newly verified.
+
 ## Next queued build
 
 **QL-294 — Assignment Worklists, Operator Handoff Summaries & Accessible Command Shortcuts.** Create coherent fictional task ownership, follow-up and handoff flows with keyboard discoverability, without changing real staff, provider systems or customer data.
 
-See [the active QL-290–304 build queue](../QL-290-304-REQUIRED_BUILD_QUEUE.md). QL-294 becomes the next release only after QL-293 has a verified GREEN production receipt.
+See [the active QL-290–304 build queue](../QL-290-304-REQUIRED_BUILD_QUEUE.md). QL-294 is now next because QL-293 has a verified GREEN production receipt.
