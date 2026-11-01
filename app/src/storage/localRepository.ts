@@ -1,4 +1,5 @@
 import { seedDb } from '../data/seedData';
+import { parseQl272Preferences } from '../operator/ql272LayoutPreferences';
 import type {
   BrandId,
   Contact,
@@ -40,6 +41,9 @@ export function saveQl272LocalLayout(value: unknown): boolean {
   if (typeof window === 'undefined') return false;
   try {
     const serialized = JSON.stringify(value);
+    // Reuse the reviewed v1 schema; never persist altered roles, extra fields,
+    // unknown versions or tenant/customer identifiers as a layout profile.
+    if (JSON.stringify(parseQl272Preferences(value)) !== serialized) return false;
     if (serialized.length > 12000) return false;
     window.localStorage.setItem(QL272_LAYOUT_KEY, serialized);
     return true;
