@@ -16,9 +16,9 @@ describe('QL-270 modern categorized operator shell',()=>{
     const groups=[...host.querySelectorAll<HTMLDetailsElement>('.ql172-nav-group')];
     expect(groups).toHaveLength(5);
     expect(groups.map(g=>g.querySelector('summary')?.textContent)).toEqual([
-      'Operations10','IT & Connections6','Management & Reviews5','Analytics & Status2','Advanced / Historical33']);
+      'Operations11','IT & Connections6','Management & Reviews5','Analytics & Status2','Advanced / Historical34']);
     expect(groups.map(g=>g.open)).toEqual([true,true,false,true,false]);
-    expect(host.querySelectorAll('.ql172-nav-button')).toHaveLength(56);
+    expect(host.querySelectorAll('.ql172-nav-button')).toHaveLength(58);
     expect(host.querySelectorAll('.ql172-brand')).toHaveLength(4);
     expect(host.querySelector('.ql172-nav-search')).not.toBeNull();
   });
