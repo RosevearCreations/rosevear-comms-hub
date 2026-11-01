@@ -25,7 +25,14 @@
 - Full application suite, TypeScript, QL-171 security baseline and production Vite build.
 - Exact tested Git tree through guarded feature → `dev` → `main` merges; five successful production checks on the exact `main` code commit; public Worker JS/CSS SHA-256 identical to the tested local files.
 
-**Release receipt:** pending verification and promotion; no GREEN assertion until the exact `main` and live Worker gates succeed.
+## Verified release receipt — Production GREEN
+
+- **Exact tested Git tree:** `ae81a3dd0b99eae64fe572fef2126fce272dde1f`, unchanged through feature, `dev` and `main` merge.
+- **Feature → `dev`:** [PR #562](https://github.com/RosevearCreations/rosevear-comms-hub/pull/562), `dev` merge `0c248026927d8508b1310930be4528141abfe4b8`, both app-build and Workers checks successful.
+- **`dev` → `main`:** [PR #563](https://github.com/RosevearCreations/rosevear-comms-hub/pull/563), production code commit `20756ec58d7721f541ca4332b74b4c7bc4f16eac`.
+- **Exact-main production checks:** five successful: `app-build`, `Workers Builds: rosevear-comms-hub`, `Build disabled preview`, `Deploy disabled preview`, `Supabase Preview`.
+- **Live Worker:** `https://rosevear-comms-hub.devilndovelive.workers.dev/` served `assets/index-Ca8tQ2IF.js` (SHA-256 `35acf196cda5f4cb94c62f9abd02f509b1a3fbedd15024ddeb5b4aed5353e41d`) and `assets/index-D6QbZfYj.css` (SHA-256 `0a428a09c83679fdd41ca9eb72012038f8885525a78023fce647ead94c722a2d`), byte-identical to the tested local production build.
+- **Queue outcome:** 6/15 Production GREEN; 9 builds remain; QL-296 next. Six apps DISCONNECTED/HOLD; ACK delivery evidence UNDER_REVIEW/PARKED_FOR_LATER.
 
 **Completed local gates:** `verify:ql295` passed **436** focused assertions (220 QL-289; 16 QL-290; 33 QL-291; 51 QL-292; 38 QL-293; 33 QL-294; 45 QL-295/193/194/293). Full application suite passed **1,093 tests in 112 files**; TypeScript check, 10/10 QL-171 security baseline and Vite production build (491 modules) all passed. Local JS `index-Ca8tQ2IF.js` SHA-256 `35acf196cda5f4cb94c62f9abd02f509b1a3fbedd15024ddeb5b4aed5353e41d`; CSS `index-D6QbZfYj.css` SHA-256 `0a428a09c83679fdd41ca9eb72012038f8885525a78023fce647ead94c722a2d`.
 

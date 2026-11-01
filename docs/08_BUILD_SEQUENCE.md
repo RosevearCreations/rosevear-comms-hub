@@ -5,12 +5,12 @@ older completed-build history and former queues remain preserved for reference.
 
 ## Current active queue — QL-290 through QL-304
 
-**Latest verified production release:** QL-294 at exact `main` code commit
-`3fb6f1fedc82fbae7a5d5100f51d4662078857f3` (five production checks GREEN;
+**Latest verified production release:** QL-295 at exact `main` code commit
+`20756ec58d7721f541ca4332b74b4c7bc4f16eac` (five production checks GREEN;
 live JS/CSS SHA-256 matching the tested bundle).
 
-**15 builds are in the active batch; 5/15 Production GREEN; 10 remain.**
-Next is **QL-295 — Brand-Safe Contact 360, Consent Context & Duplicate Review.** Follow the full, numbered feature scope, dependencies, test
+**15 builds are in the active batch; 6/15 Production GREEN; 9 remain.**
+Next is **QL-296 — Guided Four-Business Intake Cards & Quote Handoff Preview.** Follow the full, numbered feature scope, dependencies, test
 evidence and queue-count rules in **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)**.
 
 | Builds | Priority area | Count |
