@@ -5,12 +5,12 @@ older completed-build history and former queues remain preserved for reference.
 
 ## Current active queue — QL-290 through QL-304
 
-**Latest verified production release:** QL-297 at exact `main` code commit
-`7e012c8850e4fc71555b61dc3dbc6249bf074110` (five production checks GREEN;
+**Latest verified production release:** QL-298 at exact `main` code commit
+`e10cb57ef76154a978cf9daa778a214dea2862bd` (five production checks GREEN;
 live JS/CSS SHA-256 matching the tested bundle).
 
-**15 builds are in the active batch; 8/15 Production GREEN; 7 remain.**
-Next is **QL-298 — Multi-Line Routing & IVR Scenario Studio with Safe Fallback Review.** Follow the full, numbered feature scope, dependencies, test
+**15 builds are in the active batch; 9/15 Production GREEN; 6 remain.**
+Next is **QL-299 — Operator Accessibility Owner Walkthrough & Cross-Device Regression Queue.** Follow the full, numbered feature scope, dependencies, test
 evidence and queue-count rules in **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)**.
 
 | Builds | Priority area | Count |

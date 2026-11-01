@@ -1,8 +1,8 @@
 # Rosevear Comms Hub — active 15-build batch (QL-290–QL-304)
 
-**Planning baseline:** QL-289–296 are verified in their individual release records. QL-297 is **Production GREEN** at exact `main` code commit `7e012c8850e4fc71555b61dc3dbc6249bf074110`, with five successful production checks and matching live JS/CSS SHA-256. The next build is **QL-298**. Planning the remaining builds is not evidence that they have been implemented or approved for real communications.
+**Planning baseline:** QL-289–297 are verified in their individual release records. QL-298 is **Production GREEN** at exact `main` code commit `e10cb57ef76154a978cf9daa778a214dea2862bd`, with five successful production checks and matching live JS/CSS SHA-256. The next build is **QL-299**. Planning the remaining builds is not evidence that they have been implemented or approved for real communications.
 
-**Queue accounting:** 15 planned; **8/15 Production GREEN** in this batch; **7 remaining**. After each completed build, update the count, its exact-main release record and the next queued item in `08_BUILD_SEQUENCE.md`. Do not decrement the remaining count for a PR, local test, preview deployment or simulated approval alone.
+**Queue accounting:** 15 planned; **9/15 Production GREEN** in this batch; **6 remaining**. After each completed build, update the count, its exact-main release record and the next queued item in `08_BUILD_SEQUENCE.md`. Do not decrement the remaining count for a PR, local test, preview deployment or simulated approval alone.
 
 ## Product outcome
 
@@ -22,7 +22,7 @@ The four customer-facing business contexts are Rosie Dazzlers, Devil n Dove, Yar
 | **QL-295 — Brand-Safe Contact 360, Consent Context & Duplicate Review** · **Production GREEN** | Communications workflow | Completed: company-scoped linked conversation/assignment context, per-source restrictive opt-out/service-only/unknown consent readback, four explicitly fictional duplicate-candidate reviews with no confirmed matches, and five denied live-contact capabilities. | 1,093 app tests, 436 focused results, TypeScript, security baseline and production build passed. Exact-main code `20756ec58d7721f541ca4332b74b4c7bc4f16eac` 5/5 production checks GREEN; live JS/CSS SHA-256 match tested bundle. No customer ingestion, merge, consent write, outbound send or added persistence. [Release record](build-records/QL-295_BRAND_SAFE_CONTACT_CONSENT_DUPLICATE_REVIEW.md). |
 | **QL-296 — Guided Four-Business Intake Cards & Quote Handoff Preview** · **Production GREEN** | Communications workflow | Completed: four company-specific synthetic guided inquiry cards and validated UNSENT internal review handoff previews. | 1,099 app tests, TypeScript, security baseline, production build passed; exact-main `ea2200a9bf579a730cecde3118ab493e94cd30a4` 5/5 checks GREEN with byte-identical public Worker JS/CSS. No bookings, quotes, payments or customer export. [Release record](build-records/QL-296_GUIDED_FOUR_BUSINESS_INTAKE_QUOTE_HANDOFF.md). |
 | **QL-297 — Omnichannel Event Timeline Simulator, Delivery Error States & Replay Recovery** · **Production GREEN** | Communications workflow | Completed: four-business five-channel fixture timeline, deterministic source readback, idempotent local replay and single-step failed-event recovery. | 1,105 tests, TypeScript/security/build passed; exact-main `7e012c8850e4fc71555b61dc3dbc6249bf074110` 5/5 checks GREEN with byte-identical Worker assets. No phone provider, email account, webhook, external message or callback activation. [Release record](build-records/QL-297_OMNICHANNEL_EVENT_TIMELINE_REPLAY_RECOVERY.md). |
-| **QL-298 — Multi-Line Routing & IVR Scenario Studio with Safe Fallback Review** | Communications workflow | Provide a visual preview of per-business lines, hours, menu options, missed calls, voicemail and wrong-destination fallbacks. Let owners compare safe routing scenarios without changing a carrier. | Deterministic scenario tests for invalid keys, no answer, cross-brand ambiguity and time windows; no number purchase, forwarding, SIP, DTMF to live service or telephony configuration. |
+| **QL-298 — Multi-Line Routing & IVR Scenario Studio with Safe Fallback Review** · **Production GREEN** | Communications workflow | Completed: side-by-side four-business demo line, menu, opening-hours and fallback comparison with fail-closed tenant routing. | 1,111 tests, TypeScript/security/build passed; exact-main `e10cb57ef76154a978cf9daa778a214dea2862bd` 5/5 checks GREEN and live JS/CSS byte-identical. No number purchase, forwarding, SIP, live DTMF or telephony configuration. [Release record](build-records/QL-298_FOUR_BUSINESS_ROUTING_IVR_FALLBACK_STUDIO.md). |
 | **QL-299 — Operator Accessibility Owner Walkthrough & Cross-Device Regression Queue** | Accessibility | Audit the rebuilt operator surfaces on desktop, tablet and mobile; organize owner-observed keyboard, focus, contrast, text-zoom and screen-reader defects with local review dispositions. | Reproducible accessibility checks and regression tests; owner findings remain **unverified until actually recorded**, and no simulated sign-off becomes accepted evidence. |
 | **QL-300 — Preference Accessibility, Shortcut Discoverability & Saved-View Recovery Acceptance** | Accessibility | Polish reduced-motion/forced-colors support, command help, shortcuts, density options and safe recovery of supported preference profiles across navigation and refresh. | Robust storage-version/tamper/invalid-profile recovery tests, focus preservation and keyboard-only review; no new unreviewed browser persistence or private data retention. |
 | **QL-301 — Management Command Dashboard, Ownership Workload & Incident Status Cards** | Management dashboard | Build modern, dense Management and Status command cards showing synthetic assignments, blocked handoffs, workload, incident age and review checkpoints. Provide drill-down links to relevant operator views. | Metrics derived from labeled synthetic fixtures, consistent counting and role-safe detail; responsive cards, readable statuses and no fabricated live operational totals. |
@@ -32,7 +32,7 @@ The four customer-facing business contexts are Rosie Dazzlers, Devil n Dove, Yar
 
 ## Dependencies and priority
 
-1. **QL-290 through QL-297 are complete**, without extending or restarting the parked ACK delivery workstream. **QL-298 is next**.
+1. **QL-290 through QL-298 are complete**, without extending or restarting the parked ACK delivery workstream. **QL-299 is next**.
 2. **QL-291–294** establish usable operator navigation, inbox, drafts and assignments; **QL-295–298** complete connected-looking *synthetic* customer and channel journeys without activating providers.
 3. **QL-299–300** validate accessibility and preference recovery against those completed screens; **QL-301–302** build management and statistics views on explicit fixture-backed outcomes.
 4. **QL-303** consolidates source-gate readiness without bypassing it. **QL-304** performs end-to-end acceptance and reconciles the next batch; it does not itself authorize a live pilot.
@@ -45,10 +45,10 @@ The four customer-facing business contexts are Rosie Dazzlers, Devil n Dove, Yar
 - **No unreviewed persistence:** use existing reviewed local preference storage only for allowed layout settings; do not silently introduce private data into localStorage, a database, telemetry or exports.
 - **One guarded release per build:** focused tests, full app tests, security baseline, production build, exact feature→`dev`→`main` Git tree, and five successful checks on the **exact `main` commit**. Confirm the public Worker serves the same JS/CSS bytes before announcing **Production GREEN**. Record the release SHA and next queue status after completion.
 
-## Queue ledger (verified after QL-297)
+## Queue ledger (verified after QL-298)
 
 | Range | Planned | Production GREEN in this batch | Remaining | Next |
 | --- | ---: | ---: | ---: | --- |
-| QL-290–304 | **15** | **8** | **7** | **QL-298** |
+| QL-290–304 | **15** | **9** | **6** | **QL-299** |
 
 This is the **active future queue**. Previous historical queues (`QL-164–170` and `QL-171–182`) remain archived as records of their original scopes. The source-of-truth entry point is [`08_BUILD_SEQUENCE.md`](08_BUILD_SEQUENCE.md).
