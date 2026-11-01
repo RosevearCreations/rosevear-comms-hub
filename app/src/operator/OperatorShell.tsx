@@ -7,6 +7,7 @@ import { Ql174BrandSafeTriagePreview } from './Ql174BrandSafeTriagePreview';
 import { Ql175ContactContextPreview } from './Ql175ContactContextPreview';
 import { Ql176ConversationTimelinePreview } from './Ql176ConversationTimelinePreview';
 import { Ql177BrandIntakeHandoffPreview } from './Ql177BrandIntakeHandoffPreview';
+import { Ql296GuidedIntake } from './Ql296GuidedIntake';
 import { Ql178OperatorTaskSimulation } from './Ql178OperatorTaskSimulation';
 import { Ql179PhoneSmsEventEmulator } from './Ql179PhoneSmsEventEmulator';
 import { Ql180RoutingIvrPreview } from './Ql180RoutingIvrPreview';
@@ -113,6 +114,7 @@ import type { Ql183Feedback } from './ql183OperatorUsabilityAcceptance';
 import './operator-shell.css';
 
 const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; description: string }> = [
+  { id: 'guided_intake', label: 'Guided intake & quote review', description: 'Four company-specific fictional inquiry cards and unsent handoff previews' },
   { id: 'dashboard', label: 'Dashboard', description: 'Company overview, synthetic activity and quick navigation' },
   { id: 'connections', label: 'Connections · six apps', description: 'Six-app topology, nonproduction TEST profile planning, public proof status and the independent GET release gates' },
   { id: 'it_command', label: 'IT Command', description: 'Six-app source registry, independent proof status and safe connection release controls' },
@@ -171,7 +173,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
  * collapsed categories until requested. No permission or feature is removed. */
 const NAVIGATION_GROUPS = [
   {id:'operations',label:'Operations',hint:'Daily workspaces',primary:true,
-    ids:['dashboard','inbox','contacts','queue','phone','composer','calendar','reports']},
+    ids:['dashboard','inbox','contacts','guided_intake','queue','phone','composer','calendar','reports']},
   {id:'it',label:'IT & Connections',hint:'Six-app setup and evidence',primary:true,
     ids:['it_command','connections','connectors','six_app_evidence','connection_testing','integration_options']},
   {id:'admin',label:'Management & Reviews',hint:'Company oversight, safety, trial and audits',primary:false,
@@ -311,7 +313,7 @@ export function OperatorShell() {
       <a className="ql172-skip-link" href="#ql172-workspace">Skip to operator workspace</a>
       <header className="ql172-header">
         <div>
-          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-295</p>
+          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-296</p>
           <h1>Communications Command Centre</h1>
           <p>One control surface · four businesses · two supporting systems.</p>
         </div>
@@ -404,6 +406,7 @@ export function OperatorShell() {
           {workspace === 'calendar' && <Ql197TaskCalendar key={`task-calendar-${organization.id}`} organization={organization} queue={queueState} setQueue={setQueueState} reminderIds={reminderIds} setReminderIds={setReminderIds} onOpenThread={openThread} onOpenQueue={openQueue} />}
           {workspace === 'reports' && <Ql198Reports key={`reports-${organization.id}`} organization={organization} queue={queueState} onNavigate={setWorkspace} />}
           {workspace === 'connectors' && <Ql199ConnectorCentre key={`connectors-${organization.id}`} organization={organization} onOpenThread={openThread} />}
+          {workspace === 'guided_intake' && <Ql296GuidedIntake key={`guided-intake-${organization.id}`} organization={organization} />}
           {workspace === 'integration_options' && <Ql237IntegrationOptions key={'integration-v1-' + organization.id} organization={organization} />}
           {workspace === 'handshake_readiness' && <Ql238HandshakeReadiness key={'handshake-v1-' + organization.id} organization={organization} ledger={ql238Ledger} setLedger={setQl238Ledger} onNavigate={setWorkspace} />}
           {workspace === 'gateway_proof_review' && <Ql239GatewayProofReview key={'gateway-proof-v1-' + organization.id} organization={organization} ledger={ql239Ledger} setLedger={setQl239Ledger} onNavigate={setWorkspace} />}
