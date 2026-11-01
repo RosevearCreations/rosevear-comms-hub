@@ -10,6 +10,7 @@ import { Ql177BrandIntakeHandoffPreview } from './Ql177BrandIntakeHandoffPreview
 import { Ql296GuidedIntake } from './Ql296GuidedIntake';
 import { Ql297Omnichannel } from './Ql297Omnichannel';
 import { Ql298RoutingStudio } from './Ql298RoutingStudio';
+import { Ql299AccessibilityReview } from './Ql299AccessibilityReview';
 import { Ql178OperatorTaskSimulation } from './Ql178OperatorTaskSimulation';
 import { Ql179PhoneSmsEventEmulator } from './Ql179PhoneSmsEventEmulator';
 import { Ql180RoutingIvrPreview } from './Ql180RoutingIvrPreview';
@@ -116,6 +117,7 @@ import type { Ql183Feedback } from './ql183OperatorUsabilityAcceptance';
 import './operator-shell.css';
 
 const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; description: string }> = [
+  { id: 'accessibility_review', label: 'Accessibility owner walkthrough', description: 'Device-by-device keyboard, focus, contrast, zoom and screen-reader review queue' },
   { id: 'routing_studio', label: 'IVR & routing scenario studio', description: 'Four-business demo lines, hours, menus and fallback comparison' },
   { id: 'event_timeline', label: 'Omnichannel event timeline', description: 'Five-channel synthetic event replay, delivery errors and local recovery' },
   { id: 'guided_intake', label: 'Guided intake & quote review', description: 'Four company-specific fictional inquiry cards and unsent handoff previews' },
@@ -177,7 +179,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
  * collapsed categories until requested. No permission or feature is removed. */
 const NAVIGATION_GROUPS = [
   {id:'operations',label:'Operations',hint:'Daily workspaces',primary:true,
-    ids:['dashboard','inbox','contacts','guided_intake','event_timeline','routing_studio','queue','phone','composer','calendar','reports']},
+    ids:['dashboard','inbox','contacts','guided_intake','event_timeline','routing_studio','accessibility_review','queue','phone','composer','calendar','reports']},
   {id:'it',label:'IT & Connections',hint:'Six-app setup and evidence',primary:true,
     ids:['it_command','connections','connectors','six_app_evidence','connection_testing','integration_options']},
   {id:'admin',label:'Management & Reviews',hint:'Company oversight, safety, trial and audits',primary:false,
@@ -317,7 +319,7 @@ export function OperatorShell() {
       <a className="ql172-skip-link" href="#ql172-workspace">Skip to operator workspace</a>
       <header className="ql172-header">
         <div>
-          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-298</p>
+          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-299</p>
           <h1>Communications Command Centre</h1>
           <p>One control surface · four businesses · two supporting systems.</p>
         </div>
@@ -413,6 +415,7 @@ export function OperatorShell() {
           {workspace === 'guided_intake' && <Ql296GuidedIntake key={`guided-intake-${organization.id}`} organization={organization} />}
           {workspace === 'event_timeline' && <Ql297Omnichannel key={`event-timeline-${organization.id}`} organization={organization} />}
           {workspace === 'routing_studio' && <Ql298RoutingStudio key={`routing-studio-${organization.id}`} organization={organization} />}
+          {workspace === 'accessibility_review' && <Ql299AccessibilityReview key={`accessibility-${organization.id}`} organization={organization} />}
           {workspace === 'integration_options' && <Ql237IntegrationOptions key={'integration-v1-' + organization.id} organization={organization} />}
           {workspace === 'handshake_readiness' && <Ql238HandshakeReadiness key={'handshake-v1-' + organization.id} organization={organization} ledger={ql238Ledger} setLedger={setQl238Ledger} onNavigate={setWorkspace} />}
           {workspace === 'gateway_proof_review' && <Ql239GatewayProofReview key={'gateway-proof-v1-' + organization.id} organization={organization} ledger={ql239Ledger} setLedger={setQl239Ledger} onNavigate={setWorkspace} />}
