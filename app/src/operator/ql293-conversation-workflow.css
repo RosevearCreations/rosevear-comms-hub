@@ -1,0 +1,37 @@
+.ql293-inbox, .ql293-composer { --ql293-navy: #17395c; --ql293-line: #b8cce1; --ql293-paper: #f1f6fc; }
+.ql293-contextual-reply { border: 1px solid #b8cce1; border-left: 4px solid #24618e; background: #edf5fd; border-radius: 12px; padding: 12px; margin: 12px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.ql293-contextual-reply > div { display: grid; gap: 4px; color: #17395c; }
+.ql293-contextual-reply > div span { color: #36536f; font-size: .77rem; }
+.ql293-contextual-reply button, .ql293-timeline-empty button, .ql293-reply-help button { min-height: 44px; border-radius: 9px; border: 1px solid #28628e; background: #fff; color: #17395c; font: inherit; padding: 9px 13px; font-size: .85rem; font-weight: 800; cursor: pointer; }
+.ql293-contextual-reply > p { flex: 1 1 100%; margin: 0; padding: 9px 11px; border-radius: 8px; background: #fff; font-size: .85rem; line-height: 1.5; color: #294863; }
+.ql293-timeline { margin-top: 19px; border-top: 1px solid #d0dce9; padding-top: 14px; }
+.ql293-timeline-heading { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.ql293-timeline-heading h5 { color: #17395c; font-size: 1.06rem; margin: 2px 0; }
+.ql293-eyebrow { margin: 0; color: #496580; font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; font-weight: 850; }
+.ql293-timeline-heading label { color: #334e69; font-size: .78rem; font-weight: 800; display: grid; gap: 6px; min-width: min(175px,100%); }
+.ql293-timeline-heading select { min-height: 44px; background: #fff; border: 1px solid #94a3b8; border-radius: 9px; font: inherit; font-size: .88rem; padding: 8px 10px; color: #172b47; }
+.ql293-timeline ol { display: grid; gap: 11px; }
+.ql293-timeline .ql293-event { border: 1px solid #bacbdc; border-left: 5px solid #2563a6; box-shadow: 0 3px 10px rgba(21, 53, 86, .04); background: #fff; padding: 13px 15px; }
+.ql293-timeline .ql293-event.ql192-internal_note { border-left-color: #7c3aed; }
+.ql293-timeline .ql293-event.ql192-call_event { border-left-color: #0f766e; }
+.ql293-event-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 7px; margin-bottom: 10px; }
+.ql293-event-head strong { color: #17395c; font-size: .86rem; }
+.ql293-event-head span { font-size: .75rem; color: #465f78; }
+.ql293-event-details { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.ql293-event-details span { background: #e8f1fb; border-radius: 7px; color: #274966; padding: 5px 8px; font-size: .72rem; font-weight: 700; overflow-wrap: anywhere; }
+.ql293-timeline .ql293-event-meaning { font-size: .78rem; line-height: 1.5; color: #475569; margin: 10px 0 0; }
+.ql293-timeline .ql293-attachment { border: 1px dashed #6b829c; border-radius: 9px; background: #f4f8fd; padding: 10px; font-size: .79rem; color: #294563; line-height: 1.55; }
+.ql293-timeline-empty { border: 1px dashed #93a9bf; padding: 15px; border-radius: 11px; background: #f8fbff; color: #36536f; }
+.ql293-composer .ql196-header { border: 1px solid #254b76; border-radius: 17px; padding: clamp(15px,2vw,22px); background: linear-gradient(115deg,#112642,#234b73); color: #fff; box-shadow: 0 9px 23px rgba(13,35,61,.12); }
+.ql293-composer .ql196-header h3, .ql293-composer .ql196-header p { color: #fff; }
+.ql293-composer .ql196-header .ql191-eyebrow { color: #d4e7ff; }
+.ql293-composer .ql196-header .ql191-help-button { background: #f1f7ff; border-color: #b6d7fb; color: #17395c; }
+.ql293-recovery { border: 1px solid #a8c7e3; border-left: 4px solid #24618e; background: #edf5fd; border-radius: 11px; padding: 13px; color: #1c3f62; display: grid; gap: 5px; }
+.ql293-recovery p { margin: 0; font-size: .86rem; line-height: 1.5; }
+.ql293-recovery small { color: #41617c; font-size: .74rem; }
+.ql293-reply-help { margin: 12px 0; border: 1px solid #b8cce1; background: #f1f6fc; border-radius: 11px; padding: 11px; }
+.ql293-reply-help p { color: #24425d; line-height: 1.55; margin: 10px 0 2px; font-size: .84rem; }
+.ql293-inbox button:focus-visible, .ql293-inbox select:focus-visible, .ql293-composer button:focus-visible, .ql293-composer select:focus-visible, .ql293-composer textarea:focus-visible { outline: 3px solid #f59e0b; outline-offset: 3px; }
+@media (max-width: 620px) { .ql293-timeline-heading label { flex: 1 1 100%; } .ql293-contextual-reply button { width: 100%; } }
+@media (forced-colors: active) { .ql293-event, .ql293-recovery, .ql293-contextual-reply, .ql293-reply-help { border: 2px solid CanvasText; } .ql293-event-details span { border: 1px solid CanvasText; } }
+@media (prefers-reduced-motion: reduce) { .ql293-event, .ql293-contextual-reply, .ql293-recovery { transition: none; animation: none; } }

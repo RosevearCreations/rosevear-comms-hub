@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react';
 import type { OperatorOrganization } from './ql191Organizations';
 import { inboxChannels, inboxForOrganization, type InboxChannel, type InboxThread } from './ql192InboxFixtures';
 import { customerForThread } from './ql193CustomerContexts';
+import { effectiveDemoConsent } from './ql196MessagePolicy';
+import { describeQl293Event, ql293ReplyHelp } from './ql293ConversationRecovery';
 import {
   defaultInboxTriageFilters, demoOwnerForThread, filterInboxTriage, nextDemoAction,
   recoverInboxTriagePreset, triageLaneForThread, triageLanes, triageOwners, triageSlots,
@@ -9,6 +11,7 @@ import {
 } from './ql292InboxTriage';
 import './ql192-inbox.css';
 import './ql292-inbox-triage.css';
+import './ql293-conversation-workflow.css';
 
 type ViewFilter = 'all' | 'unread' | 'needs_reply' | 'follow_up';
 const viewFilters: ReadonlyArray<{ id: ViewFilter; label: string }> = [
@@ -35,12 +38,17 @@ export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact
   const [readOverrides, setReadOverrides] = useState<ReadonlySet<string>>(() => new Set());
   const [followUpOverrides, setFollowUpOverrides] = useState<Readonly<Record<string, boolean>>>({});
   const [showHelp, setShowHelp] = useState(false);
+  const [showReplyHelp, setShowReplyHelp] = useState(false);
+  const [timelineFilter, setTimelineFilter] = useState<'all' | InboxThread['events'][number]['kind']>('all');
 
   const isUnread = (thread: InboxThread) => thread.unread && !readOverrides.has(thread.id);
   const isFollowUp = (thread: InboxThread) => followUpOverrides[thread.id] ?? thread.needsFollowUp;
   const filtered = useMemo(() => filterInboxTriage(threads, organization.id, filters, isUnread, isFollowUp),
     [threads, organization.id, filters, readOverrides, followUpOverrides]);
   const selected = filtered.find((thread) => thread.id === selectedId) ?? filtered[0];
+  const selectedConsent = selected && (selected.channel === 'sms' || selected.channel === 'mms')
+    ? effectiveDemoConsent(organization.id, selected.id) ?? selected.consent : selected?.consent;
+  const selectedEvents = selected?.events.filter((event) => timelineFilter === 'all' || event.kind === timelineFilter) ?? [];
 
   const totals = {
     conversations: threads.length,
@@ -86,7 +94,7 @@ export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact
   }));
 
   return (
-    <section className="ql192-inbox ql292-inbox" data-ql192-release="ql192-unified-four-company-inbox-v1" data-ql292-release="ql292-priority-lanes-precise-search-session-presets" data-organization={organization.id} aria-labelledby="ql192-inbox-heading">
+    <section className="ql192-inbox ql292-inbox ql293-inbox" data-ql192-release="ql192-unified-four-company-inbox-v1" data-ql292-release="ql292-priority-lanes-precise-search-session-presets" data-ql293-release="ql293-readable-timeline-contextual-help" data-organization={organization.id} aria-labelledby="ql192-inbox-heading">
       <div className="ql192-inbox-header">
         <div>
           <p className="ql191-eyebrow">QL-292 · Operator inbox command</p>
@@ -180,6 +188,11 @@ export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact
                 <p>{selected.contactLabel} · {selected.sourceLabel}</p>
                 <p className="ql192-context">{selected.context}</p>
                 <p className="ql292-detail-triage">Preview lane: <strong>{triageLanes.find((lane) => lane.id === triageLaneForThread(selected, isFollowUp(selected)))?.label}</strong> · Demo owner: <strong>{triageOwners.find((owner) => owner.id === demoOwnerForThread(selected))?.label}</strong> · Next review: <strong>{nextDemoAction(selected)}</strong></p>
+                <section className="ql293-contextual-reply" aria-label="Contextual reply guidance">
+                  <div><strong>{selected.channel.toUpperCase()} · Fictional conversation</strong><span>No delivery or provider receipt</span></div>
+                  <button type="button" aria-expanded={showReplyHelp} aria-controls="ql293-inbox-reply-help" onClick={() => setShowReplyHelp((open) => !open)}>ⓘ Reply and consent help</button>
+                  {showReplyHelp && <p id="ql293-inbox-reply-help" role="note">{ql293ReplyHelp(selected, selectedConsent)} Review flags and saved triage filters do not grant consent or alter the real inbox.</p>}
+                </section>
                 <div className="ql192-detail-actions">
                   <button type="button" onClick={() => markRead(selected)} disabled={!isUnread(selected)}>{isUnread(selected) ? 'Mark reviewed (demo)' : 'Reviewed in demo'}</button>
                   <button type="button" onClick={() => toggleFollowUp(selected)} aria-pressed={isFollowUp(selected)}>{isFollowUp(selected) ? 'Remove follow-up flag' : 'Flag follow-up (demo)'}</button>
@@ -188,7 +201,7 @@ export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact
                 </div>
               </header>
               <div className="ql192-consent" role="status">
-                <strong>Consent:</strong> {selected.consent === 'opted_out' ? 'Opt-out indicated in test fixture; promotional send prohibited.' : selected.consent === 'service_only' ? 'Service-only demonstration; marketing not authorized.' : 'Unknown; no outbound communication authorized.'}
+                <strong>Consent:</strong> {selectedConsent === 'opted_out' ? 'Opt-out indicated in test fixture or linked consent context; promotional send prohibited.' : selectedConsent === 'service_only' ? 'Service-only demonstration; marketing not authorized.' : 'Unknown; no outbound communication authorized.'}
               </div>
               {(() => {
                 const linked = customerForThread(organization.id, selected.id);
@@ -197,14 +210,19 @@ export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact
                   <button type="button" onClick={() => onOpenContact(linked.id)}>Open Customer 360</button>
                 </div> : <p className="ql192-nonpersistent">This internal source has no customer profile. No identity is inferred.</p>;
               })()}
-              <div className="ql192-timeline" aria-label="Synthetic communication timeline">
-                <h5>Conversation timeline</h5>
-                <ol>{selected.events.map((event) => (
-                  <li key={event.id} className={`ql192-event ql192-${event.kind}`}>
-                    <span>{event.timeLabel} · {event.kind.replaceAll('_', ' ')}</span>
+              <div className="ql192-timeline ql293-timeline" aria-label="Synthetic communication timeline">
+                <div className="ql293-timeline-heading"><div><p className="ql293-eyebrow">Fictional event history · no actual timestamps</p><h5>Conversation timeline · {selectedEvents.length} of {selected.events.length}</h5></div><label htmlFor="ql293-event-filter">Event type<select id="ql293-event-filter" value={timelineFilter} onChange={(event) => setTimelineFilter(event.target.value as typeof timelineFilter)}><option value="all">All events</option><option value="inbound">Inbound examples</option><option value="call_event">Call scenarios</option><option value="internal_note">Internal notes</option><option value="draft">Unsent draft examples</option></select></label></div>
+                {selectedEvents.length === 0 && <div className="ql293-timeline-empty"><p>No fictional events match this type.</p><button type="button" onClick={() => setTimelineFilter('all')}>Show all events</button></div>}
+                <ol>{selectedEvents.map((event) => {
+                  const display = describeQl293Event(selected, event);
+                  return <li key={event.id} className={`ql192-event ql192-${event.kind} ql293-event`}>
+                    <div className="ql293-event-head"><strong>{display.label}</strong><span>{event.timeLabel} · illustrative order</span></div>
                     <p>{event.body}</p>
-                  </li>
-                ))}</ol>
+                    <div className="ql293-event-details"><span>State: {display.state.replaceAll('_', ' ')}</span><span>Source: {selected.sourceLabel}</span></div>
+                    <p className="ql293-event-meaning">ⓘ {display.meaning}</p>
+                    {display.attachment && <p className="ql293-attachment" role="note"><strong>Attachment metadata:</strong> {display.attachment.label} · no media upload, URL or real file</p>}
+                  </li>;
+                })}</ol>
               </div>
               <div className="ql192-composer" aria-label="Disabled reply composer">
                 <label htmlFor="ql192-compose">Reply composer — disabled</label>
