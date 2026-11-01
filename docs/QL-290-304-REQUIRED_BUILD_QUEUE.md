@@ -1,8 +1,8 @@
 # Rosevear Comms Hub — active 15-build batch (QL-290–QL-304)
 
-**Planning baseline:** QL-289–298 are verified in their individual release records. QL-299 is **Production GREEN** at exact `main` code commit `ec45e971b62b8a527dc97277654aa02bc86ce442`, with five successful production checks and matching live JS/CSS SHA-256. The next build is **QL-300**. Planning the remaining builds is not evidence that they have been implemented or approved for real communications.
+**Planning baseline:** QL-289–299 are verified in their individual release records. QL-300 is **Production GREEN** at exact `main` code commit `aa0fea176dd472e932e59e3d3a5f50574ff834c0`, with five successful production checks and matching live JS/CSS SHA-256. The next build is **QL-301**. Planning the remaining builds is not evidence that they have been implemented or approved for real communications.
 
-**Queue accounting:** 15 planned; **10/15 Production GREEN** in this batch; **5 remaining**. After each completed build, update the count, its exact-main release record and the next queued item in `08_BUILD_SEQUENCE.md`. Do not decrement the remaining count for a PR, local test, preview deployment or simulated approval alone.
+**Queue accounting:** 15 planned; **11/15 Production GREEN** in this batch; **4 remaining**. After each completed build, update the count, its exact-main release record and the next queued item in `08_BUILD_SEQUENCE.md`. Do not decrement the remaining count for a PR, local test, preview deployment or simulated approval alone.
 
 ## Product outcome
 
@@ -24,7 +24,7 @@ The four customer-facing business contexts are Rosie Dazzlers, Devil n Dove, Yar
 | **QL-297 — Omnichannel Event Timeline Simulator, Delivery Error States & Replay Recovery** · **Production GREEN** | Communications workflow | Completed: four-business five-channel fixture timeline, deterministic source readback, idempotent local replay and single-step failed-event recovery. | 1,105 tests, TypeScript/security/build passed; exact-main `7e012c8850e4fc71555b61dc3dbc6249bf074110` 5/5 checks GREEN with byte-identical Worker assets. No phone provider, email account, webhook, external message or callback activation. [Release record](build-records/QL-297_OMNICHANNEL_EVENT_TIMELINE_REPLAY_RECOVERY.md). |
 | **QL-298 — Multi-Line Routing & IVR Scenario Studio with Safe Fallback Review** · **Production GREEN** | Communications workflow | Completed: side-by-side four-business demo line, menu, opening-hours and fallback comparison with fail-closed tenant routing. | 1,111 tests, TypeScript/security/build passed; exact-main `e10cb57ef76154a978cf9daa778a214dea2862bd` 5/5 checks GREEN and live JS/CSS byte-identical. No number purchase, forwarding, SIP, live DTMF or telephony configuration. [Release record](build-records/QL-298_FOUR_BUSINESS_ROUTING_IVR_FALLBACK_STUDIO.md). |
 | **QL-299 — Operator Accessibility Owner Walkthrough & Cross-Device Regression Queue** · **Production GREEN** | Accessibility | Completed: 15 manual device/check cases per company, reproducible steps, local dispositions and accessible review controls. Owner observations remain unverified. | 1,118 tests, TypeScript/security/build passed; exact-main `ec45e971b62b8a527dc97277654aa02bc86ce442` 5/5 checks GREEN and live JS/CSS byte-identical. No fabricated owner sign-off. [Release record](build-records/QL-299_ACCESSIBILITY_OWNER_WALKTHROUGH_DEVICE_REGRESSION.md). |
-| **QL-300 — Preference Accessibility, Shortcut Discoverability & Saved-View Recovery Acceptance** | Accessibility | Polish reduced-motion/forced-colors support, command help, shortcuts, density options and safe recovery of supported preference profiles across navigation and refresh. | Robust storage-version/tamper/invalid-profile recovery tests, focus preservation and keyboard-only review; no new unreviewed browser persistence or private data retention. |
+| **QL-300 — Preference Accessibility, Shortcut Discoverability & Saved-View Recovery Acceptance** · **Production GREEN** | Accessibility | Completed: four manual accessibility acceptance cards, discoverable shortcuts, focus-stable recovery and fail-closed profile persistence validation; no new storage format or owner acceptance claims. | 1,123 tests, TypeScript/security/build passed; exact-main `aa0fea176dd472e932e59e3d3a5f50574ff834c0` 5/5 checks GREEN and live JS/CSS byte-identical. [Release record](build-records/QL-300_PREFERENCE_ACCESSIBILITY_SHORTCUT_RECOVERY.md). |
 | **QL-301 — Management Command Dashboard, Ownership Workload & Incident Status Cards** | Management dashboard | Build modern, dense Management and Status command cards showing synthetic assignments, blocked handoffs, workload, incident age and review checkpoints. Provide drill-down links to relevant operator views. | Metrics derived from labeled synthetic fixtures, consistent counting and role-safe detail; responsive cards, readable statuses and no fabricated live operational totals. |
 | **QL-302 — Statistics Trend Explorer, Source Provenance & Freshness Explanations** | Management/statistics | Add segmented trend comparisons, time-window filters, accessible tables/charts and a clear data-freshness/source explanation beside every synthetic metric. | Reproducible aggregation and empty-data tests, no cross-tenant aggregation leakage, chart/table parity and no claim of live business measurements. |
 | **QL-303 — Six-App Capability Readiness Matrix, Immutable Proof Drift & Owner Notification Review** | Integration readiness | Present the six app source roles, required permission/proof gates, actual pinned public source observations, drift aging and **local unsent** notification candidates in a clear management view. | Fresh independent source lookups are timestamped when actually performed; 404/403/200 states distinct; no automatic authenticated GET, source writes, ACK delivery, owner notifications, private credentials or connection enablement. |
@@ -32,7 +32,7 @@ The four customer-facing business contexts are Rosie Dazzlers, Devil n Dove, Yar
 
 ## Dependencies and priority
 
-1. **QL-290 through QL-299 are complete**, without extending or restarting the parked ACK delivery workstream. **QL-300 is next**.
+1. **QL-290 through QL-300 are complete**, without extending or restarting the parked ACK delivery workstream. **QL-301 is next**.
 2. **QL-291–294** establish usable operator navigation, inbox, drafts and assignments; **QL-295–298** complete connected-looking *synthetic* customer and channel journeys without activating providers.
 3. **QL-299–300** validate accessibility and preference recovery against those completed screens; **QL-301–302** build management and statistics views on explicit fixture-backed outcomes.
 4. **QL-303** consolidates source-gate readiness without bypassing it. **QL-304** performs end-to-end acceptance and reconciles the next batch; it does not itself authorize a live pilot.
@@ -45,10 +45,10 @@ The four customer-facing business contexts are Rosie Dazzlers, Devil n Dove, Yar
 - **No unreviewed persistence:** use existing reviewed local preference storage only for allowed layout settings; do not silently introduce private data into localStorage, a database, telemetry or exports.
 - **One guarded release per build:** focused tests, full app tests, security baseline, production build, exact feature→`dev`→`main` Git tree, and five successful checks on the **exact `main` commit**. Confirm the public Worker serves the same JS/CSS bytes before announcing **Production GREEN**. Record the release SHA and next queue status after completion.
 
-## Queue ledger (verified after QL-299)
+## Queue ledger (verified after QL-300)
 
 | Range | Planned | Production GREEN in this batch | Remaining | Next |
 | --- | ---: | ---: | ---: | --- |
-| QL-290–304 | **15** | **10** | **5** | **QL-300** |
+| QL-290–304 | **15** | **11** | **4** | **QL-301** |
 
 This is the **active future queue**. Previous historical queues (`QL-164–170` and `QL-171–182`) remain archived as records of their original scopes. The source-of-truth entry point is [`08_BUILD_SEQUENCE.md`](08_BUILD_SEQUENCE.md).
