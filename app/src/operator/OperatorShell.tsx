@@ -26,6 +26,7 @@ import { Ql192UnifiedInbox } from './Ql192UnifiedInbox';
 import { emptyInboxTriagePresets, type InboxTriagePresets } from './ql292InboxTriage';
 import { Ql193Customer360 } from './Ql193Customer360';
 import { Ql194FollowUpQueue } from './Ql194FollowUpQueue';
+import { ql294Shortcut } from './ql294OperatorWorklist';
 import { Ql195PhoneDesk } from './Ql195PhoneDesk';
 import { Ql196MessageComposer } from './Ql196MessageComposer';
 import { discardQl293Draft, stageQl293Draft, type Ql293SessionDrafts } from './ql293ConversationRecovery';
@@ -292,12 +293,22 @@ export function OperatorShell() {
     previouslySelected.current = workspace;
   }, [workspace]);
 
+  useEffect(() => {
+    function handleWorklistNavigation(event: KeyboardEvent) {
+      if (ql294Shortcut(event) !== 'queue') return;
+      event.preventDefault();
+      setWorkspace('queue');
+    }
+    window.addEventListener('keydown', handleWorklistNavigation);
+    return () => window.removeEventListener('keydown', handleWorklistNavigation);
+  }, []);
+
   return (
     <div className="ql172-shell" data-organization={organization.id} data-ql191-release="ql191-four-organization-console-v2" data-ql270-shell="categorized" data-ql271-command={commandWorkspace?'true':'false'}>
       <a className="ql172-skip-link" href="#ql172-workspace">Skip to operator workspace</a>
       <header className="ql172-header">
         <div>
-          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-293</p>
+          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-294</p>
           <h1>Communications Command Centre</h1>
           <p>One control surface · four businesses · two supporting systems.</p>
         </div>
@@ -350,6 +361,7 @@ export function OperatorShell() {
               </details>;
             })}
           </nav>
+          <p className="ql172-sidebar-warning"><kbd>Alt + Shift + Q</kbd> opens assignment worklists. Use ⓘ Help there for focus and handoff shortcuts; shortcuts do not operate inside typing fields.</p>
           <p className="ql172-sidebar-warning">No live calls, SMS, owner approvals, or customer-data processing is authorized.</p>
         </aside>
 
