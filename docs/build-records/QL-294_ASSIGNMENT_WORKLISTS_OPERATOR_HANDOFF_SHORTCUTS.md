@@ -27,7 +27,14 @@
 - Guarded feature → `dev` → `main` promotion with exact feature tree maintained.
 - **Production GREEN only after** all five checks on exact `main` code commit succeed and public Worker JS/CSS SHA-256 match the tested local production bundle.
 
-**Release receipt:** pending production promotion; do not mark GREEN based only on local tests or PR preview.
+## Verified release receipt — Production GREEN
+
+- **Exact tested source tree:** `6d9f7e6c6909b43d011c59720163f605f5e8ae8d`, unchanged in feature branch, `dev` merge and `main` merge.
+- **Feature → `dev`:** [PR #558](https://github.com/RosevearCreations/rosevear-comms-hub/pull/558), merge commit `bf935437b1c4cd76fd7ef92fd7a7528c44137d79`; Workers and app-build checks successful.
+- **`dev` → `main`:** [PR #559](https://github.com/RosevearCreations/rosevear-comms-hub/pull/559), exact production code commit `3fb6f1fedc82fbae7a5d5100f51d4662078857f3`.
+- **Production checks on exact `main` SHA:** all five successful — `app-build`, `Workers Builds: rosevear-comms-hub`, `Build disabled preview`, `Deploy disabled preview`, `Supabase Preview`.
+- **Live Worker:** `https://rosevear-comms-hub.devilndovelive.workers.dev/` served `assets/index-B8VR50IS.js` (SHA-256 `a760be6673e7bb0d650538eea4baa5bd80ed94390dc307bcbd92c2947ae34bcc`) and `assets/index-G9cvl3rH.css` (SHA-256 `b1da8150bf747177316a45c6dae94d95e68473e904c11839ae74713e48319376`), byte-identical to the tested production bundle.
+- **Active batch:** 5/15 Production GREEN, 10 builds remaining. Six app sources remain disconnected/held; ACK evidence remains parked under review.
 
 **Completed local verification:** `verify:ql294` passed 391 focused results (220 QL-289, 16 QL-290, 33 QL-291, 51 QL-292, 38 QL-293 and 33 QL-294/194/197/273); full app passed **1,085 tests in 111 files**; TypeScript check succeeded; QL-171 security passed 10/10 checks; Vite built 490 modules. Tested bundle JS `index-B8VR50IS.js`, SHA-256 `a760be6673e7bb0d650538eea4baa5bd80ed94390dc307bcbd92c2947ae34bcc`, and CSS `index-G9cvl3rH.css`, SHA-256 `b1da8150bf747177316a45c6dae94d95e68473e904c11839ae74713e48319376`.
 
