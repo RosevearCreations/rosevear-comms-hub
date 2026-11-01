@@ -8,6 +8,7 @@ import { Ql272LayoutControls } from './Ql272LayoutControls';
 import { Ql273CommandAssistance, Ql273MetricHelp } from './Ql273CommandAssistance';
 import { Ql291CommandNavigation } from './Ql291CommandNavigation';
 import { Ql300PreferenceAcceptance } from './Ql300PreferenceAcceptance';
+import { Ql301ManagementDashboard } from './Ql301ManagementDashboard';
 import { activeQl272Profile, defaultQl272Preferences, parseQl272Preferences,
   type Ql272PreferenceEnvelope } from './ql272LayoutPreferences';
 import { inspectQl272LocalLayout, saveQl272LocalLayout } from '../storage/localRepository';
@@ -127,6 +128,8 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
       onReset={() => updatePreferences(defaultQl272Preferences())} />
 
     <Ql300PreferenceAcceptance onRestore={restored => { setPreferences(restored); setSaved(true); setStorageAvailable(true); }} />
+
+    {(mode === 'management' || mode === 'system_status') && <Ql301ManagementDashboard key={`${organizationId}-${mode}`} organizationId={organizationId} mode={mode} onNavigate={onNavigate} />}
 
     <Ql291CommandNavigation mode={mode} preferences={preferences} saved={saved} storageAvailable={storageAvailable}
       onNavigate={onNavigate} onChange={updatePreferences}
