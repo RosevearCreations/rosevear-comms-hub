@@ -5,12 +5,12 @@ older completed-build history and former queues remain preserved for reference.
 
 ## Current active queue — QL-290 through QL-304
 
-**Latest verified production release:** QL-296 at exact `main` code commit
-`ea2200a9bf579a730cecde3118ab493e94cd30a4` (five production checks GREEN;
+**Latest verified production release:** QL-297 at exact `main` code commit
+`7e012c8850e4fc71555b61dc3dbc6249bf074110` (five production checks GREEN;
 live JS/CSS SHA-256 matching the tested bundle).
 
-**15 builds are in the active batch; 7/15 Production GREEN; 8 remain.**
-Next is **QL-297 — Omnichannel Event Timeline Simulator, Delivery Error States & Replay Recovery.** Follow the full, numbered feature scope, dependencies, test
+**15 builds are in the active batch; 8/15 Production GREEN; 7 remain.**
+Next is **QL-298 — Multi-Line Routing & IVR Scenario Studio with Safe Fallback Review.** Follow the full, numbered feature scope, dependencies, test
 evidence and queue-count rules in **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)**.
 
 | Builds | Priority area | Count |
