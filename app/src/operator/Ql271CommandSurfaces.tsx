@@ -7,6 +7,7 @@ import { QL290_PUBLIC_SOURCE_RECHECK, QL290_OBSERVED_AT } from './ql290OriginWit
 import { Ql272LayoutControls } from './Ql272LayoutControls';
 import { Ql273CommandAssistance, Ql273MetricHelp } from './Ql273CommandAssistance';
 import { Ql291CommandNavigation } from './Ql291CommandNavigation';
+import { Ql300PreferenceAcceptance } from './Ql300PreferenceAcceptance';
 import { activeQl272Profile, defaultQl272Preferences, parseQl272Preferences,
   type Ql272PreferenceEnvelope } from './ql272LayoutPreferences';
 import { inspectQl272LocalLayout, saveQl272LocalLayout } from '../storage/localRepository';
@@ -124,6 +125,8 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
     <Ql272LayoutControls preferences={preferences} mode={mode} saved={saved} storageAvailable={storageAvailable}
       metricLabels={metricCopy[mode].map(metric => metric.label)} onChange={updatePreferences}
       onReset={() => updatePreferences(defaultQl272Preferences())} />
+
+    <Ql300PreferenceAcceptance onRestore={restored => { setPreferences(restored); setSaved(true); setStorageAvailable(true); }} />
 
     <Ql291CommandNavigation mode={mode} preferences={preferences} saved={saved} storageAvailable={storageAvailable}
       onNavigate={onNavigate} onChange={updatePreferences}

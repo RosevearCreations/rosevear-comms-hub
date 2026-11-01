@@ -104,7 +104,10 @@ describe('QL-291 compact operator command and guided safe navigation',()=>{
     await openCommand();
     const forged=structuredClone(defaultQl272Preferences());
     (forged.profiles[0] as {rolePreview:string}).rolePreview='superadmin';
-    expect(saveQl272LocalLayout(forged)).toBe(true);
+    // QL-300 blocks tampered values through the reviewed save API. Simulate
+    // direct browser-storage tampering to exercise the existing recovery UI.
+    expect(saveQl272LocalLayout(forged)).toBe(false);
+    window.localStorage.setItem('rosevear-comms-hub:ql272-command-layouts:v1', JSON.stringify(forged));
     await act(async()=>button('Check saved view').click());
     expect(host.textContent).toContain('Saved layout: INVALID');
     expect(button('Restore verified layout').disabled).toBe(true);
