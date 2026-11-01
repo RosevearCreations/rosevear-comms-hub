@@ -25,6 +25,7 @@ import { Ql191AdditionalOrganizationPreview } from './Ql191AdditionalOrganizatio
 import { Ql192UnifiedInbox } from './Ql192UnifiedInbox';
 import { emptyInboxTriagePresets, type InboxTriagePresets } from './ql292InboxTriage';
 import { Ql193Customer360 } from './Ql193Customer360';
+import { seedQl295Review, type Ql295ReviewState } from './ql295ContactReview';
 import { Ql194FollowUpQueue } from './Ql194FollowUpQueue';
 import { ql294Shortcut } from './ql294OperatorWorklist';
 import { Ql195PhoneDesk } from './Ql195PhoneDesk';
@@ -202,6 +203,7 @@ export function OperatorShell() {
   const [queueJump, setQueueJump] = useState<string | null>(null);
   const [composerJump, setComposerJump] = useState<string | null>(null);
   const [queueState, setQueueState] = useState<MockQueueState>(() => seedQueueForOrganization(firstOrganization));
+  const [contactReviewState, setContactReviewState] = useState<Ql295ReviewState>(() => seedQl295Review(firstOrganization));
   const [inboxTriagePresets, setInboxTriagePresets] = useState<InboxTriagePresets>(emptyInboxTriagePresets);
   const [composerDrafts, setComposerDrafts] = useState<Ql293SessionDrafts>({});
   const [trialLedger, setTrialLedger] = useState<Ql211Ledger>({});
@@ -255,6 +257,7 @@ export function OperatorShell() {
       setQueueJump(null);
       setComposerJump(null);
       setQueueState(seedQueueForOrganization(nextOrganization));
+      setContactReviewState(seedQl295Review(nextOrganization));
       setInboxTriagePresets(emptyInboxTriagePresets());
       setComposerDrafts({});
       setReminderIds(new Set());
@@ -308,7 +311,7 @@ export function OperatorShell() {
       <a className="ql172-skip-link" href="#ql172-workspace">Skip to operator workspace</a>
       <header className="ql172-header">
         <div>
-          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-294</p>
+          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-295</p>
           <h1>Communications Command Centre</h1>
           <p>One control surface · four businesses · two supporting systems.</p>
         </div>
@@ -394,7 +397,7 @@ export function OperatorShell() {
               )}
             </>
           )}
-          {workspace === 'contacts' && <Ql193Customer360 key={`customer-360-${organization.id}-${contactJump ?? 'default'}`} organization={organization} initialContactId={contactJump} onOpenThread={openThread} onOpenQueue={openQueue} />}
+          {workspace === 'contacts' && <Ql193Customer360 key={`customer-360-${organization.id}-${contactJump ?? 'default'}`} organization={organization} initialContactId={contactJump} onOpenThread={openThread} onOpenQueue={openQueue} queue={queueState} reviewState={contactReviewState} setReviewState={setContactReviewState} />}
           {workspace === 'queue' && <Ql194FollowUpQueue key={`follow-up-queue-${organization.id}-${queueJump ?? 'default'}`} organization={organization} queue={queueState} setQueue={setQueueState} initialThreadId={queueJump} onOpenThread={openThread} onOpenContact={openCustomer} />}
           {workspace === 'phone' && <Ql195PhoneDesk key={`phone-desk-${organization.id}`} organization={organization} onOpenThread={openThread} onOpenQueue={openQueue} />}
           {workspace === 'composer' && <Ql196MessageComposer key={`message-composer-${organization.id}-${composerJump ?? 'default'}`} organization={organization} initialThreadId={composerJump} onOpenThread={openThread} sessionDrafts={composerDrafts} onStageDraft={(draft) => setComposerDrafts((previous) => stageQl293Draft(previous, organization.id, draft))} onDiscardDraft={(threadId) => setComposerDrafts((previous) => discardQl293Draft(previous, organization.id, threadId))} />}
