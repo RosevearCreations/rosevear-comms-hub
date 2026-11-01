@@ -31,10 +31,23 @@ export interface MockQueueReceipt {
   description: string;
 }
 
+export type MockHandoffStep = 'verify-context' | 'owner-review' | 'prepare-response' | 'resolve-blocker';
+
+export interface MockHandoffSummary {
+  id: string;
+  taskId: string;
+  organizationId: OrganizationId;
+  recipientId: string;
+  nextStep: MockHandoffStep;
+  taskVersion: string;
+  summary: string;
+}
+
 export interface MockQueueState {
   organizationId: OrganizationId;
   tasks: readonly MockFollowUpTask[];
   receipts: readonly MockQueueReceipt[];
+  handoffs: readonly MockHandoffSummary[];
   nextTask: number;
   nextReceipt: number;
 }
@@ -44,7 +57,8 @@ export type MockQueueAction =
   | { kind: 'assign'; taskId: string; ownerId: string | null }
   | { kind: 'status'; taskId: string; status: MockTaskStatus }
   | { kind: 'due'; taskId: string; due: MockDueWindow }
-  | { kind: 'priority'; taskId: string; priority: MockTaskPriority };
+  | { kind: 'priority'; taskId: string; priority: MockTaskPriority }
+  | { kind: 'handoff'; taskId: string; recipientId: string; nextStep: MockHandoffStep };
 
 const syntheticRosters: Readonly<Record<OrganizationId, readonly MockTeamMember[]>> = {
   rosiedazzlers: [
@@ -102,8 +116,19 @@ export function rosterForOrganization(organizationId: OrganizationId): readonly 
 }
 
 export function seedQueueForOrganization(organizationId: OrganizationId): MockQueueState {
-  return { organizationId, tasks: taskFixtures[organizationId].map((task) => ({ ...task })), receipts: [], nextTask: 1, nextReceipt: 1 };
+  return { organizationId, tasks: taskFixtures[organizationId].map((task) => ({ ...task })), receipts: [], handoffs: [], nextTask: 1, nextReceipt: 1 };
 }
+
+export function taskVersion(task: MockFollowUpTask): string {
+  return [task.id, task.ownerId ?? 'unassigned', task.status, task.due, task.priority].join('|');
+}
+
+export const handoffStepLabels: Readonly<Record<MockHandoffStep, string>> = {
+  'verify-context': 'Verify fictional conversation context',
+  'owner-review': 'Request simulated owner review',
+  'prepare-response': 'Prepare an unsent example response',
+  'resolve-blocker': 'Recheck sample waiting blocker'
+};
 
 export function dueRank(due: MockDueWindow): number {
   return ({ overdue: 0, today: 1, soon: 2, later: 3 } as const)[due];
@@ -135,6 +160,23 @@ export function applyQueueAction(organizationId: OrganizationId, state: MockQueu
   const index = state.tasks.findIndex((task) => task.id === action.taskId && task.organizationId === organizationId);
   if (index === -1) return state;
   const original = state.tasks[index];
+  if (action.kind === 'handoff') {
+    const recipient = rosterForOrganization(organizationId).find((person) => person.id === action.recipientId);
+    if (!recipient || original.status === 'done' || !Object.hasOwn(handoffStepLabels, action.nextStep)) return state;
+    const thread = inboxForOrganization(organizationId).find((item) => item.id === original.threadId);
+    if (!thread) return state;
+    const summary: MockHandoffSummary = {
+      id: `${organizationId}-handoff-${state.nextReceipt}`,
+      taskId: original.id,
+      organizationId,
+      recipientId: recipient.id,
+      nextStep: action.nextStep,
+      taskVersion: taskVersion(original),
+      summary: `${original.title} · ${thread.channel.toUpperCase()} source · ${original.status === 'waiting' ? 'Waiting / blocked' : 'Open'} · ${original.due} example · ${original.priority} priority. Current demo owner: ${rosterForOrganization(organizationId).find((member) => member.id === original.ownerId)?.label ?? 'Unassigned'}. Handoff preview for ${recipient.label}: ${handoffStepLabels[action.nextStep]}.`
+    };
+    const receipt: MockQueueReceipt = { id: `${organizationId}-receipt-${state.nextReceipt}`, taskId: original.id, organizationId, sequence: state.nextReceipt, description: `Prepared UNSENT handoff preview for ${recipient.label}` };
+    return { ...state, handoffs: [...state.handoffs.filter((item) => item.taskId !== original.id), summary], receipts: [...state.receipts, receipt], nextReceipt: state.nextReceipt + 1 };
+  }
   let updated: MockFollowUpTask;
   let description: string;
 

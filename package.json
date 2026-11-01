@@ -65,7 +65,8 @@
     "verify:ql290": "npm run verify:ql289 && npm --prefix app run test -- src/operator/__tests__/ql290OriginWitnessPriority.test.tsx src/operator/__tests__/ql270Connections.test.tsx",
     "verify:ql291": "npm run verify:ql290 && npm --prefix app run test -- src/operator/__tests__/ql291CommandNavigation.test.tsx src/operator/__tests__/ql272LayoutPreferences.test.tsx src/operator/__tests__/ql273CommandAssistance.test.tsx src/operator/__tests__/ql271CommandSurfaces.test.tsx",
     "verify:ql292": "npm run verify:ql291 && npm --prefix app run test -- src/operator/__tests__/ql292InboxTriage.test.tsx src/operator/__tests__/ql192UnifiedInbox.test.tsx src/operator/__tests__/ql193Customer360.test.tsx src/operator/__tests__/ql194FollowUpQueue.test.tsx",
-    "verify:ql293": "npm run verify:ql292 && npm --prefix app run test -- src/operator/__tests__/ql293ConversationRecovery.test.tsx src/operator/__tests__/ql192UnifiedInbox.test.tsx src/operator/__tests__/ql196MessageComposer.test.tsx src/operator/__tests__/ql176ConversationTimeline.test.tsx"
+    "verify:ql293": "npm run verify:ql292 && npm --prefix app run test -- src/operator/__tests__/ql293ConversationRecovery.test.tsx src/operator/__tests__/ql192UnifiedInbox.test.tsx src/operator/__tests__/ql196MessageComposer.test.tsx src/operator/__tests__/ql176ConversationTimeline.test.tsx",
+    "verify:ql294": "npm run verify:ql293 && npm --prefix app run test -- src/operator/__tests__/ql294OperatorWorklists.test.tsx src/operator/__tests__/ql194FollowUpQueue.test.tsx src/operator/__tests__/ql197TaskCalendar.test.tsx src/operator/__tests__/ql273CommandAssistance.test.tsx"
   },
   "devDependencies": {
     "wrangler": "^4.40.0"
