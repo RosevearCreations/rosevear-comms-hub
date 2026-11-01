@@ -28,6 +28,7 @@ import { Ql193Customer360 } from './Ql193Customer360';
 import { Ql194FollowUpQueue } from './Ql194FollowUpQueue';
 import { Ql195PhoneDesk } from './Ql195PhoneDesk';
 import { Ql196MessageComposer } from './Ql196MessageComposer';
+import { discardQl293Draft, stageQl293Draft, type Ql293SessionDrafts } from './ql293ConversationRecovery';
 import { Ql197TaskCalendar } from './Ql197TaskCalendar';
 import { Ql198Reports } from './Ql198Reports';
 import { Ql199ConnectorCentre } from './Ql199ConnectorCentre';
@@ -201,6 +202,7 @@ export function OperatorShell() {
   const [composerJump, setComposerJump] = useState<string | null>(null);
   const [queueState, setQueueState] = useState<MockQueueState>(() => seedQueueForOrganization(firstOrganization));
   const [inboxTriagePresets, setInboxTriagePresets] = useState<InboxTriagePresets>(emptyInboxTriagePresets);
+  const [composerDrafts, setComposerDrafts] = useState<Ql293SessionDrafts>({});
   const [trialLedger, setTrialLedger] = useState<Ql211Ledger>({});
   const [repairLedger, setRepairLedger] = useState<Ql212Ledger>({});
   const [reviewLedger, setReviewLedger] = useState<Ql213Ledger>({});
@@ -253,6 +255,7 @@ export function OperatorShell() {
       setComposerJump(null);
       setQueueState(seedQueueForOrganization(nextOrganization));
       setInboxTriagePresets(emptyInboxTriagePresets());
+      setComposerDrafts({});
       setReminderIds(new Set());
     }
     setOrganizationId(nextOrganization);
@@ -294,7 +297,7 @@ export function OperatorShell() {
       <a className="ql172-skip-link" href="#ql172-workspace">Skip to operator workspace</a>
       <header className="ql172-header">
         <div>
-          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-292</p>
+          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-293</p>
           <h1>Communications Command Centre</h1>
           <p>One control surface · four businesses · two supporting systems.</p>
         </div>
@@ -382,7 +385,7 @@ export function OperatorShell() {
           {workspace === 'contacts' && <Ql193Customer360 key={`customer-360-${organization.id}-${contactJump ?? 'default'}`} organization={organization} initialContactId={contactJump} onOpenThread={openThread} onOpenQueue={openQueue} />}
           {workspace === 'queue' && <Ql194FollowUpQueue key={`follow-up-queue-${organization.id}-${queueJump ?? 'default'}`} organization={organization} queue={queueState} setQueue={setQueueState} initialThreadId={queueJump} onOpenThread={openThread} onOpenContact={openCustomer} />}
           {workspace === 'phone' && <Ql195PhoneDesk key={`phone-desk-${organization.id}`} organization={organization} onOpenThread={openThread} onOpenQueue={openQueue} />}
-          {workspace === 'composer' && <Ql196MessageComposer key={`message-composer-${organization.id}-${composerJump ?? 'default'}`} organization={organization} initialThreadId={composerJump} onOpenThread={openThread} />}
+          {workspace === 'composer' && <Ql196MessageComposer key={`message-composer-${organization.id}-${composerJump ?? 'default'}`} organization={organization} initialThreadId={composerJump} onOpenThread={openThread} sessionDrafts={composerDrafts} onStageDraft={(draft) => setComposerDrafts((previous) => stageQl293Draft(previous, organization.id, draft))} onDiscardDraft={(threadId) => setComposerDrafts((previous) => discardQl293Draft(previous, organization.id, threadId))} />}
           {workspace === 'calendar' && <Ql197TaskCalendar key={`task-calendar-${organization.id}`} organization={organization} queue={queueState} setQueue={setQueueState} reminderIds={reminderIds} setReminderIds={setReminderIds} onOpenThread={openThread} onOpenQueue={openQueue} />}
           {workspace === 'reports' && <Ql198Reports key={`reports-${organization.id}`} organization={organization} queue={queueState} onNavigate={setWorkspace} />}
           {workspace === 'connectors' && <Ql199ConnectorCentre key={`connectors-${organization.id}`} organization={organization} onOpenThread={openThread} />}
