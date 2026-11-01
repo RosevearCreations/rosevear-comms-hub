@@ -5,12 +5,12 @@ older completed-build history and former queues remain preserved for reference.
 
 ## Current active queue — QL-290 through QL-304
 
-**Latest verified production release:** QL-300 at exact `main` code commit
-`aa0fea176dd472e932e59e3d3a5f50574ff834c0` (five production checks GREEN;
+**Latest verified production release:** QL-301 at exact `main` code commit
+`a2b5d64db6abfb51c4a36f430f23f7a1827cf2e8` (five production checks GREEN;
 live JS/CSS SHA-256 matching the tested bundle).
 
-**15 builds are in the active batch; 11/15 Production GREEN; 4 remain.**
-Next is **QL-301 — Management Command Dashboard, Ownership Workload & Incident Status Cards.** Follow the full, numbered feature scope, dependencies, test
+**15 builds are in the active batch; 12/15 Production GREEN; 3 remain.**
+Next is **QL-302 — Statistics Trend Explorer, Source Provenance & Freshness Explanations.** Follow the full, numbered feature scope, dependencies, test
 evidence and queue-count rules in **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)**.
 
 | Builds | Priority area | Count |
