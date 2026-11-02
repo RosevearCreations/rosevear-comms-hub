@@ -3,15 +3,14 @@
 This file is the build-sequence entry point. The active future batch is listed below;
 older completed-build history and former queues remain preserved for reference.
 
-## Current active queue — QL-290 through QL-304
+## Completed active queue — QL-290 through QL-304
 
-**Latest verified production release:** QL-303 at exact `main` code commit
-`0d0180d888a4e3f717cd732b93af573583610d36` (five production checks GREEN;
+**Latest verified production release:** QL-304 at exact `main` code commit
+`33d6e2aa5e0a8735137c12260df6298abcc3a270` (five production checks GREEN;
 live JS/CSS SHA-256 matching the tested bundle).
 
-**15 builds are in the active batch; 14/15 Production GREEN; 1 remains.**
-Next is **QL-304 — Four-Business Operator Acceptance Journey, Six-App Gate Reconciliation & Next-Batch Handoff.** Follow the full, numbered feature scope, dependencies, test
-evidence and queue-count rules in **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)**.
+**15/15 builds are Production GREEN; 0 remain in this batch.** The batch is closed.
+The [QL-305–310 handoff](QL-305-310-PROPOSED-NEXT-BATCH.md) is **proposed only**, pending owner scope authorization. See the completed **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)** for evidence and acceptance gates.
 
 | Builds | Priority area | Count |
 | --- | --- | ---: |
