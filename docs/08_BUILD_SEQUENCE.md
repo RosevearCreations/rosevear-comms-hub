@@ -5,12 +5,12 @@ older completed-build history and former queues remain preserved for reference.
 
 ## Completed active queue — QL-290 through QL-304
 
-**Latest verified production release:** QL-304 at exact `main` code commit
-`33d6e2aa5e0a8735137c12260df6298abcc3a270` (five production checks GREEN;
+**Latest verified production release:** QL-305 at exact `main` code commit
+`c5438e0f34026442284da850bbb16fb62b608cd0` (five production checks GREEN;
 live JS/CSS SHA-256 matching the tested bundle).
 
 **15/15 builds are Production GREEN; 0 remain in this batch.** The batch is closed.
-The [QL-305–310 handoff](QL-305-310-PROPOSED-NEXT-BATCH.md) is **proposed only**, pending owner scope authorization. See the completed **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)** for evidence and acceptance gates.
+QL-305 was explicitly requested and delivered as a separate release; [QL-305 release record](build-records/QL-305_OPERATOR_FEEDBACK_TRIAGE_CROSS_DEVICE_RETEST.md). The remaining [QL-306–310 handoff proposals](QL-305-310-PROPOSED-NEXT-BATCH.md) await owner scope authorization. See the completed **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)** for evidence and acceptance gates.
 
 | Builds | Priority area | Count |
 | --- | --- | ---: |
