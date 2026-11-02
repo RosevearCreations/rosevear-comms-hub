@@ -1,8 +1,8 @@
 # Rosevear Comms Hub — completed 15-build batch (QL-290–QL-304)
 
-**Planning baseline:** QL-289–301 are verified in their individual release records. QL-302 is **Production GREEN** at exact `main` code commit `0ceeea5e6c4261dfdd6133b3e009aaa989040e39`, with five successful production checks and matching live JS/CSS SHA-256. The next build is **QL-303**. Planning the remaining builds is not evidence that they have been implemented or approved for real communications.
+**Archived production state:** The complete QL-290–304 batch is **15/15 Production GREEN**. QL-305–310 were subsequently promoted separately. The next owner-directed software queue is [QL-311–330](QL-311-330-FINAL-SETUP-VISUAL-CONNECTION-QUEUE.md). None of these past releases activated real communications.
 
-**Queue accounting:** 15 planned; **13/15 Production GREEN** in this batch; **2 remaining**. After each completed build, update the count, its exact-main release record and the next queued item in `08_BUILD_SEQUENCE.md`. Do not decrement the remaining count for a PR, local test, preview deployment or simulated approval alone.
+**Final queue accounting:** 15 planned; **15/15 Production GREEN** in this archived batch; **0 remaining**. The new QL-311–330 batch has its own separate `0/20` ledger. Never count a PR, local test, preview deployment or simulated approval alone as GREEN.
 
 ## Product outcome
 
@@ -32,7 +32,7 @@ The four customer-facing business contexts are Rosie Dazzlers, Devil n Dove, Yar
 
 ## Dependencies and priority
 
-1. **QL-290 through QL-304 are complete**; no live integration or parked ACK workstream has been activated. **The batch is closed.** [QL-305–310 proposals](QL-305-310-PROPOSED-NEXT-BATCH.md) await independent owner scheduling.
+1. **QL-290 through QL-304 are complete**; no live integration or parked ACK workstream has been activated. **The batch is closed.** QL-305–310 were subsequently delivered separately; the next owner-directed software batch is [QL-311–330](QL-311-330-FINAL-SETUP-VISUAL-CONNECTION-QUEUE.md).
 2. **QL-291–294** establish usable operator navigation, inbox, drafts and assignments; **QL-295–298** complete connected-looking *synthetic* customer and channel journeys without activating providers.
 3. **QL-299–300** validate accessibility and preference recovery against those completed screens; **QL-301–302** build management and statistics views on explicit fixture-backed outcomes.
 4. **QL-303** consolidates source-gate readiness without bypassing it. **QL-304** performs end-to-end acceptance and reconciles the next batch; it does not itself authorize a live pilot.
@@ -49,6 +49,6 @@ The four customer-facing business contexts are Rosie Dazzlers, Devil n Dove, Yar
 
 | Range | Planned | Production GREEN in this batch | Remaining | Next |
 | --- | ---: | ---: | ---: | --- |
-| QL-290–304 | **15** | **15** | **0** | **Batch closed · QL-305 proposed only** |
+| QL-290–304 | **15** | **15** | **0** | **Batch closed · QL-311–330 now separate active queue** |
 
-This is the **closed batch ledger**. QL-305–310 is a proposal, not yet an authorized active queue. Previous historical queues (`QL-164–170` and `QL-171–182`) remain archived as records of their original scopes. The source-of-truth entry point is [`08_BUILD_SEQUENCE.md`](08_BUILD_SEQUENCE.md).
+This is the **closed batch ledger**. QL-305–310 were separately completed and QL-311–330 is the new owner-directed software queue; neither changes the count of this archived batch. Previous historical queues (`QL-164–170` and `QL-171–182`) remain archived as records of their original scopes. The source-of-truth entry point is [`08_BUILD_SEQUENCE.md`](08_BUILD_SEQUENCE.md).
