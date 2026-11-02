@@ -5,12 +5,12 @@ older completed-build history and former queues remain preserved for reference.
 
 ## Current active queue — QL-290 through QL-304
 
-**Latest verified production release:** QL-302 at exact `main` code commit
-`0ceeea5e6c4261dfdd6133b3e009aaa989040e39` (five production checks GREEN;
+**Latest verified production release:** QL-303 at exact `main` code commit
+`0d0180d888a4e3f717cd732b93af573583610d36` (five production checks GREEN;
 live JS/CSS SHA-256 matching the tested bundle).
 
-**15 builds are in the active batch; 13/15 Production GREEN; 2 remain.**
-Next is **QL-303 — Six-App Capability Readiness Matrix, Immutable Proof Drift & Owner Notification Review.** Follow the full, numbered feature scope, dependencies, test
+**15 builds are in the active batch; 14/15 Production GREEN; 1 remains.**
+Next is **QL-304 — Four-Business Operator Acceptance Journey, Six-App Gate Reconciliation & Next-Batch Handoff.** Follow the full, numbered feature scope, dependencies, test
 evidence and queue-count rules in **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)**.
 
 | Builds | Priority area | Count |
