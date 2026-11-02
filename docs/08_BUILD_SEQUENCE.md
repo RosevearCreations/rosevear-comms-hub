@@ -8,8 +8,12 @@ older completed-build history and former queues remain preserved for reference.
 **Owner-directed planning scope:** The next **20 builds** complete visual consistency,
 operator screens, management/statistics/status dashboards, credential-free connection
 details, failure-safe mock reviews and final accessibility/regression/handoff.
-**20 planned · 0 Production GREEN · 20 remaining · next QL-311.** These are queued
-software improvements; no implementation or future production status is implied.
+**20 planned · 1 Production GREEN · 19 remaining · next QL-312.** These are queued
+software improvements beyond QL-311; no implementation or future production status is implied.
+
+**QL-311 verified code release:** `9cdb4b47ec73c3f912f7166010d07e3d962e70ad`
+via [PR #596](https://github.com/RosevearCreations/rosevear-comms-hub/pull/596);
+see [navigation and optional Supabase setup release receipt](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md).
 
 **Detailed numbered build list and acceptance gates:**
 [QL-311–330 Final Setup, Visual & Connection-Readiness Queue](QL-311-330-FINAL-SETUP-VISUAL-CONNECTION-QUEUE.md).
@@ -32,7 +36,7 @@ with new explicit owner authorization before implementation.
 
 ## Completed QL-290–304 batch and separate QL-305–310 releases
 
-**Latest verified production software release:** QL-310 at exact `main` code commit
+**Prior production software release:** QL-310 at exact `main` code commit
 `cdd59e18e3fd0a9c51a08d04d8aabe48f806ad2b`; **five production checks GREEN**
 and live JS/CSS SHA-256 byte-identical to the tested bundle. See the
 [QL-310 production record](build-records/QL-310_BATCH_RECONCILIATION_OPERATIONAL_READBACK_MANAGEMENT_REVIEW.md).
