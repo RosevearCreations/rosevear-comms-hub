@@ -5,12 +5,13 @@ older completed-build history and former queues remain preserved for reference.
 
 ## Completed active queue — QL-290 through QL-304
 
-**Latest verified production release:** QL-309 at exact `main` code commit
-`ce4986e3d1b29a84c47a88508c48920e48ca9788` (five production checks GREEN;
-live JS/CSS SHA-256 matching the tested bundle).
+**Latest verified production software release:** QL-310 at exact `main` code commit
+`cdd59e18e3fd0a9c51a08d04d8aabe48f806ad2b`; **five production checks GREEN**
+and live JS/CSS SHA-256 byte-identical to the tested bundle. See the
+[QL-310 production record](build-records/QL-310_BATCH_RECONCILIATION_OPERATIONAL_READBACK_MANAGEMENT_REVIEW.md).
 
 **15/15 builds are Production GREEN; 0 remain in this batch.** The batch is closed.
-QL-305–309 were explicitly requested and delivered as separate releases; see [QL-305](build-records/QL-305_OPERATOR_FEEDBACK_TRIAGE_CROSS_DEVICE_RETEST.md), [QL-306](build-records/QL-306_FOUR_BUSINESS_HANDOFF_QUALITY_SYNTHETIC_REGRESSION.md), [QL-307](build-records/QL-307_IMMUTABLE_SOURCE_PROOF_RECHECK_REVIEWER_INTAKE.md), [QL-308](build-records/QL-308_TENANT_SCOPE_CREDENTIAL_FREE_CONTRACT.md) and [QL-309](build-records/QL-309_READ_ONLY_PILOT_PREFLIGHT_DECISION_PACKET.md) production records. The remaining [QL-310 handoff proposal](QL-305-310-PROPOSED-NEXT-BATCH.md) awaits owner scope authorization. See the completed **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)** for evidence and acceptance gates.
+QL-305–310 were explicitly requested as separate releases; see [QL-305](build-records/QL-305_OPERATOR_FEEDBACK_TRIAGE_CROSS_DEVICE_RETEST.md), [QL-306](build-records/QL-306_FOUR_BUSINESS_HANDOFF_QUALITY_SYNTHETIC_REGRESSION.md), [QL-307](build-records/QL-307_IMMUTABLE_SOURCE_PROOF_RECHECK_REVIEWER_INTAKE.md), [QL-308](build-records/QL-308_TENANT_SCOPE_CREDENTIAL_FREE_CONTRACT.md), [QL-309](build-records/QL-309_READ_ONLY_PILOT_PREFLIGHT_DECISION_PACKET.md) and [QL-310](build-records/QL-310_BATCH_RECONCILIATION_OPERATIONAL_READBACK_MANAGEMENT_REVIEW.md) records. No automatic QL-311 is queued. See the completed **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)** for evidence and acceptance gates.
 
 | Builds | Priority area | Count |
 | --- | --- | ---: |
