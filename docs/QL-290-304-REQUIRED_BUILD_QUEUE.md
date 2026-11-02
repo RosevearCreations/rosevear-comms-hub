@@ -1,4 +1,4 @@
-# Rosevear Comms Hub — active 15-build batch (QL-290–QL-304)
+# Rosevear Comms Hub — completed 15-build batch (QL-290–QL-304)
 
 **Planning baseline:** QL-289–301 are verified in their individual release records. QL-302 is **Production GREEN** at exact `main` code commit `0ceeea5e6c4261dfdd6133b3e009aaa989040e39`, with five successful production checks and matching live JS/CSS SHA-256. The next build is **QL-303**. Planning the remaining builds is not evidence that they have been implemented or approved for real communications.
 
@@ -28,11 +28,11 @@ The four customer-facing business contexts are Rosie Dazzlers, Devil n Dove, Yar
 | **QL-301 — Management Command Dashboard, Ownership Workload & Incident Status Cards** · **Production GREEN** | Management dashboard | Completed: scoped Management/System Status command cards from four existing fictional queue fixtures per company, with status counts, fixed age labels, filters and preview drill-downs. | 1,132 tests, TypeScript/security/build passed; exact-main `a2b5d64db6abfb51c4a36f430f23f7a1827cf2e8` 5/5 checks GREEN and live JS/CSS byte-identical. [Release record](build-records/QL-301_MANAGEMENT_OWNERSHIP_WORKLOAD_INCIDENT_STATUS.md). |
 | **QL-302 — Statistics Trend Explorer, Source Provenance & Freshness Explanations** · **Production GREEN** | Management/statistics | Completed: company-scoped fictional time-window and category comparisons with chart/table parity, zero-filter handling and source/freshness explanation. | 1,140 tests, TypeScript/security/build passed; exact-main `0ceeea5e6c4261dfdd6133b3e009aaa989040e39` 5/5 checks GREEN and live JS/CSS byte-identical. [Release record](build-records/QL-302_STATISTICS_TREND_SOURCE_FRESHNESS.md). |
 | **QL-303 — Six-App Capability Readiness Matrix, Immutable Proof Drift & Owner Notification Review** · **Production GREEN** | Integration readiness | Completed: six-source role/capability matrix, five closed independent gate families, immutable-SHA pinned public source readback and dated drift aging, accessible UNSENT owner notification drafts with local-only review. | Six actual public immutable-path GETs on 2026-11-02 returned HTTP 404; 200/403/404 classifications distinct. 1,144 tests, TypeScript, 10/10 security baseline, build passed; exact-main `0d0180d888a4e3f717cd732b93af573583610d36` 5/5 checks GREEN and live JS/CSS byte-identical. No app network sink or source writes. [Release record](build-records/QL-303_SIX_APP_CAPABILITY_IMMUTABLE_PROOF_DRIFT_OWNER_NOTIFICATION.md). |
-| **QL-304 — Four-Business Operator Acceptance Journey, Six-App Gate Reconciliation & Next-Batch Handoff** | Acceptance and queue closure | Exercise the full synthetic journey from intake/event → inbox → contact context → unsent draft → task/handoff → management/statistics readback; reconcile all six app integration gates and prepare the next roadmap. | Full test/accessibility/security regression, cross-brand isolation, exact-main build/Worker verification and owner-visible acceptance checklist; **queue closes only after its own verified production GREEN**. Live pilot and ACK workstream remain separate decisions. |
+| **QL-304 — Four-Business Operator Acceptance Journey, Six-App Gate Reconciliation & Next-Batch Handoff** · **Production GREEN** | Acceptance and queue closure | Completed: eight-step synthetic journey for all four companies, 32 session-only review controls, six-source zero-gate reconciliation and proposed QL-305–310 roadmap. | 1,148 tests across 121 files, TypeScript, 10/10 security baseline, production build passed. Exact-main code `33d6e2aa5e0a8735137c12260df6298abcc3a270` 5/5 checks GREEN and live JS/CSS byte-identical. No owner acceptance or live pilot implied. [Release record](build-records/QL-304_FOUR_BUSINESS_ACCEPTANCE_SIX_APP_GATE_BATCH_CLOSURE.md). |
 
 ## Dependencies and priority
 
-1. **QL-290 through QL-303 are complete**, without extending or restarting the parked ACK delivery workstream. **QL-304 is next**.
+1. **QL-290 through QL-304 are complete**; no live integration or parked ACK workstream has been activated. **The batch is closed.** [QL-305–310 proposals](QL-305-310-PROPOSED-NEXT-BATCH.md) await independent owner scheduling.
 2. **QL-291–294** establish usable operator navigation, inbox, drafts and assignments; **QL-295–298** complete connected-looking *synthetic* customer and channel journeys without activating providers.
 3. **QL-299–300** validate accessibility and preference recovery against those completed screens; **QL-301–302** build management and statistics views on explicit fixture-backed outcomes.
 4. **QL-303** consolidates source-gate readiness without bypassing it. **QL-304** performs end-to-end acceptance and reconciles the next batch; it does not itself authorize a live pilot.
@@ -45,10 +45,10 @@ The four customer-facing business contexts are Rosie Dazzlers, Devil n Dove, Yar
 - **No unreviewed persistence:** use existing reviewed local preference storage only for allowed layout settings; do not silently introduce private data into localStorage, a database, telemetry or exports.
 - **One guarded release per build:** focused tests, full app tests, security baseline, production build, exact feature→`dev`→`main` Git tree, and five successful checks on the **exact `main` commit**. Confirm the public Worker serves the same JS/CSS bytes before announcing **Production GREEN**. Record the release SHA and next queue status after completion.
 
-## Queue ledger (verified after QL-303)
+## Queue ledger (verified after QL-304)
 
 | Range | Planned | Production GREEN in this batch | Remaining | Next |
 | --- | ---: | ---: | ---: | --- |
-| QL-290–304 | **15** | **14** | **1** | **QL-304** |
+| QL-290–304 | **15** | **15** | **0** | **Batch closed · QL-305 proposed only** |
 
-This is the **active future queue**. Previous historical queues (`QL-164–170` and `QL-171–182`) remain archived as records of their original scopes. The source-of-truth entry point is [`08_BUILD_SEQUENCE.md`](08_BUILD_SEQUENCE.md).
+This is the **closed batch ledger**. QL-305–310 is a proposal, not yet an authorized active queue. Previous historical queues (`QL-164–170` and `QL-171–182`) remain archived as records of their original scopes. The source-of-truth entry point is [`08_BUILD_SEQUENCE.md`](08_BUILD_SEQUENCE.md).
