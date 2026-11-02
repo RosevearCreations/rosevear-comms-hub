@@ -1,10 +1,10 @@
-# Rosevear Comms Hub — proposed QL-305–310 handoff (not authorized)
+# Rosevear Comms Hub — QL-305 completed; QL-306–310 proposed handoff
 
-This is a planning handoff following the verified 15/15 GREEN QL-290–304 operator-preview batch. None of these proposals is a committed active build. Confirm scope and priority with the owner before starting.
+This is a planning handoff following the verified 15/15 GREEN QL-290–304 operator-preview batch. **QL-305 has now been explicitly owner-requested and delivered Production GREEN** as a separate release; QL-306–310 remain unapproved proposals. Confirm scope and priority with the owner before starting any further build.
 
 | Proposal | Suggested next improvement | Acceptance dependency |
 | --- | --- | --- |
-| QL-305 | Operator acceptance feedback triage and accessible cross-device retest | Genuine owner observations, device/browser evidence and prioritized reproducible defects; do not fabricate sign-off. |
+| QL-305 · **Production GREEN** | Operator acceptance feedback triage and accessible cross-device retest | Completed: local unverified case entry, company-scoped severity/device queues and accessible manual retest directions. Owner observations and actual device pass remain unverified. [Release record](build-records/QL-305_OPERATOR_FEEDBACK_TRIAGE_CROSS_DEVICE_RETEST.md). |
 | QL-306 | Four-business synthetic handoff quality and regression expansion | Strict company fixture isolation and no real staff updates, notification delivery or provider send. |
 | QL-307 | Immutable source proof recheck and independent reviewer evidence intake | Distinguish 404, 403/rate limit and 200-present-unverified; signed original Proof-B and independently verified witness/custody gates required. |
 | QL-308 | Nonproduction tenant-scope and credential-free capability contract review | No private gateway use, no unapproved identity, no real customer tenant. |
@@ -20,4 +20,4 @@ This is a planning handoff following the verified 15/15 GREEN QL-290–304 opera
 - **Manual acceptance:** QL-304 provides 32 fictional, session-only review controls. No real owner device feedback or authorization was received.
 - **Deployment vs. live operation:** All QL-290–304 production UI builds passed their exact-main checks and live asset verifications. Production GREEN does not remove safety holds.
 
-**Next proposed build to approve:** QL-305 — Operator Acceptance Feedback Triage & Accessible Cross-Device Retest. This is a suggestion, not an instruction to build or release it.
+**Next proposed build to approve:** QL-306 — Four-Business Handoff Quality & Synthetic Regression Expansion. This is a suggestion, not an instruction to build or release it.
