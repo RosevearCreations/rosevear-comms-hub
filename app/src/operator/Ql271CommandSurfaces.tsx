@@ -12,6 +12,7 @@ import { Ql301ManagementDashboard } from './Ql301ManagementDashboard';
 import { Ql302StatisticsTrend } from './Ql302StatisticsTrend';
 import { Ql303CapabilityReadiness } from './Ql303CapabilityReadiness';
 import { Ql307ProofEvidence } from './Ql307ProofEvidence';
+import { Ql308TenantContracts } from './Ql308TenantContracts';
 import { Ql304OperatorAcceptance } from './Ql304OperatorAcceptance';
 import { Ql305FeedbackTriage } from './Ql305FeedbackTriage';
 import { Ql306HandoffQuality } from './Ql306HandoffQuality';
@@ -138,6 +139,7 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
     {(mode === 'management' || mode === 'system_status') && <Ql301ManagementDashboard key={`${organizationId}-${mode}`} organizationId={organizationId} mode={mode} onNavigate={onNavigate} />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql303CapabilityReadiness />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql307ProofEvidence />}
+    {(mode === 'it_command' || mode === 'system_status') && <Ql308TenantContracts />}
     {mode === 'management' && <Ql304OperatorAcceptance organizationId={organizationId} onSelectOrganization={onSelectOrganization} onNavigate={onNavigate} />}
     {mode === 'management' && <Ql305FeedbackTriage organizationId={organizationId} onSelectOrganization={onSelectOrganization} onNavigate={onNavigate} />}
     {mode === 'management' && <Ql306HandoffQuality organizationId={organizationId} onSelectOrganization={onSelectOrganization} onNavigate={onNavigate} />}
