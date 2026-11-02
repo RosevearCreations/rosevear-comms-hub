@@ -14,6 +14,7 @@ import { Ql303CapabilityReadiness } from './Ql303CapabilityReadiness';
 import { Ql307ProofEvidence } from './Ql307ProofEvidence';
 import { Ql308TenantContracts } from './Ql308TenantContracts';
 import { Ql309PilotPreflight } from './Ql309PilotPreflight';
+import { Ql310BatchReconciliation } from './Ql310BatchReconciliation';
 import { Ql304OperatorAcceptance } from './Ql304OperatorAcceptance';
 import { Ql305FeedbackTriage } from './Ql305FeedbackTriage';
 import { Ql306HandoffQuality } from './Ql306HandoffQuality';
@@ -145,6 +146,7 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
     {mode === 'management' && <Ql304OperatorAcceptance organizationId={organizationId} onSelectOrganization={onSelectOrganization} onNavigate={onNavigate} />}
     {mode === 'management' && <Ql305FeedbackTriage organizationId={organizationId} onSelectOrganization={onSelectOrganization} onNavigate={onNavigate} />}
     {mode === 'management' && <Ql306HandoffQuality organizationId={organizationId} onSelectOrganization={onSelectOrganization} onNavigate={onNavigate} />}
+    {(mode === 'management' || mode === 'system_status') && <Ql310BatchReconciliation />}
 
     {mode === 'analytics' && <Ql302StatisticsTrend key={`trend-${organizationId}`} organizationId={organizationId} />}
 
