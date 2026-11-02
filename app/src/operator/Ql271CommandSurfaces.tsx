@@ -12,6 +12,7 @@ import { Ql301ManagementDashboard } from './Ql301ManagementDashboard';
 import { Ql302StatisticsTrend } from './Ql302StatisticsTrend';
 import { Ql303CapabilityReadiness } from './Ql303CapabilityReadiness';
 import { Ql304OperatorAcceptance } from './Ql304OperatorAcceptance';
+import { Ql305FeedbackTriage } from './Ql305FeedbackTriage';
 import { activeQl272Profile, defaultQl272Preferences, parseQl272Preferences,
   type Ql272PreferenceEnvelope } from './ql272LayoutPreferences';
 import { inspectQl272LocalLayout, saveQl272LocalLayout } from '../storage/localRepository';
@@ -135,6 +136,7 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
     {(mode === 'management' || mode === 'system_status') && <Ql301ManagementDashboard key={`${organizationId}-${mode}`} organizationId={organizationId} mode={mode} onNavigate={onNavigate} />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql303CapabilityReadiness />}
     {mode === 'management' && <Ql304OperatorAcceptance organizationId={organizationId} onSelectOrganization={onSelectOrganization} onNavigate={onNavigate} />}
+    {mode === 'management' && <Ql305FeedbackTriage organizationId={organizationId} onSelectOrganization={onSelectOrganization} onNavigate={onNavigate} />}
 
     {mode === 'analytics' && <Ql302StatisticsTrend key={`trend-${organizationId}`} organizationId={organizationId} />}
 
