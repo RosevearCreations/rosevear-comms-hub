@@ -109,6 +109,7 @@ import { type Ql244Ledger } from './ql244WitnessedHandshake';
 import { Ql245SixAppEvidence } from './Ql245SixAppEvidence';
 import { Ql270Connections } from './Ql270Connections';
 import {ql311FilteredSections,ql311NavigationSections,ql311SectionForWorkspace,type Ql311SectionId} from './ql311Navigation';
+import {Ql312ThemeControls, type Ql312Contrast, type Ql312Density} from './Ql312ThemeControls';
 import { Ql271CommandSurfaces, type Ql271CommandMode } from './Ql271CommandSurfaces';
 import { type Ql245Ledger } from './ql245SixAppEvidence';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
@@ -116,6 +117,7 @@ import { findOperatorOrganization, initialOperatorOrganization, operatorOrganiza
 import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
 import type { Ql183Feedback } from './ql183OperatorUsabilityAcceptance';
 import './operator-shell.css';
+import './ql312-theme.css';
 
 const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; description: string }> = [
   { id: 'accessibility_review', label: 'Accessibility owner walkthrough', description: 'Device-by-device keyboard, focus, contrast, zoom and screen-reader review queue' },
@@ -190,6 +192,8 @@ export function OperatorShell() {
   const [showLegacyTools, setShowLegacyTools] = useState(false);
   const [workspace, setWorkspace] = useState<OperatorWorkspace>('dashboard');
   const [navigationSearch,setNavigationSearch] = useState('');
+  const [themeDensity,setThemeDensity] = useState<Ql312Density>('comfortable');
+  const [themeContrast,setThemeContrast] = useState<Ql312Contrast>('standard');
   const [expandedSections,setExpandedSections]=useState<ReadonlySet<Ql311SectionId>>(()=>new Set(['front_end']));
   const [contactJump, setContactJump] = useState<string | null>(null);
   const [threadJump, setThreadJump] = useState<string | null>(null);
@@ -311,11 +315,11 @@ export function OperatorShell() {
   }, []);
 
   return (
-    <div className="ql172-shell" data-organization={organization.id} data-ql191-release="ql191-four-organization-console-v2" data-ql270-shell="categorized" data-ql271-command={commandWorkspace?'true':'false'}>
+    <div className="ql172-shell" data-organization={organization.id} data-ql191-release="ql191-four-organization-console-v2" data-ql270-shell="categorized" data-ql271-command={commandWorkspace?'true':'false'} data-ql312-density={themeDensity} data-ql312-contrast={themeContrast}>
       <a className="ql172-skip-link" href="#ql172-workspace">Skip to operator workspace</a>
       <header className="ql172-header">
         <div>
-          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-311</p>
+          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-312</p>
           <h1>Communications Command Centre</h1>
           <p>One control surface · four businesses · two supporting systems.</p>
         </div>
@@ -379,6 +383,7 @@ export function OperatorShell() {
         </aside>
 
         <main id="ql172-workspace" tabIndex={-1} className="ql172-main" aria-label="Selected operator workspace">
+          <Ql312ThemeControls density={themeDensity} onDensityChange={setThemeDensity} contrast={themeContrast} onContrastChange={setThemeContrast} />
           <nav className="ql311-breadcrumb" aria-label="Workspace breadcrumb">
             <button type="button" onClick={()=>setWorkspace('dashboard')}>Command home</button>
             <span aria-hidden="true">/</span><span>{activeSection.label}</span>

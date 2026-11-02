@@ -94,7 +94,7 @@ describe('QL-291 compact operator command and guided safe navigation',()=>{
   });
   it('restores a verified saved profile after a presentation change',async()=>{
     await openCommand();
-    await act(async()=>button('Compact').click());
+    await act(async()=>host.querySelectorAll<HTMLButtonElement>('.ql291-preference-controls button')[1].click());
     await act(async()=>button('Check saved view').click());
     expect(host.textContent).toContain('Saved layout: VALID');
     expect(button('Restore verified layout').disabled).toBe(false);
@@ -152,7 +152,7 @@ describe('QL-291 compact operator command and guided safe navigation',()=>{
     await act(async()=>{select.value='it_reviewer';select.dispatchEvent(new Event('change',{bubbles:true}));});
     expect(host.textContent).toContain('IT reviewer display preview');
     expect(host.textContent).toContain('No real tenant, gateway or messaging permission');
-    await act(async()=>button('Compact').click());
+    await act(async()=>host.querySelectorAll<HTMLButtonElement>('.ql291-preference-controls button')[1].click());
     expect(host.querySelector('.ql271-command')?.getAttribute('data-ql272-role-preview')).toBe('it_reviewer');
     expect(host.querySelectorAll('.ql291-route')).toHaveLength(3);
     expect(window.localStorage.length).toBe(1);

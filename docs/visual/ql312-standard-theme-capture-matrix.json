@@ -1,0 +1,18 @@
+{
+  "build": "QL-312",
+  "purpose": "Repeatable cross-category screenshot comparison and physical-device acceptance plan; no screenshots or owner reviews are fabricated.",
+  "captureStatus": "PENDING_BROWSER_CAPTURE",
+  "viewportWidths": [320, 375, 768, 1024, 1440],
+  "zoomPercent": [100, 200, 400],
+  "displayStates": ["comfortable / standard", "compact / standard", "comfortable / high contrast", "compact / high contrast"],
+  "categoryScreens": [
+    { "section": "front_end", "workspace": "dashboard", "tone": "cyan" },
+    { "section": "admin", "workspace": "accessibility_review", "tone": "violet" },
+    { "section": "it", "workspace": "connections", "tone": "blue" },
+    { "section": "management", "workspace": "management", "tone": "gold" },
+    { "section": "statistics", "workspace": "analytics", "tone": "green" },
+    { "section": "status", "workspace": "system_status", "tone": "rose" }
+  ],
+  "checks": ["focus ring visible", "no clipped labels or horizontal page overflow", "controls remain at least 40 CSS px high", "status meaning does not depend on colour", "no activated integration", "no real owner device claim"],
+  "ownerDeviceAcceptance": "NOT_PERFORMED"
+}
