@@ -3,7 +3,34 @@
 This file is the build-sequence entry point. The active future batch is listed below;
 older completed-build history and former queues remain preserved for reference.
 
-## Completed active queue — QL-290 through QL-304
+## Active final setup queue — QL-311 through QL-330
+
+**Owner-directed planning scope:** The next **20 builds** complete visual consistency,
+operator screens, management/statistics/status dashboards, credential-free connection
+details, failure-safe mock reviews and final accessibility/regression/handoff.
+**20 planned · 0 Production GREEN · 20 remaining · next QL-311.** These are queued
+software improvements; no implementation or future production status is implied.
+
+**Detailed numbered build list and acceptance gates:**
+[QL-311–330 Final Setup, Visual & Connection-Readiness Queue](QL-311-330-FINAL-SETUP-VISUAL-CONNECTION-QUEUE.md).
+
+| Builds | Priority area | Count |
+| --- | --- | ---: |
+| QL-311–320 | Navigation, design theme, responsive screens, operator workflows and accessibility | 10 |
+| QL-321–323 | Management, statistics, system status and recovery | 3 |
+| QL-324–328 | Six-app connection catalogue, proof and nonsecret contract/fallback readiness | 5 |
+| QL-329–330 | Hardening, acceptance packet and final evidence-led handoff | 2 |
+| **Total** | **Active final autonomous-setup batch** | **20** |
+
+All six external integrations remain **DISCONNECTED / HOLD**. No private GET,
+real calls/SMS, provider sending, real customer data, signed proof attestation,
+TEST authorization, Windows relay installation, or owner acceptance is authorized
+by this queue. ACK Delivery Evidence remains **UNDER_REVIEW / PARKED_FOR_LATER**.
+**After QL-330: do not automatically queue QL-331.** Another batch must be
+chosen from genuine owner acceptance findings and independently verified evidence,
+with new explicit owner authorization before implementation.
+
+## Completed QL-290–304 batch and separate QL-305–310 releases
 
 **Latest verified production software release:** QL-310 at exact `main` code commit
 `cdd59e18e3fd0a9c51a08d04d8aabe48f806ad2b`; **five production checks GREEN**
@@ -11,7 +38,7 @@ and live JS/CSS SHA-256 byte-identical to the tested bundle. See the
 [QL-310 production record](build-records/QL-310_BATCH_RECONCILIATION_OPERATIONAL_READBACK_MANAGEMENT_REVIEW.md).
 
 **15/15 builds are Production GREEN; 0 remain in this batch.** The batch is closed.
-QL-305–310 were explicitly requested as separate releases; see [QL-305](build-records/QL-305_OPERATOR_FEEDBACK_TRIAGE_CROSS_DEVICE_RETEST.md), [QL-306](build-records/QL-306_FOUR_BUSINESS_HANDOFF_QUALITY_SYNTHETIC_REGRESSION.md), [QL-307](build-records/QL-307_IMMUTABLE_SOURCE_PROOF_RECHECK_REVIEWER_INTAKE.md), [QL-308](build-records/QL-308_TENANT_SCOPE_CREDENTIAL_FREE_CONTRACT.md), [QL-309](build-records/QL-309_READ_ONLY_PILOT_PREFLIGHT_DECISION_PACKET.md) and [QL-310](build-records/QL-310_BATCH_RECONCILIATION_OPERATIONAL_READBACK_MANAGEMENT_REVIEW.md) records. No automatic QL-311 is queued. See the completed **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)** for evidence and acceptance gates.
+QL-305–310 were explicitly requested as separate releases; see [QL-305](build-records/QL-305_OPERATOR_FEEDBACK_TRIAGE_CROSS_DEVICE_RETEST.md), [QL-306](build-records/QL-306_FOUR_BUSINESS_HANDOFF_QUALITY_SYNTHETIC_REGRESSION.md), [QL-307](build-records/QL-307_IMMUTABLE_SOURCE_PROOF_RECHECK_REVIEWER_INTAKE.md), [QL-308](build-records/QL-308_TENANT_SCOPE_CREDENTIAL_FREE_CONTRACT.md), [QL-309](build-records/QL-309_READ_ONLY_PILOT_PREFLIGHT_DECISION_PACKET.md) and [QL-310](build-records/QL-310_BATCH_RECONCILIATION_OPERATIONAL_READBACK_MANAGEMENT_REVIEW.md) records. The newly owner-directed queue starts at QL-311. See the completed **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)** for earlier evidence and acceptance gates.
 
 | Builds | Priority area | Count |
 | --- | --- | ---: |
@@ -21,7 +48,7 @@ QL-305–310 were explicitly requested as separate releases; see [QL-305](build-
 | QL-299–300 | Accessibility owner walkthrough, keyboard preferences and saved-view recovery | 2 |
 | QL-301–302 | Management/Status dashboards and source-explained statistics | 2 |
 | QL-303–304 | Six-app safe integration readiness and end-to-end synthetic acceptance/queue closure | 2 |
-| **Total** | **Active planned batch** | **15** |
+| **Total** | **Closed prior batch** | **15** |
 
 **Scope restriction:** these are planned software improvements, **not** live
 provider or owner-evidence authorizations. The Six-App Acknowledgement Delivery
@@ -36,7 +63,7 @@ disabled pending genuine independent verification and separate TEST approval.
 - [QL-171–182 Required Build Queue](QL-171-182-REQUIRED_BUILD_QUEUE.md)
 
 The archived QL-166/QL-167–170 status and history belong to those older batches;
-they are not active future builds as of QL-290.
+they are not active future builds.
 
 ## Completed builds
 
