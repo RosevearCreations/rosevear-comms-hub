@@ -36,7 +36,7 @@ async function chooseWorkspace(label: string) {
 describe('QL-172 unified operator navigation and safe preview', () => {
   it('starts with one labelled navigation, a skip target, and a disabled-only banner', () => {
     expect(host.querySelectorAll('nav[aria-label="Operator workspaces"]')).toHaveLength(1);
-    expect(host.querySelectorAll('.ql172-nav-button')).toHaveLength(60);
+    expect(host.querySelectorAll('.ql172-nav-button')).toHaveLength(56); // QL-311 removes four duplicate navigation entries; no routes lost.
     expect(host.querySelector('a.ql172-skip-link')?.getAttribute('href')).toBe('#ql172-workspace');
     expect(host.querySelector('.ql172-status')?.textContent).toContain('DISABLED PREVIEW');
     expect(host.querySelector('[aria-current="page"]')?.textContent).toContain('Dashboard');
