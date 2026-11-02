@@ -5,12 +5,12 @@ older completed-build history and former queues remain preserved for reference.
 
 ## Completed active queue — QL-290 through QL-304
 
-**Latest verified production release:** QL-307 at exact `main` code commit
-`a72d64a22866a4ca6023b31c1bd53e8a951127d9` (five production checks GREEN;
+**Latest verified production release:** QL-308 at exact `main` code commit
+`d168da2d467dbe7691a4a366f90f6d010eb17086` (five production checks GREEN;
 live JS/CSS SHA-256 matching the tested bundle).
 
 **15/15 builds are Production GREEN; 0 remain in this batch.** The batch is closed.
-QL-305–307 were explicitly requested and delivered as separate releases; see [QL-305](build-records/QL-305_OPERATOR_FEEDBACK_TRIAGE_CROSS_DEVICE_RETEST.md), [QL-306](build-records/QL-306_FOUR_BUSINESS_HANDOFF_QUALITY_SYNTHETIC_REGRESSION.md) and [QL-307](build-records/QL-307_IMMUTABLE_SOURCE_PROOF_RECHECK_REVIEWER_INTAKE.md) production records. The remaining [QL-308–310 handoff proposals](QL-305-310-PROPOSED-NEXT-BATCH.md) await owner scope authorization. See the completed **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)** for evidence and acceptance gates.
+QL-305–308 were explicitly requested and delivered as separate releases; see [QL-305](build-records/QL-305_OPERATOR_FEEDBACK_TRIAGE_CROSS_DEVICE_RETEST.md), [QL-306](build-records/QL-306_FOUR_BUSINESS_HANDOFF_QUALITY_SYNTHETIC_REGRESSION.md), [QL-307](build-records/QL-307_IMMUTABLE_SOURCE_PROOF_RECHECK_REVIEWER_INTAKE.md) and [QL-308](build-records/QL-308_TENANT_SCOPE_CREDENTIAL_FREE_CONTRACT.md) production records. The remaining [QL-309–310 handoff proposals](QL-305-310-PROPOSED-NEXT-BATCH.md) await owner scope authorization. See the completed **[QL-290–304 Required Build Queue](QL-290-304-REQUIRED_BUILD_QUEUE.md)** for evidence and acceptance gates.
 
 | Builds | Priority area | Count |
 | --- | --- | ---: |
