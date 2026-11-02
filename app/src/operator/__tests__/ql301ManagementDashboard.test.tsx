@@ -37,7 +37,7 @@ beforeEach(async () => {
 });
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); });
 
-function button(label: string) { const result = [...host.querySelectorAll<HTMLButtonElement>('button')].find(item => item.textContent?.includes(label)); if (!result) throw new Error(`Missing ${label}`); return result; }
+function button(label: string) { const all = [...host.querySelectorAll<HTMLButtonElement>('button')]; const findIn=(selector:string)=>all.filter(item=>item.matches(selector)).find(item=>item.textContent?.includes(label)); const result=findIn('.ql172-brand')??findIn('.ql172-nav-button')??all.find(item=>item.textContent?.includes(label)); if(!result)throw new Error(`Missing ${label}`); return result; }
 
 describe('QL-301 management dashboard interactions', () => {
   it('filters visible cards and navigates to a relevant preview without a real handoff', async () => {

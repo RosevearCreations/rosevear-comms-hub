@@ -108,6 +108,7 @@ import { Ql244WitnessedHandshake } from './Ql244WitnessedHandshake';
 import { type Ql244Ledger } from './ql244WitnessedHandshake';
 import { Ql245SixAppEvidence } from './Ql245SixAppEvidence';
 import { Ql270Connections } from './Ql270Connections';
+import {ql311FilteredSections,ql311NavigationSections,ql311SectionForWorkspace,type Ql311SectionId} from './ql311Navigation';
 import { Ql271CommandSurfaces, type Ql271CommandMode } from './Ql271CommandSurfaces';
 import { type Ql245Ledger } from './ql245SixAppEvidence';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
@@ -175,24 +176,7 @@ const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; descript
   { id: 'telephony', label: 'Phone/SMS safety', description: 'Mock-only phone/SMS event emulator, replay and disabled provider safeguards' }
 ];
 
-/** Compact navigation: keep every historical screen but hide deep audits in
- * collapsed categories until requested. No permission or feature is removed. */
-const NAVIGATION_GROUPS = [
-  {id:'operations',label:'Operations',hint:'Daily workspaces',primary:true,
-    ids:['dashboard','inbox','contacts','guided_intake','event_timeline','routing_studio','accessibility_review','queue','phone','composer','calendar','reports']},
-  {id:'it',label:'IT & Connections',hint:'Six-app setup and evidence',primary:true,
-    ids:['it_command','connections','connectors','six_app_evidence','connection_testing','integration_options']},
-  {id:'admin',label:'Management & Reviews',hint:'Company oversight, safety, trial and audits',primary:false,
-    ids:['management','evidence','trial','review','audit']},
-  {id:'insights',label:'Analytics & Status',hint:'Statistics and six-app safety',primary:true,
-    ids:['analytics','system_status']},
-  {id:'archive',label:'Advanced / Historical',hint:'Older technical and audit workspaces',primary:false,
-    ids:workspaces.filter(entry=>!new Set([
-      'dashboard','inbox','contacts','queue','phone','composer','calendar','reports',
-      'it_command','connections','connectors','six_app_evidence','connection_testing','integration_options',
-      'management','evidence','trial','review','audit','analytics','system_status'
-    ]).has(entry.id)).map(entry=>entry.id)}
-] as const;
+const QL311_NAVIGATION=ql311NavigationSections(workspaces);
 
 const QL271_COMMAND_WORKSPACES: ReadonlySet<OperatorWorkspace> = new Set([
   'it_command', 'management', 'analytics', 'system_status'
@@ -206,6 +190,7 @@ export function OperatorShell() {
   const [showLegacyTools, setShowLegacyTools] = useState(false);
   const [workspace, setWorkspace] = useState<OperatorWorkspace>('dashboard');
   const [navigationSearch,setNavigationSearch] = useState('');
+  const [expandedSections,setExpandedSections]=useState<ReadonlySet<Ql311SectionId>>(()=>new Set(['front_end']));
   const [contactJump, setContactJump] = useState<string | null>(null);
   const [threadJump, setThreadJump] = useState<string | null>(null);
   const [queueJump, setQueueJump] = useState<string | null>(null);
@@ -252,6 +237,9 @@ export function OperatorShell() {
   const organization = findOperatorOrganization(organizationId) ?? operatorOrganizations[0];
   const brandId = organization.legacyBrandId;
   const activeWorkspace = workspaces.find((entry) => entry.id === workspace) ?? workspaces[0];
+  const activeSection=ql311SectionForWorkspace(QL311_NAVIGATION,workspace);
+  const matchingSections=ql311FilteredSections(QL311_NAVIGATION,navigationSearch);
+  const matchingCount=matchingSections.reduce((sum,section)=>sum+section.items.length,0);
   const commandWorkspace = QL271_COMMAND_WORKSPACES.has(workspace);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const previouslySelected = useRef<OperatorWorkspace | null>(null);
@@ -302,7 +290,15 @@ export function OperatorShell() {
   useEffect(() => {
     if (previouslySelected.current && previouslySelected.current !== workspace) headingRef.current?.focus();
     previouslySelected.current = workspace;
+    setExpandedSections(previous=>new Set([...previous,activeSection.id]));
   }, [workspace]);
+
+  function toggleSection(id:Ql311SectionId){
+    setExpandedSections(previous=>{
+      if(previous.has(id))return new Set([...previous].filter(section=>section!==id));
+      return new Set([...previous,id]);
+    });
+  }
 
   useEffect(() => {
     function handleWorklistNavigation(event: KeyboardEvent) {
@@ -319,7 +315,7 @@ export function OperatorShell() {
       <a className="ql172-skip-link" href="#ql172-workspace">Skip to operator workspace</a>
       <header className="ql172-header">
         <div>
-          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-310</p>
+          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-311</p>
           <h1>Communications Command Centre</h1>
           <p>One control surface · four businesses · two supporting systems.</p>
         </div>
@@ -351,16 +347,18 @@ export function OperatorShell() {
             <input id="ql172-nav-search" className="ql172-nav-search" type="search"
               placeholder="Search tools…" value={navigationSearch}
               onChange={event=>setNavigationSearch(event.currentTarget.value)} />
-            {NAVIGATION_GROUPS.map(group=>{
-              const groupItems=workspaces.filter(entry=>group.ids.some(id=>id===entry.id)&&
-                (!navigationSearch.trim()||`${entry.label} ${entry.description}`.toLowerCase()
-                  .includes(navigationSearch.trim().toLowerCase())));
-              if(!groupItems.length)return null;
-              return <details className="ql172-nav-group" key={group.id}
-                open={navigationSearch.trim()?true:group.primary}>
-                <summary><span>{group.label}</span><small>{groupItems.length}</small></summary>
-                <div className="ql172-nav-items">
-                  {groupItems.map(entry=><button
+            <p className="ql311-nav-result" aria-live="polite">{navigationSearch.trim()?`${matchingCount} matching workspace${matchingCount===1?'':'s'}`:'Six command categories · one historical archive'}</p>
+            {matchingCount===0&&<p className="ql311-no-results" role="status">No workspaces match. Clear the search to see all tools.</p>}
+            {matchingSections.map(group=>{
+              const expanded=Boolean(navigationSearch.trim())||expandedSections.has(group.id);
+              return <section className={`ql172-nav-group ql311-tone-${group.tone}`} key={group.id} data-ql311-section={group.id}>
+                <button type="button" className="ql311-nav-toggle" aria-expanded={expanded}
+                  aria-controls={`ql311-nav-items-${group.id}`} onClick={()=>toggleSection(group.id)}>
+                  <span><strong>{group.label}</strong><small>{group.hint}</small></span><em>{group.items.length}</em>
+                  <span aria-hidden="true">{expanded?'⌄':'›'}</span>
+                </button>
+                <div id={`ql311-nav-items-${group.id}`} className="ql172-nav-items" hidden={!expanded}>
+                  {group.items.map(entry=><button
                     className={entry.id===workspace?'ql172-nav-button active':'ql172-nav-button'}
                     type="button" key={entry.id}
                     aria-current={entry.id===workspace?'page':undefined}
@@ -369,14 +367,23 @@ export function OperatorShell() {
                     <strong>{entry.label}</strong><small>{entry.description}</small>
                   </button>)}
                 </div>
-              </details>;
+              </section>;
             })}
           </nav>
+          <details className="ql311-sidebar-help"><summary>ⓘ Navigation & safe setup help</summary>
+            <p>Choose a category, then its workspace. Search includes the historical screens. Switching businesses clears fictional thread drafts and keeps customer scopes separate.</p>
+            <p>Supabase login is optional and disabled for the six-app proof review. The four `VITE_` settings belong to a future separately approved browser-login build, not a connection key.</p>
+          </details>
           <p className="ql172-sidebar-warning"><kbd>Alt + Shift + Q</kbd> opens assignment worklists. Use ⓘ Help there for focus and handoff shortcuts; shortcuts do not operate inside typing fields.</p>
           <p className="ql172-sidebar-warning">No live calls, SMS, owner approvals, or customer-data processing is authorized.</p>
         </aside>
 
         <main id="ql172-workspace" tabIndex={-1} className="ql172-main" aria-label="Selected operator workspace">
+          <nav className="ql311-breadcrumb" aria-label="Workspace breadcrumb">
+            <button type="button" onClick={()=>setWorkspace('dashboard')}>Command home</button>
+            <span aria-hidden="true">/</span><span>{activeSection.label}</span>
+            <span aria-hidden="true">/</span><strong aria-current="location">{activeWorkspace.label}</strong>
+          </nav>
           <div className="ql172-context">
             <div>
               <p className="ql172-kicker" aria-live="polite" aria-atomic="true">{organization.name} · {activeWorkspace.label}</p>
@@ -385,6 +392,12 @@ export function OperatorShell() {
             </div>
             <span className="ql172-context-badge">Preview only · no dispatch</span>
           </div>
+          <details className="ql311-workspace-guide"><summary>ⓘ About this area & where to go next</summary>
+            <p>{activeSection.hint}. This workspace uses fictional samples or public-source review only. It cannot create a live connection or owner approval.</p>
+            <div className="ql311-guide-actions"><button type="button" onClick={()=>setWorkspace('dashboard')}>Operator home</button>
+              <button type="button" onClick={()=>setWorkspace('it_command')}>I.T. connections</button>
+              <button type="button" onClick={()=>setWorkspace('system_status')}>Safety status</button></div>
+          </details>
           {workspace === 'dashboard' && <Ql191OperatorDashboard key={`dashboard-${organization.id}`} organization={organization} onNavigate={setWorkspace} />}
           {workspace === 'connections' && <Ql270Connections onNavigate={setWorkspace} />}
           {commandWorkspace && <Ql271CommandSurfaces mode={workspace as Ql271CommandMode} organizationId={organization.id} onNavigate={setWorkspace} onSelectOrganization={changeOrganization} />}

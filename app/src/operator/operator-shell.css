@@ -111,6 +111,11 @@
 .ql270-config-banner details { max-width:480px; }
 .ql270-config-banner summary { color:#a2dbee; cursor:pointer; font-weight:700; }
 .ql270-config-banner details p { margin:8px 0 0; color:#d7eafa; line-height:1.45; overflow-wrap:anywhere; }
+.ql270-config-banner details { max-width:min(900px,100%); flex-basis:100%; }
+.ql270-config-banner details[open] { border-top:1px solid #365a75; padding-top:10px; }
+.ql270-config-banner details ol,.ql270-config-banner details ul { margin:8px 0; padding-left:23px; display:grid; gap:7px; line-height:1.5; }
+.ql270-config-banner details code { color:#f5cf89; overflow-wrap:anywhere; }
+.ql270-config-banner details a { display:inline-block; margin-top:10px; color:#86e7fa; font-weight:800; }
 
 /* QL-271 immersive management / IT / analytics / status workspace frame. */
 .ql172-shell[data-ql271-command='true'] { background:#071524; }
@@ -120,3 +125,49 @@
 .ql172-shell[data-ql270-shell='categorized'][data-ql271-command='true'] .ql172-context h2 { color:#fff; }
 .ql172-shell[data-ql270-shell='categorized'][data-ql271-command='true'] .ql172-context p { color:#bdd1e8; }
 .ql172-shell[data-ql270-shell='categorized'][data-ql271-command='true'] .ql172-context-badge { color:#ffd99a; background:#44331c; border-color:#84612d; }
+
+/* QL-311: vivid, unified command navigation without removing historical routes. */
+.ql172-shell[data-ql270-shell='categorized'] .ql172-header { background:radial-gradient(ellipse at 74% -60%,#23c5d450,transparent 58%),radial-gradient(ellipse at 18% 105%,#8746d344,transparent 60%),linear-gradient(112deg,#081629,#122a49 64%,#0a2038); border-bottom:3px solid #5bd5ef; }
+.ql172-shell[data-ql270-shell='categorized'] .ql172-header:before { content:''; position:absolute; inset:0 0 auto; height:4px; background:linear-gradient(90deg,#22d3ee 0 20%,#a78bfa 20% 40%,#f2be64 40% 60%,#5ddba7 60% 80%,#f690b0 80%); }
+.ql172-shell[data-ql270-shell='categorized'] .ql172-sidebar { background:linear-gradient(160deg,#0b1c34,#1b284e 68%,#121f38); }
+.ql172-shell[data-ql270-shell='categorized'] .ql172-brand { background:#202f52; border-color:#425477; }
+.ql172-shell[data-ql270-shell='categorized'] .ql172-brand.active { background:linear-gradient(125deg,var(--ql191-accent),#315f95); }
+.ql172-shell[data-ql270-shell='categorized'] .ql172-navigation { gap:8px; }
+.ql172-shell[data-ql270-shell='categorized'] .ql311-nav-result { margin:0; color:#bcdcf1; font-size:.72rem; line-height:1.5; }
+.ql172-shell[data-ql270-shell='categorized'] .ql172-nav-group { --ql311-accent:#66c9e7; position:relative; background:#152744; border-color:#3b4e70; }
+.ql172-shell[data-ql270-shell='categorized'] .ql311-tone-violet { --ql311-accent:#b8a0ff; }
+.ql172-shell[data-ql270-shell='categorized'] .ql311-tone-blue { --ql311-accent:#67b5ff; }
+.ql172-shell[data-ql270-shell='categorized'] .ql311-tone-gold { --ql311-accent:#f1c370; }
+.ql172-shell[data-ql270-shell='categorized'] .ql311-tone-green { --ql311-accent:#74e2bb; }
+.ql172-shell[data-ql270-shell='categorized'] .ql311-tone-rose { --ql311-accent:#ff9db8; }
+.ql172-shell[data-ql270-shell='categorized'] .ql311-tone-slate { --ql311-accent:#aec3d6; }
+.ql172-shell[data-ql270-shell='categorized'] .ql311-nav-toggle { width:100%; min-height:50px; padding:10px 9px 10px 13px; text-align:left; display:flex; align-items:center; gap:7px; border:0; border-left:4px solid var(--ql311-accent); background:linear-gradient(115deg,#1e3556,#172746); color:#f4f9ff; cursor:pointer; }
+.ql172-shell[data-ql270-shell='categorized'] .ql311-nav-toggle>span:first-child { flex:1; min-width:0; display:grid; gap:3px; }
+.ql172-shell[data-ql270-shell='categorized'] .ql311-nav-toggle strong { font-size:.78rem; }
+.ql172-shell[data-ql270-shell='categorized'] .ql311-nav-toggle small { font-size:.65rem; line-height:1.28; color:#bacfe3; }
+.ql172-shell[data-ql270-shell='categorized'] .ql311-nav-toggle em { font-size:.7rem; font-style:normal; background:#101f38; border-radius:7px; padding:3px 6px; color:var(--ql311-accent); }
+.ql172-shell[data-ql270-shell='categorized'] .ql311-nav-toggle>span:last-child { color:var(--ql311-accent); font-size:1.15rem; }
+.ql172-shell[data-ql270-shell='categorized'] .ql311-nav-toggle:hover { background:#284767; }
+.ql172-shell[data-ql270-shell='categorized'] .ql172-nav-items[hidden] { display:none; }
+.ql172-shell[data-ql270-shell='categorized'] .ql172-nav-items { padding:7px; }
+.ql172-shell[data-ql270-shell='categorized'] .ql172-nav-button.active { background:linear-gradient(100deg,#235a91,#634e9c); box-shadow:inset 4px 0 var(--ql311-accent); }
+.ql172-shell[data-ql270-shell='categorized'] .ql311-no-results { margin:0; padding:10px; border:1px solid #c5a359; border-radius:9px; color:#ffe3b8; font-size:.8rem; }
+.ql311-sidebar-help { border:1px solid #6487a7; border-radius:11px; color:#e1f3ff; background:#18334e; padding:11px; font-size:.76rem; line-height:1.55; }
+.ql311-sidebar-help summary { font-weight:850; color:#87e8e8; cursor:pointer; }
+.ql311-sidebar-help p { margin:9px 0 0; }
+.ql311-breadcrumb { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:12px; color:#365574; font-size:.8rem; font-weight:700; }
+.ql311-breadcrumb button { border:1px solid #aec4df; background:#eaf5ff; padding:7px 10px; border-radius:9px; color:#183b66; font-weight:800; cursor:pointer; }
+.ql311-breadcrumb strong { color:#17416d; }
+.ql311-workspace-guide { margin:-4px 0 18px; border:1px solid #b7cae7; border-left:4px solid #6b69cf; border-radius:12px; background:#f8fbff; padding:12px 15px; color:#304b6b; font-size:.86rem; }
+.ql311-workspace-guide summary { cursor:pointer; font-weight:850; color:#2a377b; }
+.ql311-workspace-guide p { margin:10px 0; line-height:1.55; }
+.ql311-guide-actions { display:flex; flex-wrap:wrap; gap:8px; }
+.ql311-guide-actions button { min-height:40px; border-radius:9px; padding:8px 12px; border:1px solid #7e9dcc; background:#e9f1ff; color:#233e6a; font-weight:800; cursor:pointer; }
+.ql172-shell[data-ql271-command='true'] .ql311-breadcrumb { color:#a6b9dc; }
+.ql172-shell[data-ql271-command='true'] .ql311-breadcrumb strong { color:#eef3ff; }
+.ql172-shell[data-ql271-command='true'] .ql311-breadcrumb button { background:#233e5f; border-color:#47749e; color:#f0f8ff; }
+.ql172-shell[data-ql271-command='true'] .ql311-workspace-guide { background:#152942; border-color:#476491; border-left-color:#b39aff; color:#d0e3f8; }
+.ql172-shell[data-ql271-command='true'] .ql311-workspace-guide summary { color:#beaaff; }
+.ql172-shell[data-ql271-command='true'] .ql311-guide-actions button { background:#213d60; border-color:#537eaa; color:#f0f8ff; }
+@media (max-width:760px) { .ql311-breadcrumb { gap:6px; } .ql311-guide-actions button { flex:1; } }
+@media (forced-colors:active) { .ql311-nav-toggle[aria-expanded='true'] { outline:2px solid Highlight; } .ql311-workspace-guide { border:2px solid CanvasText; } }

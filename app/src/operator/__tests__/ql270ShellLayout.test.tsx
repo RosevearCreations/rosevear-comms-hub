@@ -12,13 +12,14 @@ beforeEach(async()=>{Object.assign(globalThis,{IS_REACT_ACT_ENVIRONMENT:true});
 afterEach(async()=>{await act(async()=>root.unmount());host.remove();});
 
 describe('QL-270 modern categorized operator shell',()=>{
-  it('retains all workspaces while showing only compact Operations and IT categories',()=>{
-    const groups=[...host.querySelectorAll<HTMLDetailsElement>('.ql172-nav-group')];
-    expect(groups).toHaveLength(5);
-    expect(groups.map(g=>g.querySelector('summary')?.textContent)).toEqual([
-      'Operations12','IT & Connections6','Management & Reviews5','Analytics & Status2','Advanced / Historical35']);
-    expect(groups.map(g=>g.open)).toEqual([true,true,false,true,false]);
-    expect(host.querySelectorAll('.ql172-nav-button')).toHaveLength(60);
+  it('retains all unique workspaces in seven QL-311 command categories',()=>{
+    const groups=[...host.querySelectorAll<HTMLElement>('.ql172-nav-group')];
+    expect(groups).toHaveLength(7);
+    expect(groups.map(g=>g.querySelector('.ql311-nav-toggle strong')?.textContent)).toEqual([
+      'Front End / Operator','Admin','I.T. / Connections','Management','Statistical','System Status','Advanced / Historical']);
+    expect(groups.map(g=>g.querySelectorAll('.ql172-nav-button').length)).toEqual([10,5,7,5,1,2,26]);
+    expect(groups.map(g=>g.querySelector('.ql311-nav-toggle')?.getAttribute('aria-expanded'))).toEqual(['true','false','false','false','false','false','false']);
+    expect(host.querySelectorAll('.ql172-nav-button')).toHaveLength(56);
     expect(host.querySelectorAll('.ql172-brand')).toHaveLength(4);
     expect(host.querySelector('.ql172-nav-search')).not.toBeNull();
   });

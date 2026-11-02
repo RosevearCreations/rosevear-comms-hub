@@ -76,9 +76,17 @@ function LocalOnlyBanner({ reasons }: { reasons: string[] }) {
       <span>Disabled preview — local samples only. Supabase login/reference reads
         {' '}are intentionally off. No live calls, customer records or six-app connections.</span>
       {reasons.length>0&&<details>
-        <summary>Technical configuration</summary>
-        <p>Adding a key is not required for the six-app proof handoff.
-          {' '}Configuration: {reasons.join(' ')}</p>
+        <summary>ⓘ Why the Supabase settings say “missing” · setup help</summary>
+        <p><strong>No key is needed for the six-app proof handoff.</strong> These notices explain why optional admin login is OFF, not an error with the public proof review. Keep both enable flags false for the current disabled preview.</p>
+        <ul aria-label="Current optional login configuration">{reasons.map(reason=><li key={reason}><code>{reason}</code></li>)}</ul>
+        <p><strong>Where to put settings only if a later, separately approved login build needs them:</strong></p>
+        <ol>
+          <li><strong>Local development:</strong> create <code>app/.env.local</code> beside the app's <code>vite.config.ts</code>, add the four <code>VITE_</code> names, and restart Vite. Use <code>false</code> for both flags now; URL/key may stay blank.</li>
+          <li><strong>Cloudflare production build:</strong> Workers &amp; Pages → <code>rosevear-comms-hub</code> → Settings → Builds → Build variables and secrets. These are build-time browser values, not the Worker runtime Variables page.</li>
+          <li><strong>GitHub Pages preview (separate):</strong> repository Settings → Secrets and variables → Actions → Variables. This does not configure Cloudflare.</li>
+        </ol>
+        <p>Only with separate approval would an operator set both flags to <code>true</code>, add the public Supabase project URL, and copy a <em>publishable</em> key from Supabase Dashboard → Project Settings → API Keys. Never enter a secret/service-role key, signed source key, password or private token into a <code>VITE_</code> variable.</p>
+        <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/QL-311_NAVIGATION_AND_OPTIONAL_SUPABASE_SETUP.md" target="_blank" rel="noopener noreferrer">Read the full QL-311 setup and navigation guide ↗</a>
       </details>}
     </div>
   );

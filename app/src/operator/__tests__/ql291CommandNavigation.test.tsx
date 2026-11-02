@@ -19,7 +19,10 @@ function button(label:string){const item=[...host.querySelectorAll<HTMLButtonEle
   .find(node=>node.getAttribute('aria-label')===label||node.textContent?.includes(label));
   if(!item)throw Error(`Missing button ${label}`);return item;}
 async function openCommand(mode='IT Command'){
-  await act(async()=>button(mode).click());
+  const target=[...host.querySelectorAll<HTMLButtonElement>('.ql172-nav-button')]
+    .find(item=>item.textContent?.toLocaleLowerCase().includes(mode.toLocaleLowerCase()));
+  if(!target)throw Error(`Missing command workspace ${mode}`);
+  await act(async()=>target.click());
 }
 function route(title:string){const match=[...host.querySelectorAll<HTMLElement>('.ql291-route')]
   .find(item=>item.querySelector('h4')?.textContent===title);
