@@ -118,6 +118,7 @@ import { Ql093SafeReadPreview } from './Ql093SafeReadPreview';
 import type { Ql183Feedback } from './ql183OperatorUsabilityAcceptance';
 import './operator-shell.css';
 import './ql312-theme.css';
+import './ql313-responsive.css';
 
 const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; description: string }> = [
   { id: 'accessibility_review', label: 'Accessibility owner walkthrough', description: 'Device-by-device keyboard, focus, contrast, zoom and screen-reader review queue' },
@@ -194,6 +195,7 @@ export function OperatorShell() {
   const [navigationSearch,setNavigationSearch] = useState('');
   const [themeDensity,setThemeDensity] = useState<Ql312Density>('comfortable');
   const [themeContrast,setThemeContrast] = useState<Ql312Contrast>('standard');
+  const [mobileNavigationOpen,setMobileNavigationOpen] = useState(false);
   const [expandedSections,setExpandedSections]=useState<ReadonlySet<Ql311SectionId>>(()=>new Set(['front_end']));
   const [contactJump, setContactJump] = useState<string | null>(null);
   const [threadJump, setThreadJump] = useState<string | null>(null);
@@ -246,6 +248,7 @@ export function OperatorShell() {
   const matchingCount=matchingSections.reduce((sum,section)=>sum+section.items.length,0);
   const commandWorkspace = QL271_COMMAND_WORKSPACES.has(workspace);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const mobileNavigationButtonRef = useRef<HTMLButtonElement>(null);
   const previouslySelected = useRef<OperatorWorkspace | null>(null);
 
   function changeOrganization(nextOrganization: OrganizationId) {
@@ -304,6 +307,31 @@ export function OperatorShell() {
     });
   }
 
+  function closeMobileNavigation(returnFocus:boolean){
+    setMobileNavigationOpen(false);
+    if(returnFocus)mobileNavigationButtonRef.current?.focus();
+  }
+
+  useEffect(()=>{
+    if(!mobileNavigationOpen)return;
+    const escape=(event:KeyboardEvent)=>{
+      if(event.key!=='Escape')return;
+      event.preventDefault();
+      setMobileNavigationOpen(false);
+      mobileNavigationButtonRef.current?.focus();
+    };
+    window.addEventListener('keydown',escape);
+    return ()=>window.removeEventListener('keydown',escape);
+  },[mobileNavigationOpen]);
+
+  useEffect(()=>{
+    const query=window.matchMedia?.('(max-width: 850px)');
+    if(!query)return;
+    const recover=(event:MediaQueryListEvent)=>{if(!event.matches)setMobileNavigationOpen(false);};
+    query.addEventListener('change',recover);
+    return ()=>query.removeEventListener('change',recover);
+  },[]);
+
   useEffect(() => {
     function handleWorklistNavigation(event: KeyboardEvent) {
       if (ql294Shortcut(event) !== 'queue') return;
@@ -315,11 +343,11 @@ export function OperatorShell() {
   }, []);
 
   return (
-    <div className="ql172-shell" data-organization={organization.id} data-ql191-release="ql191-four-organization-console-v2" data-ql270-shell="categorized" data-ql271-command={commandWorkspace?'true':'false'} data-ql312-density={themeDensity} data-ql312-contrast={themeContrast}>
+    <div className="ql172-shell" data-organization={organization.id} data-ql191-release="ql191-four-organization-console-v2" data-ql270-shell="categorized" data-ql271-command={commandWorkspace?'true':'false'} data-ql312-density={themeDensity} data-ql312-contrast={themeContrast} data-ql313-nav-open={mobileNavigationOpen?'true':'false'}>
       <a className="ql172-skip-link" href="#ql172-workspace">Skip to operator workspace</a>
       <header className="ql172-header">
         <div>
-          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-312</p>
+          <p className="ql172-kicker">◆ Rosevear Comms Hub · QL-313</p>
           <h1>Communications Command Centre</h1>
           <p>One control surface · four businesses · two supporting systems.</p>
         </div>
@@ -330,7 +358,15 @@ export function OperatorShell() {
       </header>
 
       <div className="ql172-layout">
-        <aside className="ql172-sidebar" aria-label="Workspace controls">
+        <button ref={mobileNavigationButtonRef} type="button" className="ql313-mobile-toggle"
+          aria-controls="ql313-sidebar" aria-expanded={mobileNavigationOpen}
+          onClick={()=>setMobileNavigationOpen(previous=>!previous)}>
+          <span aria-hidden="true">☰</span>
+          <span><strong>{mobileNavigationOpen?'Hide':'Browse'} workspaces</strong><small>{organization.name} · {activeWorkspace.label}</small></span>
+          <span aria-hidden="true">{mobileNavigationOpen?'⌃':'⌄'}</span>
+        </button>
+        <aside id="ql313-sidebar" className="ql172-sidebar" aria-label="Workspace controls" data-ql313-open={mobileNavigationOpen?'true':'false'}>
+          <button type="button" className="ql313-mobile-close" onClick={()=>closeMobileNavigation(true)}>Done browsing · return to workspace <span aria-hidden="true">✕</span></button>
           <div className="ql172-brand-group" role="group" aria-label="Active company context">
             <h2>Active business</h2>
             {operatorOrganizations.map((entry) => (
@@ -367,7 +403,7 @@ export function OperatorShell() {
                     type="button" key={entry.id}
                     aria-current={entry.id===workspace?'page':undefined}
                     aria-controls="ql172-workspace" title={entry.description}
-                    onClick={()=>setWorkspace(entry.id)}>
+                    onClick={()=>{setWorkspace(entry.id);closeMobileNavigation(false);if(entry.id===workspace)headingRef.current?.focus();}}>
                     <strong>{entry.label}</strong><small>{entry.description}</small>
                   </button>)}
                 </div>
@@ -384,6 +420,11 @@ export function OperatorShell() {
 
         <main id="ql172-workspace" tabIndex={-1} className="ql172-main" aria-label="Selected operator workspace">
           <Ql312ThemeControls density={themeDensity} onDensityChange={setThemeDensity} contrast={themeContrast} onContrastChange={setThemeContrast} />
+          <details className="ql313-responsive-help"><summary>ⓘ Phone, tablet, zoom & table navigation help</summary>
+            <p>At tablet or phone widths, use <strong>Browse workspaces</strong> to reveal the business and category menu. Choose a workspace to return to its heading, or use <strong>Done browsing</strong> / Escape to close the menu. The current business, search and display choices remain available when the screen rotates or reflows.</p>
+            <p>Wide evidence tables scroll horizontally <em>inside their own card</em>; swipe within the table or use Shift + mouse wheel. No action is hidden behind the table edge. Browser zoom from 200–400% is encouraged for readability review, but simulated viewport checks are not proof of physical owner-device acceptance.</p>
+            <p>All six integrations remain <strong>DISCONNECTED / HOLD</strong>; responsive buttons only navigate fictional/local preview data and cannot call, send SMS, dispatch or approve a connection.</p>
+          </details>
           <nav className="ql311-breadcrumb" aria-label="Workspace breadcrumb">
             <button type="button" onClick={()=>setWorkspace('dashboard')}>Command home</button>
             <span aria-hidden="true">/</span><span>{activeSection.label}</span>

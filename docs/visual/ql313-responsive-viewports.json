@@ -1,0 +1,29 @@
+{
+  "build": "QL-313",
+  "title": "Responsive Operator Shell, Touch Targets & Device Layout Recovery",
+  "mode": "DISABLED_PREVIEW_ONLY",
+  "captureStatus": "PENDING_BROWSER_CAPTURE",
+  "ownerDeviceAcceptance": "NOT_PERFORMED",
+  "viewportWidths": [320, 375, 768, 1024, 1440],
+  "zoomPercent": [100, 200, 400],
+  "orientationCases": ["portrait", "landscape"],
+  "checkpoints": [
+    "menu closed by default at phone/tablet width; open, close and Escape return keyboard focus",
+    "on orientation or desktop-width recovery the menu closes and the current workspace is unchanged",
+    "business context, navigation search, theme density and theme contrast survive reflow",
+    "primary actions remain accessible with minimum 44px touch height at phone/tablet sizes",
+    "evidence-table overflow stays within its card, without clipping action buttons",
+    "phone status source and reason labels stay visible rather than being suppressed",
+    "400% zoom supports vertical document flow and readable focus targets",
+    "none of the responsive controls enable calls, SMS, dispatch, databases or six-app connections"
+  ],
+  "categoryScreens": [
+    {"section":"front_end","workspace":"dashboard","capture":"PENDING"},
+    {"section":"admin","workspace":"accessibility_review","capture":"PENDING"},
+    {"section":"it","workspace":"connections","capture":"PENDING"},
+    {"section":"management","workspace":"management","capture":"PENDING"},
+    {"section":"statistics","workspace":"statistics","capture":"PENDING"},
+    {"section":"status","workspace":"system_status","capture":"PENDING"}
+  ],
+  "evidencePolicy": "Code and jsdom matrix checks are not photographic/browser or real owner-device acceptance. Record actual widths, platform, OS, browser, screenshot, keyboard/touch observation and reviewer before closing these checkpoints."
+}
