@@ -3,7 +3,9 @@ import type { OperatorOrganization } from './ql191Organizations';
 import { customerChannelCount, customersForOrganization, customerThreads, restrictiveConsent } from './ql193CustomerContexts';
 import { candidateForContact, candidatePeer, duplicateCandidates, ql295ConsentPosture, ql295PermissionGate, ql295TasksForContact, reviewQl295Candidate, type Ql295DuplicateDisposition, type Ql295ReviewState } from './ql295ContactReview';
 import { rosterForOrganization, type MockQueueState } from './ql194WorkQueue';
+import { ql316Brands, ql316ConsentReadback } from './ql316VisualReadback';
 import './ql193-customer-360.css';
+import './ql316-contact-intake-visual.css';
 
 type ListFilter = 'all' | 'attention' | 'multi_channel';
 
@@ -38,6 +40,7 @@ export function Ql193Customer360({ organization, initialContactId, onOpenThread,
   const needsReply = threads.filter((thread) => thread.status === 'needs_reply').length;
   const followUps = threads.filter((thread) => thread.needsFollowUp).length;
   const posture = ql295ConsentPosture(threads);
+  const consentReadback = ql316ConsentReadback(posture);
   const tasks = selected ? ql295TasksForContact(organization.id, selected, queue) : [];
   const activeTasks = tasks.filter((task) => task.status !== 'done');
   const roster = rosterForOrganization(organization.id);
@@ -51,16 +54,17 @@ export function Ql193Customer360({ organization, initialContactId, onOpenThread,
   }
 
   return (
-    <section className="ql193-customer-360" data-ql193-release="ql193-customer-360-cross-channel-v1" data-ql295-release="ql295-brand-safe-contact-consent-duplicate-review-v1" data-organization={organization.id} aria-labelledby="ql193-heading">
+    <section className="ql193-customer-360 ql316-surface ql316-contact" data-ql193-release="ql193-customer-360-cross-channel-v1" data-ql295-release="ql295-brand-safe-contact-consent-duplicate-review-v1" data-ql316-release="contact-consent-intake-visual-v1" data-ql316-brand={organization.id} data-organization={organization.id} aria-labelledby="ql193-heading">
       <header className="ql193-header">
         <div>
-          <p className="ql191-eyebrow">QL-295 · Brand-safe contact workbench</p>
+          <p className="ql191-eyebrow">QL-316 · Brand-safe contact workbench</p>
           <h3 id="ql193-heading">{organization.name} · Customer 360</h3>
           <p>Review linked conversations, open assignments, consent sources and possible duplicate examples in one place.</p>
+          <div className="ql316-heading-chips" aria-label="Contact workspace boundaries"><span>{ql316Brands[organization.id].workstream}</span><span>Fixture identities only</span><span>Live contact OFF</span></div>
         </div>
         <button type="button" className="ql191-help-button" aria-expanded={showHelp} aria-controls="ql193-help" aria-label="Help with Customer 360" onClick={() => setShowHelp((previous) => !previous)}>ⓘ Help</button>
       </header>
-      {showHelp && <p id="ql193-help" role="note" className="ql193-help">Choose a fictional person, inspect linked source conversations and related sample assignments, and open the original inbox or worklist. Two conversations are linked only when this synthetic fixture explicitly says so. Names are never used for automatic matching. Duplicate candidates are authored rehearsal scenarios, never confirmed identities. Marketing consent is never granted by an unknown or service-only source. Changing companies clears local review decisions. There is no customer database, contact enrichment, merge, send, or synchronization.</p>}
+      {showHelp && <p id="ql193-help" role="note" className="ql193-help">Choose a fictional person, inspect linked source conversations and sample assignments, then open the source inbox or worklist. The colour and words in the consent card show the strictest linked fixture status—not verified legal permission. Every source stays readable below. Two conversations are linked only when the test fixture says so. Names are never used for automatic matching. Possible duplicates are unverified review prompts, not confirmed identities. Changing companies clears local review decisions. There is no customer database, contact enrichment, merge, send, or synchronization.</p>}
       <p className="ql191-synthetic-banner" role="note">DISABLED CUSTOMER 360 PREVIEW — fabricated identities, assignments, consent labels and possible-duplicate cases only. Each company is isolated. iCamp tenant and YW company records are not connected. No live customer data, contact matching, consent updates, outbound messages, server access or storage writes.</p>
 
       <div className="ql193-summary" aria-label="Customer 360 sample summary">
@@ -86,8 +90,10 @@ export function Ql193Customer360({ organization, initialContactId, onOpenThread,
             <div className="ql193-contact-list">
               {filtered.map((contact) => {
                 const items = customerThreads(organization.id, contact);
+                const contactReadback = ql316ConsentReadback(ql295ConsentPosture(items));
                 return <button key={contact.id} type="button" className={selected?.id === contact.id ? 'ql193-contact active' : 'ql193-contact'} aria-pressed={selected?.id === contact.id} onClick={() => setSelectedId(contact.id)}>
                   <strong>{contact.label}</strong>
+                  <span className={`ql316-consent-pill ql316-consent--${contactReadback.tone}`}>{contactReadback.label}</span>
                   <span>{items.length} {items.length === 1 ? 'conversation' : 'conversations'} · {customerChannelCount(items)} {customerChannelCount(items) === 1 ? 'channel' : 'channels'}</span>
                   <small>{contact.context}</small>
                   <small>{ql295TasksForContact(organization.id, contact, queue).filter((task) => task.status !== 'done').length} open linked tasks · {ql295ConsentPosture(items).label}</small>
@@ -104,6 +110,7 @@ export function Ql193Customer360({ organization, initialContactId, onOpenThread,
               <p className="ql191-eyebrow">Customer context · fixture-only</p>
               <h4>{selected.label}</h4>
               <p>{selected.context}</p>
+              <div className="ql316-contact-readback" role="note"><div><span className="ql316-overline">Read-only contact overview</span><strong>{ql316Brands[organization.id].workstream} · {threads.length} source {threads.length === 1 ? 'conversation' : 'conversations'}</strong></div><span className="ql316-readback-warning">UNVERIFIED IDENTITY · NOT A CUSTOMER RECORD</span></div>
               <div className="ql193-identity" role="note"><strong>Identity evidence:</strong> Manually linked in the test fixture; not customer-verified, inferred from names, or shared across companies. Real identity verification is required before any future merge.</div>
               <dl className="ql193-profile-stats">
                 <div><dt>Conversations</dt><dd>{threads.length}</dd></div>
@@ -112,16 +119,17 @@ export function Ql193Customer360({ organization, initialContactId, onOpenThread,
                 <div><dt>Follow-ups</dt><dd>{followUps}</dd></div>
               </dl>
               <div className="ql193-consent" role="status">
+                <span className={`ql316-consent-pill ql316-consent--${consentReadback.tone}`}>{consentReadback.label}</span>
                 <strong>Contact-wide consent precaution: </strong>
                 {consent === 'opted_out' ? 'A linked channel indicates opt-out. Marketing is prohibited in this example.' :
                   consent === 'service_only' ? 'Only service-purpose fixture context is present. Marketing is not authorized.' :
                     'Unknown or unverified across sources. No outbound messaging is authorized.'}
-                <p>Original per-thread statuses remain visible below. An opt-out is never overridden by another channel.</p>
+                <p>{consentReadback.sourceNote} Original per-thread statuses remain visible below. An opt-out is never overridden by another channel.</p>
               </div>
               <section className="ql295-preferences" aria-labelledby="ql295-consent-title">
                 <div className="ql295-section-heading"><div><p className="ql191-eyebrow">Source-specific permissions · read-only</p><h5 id="ql295-consent-title">Consent &amp; communication preferences</h5></div><span className="ql295-caution">{posture.label}</span></div>
                 <p>{posture.reason} No channel has been independently verified as marketing-allowed. The stricter contact-wide posture always wins.</p>
-                <ul>{posture.sources.map((source) => <li key={source.threadId}><strong>{source.channel.toUpperCase()}</strong><span>{source.consent === 'opted_out' ? 'Opted out' : source.consent === 'service_only' ? 'Service only' : 'Unknown / unverified'}</span><small>Fixture source: {source.threadId}</small></li>)}</ul>
+                <ul>{posture.sources.map((source) => <li key={source.threadId}><strong>{source.channel.toUpperCase()}</strong><span className={`ql316-source-consent ql316-source-consent--${source.consent}`}>{source.consent === 'opted_out' ? 'Opted out · restrict' : source.consent === 'service_only' ? 'Service only · no marketing' : 'Unknown · unverified'}</span><small>Fixture source: {source.threadId}</small></li>)}</ul>
                 <p className="ql295-no-permission" role="note">Marketing permission: NOT VERIFIED · Message delivery remains disabled. A local review cannot change consent.</p>
               </section>
               <section className="ql295-tasks" aria-labelledby="ql295-tasks-title">
@@ -144,6 +152,7 @@ export function Ql193Customer360({ organization, initialContactId, onOpenThread,
                 <p className="ql295-no-permission">Confirmed identity matches: 0. Merge, consent modification, contact sync and customer export remain disabled.</p>
               </section>
               <div className="ql295-permission-denied" role="note" data-ql295-permission="denied"><strong>ACCESS DENIED · Live contact actions</strong><p>Real contact reads, customer export, identity merge, consent writes and message sending require verified scoped permissions. No such role, tenant or provider capability is present in this preview.</p><small>{Object.values(ql295PermissionGate).filter(Boolean).length} of 5 live capabilities enabled.</small></div>
+              <div className="ql316-next-step" role="note"><strong>Suggested next review · not an action</strong><p>Inspect each original source conversation, resolve identity uncertainty independently and verify consent outside this synthetic screen. No reply, identity merge or marketing permission is inferred.</p></div>
               <section className="ql193-linked-sources" aria-labelledby="ql193-sources-heading">
                 <h5 id="ql193-sources-heading">Linked channels & source conversations</h5>
                 <p>Grouped by explicitly linked source thread, not by verified timestamps. All events are fictional.</p>
