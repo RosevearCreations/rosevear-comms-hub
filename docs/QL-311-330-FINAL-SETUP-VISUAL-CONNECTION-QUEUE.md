@@ -2,7 +2,7 @@
 
 **Approved for scheduling on 2026-11-02 by owner direction:** twenty sequential **software-only** builds. The batch is authorized as a **queue and bounded scope**, not a blanket production release approval, external account authorization, permission to represent genuine owner acceptance, or an instruction to implement all twenty immediately.
 
-**Queue:** 20 planned · **9 Production GREEN in this batch** · **11 remaining** · **next QL-320**. QL-311 through QL-319 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md), [QL-313](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md), [QL-314](build-records/QL-314_UNIFIED_INBOX_VISUAL_TRIAGE_SAVED_FILTER_RECOVERY.md), [QL-315](build-records/QL-315_CONVERSATION_TIMELINE_DELIVERY_DRAFT_RECOVERY.md), [QL-316](build-records/QL-316_CONTACT_CONSENT_FOUR_BUSINESS_INTAKE_VISUAL.md), [QL-317](build-records/QL-317_ROUTING_IVR_MAP_SAFE_FALLBACK_POLISH.md), [QL-318](build-records/QL-318_ASSIGNMENT_WORKBOARD_FOLLOWUP_SAFE_HANDOFF_REVIEW.md), [QL-319](build-records/QL-319_ADMIN_PREFERENCES_SAVED_VIEW_HELP_FINISH.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
+**Queue:** 20 planned · **10 Production GREEN in this batch** · **10 remaining** · **next QL-321**. QL-311 through QL-320 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md), [QL-313](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md), [QL-314](build-records/QL-314_UNIFIED_INBOX_VISUAL_TRIAGE_SAVED_FILTER_RECOVERY.md), [QL-315](build-records/QL-315_CONVERSATION_TIMELINE_DELIVERY_DRAFT_RECOVERY.md), [QL-316](build-records/QL-316_CONTACT_CONSENT_FOUR_BUSINESS_INTAKE_VISUAL.md), [QL-317](build-records/QL-317_ROUTING_IVR_MAP_SAFE_FALLBACK_POLISH.md), [QL-318](build-records/QL-318_ASSIGNMENT_WORKBOARD_FOLLOWUP_SAFE_HANDOFF_REVIEW.md), [QL-319](build-records/QL-319_ADMIN_PREFERENCES_SAVED_VIEW_HELP_FINISH.md), [QL-320](build-records/QL-320_ACCESSIBLE_FRONTEND_JOURNEY_RECOVERY_VISUAL_SWEEP.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
 
 ## Target outcome and autonomous authority
 
@@ -89,6 +89,8 @@ After QL-330, the disabled-preview application should feel like a coherent moder
 
 ### QL-320 — Accessible Front-End Journey, Recovery States & Final Operator Visual Sweep
 
+**Release: Production GREEN** — [code PR #614](https://github.com/RosevearCreations/rosevear-comms-hub/pull/614) · [exact-main five-check / live asset / test receipt](build-records/QL-320_ACCESSIBLE_FRONTEND_JOURNEY_RECOVERY_VISUAL_SWEEP.md). Six actual operator routes, local UNSENT recovery, visible UI-state rehearsals, four-company isolation and responsive cards shipped; owner physical-device acceptance remains pending.
+
 - **Deliver:** Cohesive four-business synthetic operator journey from inbox through contact, intake, routing, handoff and review, with consistent loading/empty/error/disabled states.
 - **Acceptance:** Automated four-business journey matrix checks focus, navigation, company isolation, recovery of unsent local work and readable card layouts at supported viewport widths; publish a gap list without pretending a human owner accepted it.
 - **Boundary:** No real-device owner pass, customer interaction or provider activation.
@@ -163,11 +165,11 @@ After QL-330, the disabled-preview application should feel like a coherent moder
 
 | Sequence | Scope | Planned | Current completed | Remaining |
 | --- | --- | ---: | ---: | ---: |
-| QL-311–320 | Design, operator workflow and accessibility polish | 10 | 2 | 8 |
+| QL-311–320 | Design, operator workflow and accessibility polish | 10 | 10 | 0 |
 | QL-321–323 | Management, statistics and system status | 3 | 0 | 3 |
 | QL-324–328 | Six-app nonsecret connection readiness and mock failure contracts | 5 | 0 | 5 |
 | QL-329–330 | Regression, final reconciliation and owner packet | 2 | 0 | 2 |
-| **Total QL-311–330** | **Final autonomous-setup batch** | **20** | **2** | **18** |
+| **Total QL-311–330** | **Final autonomous-setup batch** | **20** | **10** | **10** |
 
 **Build-by-build release gate:** A build must have a source diff and focused regression, complete app suite, TypeScript, QL-171 safety check, production asset build, GitHub feature→`dev`→`main` receipt, all applicable **exact-main** successful checks (including `Workers Builds: rosevear-comms-hub`), and SHA-256 comparison of live Worker JS/CSS with tested artifacts. Document the exact code/main receipt in its individual `docs/build-records/` record; update the queue ledger one release at a time. A later documentation-only receipt commit must also pass its own applicable final checks. Cloudflare **production GREEN** means released preview code only.
 
