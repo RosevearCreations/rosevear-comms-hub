@@ -1,0 +1,14 @@
+{
+  "build": "QL-316",
+  "mode": "DISABLED_SYNTHETIC_PREVIEW",
+  "manualCaptureStatus": "PENDING_OWNER_OBSERVATION",
+  "viewports": [320, 375, 620, 850, 1024, 1440],
+  "zoomPercent": [100, 200],
+  "businesses": ["rosiedazzlers", "devilndove", "yw", "icamp"],
+  "surfaces": [
+    { "name": "Customer 360", "states": ["default", "opted_out", "service_only", "unknown", "possible_duplicate", "no_candidate", "filtered_empty"], "checks": ["brand accent and source identity", "strictest consent remains textual", "per-thread provenance", "candidate never confirmed", "live actions disabled"] },
+    { "name": "Guided intake", "states": ["zero_of_four", "partial", "all_valid", "UNSENT_preview", "edit_invalidated", "business_switch_reset"], "checks": ["company-specific field labels", "progress matches valid selections", "review destination matches company", "UNSENT no quote/no booking", "no network/storage"] }
+  ],
+  "accessibility": ["Keyboard order and focus", "Screen-reader labels and status changes", "200-percent zoom", "Forced colours", "Reduced motion", "320px horizontal overflow"],
+  "gate": "Owner-supplied real-device/screenshots and independent witness evidence required before marking physical accessibility or operational acceptance."
+}
