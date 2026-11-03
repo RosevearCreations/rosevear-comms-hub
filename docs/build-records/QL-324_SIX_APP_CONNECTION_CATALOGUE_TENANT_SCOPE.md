@@ -17,6 +17,8 @@
 - [Code PR #621](https://github.com/RosevearCreations/rosevear-comms-hub/pull/621) merged only after exact-head `app-build` and `Workers Builds: rosevear-comms-hub` **SUCCESS** (Supabase Preview **SKIPPED** on PR).
 - Code merge `main` **`109f5db111d39368a46e21bc498d4baaf65e4635`**, with `dev` aligned to the identical commit. The five exact-main checks were all **SUCCESS**: `app-build`, `Workers Builds: rosevear-comms-hub`, `Build disabled preview`, `Deploy disabled preview`, and `Supabase Preview`.
 
+**Documentation-only retry note:** The initial evidence-ledger PR #622 head `579f641cfabe9a7a942771c47d8e7dabbf05ed2e` passed its GitHub application CI, but Cloudflare returned **FAILURE** for external Workers build `c5d79dd8-a390-403c-b77f-a362dd417181`. Its public GitHub check published no error explanation or annotations. This is a documentation-promotion exception, **not** a reversal of the independently verified code deployment above. The ledger was amended with the exact failed-build reference to trigger one safe, separately checked retry; no runtime/source files or deployment configuration were modified.
+
 ## Public Worker production receipt
 
 Public disabled preview: https://rosevear-comms-hub.devilndovelive.workers.dev/. HTTP-fetched live HTML listed the two QL-324 content-hashed assets below. Downloaded live bytes matched the locally tested production bundle:
