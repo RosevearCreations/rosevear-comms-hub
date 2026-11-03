@@ -11,6 +11,7 @@ import { Ql300PreferenceAcceptance } from './Ql300PreferenceAcceptance';
 import { Ql319AdminPreferences } from './Ql319AdminPreferences';
 import { Ql301ManagementDashboard } from './Ql301ManagementDashboard';
 import { Ql321ManagementCockpit } from './Ql321ManagementCockpit';
+import { Ql323SystemHealth } from './Ql323SystemHealth';
 import type { MockQueueState } from './ql194WorkQueue';
 import { Ql302StatisticsTrend } from './Ql302StatisticsTrend';
 import { Ql303CapabilityReadiness } from './Ql303CapabilityReadiness';
@@ -153,6 +154,7 @@ export function Ql271CommandSurfaces({ mode, organizationId, queue, onNavigate, 
       <p>Open to inspect the original four fictional source cards, status filters and evidence destinations. The QL-321 Management Command above is the primary source-reconciled cockpit.</p>
       <Ql301ManagementDashboard key={`ql301-${organizationId}`} organizationId={organizationId} mode={mode} onNavigate={onNavigate} />
     </details>}
+    {mode === 'system_status' && <Ql323SystemHealth onNavigate={onNavigate} />}
     {mode === 'system_status' && <Ql301ManagementDashboard key={`${organizationId}-${mode}`} organizationId={organizationId} mode={mode} onNavigate={onNavigate} />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql303CapabilityReadiness />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql307ProofEvidence />}
