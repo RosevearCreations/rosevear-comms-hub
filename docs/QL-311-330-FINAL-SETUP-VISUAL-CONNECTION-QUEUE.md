@@ -2,7 +2,7 @@
 
 **Approved for scheduling on 2026-11-02 by owner direction:** twenty sequential **software-only** builds. The batch is authorized as a **queue and bounded scope**, not a blanket production release approval, external account authorization, permission to represent genuine owner acceptance, or an instruction to implement all twenty immediately.
 
-**Queue:** 20 planned · **2 Production GREEN in this batch** · **18 remaining** · **next QL-313**. QL-311 and QL-312 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
+**Queue:** 20 planned · **3 Production GREEN in this batch** · **17 remaining** · **next QL-314**. QL-311 through QL-313 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md), [QL-313](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
 
 ## Target outcome and autonomous authority
 
@@ -33,6 +33,8 @@ After QL-330, the disabled-preview application should feel like a coherent moder
 - **Boundary:** Visual GREEN must not appear to mean live integration; retain explicit `DISCONNECTED / HOLD` and preview labels.
 
 ### QL-313 — Responsive Operator Shell, Touch Targets & Device Layout Recovery
+
+**Release: Production GREEN** — [code PR #600](https://github.com/RosevearCreations/rosevear-comms-hub/pull/600) · [exact-main test, Cloudflare and live-asset receipt](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md). Responsive sidebar, touch-height controls, overflow recovery and in-app help shipped. Automated matrix checks passed; screenshots and owner physical-device acceptance remain pending.
 
 - **Deliver:** Stable desktop/tablet/phone layouts, collapsible side navigation, mobile command-card grouping, safe overflow for dense tables and robust orientation/zoom changes.
 - **Acceptance:** Automated 320/375/768/1024/1440-width regressions plus keyboard/touch-target checks; no hidden submit controls, horizontal page bleed or lost filter state after reflow; explicitly mark real-device acceptance as pending.
