@@ -2,7 +2,7 @@
 
 **Approved for scheduling on 2026-11-02 by owner direction:** twenty sequential **software-only** builds. The batch is authorized as a **queue and bounded scope**, not a blanket production release approval, external account authorization, permission to represent genuine owner acceptance, or an instruction to implement all twenty immediately.
 
-**Queue:** 20 planned · **1 Production GREEN in this batch** · **19 remaining** · **next QL-312**. QL-311 is the first verified release in this scope; see the [QL-311 production record](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
+**Queue:** 20 planned · **2 Production GREEN in this batch** · **18 remaining** · **next QL-313**. QL-311 and QL-312 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
 
 ## Target outcome and autonomous authority
 
@@ -25,6 +25,8 @@ After QL-330, the disabled-preview application should feel like a coherent moder
 - **Boundary:** Navigation is not a permission change; old evidence links remain reachable.
 
 ### QL-312 — Standard Theme Tokens, Graphic Cards, Typography & Visual Consistency
+
+**Release: Production GREEN** — [code PR #598](https://github.com/RosevearCreations/rosevear-comms-hub/pull/598) · [exact-main/asset/test receipt](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md). Shared dark/light visual tokens, readable graphic cards, session-only density/contrast controls, status legend and six-area screenshot capture **plan** (manual captures and real-device acceptance remain pending).
 
 - **Deliver:** Coherent modern colour/typography/spacing/iconography, compact and comfortable card density, legible charts, status colours with text equivalents, and consistent button/form treatment across all six categories.
 - **Acceptance:** Shared token/style review covers dark/bright contrast, 200–400% zoom, long labels and focus rings; no clipped navigation or status labels; screenshot comparison fixtures span the six areas.
@@ -148,12 +150,12 @@ After QL-330, the disabled-preview application should feel like a coherent moder
 
 | Sequence | Scope | Planned | Current completed | Remaining |
 | --- | --- | ---: | ---: | ---: |
-| QL-311–320 | Design, operator workflow and accessibility polish | 10 | 1 | 9 |
+| QL-311–320 | Design, operator workflow and accessibility polish | 10 | 2 | 8 |
 | QL-321–323 | Management, statistics and system status | 3 | 0 | 3 |
 | QL-324–328 | Six-app nonsecret connection readiness and mock failure contracts | 5 | 0 | 5 |
 | QL-329–330 | Regression, final reconciliation and owner packet | 2 | 0 | 2 |
-| **Total QL-311–330** | **Final autonomous-setup batch** | **20** | **1** | **19** |
+| **Total QL-311–330** | **Final autonomous-setup batch** | **20** | **2** | **18** |
 
-**Build-by-build release gate:** A build must have a source diff and focused regression, complete app suite, TypeScript, QL-171 safety check, production asset build, GitHub feature→`dev`→`main` receipt, all applicable **exact-main** successful checks (including `Workers Builds: rosevear-comms-hub`), and SHA-256 comparison of live Worker JS/CSS with tested artifacts. Document the exact code/main receipt in its individual `docs/build-records/` record; update the queue ledger from `1/20` one release at a time. A later documentation-only receipt commit must also pass its own applicable final checks. Cloudflare **production GREEN** means released preview code only.
+**Build-by-build release gate:** A build must have a source diff and focused regression, complete app suite, TypeScript, QL-171 safety check, production asset build, GitHub feature→`dev`→`main` receipt, all applicable **exact-main** successful checks (including `Workers Builds: rosevear-comms-hub`), and SHA-256 comparison of live Worker JS/CSS with tested artifacts. Document the exact code/main receipt in its individual `docs/build-records/` record; update the queue ledger from `2/20` one release at a time. A later documentation-only receipt commit must also pass its own applicable final checks. Cloudflare **production GREEN** means released preview code only.
 
 **After QL-330:** No automatic batch. Gather real owner observations from physical devices, independently verified signed source evidence and source-owner/custodian decisions, and measured production results. The owner must choose/authorize a separate next roadmap. Do not remove the ACK `UNDER_REVIEW` classification or the six `DISCONNECTED / HOLD` gates by implication.
