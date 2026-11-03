@@ -14,6 +14,7 @@ import './ql192-inbox.css';
 import './ql292-inbox-triage.css';
 import './ql293-conversation-workflow.css';
 import './ql314-inbox-visual.css';
+import './ql315-timeline-recovery.css';
 
 type ViewFilter = 'all' | 'unread' | 'needs_reply' | 'follow_up';
 const viewFilters: ReadonlyArray<{ id: ViewFilter; label: string }> = [
@@ -235,13 +236,13 @@ export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact
               <div className="ql192-timeline ql293-timeline" aria-label="Synthetic communication timeline">
                 <div className="ql293-timeline-heading"><div><p className="ql293-eyebrow">Fictional event history · no actual timestamps</p><h5>Conversation timeline · {selectedEvents.length} of {selected.events.length}</h5></div><label htmlFor="ql293-event-filter">Event type<select id="ql293-event-filter" value={timelineFilter} onChange={(event) => setTimelineFilter(event.target.value as typeof timelineFilter)}><option value="all">All events</option><option value="inbound">Inbound examples</option><option value="call_event">Call scenarios</option><option value="internal_note">Internal notes</option><option value="draft">Unsent draft examples</option></select></label></div>
                 {selectedEvents.length === 0 && <div className="ql293-timeline-empty"><p>No fictional events match this type.</p><button type="button" onClick={() => setTimelineFilter('all')}>Show all events</button></div>}
-                <ol>{selectedEvents.map((event) => {
+                <ol aria-label="Fictional conversation events in fixture order">{selectedEvents.map((event, index) => {
                   const display = describeQl293Event(selected, event);
-                  return <li key={event.id} className={`ql192-event ql192-${event.kind} ql293-event`}>
-                    <div className="ql293-event-head"><strong>{display.label}</strong><span>{event.timeLabel} · illustrative order</span></div>
+                  return <li key={event.id} className={`ql192-event ql192-${event.kind} ql293-event ql315-inbox-event ql315-inbox-event--${event.kind}`} data-ql315-state={display.state}>
+                    <div className="ql293-event-head"><strong><span className="ql315-step">Step {index + 1} of {selectedEvents.length}</span> {display.label}</strong><span>{event.timeLabel} · illustrative order</span></div>
                     <p>{event.body}</p>
                     <div className="ql293-event-details"><span>State: {display.state.replaceAll('_', ' ')}</span><span>Source: {selected.sourceLabel}</span></div>
-                    <p className="ql293-event-meaning">ⓘ {display.meaning}</p>
+                    <p className="ql293-event-meaning">ⓘ {display.meaning} Source event: <code>{event.id}</code>. No verified customer delivery.</p>
                     {display.attachment && <p className="ql293-attachment" role="note"><strong>Attachment metadata:</strong> {display.attachment.label} · no media upload, URL or real file</p>}
                   </li>;
                 })}</ol>

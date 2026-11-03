@@ -1,0 +1,15 @@
+{
+  "build": "QL-315",
+  "releaseMode": "DISABLED_SYNTHETIC_PREVIEW",
+  "testStatus": "AUTOMATION_IMPLEMENTED_MANUAL_CAPTURE_PENDING",
+  "manualAcceptance": "PENDING_OWNER_DEVICE_AND_SCREEN_READER_EVIDENCE",
+  "viewports": [320, 375, 620, 768, 1024, 1440],
+  "zoom": [100, 200],
+  "surfaces": [
+    { "screen": "Omnichannel event timeline", "states": ["empty", "RECEIVED_MOCK", "FAILED_MOCK", "BLOCKED_MOCK", "RECOVERED_MOCK", "filtered", "reset"], "assertions": ["Chronological steps", "source fixture and code", "distinct text labels", "no live delivery claim"] },
+    { "screen": "Unified inbox conversation", "states": ["inbound", "internal_note", "call_event", "draft", "filtered_empty"], "assertions": ["List order and step number", "event ID provenance", "illustrative order disclosure", "consent readback"] },
+    { "screen": "SMS/MMS composer", "states": ["empty", "unsent", "invalid_or_stale", "cleared", "business_switch"], "assertions": ["Same-company/thread gate", "UNSENT label", "invalid content hidden", "no provider transport"] }
+  ],
+  "assistiveTechnology": ["Keyboard-only traversal", "Screen-reader ordered-list reading", "Text-first status differentiation", "Forced colours", "Reduced motion"],
+  "evidencePolicy": "Do not mark real-device or screen-reader acceptance complete without owner-observed device/app, date, source revision and independent receipt."
+}

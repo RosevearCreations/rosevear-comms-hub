@@ -2,8 +2,10 @@ import { useState } from 'react';
 import type { OperatorOrganization } from './ql191Organizations';
 import { draftGate, MAX_DEMO_CHARACTERS, messageTargets, messageTemplates, type AttachmentPlaceholder, type DraftPurpose } from './ql196MessagePolicy';
 import { readQl293Draft, safeQl293DraftText, ql293ReplyHelp, type Ql293SessionDrafts } from './ql293ConversationRecovery';
+import { ql315DraftReadback } from './ql315TimelinePresentation';
 import './ql196-message-composer.css';
 import './ql293-conversation-workflow.css';
+import './ql315-timeline-recovery.css';
 
 export function Ql196MessageComposer({ organization, initialThreadId, onOpenThread, sessionDrafts, onStageDraft, onDiscardDraft }: {
   organization: OperatorOrganization;
@@ -28,6 +30,7 @@ export function Ql196MessageComposer({ organization, initialThreadId, onOpenThre
   const [preview, setPreview] = useState(false);
   const target = targets.find((thread) => thread.id === threadId);
   const gate = draftGate(organization.id, threadId, purpose);
+  const draftReadback = ql315DraftReadback(sessionDrafts, organization.id, threadId);
 
   function stage(next: { threadId: string; purpose: DraftPurpose; templateId: string; text: string; attachment: AttachmentPlaceholder }) {
     onStageDraft(next);
@@ -42,7 +45,7 @@ export function Ql196MessageComposer({ organization, initialThreadId, onOpenThre
     setTemplateId(restored?.templateId ?? templates[0]?.id ?? '');
     setText(restored?.text ?? templates[0]?.text ?? '');
     setAttachment(restored?.attachment ?? 'none');
-    setRecoveryStatus(restored ? 'Recovered this fictional thread’s unsent draft.' : 'No previous unsent draft for this conversation.');
+    setRecoveryStatus(restored ? 'Recovered this fictional thread’s unsent draft.' : ql315DraftReadback(sessionDrafts, organization.id, next).guidance);
     setPreview(false);
     setShowReplyHelp(false);
   }
@@ -57,12 +60,12 @@ export function Ql196MessageComposer({ organization, initialThreadId, onOpenThre
   return <section className="ql196-composer ql293-composer" aria-labelledby="ql196-title" data-ql196-release="ql196-sms-mms-composer-v1" data-ql293-release="ql293-unsent-session-recovery-and-help" data-organization={organization.id}>
     <header className="ql196-header"><div><p className="ql191-eyebrow">QL-293 · Unsent communications studio</p><h3 id="ql196-title">{organization.name} · SMS/MMS composer</h3><p>Practice drafting a message for a fictional contact and review the consent boundary.</p></div>
       <button type="button" className="ql191-help-button" aria-expanded={showHelp} aria-controls="ql196-help" aria-label="Help with SMS/MMS composer" onClick={() => setShowHelp((open) => !open)}>ⓘ Help</button></header>
-    {showHelp && <p id="ql196-help" className="ql196-note">Select a synthetic conversation, choose a template and edit it locally. Edited text and attachment choices can be recovered after switching views in this tab, but are discarded on reload or business switch. Identifiers are redacted before local React state receives edits. Attachments are descriptions only—no file chooser, uploads or external media. The preview is not approved, scheduled or delivered. Opt-outs on any linked sample contact apply across channels. Nothing here grants consent or live permission.</p>}
+    {showHelp && <p id="ql196-help" className="ql196-note">Select a synthetic conversation, choose a template and edit it locally. Edited text and attachment choices can be recovered only for the same company and fictional thread after switching views in this tab; they are discarded on reload or business switch. A stale or invalid draft is hidden and cannot be restored; use Clear draft to remove it. Check the thread source below before continuing. Identifiers are redacted before local React state receives edits. Attachments are descriptions only—no file chooser, uploads or external media. The preview is not approved, scheduled or delivered. Opt-outs on any linked sample contact apply across channels. Nothing here grants consent or live permission.</p>}
     <p role="note" className="ql191-synthetic-banner">DISABLED SYNTHETIC COMPOSER — no real names, numbers, messages or personal information. No SMS/MMS provider, file uploads, media storage, carrier billing, API request, recipient lookup, scheduled send or browser/server persistence. All sending is locked.</p>
     <div className="ql196-metrics"><div><strong>{targets.length}</strong><span>Demo SMS/MMS threads</span></div><div><strong>0</strong><span>Messages delivered</span></div><div><strong>OFF</strong><span>Provider transport</span></div></div>
     <div className="ql196-layout">
       <section className="ql196-panel" aria-label="Unsent sample message controls">
-        <div className="ql293-recovery" role="note"><strong>Unsent draft recovery</strong><p role="status">{recoveryStatus}</p><small>Session memory only · resets on reload or business change · no browser storage</small></div>
+        <div className={`ql293-recovery ql315-draft-readback ql315-draft--${draftReadback.state}`} role="note" data-ql315-draft-state={draftReadback.state}><strong>Unsent draft recovery</strong><span className="ql315-draft-badge">{draftReadback.label}</span><p role="status">{recoveryStatus}</p><p>{draftReadback.guidance}</p><small>Current source: {organization.name} · {target?.contactLabel ?? 'No thread'} · <code>{threadId}</code></small><small>Session memory only · resets on reload or business change · no browser storage · never sent</small></div>
         <label htmlFor="ql196-target">Fictional conversation</label>
         <select id="ql196-target" value={threadId} onChange={(event) => chooseThread(event.target.value)}>
           {targets.map((thread) => <option key={thread.id} value={thread.id}>{thread.contactLabel} · {thread.channel.toUpperCase()} · {thread.subject}</option>)}
