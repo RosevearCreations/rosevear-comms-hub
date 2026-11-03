@@ -2,7 +2,7 @@
 
 **Approved for scheduling on 2026-11-02 by owner direction:** twenty sequential **software-only** builds. The batch is authorized as a **queue and bounded scope**, not a blanket production release approval, external account authorization, permission to represent genuine owner acceptance, or an instruction to implement all twenty immediately.
 
-**Queue:** 20 planned · **7 Production GREEN in this batch** · **13 remaining** · **next QL-318**. QL-311 through QL-317 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md), [QL-313](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md), [QL-314](build-records/QL-314_UNIFIED_INBOX_VISUAL_TRIAGE_SAVED_FILTER_RECOVERY.md), [QL-315](build-records/QL-315_CONVERSATION_TIMELINE_DELIVERY_DRAFT_RECOVERY.md), [QL-316](build-records/QL-316_CONTACT_CONSENT_FOUR_BUSINESS_INTAKE_VISUAL.md), [QL-317](build-records/QL-317_ROUTING_IVR_MAP_SAFE_FALLBACK_POLISH.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
+**Queue:** 20 planned · **8 Production GREEN in this batch** · **12 remaining** · **next QL-319**. QL-311 through QL-318 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md), [QL-313](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md), [QL-314](build-records/QL-314_UNIFIED_INBOX_VISUAL_TRIAGE_SAVED_FILTER_RECOVERY.md), [QL-315](build-records/QL-315_CONVERSATION_TIMELINE_DELIVERY_DRAFT_RECOVERY.md), [QL-316](build-records/QL-316_CONTACT_CONSENT_FOUR_BUSINESS_INTAKE_VISUAL.md), [QL-317](build-records/QL-317_ROUTING_IVR_MAP_SAFE_FALLBACK_POLISH.md), [QL-318](build-records/QL-318_ASSIGNMENT_WORKBOARD_FOLLOWUP_SAFE_HANDOFF_REVIEW.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
 
 ## Target outcome and autonomous authority
 
@@ -73,6 +73,8 @@ After QL-330, the disabled-preview application should feel like a coherent moder
 - **Boundary:** No SIP, number purchase, live forwarding, DTMF or carrier configuration.
 
 ### QL-318 — Assignment Workboard, Follow-Up Cards & Safe Handoff Review
+
+**Release: Production GREEN** — [code PR #610](https://github.com/RosevearCreations/rosevear-comms-hub/pull/610) · [exact-main tests, Worker asset receipts and held-boundary evidence](build-records/QL-318_ASSIGNMENT_WORKBOARD_FOLLOWUP_SAFE_HANDOFF_REVIEW.md). The original QL-194/294 synthetic worklists now have cohesive owner/due/severity/attention cards, a selected assignment summary and scoped task history. Revision-aware receipt checks hide stale UNSENT handoffs and block in-tab review until freshly prepared. Manual owner-device and screen-reader acceptance remain pending.
 
 - **Deliver:** Consistent owner/due/severity cards, task history, attention states, shortcuts and accessible UNSENT handoff summaries across the existing synthetic queue.
 - **Acceptance:** QL-294 worklist sorting/recovery preserves company isolation; keyboard shortcut help is discoverable and ignores editable fields; stale summaries must be refreshed before in-tab review.
