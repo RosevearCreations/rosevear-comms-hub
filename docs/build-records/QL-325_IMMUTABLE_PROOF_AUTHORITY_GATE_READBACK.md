@@ -20,7 +20,7 @@
 | `index-Bi4fgmk7.js` | `56f6725416c3950db9121931379b79a7da95b732a862e3fde6ac7777984cf234` | Byte-identical |
 | `index-J_BOUB2m.css` | `da3a51e7da4140d87a3c0a89f20ce44e84510c7a6f184e9650d79d9d8e329618` | Byte-identical |
 
-**Production GREEN is software-only**, never authenticated six-app integration or owner TEST authorization. There is no proof gate closure. The code receipt is complete; this documentation-only promotion remains subject to its own exact-main applicable checks.
+**Production GREEN is software-only**, never authenticated six-app integration or owner TEST authorization. There is no proof gate closure. The follow-up documentation receipt merged by [PR #624](https://github.com/RosevearCreations/rosevear-comms-hub/pull/624) to exact `main` `ad547adfc0d4a07c625eb18e9f28e732cf482aea`; applicable doc-only checks `app-build`, `Supabase Preview`, and `Workers Builds: rosevear-comms-hub` all reported SUCCESS. No runtime code changed in that receipt, so the code-main asset hashes above remain the QL-325 shipped-software proof.
 
 ## Queue handoff
 
