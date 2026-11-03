@@ -452,7 +452,7 @@ export function OperatorShell() {
             onOpenThread={openThread} onOpenContact={openCustomer} onOpenQueue={openQueue} onOpenComposer={openComposer} />}
           {workspace === 'dashboard' && <Ql191OperatorDashboard key={`dashboard-${organization.id}`} organization={organization} onNavigate={setWorkspace} />}
           {workspace === 'connections' && <Ql270Connections onNavigate={setWorkspace} />}
-          {commandWorkspace && <Ql271CommandSurfaces mode={workspace as Ql271CommandMode} organizationId={organization.id} onNavigate={setWorkspace} onSelectOrganization={changeOrganization} />}
+          {commandWorkspace && <Ql271CommandSurfaces mode={workspace as Ql271CommandMode} organizationId={organization.id} queue={queueState} onNavigate={setWorkspace} onSelectOrganization={changeOrganization} onOpenQueue={openQueue} />}
           {workspace === 'inbox' && (
             <>
               <p className="ql172-local-warning" role="note">QL-192 is a synthetic unified inbox. Do not enter real names, phone numbers, messages, or owner decisions. No communications are sent or saved.</p>

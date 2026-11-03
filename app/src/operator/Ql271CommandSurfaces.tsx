@@ -10,6 +10,8 @@ import { Ql291CommandNavigation } from './Ql291CommandNavigation';
 import { Ql300PreferenceAcceptance } from './Ql300PreferenceAcceptance';
 import { Ql319AdminPreferences } from './Ql319AdminPreferences';
 import { Ql301ManagementDashboard } from './Ql301ManagementDashboard';
+import { Ql321ManagementCockpit } from './Ql321ManagementCockpit';
+import type { MockQueueState } from './ql194WorkQueue';
 import { Ql302StatisticsTrend } from './Ql302StatisticsTrend';
 import { Ql303CapabilityReadiness } from './Ql303CapabilityReadiness';
 import { Ql307ProofEvidence } from './Ql307ProofEvidence';
@@ -99,11 +101,13 @@ const metricCopy: Record<Ql271CommandMode, readonly { label: string; value: stri
   ]
 };
 
-export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelectOrganization }: {
+export function Ql271CommandSurfaces({ mode, organizationId, queue, onNavigate, onSelectOrganization, onOpenQueue }: {
   mode: Ql271CommandMode;
   organizationId: OrganizationId;
+  queue: MockQueueState;
   onNavigate: (workspace: OperatorWorkspace) => void;
   onSelectOrganization: (organization: OrganizationId) => void;
+  onOpenQueue: (threadId: string) => void;
 }) {
   const copy = pageCopy[mode];
   const [preferences, setPreferences] = useState(() => parseQl272Preferences(inspectQl272LocalLayout().value));
@@ -144,7 +148,12 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
 
     <Ql300PreferenceAcceptance onRestore={restored => { setPreferences(restored); setSaved(true); setStorageAvailable(true); }} />
 
-    {(mode === 'management' || mode === 'system_status') && <Ql301ManagementDashboard key={`${organizationId}-${mode}`} organizationId={organizationId} mode={mode} onNavigate={onNavigate} />}
+    {mode === 'management' && <Ql321ManagementCockpit key={`ql321-${organizationId}`} organizationId={organizationId} queue={queue} rolePreview={profile.rolePreview} onNavigate={onNavigate} onOpenQueue={onOpenQueue} />}
+    {mode === 'management' && <details className="ql321-historical-source"><summary>ⓘ QL-301 historical incident fixture explorer and evidence continuity</summary>
+      <p>Open to inspect the original four fictional source cards, status filters and evidence destinations. The QL-321 Management Command above is the primary source-reconciled cockpit.</p>
+      <Ql301ManagementDashboard key={`ql301-${organizationId}`} organizationId={organizationId} mode={mode} onNavigate={onNavigate} />
+    </details>}
+    {mode === 'system_status' && <Ql301ManagementDashboard key={`${organizationId}-${mode}`} organizationId={organizationId} mode={mode} onNavigate={onNavigate} />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql303CapabilityReadiness />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql307ProofEvidence />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql308TenantContracts />}
