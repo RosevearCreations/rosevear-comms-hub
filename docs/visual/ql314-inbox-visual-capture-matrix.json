@@ -1,0 +1,21 @@
+{
+  "build": "QL-314",
+  "title": "Unified Inbox Visual Triage, Clear Empty States & Saved Filters",
+  "mode": "DISABLED_SYNTHETIC_PREVIEW",
+  "captureStatus": "PENDING_BROWSER_CAPTURE",
+  "ownerDeviceAcceptance": "NOT_PERFORMED",
+  "viewportWidths": [320, 375, 768, 1024, 1440],
+  "zoomPercent": [100, 200, 400],
+  "businesses": ["rosiedazzlers", "devilndove", "yw", "icamp"],
+  "scenarioNames": [
+    "all-work overview with five unfiltered fixture records and five lane totals",
+    "two combined filters and individually removable text chips",
+    "no results with removable filters",
+    "saved Desk focus and Follow-up review slots with validated same-brand restore",
+    "channel, demo owner, priority, status and next action badges",
+    "keyboard focus at 400 percent zoom with no hidden reset or restore action",
+    "switch business with zero cross-brand thread or preset leakage"
+  ],
+  "manualEvidenceRequired": ["date", "device", "operatingSystem", "browser", "viewport", "zoom", "screenshot", "keyboardNotes", "screenReaderNotes", "ownerDecision"],
+  "notes": "Code-level Vitest/jsdom regression results do not establish actual visual screenshots, human owner acceptance or live provider connectivity. Count visuals must reconcile to the same synthetic business fixture and explicitly label unfiltered lane totals versus combined-filter results."
+}
