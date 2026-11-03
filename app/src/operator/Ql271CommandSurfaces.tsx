@@ -12,6 +12,7 @@ import { Ql319AdminPreferences } from './Ql319AdminPreferences';
 import { Ql301ManagementDashboard } from './Ql301ManagementDashboard';
 import { Ql321ManagementCockpit } from './Ql321ManagementCockpit';
 import { Ql323SystemHealth } from './Ql323SystemHealth';
+import { Ql324ConnectionCatalogue } from './Ql324ConnectionCatalogue';
 import type { MockQueueState } from './ql194WorkQueue';
 import { Ql302StatisticsTrend } from './Ql302StatisticsTrend';
 import { Ql303CapabilityReadiness } from './Ql303CapabilityReadiness';
@@ -156,6 +157,7 @@ export function Ql271CommandSurfaces({ mode, organizationId, queue, onNavigate, 
     </details>}
     {mode === 'system_status' && <Ql323SystemHealth onNavigate={onNavigate} />}
     {mode === 'system_status' && <Ql301ManagementDashboard key={`${organizationId}-${mode}`} organizationId={organizationId} mode={mode} onNavigate={onNavigate} />}
+    {mode === 'it_command' && <Ql324ConnectionCatalogue />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql303CapabilityReadiness />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql307ProofEvidence />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql308TenantContracts />}
