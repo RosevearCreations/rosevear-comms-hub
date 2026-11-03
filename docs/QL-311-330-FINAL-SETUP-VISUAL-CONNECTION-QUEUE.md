@@ -2,7 +2,7 @@
 
 **Approved for scheduling on 2026-11-02 by owner direction:** twenty sequential **software-only** builds. The batch is authorized as a **queue and bounded scope**, not a blanket production release approval, external account authorization, permission to represent genuine owner acceptance, or an instruction to implement all twenty immediately.
 
-**Queue:** 20 planned · **5 Production GREEN in this batch** · **15 remaining** · **next QL-316**. QL-311 through QL-315 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md), [QL-313](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md), [QL-314](build-records/QL-314_UNIFIED_INBOX_VISUAL_TRIAGE_SAVED_FILTER_RECOVERY.md), [QL-315](build-records/QL-315_CONVERSATION_TIMELINE_DELIVERY_DRAFT_RECOVERY.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
+**Queue:** 20 planned · **6 Production GREEN in this batch** · **14 remaining** · **next QL-317**. QL-311 through QL-316 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md), [QL-313](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md), [QL-314](build-records/QL-314_UNIFIED_INBOX_VISUAL_TRIAGE_SAVED_FILTER_RECOVERY.md), [QL-315](build-records/QL-315_CONVERSATION_TIMELINE_DELIVERY_DRAFT_RECOVERY.md), [QL-316](build-records/QL-316_CONTACT_CONSENT_FOUR_BUSINESS_INTAKE_VISUAL.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
 
 ## Target outcome and autonomous authority
 
@@ -57,6 +57,8 @@ After QL-330, the disabled-preview application should feel like a coherent moder
 - **Boundary:** No SMS, email, call, MMS upload, provider retry or callback.
 
 ### QL-316 — Contact 360, Consent Readback & Four-Business Intake Visual Alignment
+
+**Release: Production GREEN** — [code PR #606](https://github.com/RosevearCreations/rosevear-comms-hub/pull/606) · [exact-main tests, Worker assets and safety receipt](build-records/QL-316_CONTACT_CONSENT_FOUR_BUSINESS_INTAKE_VISUAL.md). The existing contact and intake workflows now have four-business colour styling, strict source-level consent labels, unverified duplicate readback, valid-choice progress, and UNSENT internal handoff panels. Manual device and screen-reader owner acceptance remain pending.
 
 - **Deliver:** Unified customer-context layout for fictional company-specific contact details, restrictive consent labels, duplicate-review uncertainty, intake/quote handoff previews and clear contextual next steps.
 - **Acceptance:** QL-295/296 linked cards show correct business context and UNSENT quote/handoff labels; a duplicate candidate cannot be shown as a confirmed merge; inaccessible/unknown consent fails closed in fixture tests.
