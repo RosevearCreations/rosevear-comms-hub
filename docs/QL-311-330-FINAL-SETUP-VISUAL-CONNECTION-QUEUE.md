@@ -2,7 +2,7 @@
 
 **Approved for scheduling on 2026-11-02 by owner direction:** twenty sequential **software-only** builds. The batch is authorized as a **queue and bounded scope**, not a blanket production release approval, external account authorization, permission to represent genuine owner acceptance, or an instruction to implement all twenty immediately.
 
-**Queue:** 20 planned · **13 Production GREEN in this batch** · **7 remaining** · **next QL-324**. QL-311 through QL-323 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md), [QL-313](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md), [QL-314](build-records/QL-314_UNIFIED_INBOX_VISUAL_TRIAGE_SAVED_FILTER_RECOVERY.md), [QL-315](build-records/QL-315_CONVERSATION_TIMELINE_DELIVERY_DRAFT_RECOVERY.md), [QL-316](build-records/QL-316_CONTACT_CONSENT_FOUR_BUSINESS_INTAKE_VISUAL.md), [QL-317](build-records/QL-317_ROUTING_IVR_MAP_SAFE_FALLBACK_POLISH.md), [QL-318](build-records/QL-318_ASSIGNMENT_WORKBOARD_FOLLOWUP_SAFE_HANDOFF_REVIEW.md), [QL-319](build-records/QL-319_ADMIN_PREFERENCES_SAVED_VIEW_HELP_FINISH.md), [QL-320](build-records/QL-320_ACCESSIBLE_FRONTEND_JOURNEY_RECOVERY_VISUAL_SWEEP.md), [QL-321](build-records/QL-321_MANAGEMENT_KPI_WORKLOAD_INCIDENT_DRILLTHROUGH.md), [QL-322](build-records/QL-322_STATISTICAL_TRENDS_PARITY_FRESHNESS.md), [QL-323](build-records/QL-323_SYSTEM_STATUS_HEALTH_DEPENDENCY_RECOVERY.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
+**Queue:** 20 planned · **14 Production GREEN in this batch** · **6 remaining** · **next QL-325**. QL-311 through QL-324 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md), [QL-313](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md), [QL-314](build-records/QL-314_UNIFIED_INBOX_VISUAL_TRIAGE_SAVED_FILTER_RECOVERY.md), [QL-315](build-records/QL-315_CONVERSATION_TIMELINE_DELIVERY_DRAFT_RECOVERY.md), [QL-316](build-records/QL-316_CONTACT_CONSENT_FOUR_BUSINESS_INTAKE_VISUAL.md), [QL-317](build-records/QL-317_ROUTING_IVR_MAP_SAFE_FALLBACK_POLISH.md), [QL-318](build-records/QL-318_ASSIGNMENT_WORKBOARD_FOLLOWUP_SAFE_HANDOFF_REVIEW.md), [QL-319](build-records/QL-319_ADMIN_PREFERENCES_SAVED_VIEW_HELP_FINISH.md), [QL-320](build-records/QL-320_ACCESSIBLE_FRONTEND_JOURNEY_RECOVERY_VISUAL_SWEEP.md), [QL-321](build-records/QL-321_MANAGEMENT_KPI_WORKLOAD_INCIDENT_DRILLTHROUGH.md), [QL-322](build-records/QL-322_STATISTICAL_TRENDS_PARITY_FRESHNESS.md), [QL-323](build-records/QL-323_SYSTEM_STATUS_HEALTH_DEPENDENCY_RECOVERY.md), [QL-324](build-records/QL-324_SIX_APP_CONNECTION_CATALOGUE_TENANT_SCOPE.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
 
 ## Target outcome and autonomous authority
 
@@ -125,6 +125,8 @@ After QL-330, the disabled-preview application should feel like a coherent moder
 
 ### QL-324 — Six-App Connection Catalogue, Topology & Tenant-Scope Blueprint
 
+**Release: Production GREEN** — [code PR #621](https://github.com/RosevearCreations/rosevear-comms-hub/pull/621) · [exact-main checks, tested source and byte-identical live Worker receipt](build-records/QL-324_SIX_APP_CONNECTION_CATALOGUE_TENANT_SCOPE.md). Six-source I.T. catalogue, proposed topology/table parity and local-only tenant-scope rejections shipped with all six connections held.
+
 - **Deliver:** One I.T. connection studio showing six source roles, public repository/deployment labels (where verified), proposed read-only information flow, per-business tenant boundaries and supporting-service separation.
 - **Acceptance:** All six source cards have owner-safe scope descriptions, capability status, precise blockers and diagram/table equivalence; no fifth or sixth customer tenant is manufactured. Company selection never exposes another brand's fictional customer data.
 - **Boundary:** Source metadata is a plan, not a usable configured integration or authority proof.
@@ -173,9 +175,9 @@ After QL-330, the disabled-preview application should feel like a coherent moder
 | --- | --- | ---: | ---: | ---: |
 | QL-311–320 | Design, operator workflow and accessibility polish | 10 | 10 | 0 |
 | QL-321–323 | Management, statistics and system status | 3 | 3 | 0 |
-| QL-324–328 | Six-app nonsecret connection readiness and mock failure contracts | 5 | 0 | 5 |
+| QL-324–328 | Six-app nonsecret connection readiness and mock failure contracts | 5 | 1 | 4 |
 | QL-329–330 | Regression, final reconciliation and owner packet | 2 | 0 | 2 |
-| **Total QL-311–330** | **Final autonomous-setup batch** | **20** | **13** | **7** |
+| **Total QL-311–330** | **Final autonomous-setup batch** | **20** | **14** | **6** |
 
 **Build-by-build release gate:** A build must have a source diff and focused regression, complete app suite, TypeScript, QL-171 safety check, production asset build, GitHub feature→`dev`→`main` receipt, all applicable **exact-main** successful checks (including `Workers Builds: rosevear-comms-hub`), and SHA-256 comparison of live Worker JS/CSS with tested artifacts. Document the exact code/main receipt in its individual `docs/build-records/` record; update the queue ledger one release at a time. A later documentation-only receipt commit must also pass its own applicable final checks. Cloudflare **production GREEN** means released preview code only.
 
