@@ -9,9 +9,11 @@ import {
   recoverInboxTriagePreset, triageLaneForThread, triageLanes, triageOwners, triageSlots,
   type InboxTriageFilters, type InboxTriagePreset, type InboxTriagePresets, type TriageSlot
 } from './ql292InboxTriage';
+import {activeInboxTriageFilterChips,describeInboxTriagePreset,removeInboxTriageFilter,type Ql314FilterKey} from './ql314InboxPresentation';
 import './ql192-inbox.css';
 import './ql292-inbox-triage.css';
 import './ql293-conversation-workflow.css';
+import './ql314-inbox-visual.css';
 
 type ViewFilter = 'all' | 'unread' | 'needs_reply' | 'follow_up';
 const viewFilters: ReadonlyArray<{ id: ViewFilter; label: string }> = [
@@ -45,6 +47,9 @@ export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact
   const isFollowUp = (thread: InboxThread) => followUpOverrides[thread.id] ?? thread.needsFollowUp;
   const filtered = useMemo(() => filterInboxTriage(threads, organization.id, filters, isUnread, isFollowUp),
     [threads, organization.id, filters, readOverrides, followUpOverrides]);
+  const activeFilterChips=activeInboxTriageFilterChips(filters);
+  const visibleUnread=filtered.filter(isUnread).length;
+  const visibleFollowUps=filtered.filter(isFollowUp).length;
   const selected = filtered.find((thread) => thread.id === selectedId) ?? filtered[0];
   const selectedConsent = selected && (selected.channel === 'sms' || selected.channel === 'mms')
     ? effectiveDemoConsent(organization.id, selected.id) ?? selected.consent : selected?.consent;
@@ -67,6 +72,11 @@ export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact
 
   function updateFilter<K extends keyof InboxTriageFilters>(name: K, value: InboxTriageFilters[K]) {
     setFilters((previous) => ({ ...previous, [name]: value }));
+    setPresetFeedback('');
+  }
+
+  function removeFilter(key:Ql314FilterKey){
+    setFilters(previous=>removeInboxTriageFilter(previous,key));
     setPresetFeedback('');
   }
 
@@ -94,17 +104,17 @@ export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact
   }));
 
   return (
-    <section className="ql192-inbox ql292-inbox ql293-inbox" data-ql192-release="ql192-unified-four-company-inbox-v1" data-ql292-release="ql292-priority-lanes-precise-search-session-presets" data-ql293-release="ql293-readable-timeline-contextual-help" data-organization={organization.id} aria-labelledby="ql192-inbox-heading">
+    <section className="ql192-inbox ql292-inbox ql293-inbox ql314-inbox" data-ql192-release="ql192-unified-four-company-inbox-v1" data-ql292-release="ql292-priority-lanes-precise-search-session-presets" data-ql293-release="ql293-readable-timeline-contextual-help" data-ql314-release="ql314-visual-triage-filter-chip-recovery" data-organization={organization.id} aria-labelledby="ql192-inbox-heading">
       <div className="ql192-inbox-header">
         <div>
-          <p className="ql191-eyebrow">QL-292 · Operator inbox command</p>
+          <p className="ql191-eyebrow">QL-314 · Unified inbox command</p>
           <h3 id="ql192-inbox-heading">{organization.name} inbox</h3>
-          <p>Review one fictional timeline across phone, SMS, MMS, voicemail, email, website and internal channels.</p>
+          <p>Triaged fictional conversations · seven preview channels · clear next actions, not live messages.</p>
         </div>
         <button type="button" className="ql191-help-button" aria-label="Help with unified communications inbox" aria-expanded={showHelp} aria-controls="ql192-inbox-help" onClick={() => setShowHelp((previous) => !previous)}>ⓘ Help</button>
       </div>
       {showHelp && (
-        <p id="ql192-inbox-help" className="ql191-help-content" role="note">Use priority lanes with channel, owner, status and view filters together. Search uses every word, with quoted phrases or subject:, contact: and channel: field hints. Select a thread to inspect its timeline. Save two named views in this tab only; restore them after navigating away, not after reload or brand switching. Marking a thread reviewed or flagging a follow-up changes this demonstration screen only; no message is sent and nothing is saved to a server or the browser.</p>
+        <p id="ql192-inbox-help" className="ql191-help-content" role="note">Choose a priority lane, then narrow by channel, owner, status or view. The lane counters show the complete current business, while the results summary shows all applied filters. Remove any active filter chip separately, or clear them all to recover the full list. Search requires every word and supports quoted phrases, subject:, contact: and channel: hints. Each thread shows its fictional source, demo owner, priority and next safe review step. Save either named view in this tab only, then restore after navigating away; reload or brand switching clears them. Marking a thread reviewed or flagging a follow-up changes this demonstration screen only. No live inbox, provider loading status, delivery, message or server write exists here.</p>
       )}
       <p className="ql191-synthetic-banner" role="note">DISABLED SYNTHETIC INBOX — fictional contacts and events only. No phone/SMS, mailbox, website, booking, tenant, customer or provider connection. Do not enter real personal information.</p>
 
@@ -116,7 +126,7 @@ export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact
       </div>
 
       <section className="ql292-lanes" aria-label="Synthetic priority lanes">
-        <div className="ql292-lane-heading"><div><p className="ql292-eyebrow">Triage overview · sample data</p><h4>What needs a look?</h4></div><span>Counts recalculate from local demo flags</span></div>
+        <div className="ql292-lane-heading"><div><p className="ql292-eyebrow">Triage overview · sample data</p><h4>What needs a look?</h4></div><span>Lane counts cover all {threads.length} {organization.name} examples, before filters</span></div>
         <div className="ql292-lane-grid">
           {laneCounts.map((lane) => (
             <button key={lane.id} type="button" className={filters.lane === lane.id ? 'ql292-lane active' : 'ql292-lane'} aria-pressed={filters.lane === lane.id} onClick={() => updateFilter('lane', lane.id)}>
@@ -148,31 +158,43 @@ export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact
               <button key={entry.id} type="button" aria-pressed={filters.view === entry.id} className={filters.view === entry.id ? 'ql192-view-filter active' : 'ql192-view-filter'} onClick={() => updateFilter('view', entry.id)}>{entry.label}</button>
             ))}
           </div>
+          <section className="ql314-active-filters" aria-label="Active inbox triage filters">
+            <div className="ql314-filter-heading"><strong>Current filter choices</strong><span>{activeFilterChips.length} active · {filters.sort==='attention'?'Attention first':filters.sort==='subject'?'Subject A–Z':'Channel A–Z'}</span></div>
+            {activeFilterChips.length ? <>
+              <div className="ql314-filter-chips" role="group" aria-label="Remove one active filter">
+                {activeFilterChips.map(chip=><button key={chip.key} type="button" className="ql314-filter-chip" onClick={()=>removeFilter(chip.key)} aria-label={`Remove ${chip.label} filter: ${chip.value}`} title={`Remove ${chip.label} filter`}><span>{chip.label}: <strong>{chip.value}</strong></span><span aria-hidden="true">×</span></button>)}
+              </div>
+              <button type="button" className="ql314-clear-all" onClick={resetFilters}>Clear all filters</button>
+            </> : <p className="ql314-default-filter-note">All sample conversations in this business are eligible. Choose a lane or filter to narrow the list.</p>}
+          </section>
           <section className="ql292-presets" aria-label="Session-only saved triage views">
             <div className="ql292-preset-heading"><strong>Saved triage views</strong><span>Tab-only · fictional filters</span></div>
             <label htmlFor="ql292-preset-slot">Preset slot</label>
             <select id="ql292-preset-slot" value={slot} onChange={(event) => { setSlot(event.target.value as TriageSlot); setPresetFeedback(''); }}>{triageSlots.map((entry) => <option key={entry.id} value={entry.id}>{entry.label}</option>)}</select>
-            <p className="ql292-preset-status">{recoverInboxTriagePreset(presets?.[slot], organization.id) ? 'Valid saved view available for this business.' : 'No valid view saved in this slot.'}</p>
+            <p className="ql292-preset-status">{describeInboxTriagePreset(presets?.[slot],organization.id)}</p>
             <div className="ql292-preset-actions">
               <button type="button" onClick={savePreset} disabled={!onSavePreset}>Save current filters</button>
               <button type="button" onClick={restorePreset}>Restore saved view</button>
               <button type="button" onClick={clearPreset} disabled={!onSavePreset || !presets?.[slot]}>Remove saved view</button>
             </div>
-            {presetFeedback && <p className="ql292-preset-feedback" role="status">{presetFeedback}</p>}
+            {presetFeedback && <p className={presetFeedback.includes('unavailable or invalid')?'ql292-preset-feedback ql314-preset-recovery':'ql292-preset-feedback'} role="status">{presetFeedback}</p>}
           </section>
-          <p className="ql192-result-count" role="status">{filtered.length} of {threads.length} synthetic conversations</p>
+          <div className="ql314-result-toolbar">
+            <p className="ql192-result-count" role="status"><strong>{filtered.length}</strong> of {threads.length} synthetic conversations · {visibleUnread} unread · {visibleFollowUps} follow-up</p>
+            <span className="ql314-preview-loaded">Local demo ready · no provider sync</span>
+          </div>
           {filtered.length === 0 ? (
-            <div className="ql192-empty"><p>No demonstration conversations match these filters.</p><p>Try another lane, fewer search terms or a different demo owner.</p><button type="button" onClick={resetFilters}>Clear filters</button></div>
+            <div className="ql192-empty ql314-empty"><span className="ql314-empty-icon" aria-hidden="true">⌕</span><h4>No matching sample conversations</h4><p>No demonstration conversations match these filters. This is a filtered empty state, not a provider loading or delivery error.</p><p>Try another lane, fewer search terms or a different demo owner. Remove one filter above, or start again.</p><button type="button" onClick={resetFilters}>Clear filters</button></div>
           ) : (
             <div className="ql192-thread-list" aria-label="Matching conversations">
               {filtered.map((thread) => (
-                <button key={thread.id} type="button" className={selected?.id === thread.id ? 'ql192-thread active' : 'ql192-thread'} aria-pressed={selected?.id === thread.id} onClick={() => setSelectedId(thread.id)}>
-                  <span className="ql192-thread-top"><span>{thread.sourceLabel}</span>{isUnread(thread) && <strong className="ql192-unread">Unread</strong>}</span>
+                <button key={thread.id} type="button" className={selected?.id === thread.id ? 'ql192-thread ql314-thread active' : 'ql192-thread ql314-thread'} aria-pressed={selected?.id === thread.id} onClick={() => setSelectedId(thread.id)}>
+                  <span className="ql192-thread-top"><span className="ql314-source-badge">{thread.sourceLabel}</span>{isUnread(thread) && <strong className="ql192-unread">Unread</strong>}</span>
                   <strong>{thread.subject}</strong>
                   <span>{thread.contactLabel}</span>
                   <small>{thread.summary}</small>
-                  <span className="ql192-thread-tags"><span>{thread.status.replaceAll('_', ' ')}</span>{isFollowUp(thread) && <span>Follow-up</span>}{thread.priority === 'high' && <span>Priority</span>}</span>
-                  <span className="ql292-thread-meta"><span>Owner: {triageOwners.find((owner) => owner.id === demoOwnerForThread(thread))?.label}</span><span>Next: {nextDemoAction(thread)}</span></span>
+                  <span className="ql192-thread-tags ql314-thread-tags"><span>{thread.status.replaceAll('_', ' ')}</span>{isFollowUp(thread) && <span>Follow-up</span>}<span className={thread.priority==='high'?'ql314-priority-high':'ql314-priority-normal'}>{thread.priority==='high'?'High priority':'Normal priority'}</span></span>
+                  <span className="ql292-thread-meta ql314-thread-meta"><span className="ql314-owner-badge">Demo owner: {triageOwners.find((owner) => owner.id === demoOwnerForThread(thread))?.label}</span><span>Next: {nextDemoAction(thread)}</span></span>
                 </button>
               ))}
             </div>
