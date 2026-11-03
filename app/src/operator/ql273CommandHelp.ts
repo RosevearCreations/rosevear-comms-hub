@@ -5,7 +5,7 @@ import { parseQl272Preferences, type Ql272PreferenceEnvelope } from './ql272Layo
 export const QL273_VIEW_HELP: Record<Ql271CommandMode, { purpose: string; reading: string; next: string }> = {
   it_command: {
     purpose: 'Inspect six source mappings and the independent connection-release checklist.',
-    reading: 'Source registry, QL-327 compatible fixtures and QL-328 failure packets are synthetic. Proof-B verified and gateway requests stay zero; a local NO-GO packet is never an authorized TEST or sent message.',
+    reading: 'Registry counts are known mappings. Proofs verified and gateway requests are zero, not live health measurements. QL-327 fixtures and QL-328 NO-GO packets are synthetic; neither authorizes TEST, sends a packet or performs a source GET.',
     next: 'Open Connections to inspect the held preflight and Six-app evidence to review existing receipt exceptions.'
   },
   management: {
