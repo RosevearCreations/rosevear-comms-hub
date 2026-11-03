@@ -8,6 +8,7 @@ import { Ql272LayoutControls } from './Ql272LayoutControls';
 import { Ql273CommandAssistance, Ql273MetricHelp } from './Ql273CommandAssistance';
 import { Ql291CommandNavigation } from './Ql291CommandNavigation';
 import { Ql300PreferenceAcceptance } from './Ql300PreferenceAcceptance';
+import { Ql319AdminPreferences } from './Ql319AdminPreferences';
 import { Ql301ManagementDashboard } from './Ql301ManagementDashboard';
 import { Ql302StatisticsTrend } from './Ql302StatisticsTrend';
 import { Ql303CapabilityReadiness } from './Ql303CapabilityReadiness';
@@ -131,6 +132,11 @@ export function Ql271CommandSurfaces({ mode, organizationId, onNavigate, onSelec
         <span aria-hidden="true">{tab.glyph}</span>{tab.label}
       </button>)}
     </nav>
+
+    <Ql319AdminPreferences mode={mode} preferences={preferences} saved={saved} storageAvailable={storageAvailable}
+      onNavigate={onNavigate} onChange={updatePreferences}
+      onRestore={restored => { setPreferences(restored); setSaved(true); setStorageAvailable(true); }}
+      onReset={updatePreferences} />
 
     <Ql272LayoutControls preferences={preferences} mode={mode} saved={saved} storageAvailable={storageAvailable}
       metricLabels={metricCopy[mode].map(metric => metric.label)} onChange={updatePreferences}
