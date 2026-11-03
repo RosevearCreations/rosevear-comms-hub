@@ -2,9 +2,11 @@ import { useEffect, useMemo, useRef, useState, type Dispatch, type SetStateActio
 import type { OperatorOrganization } from './ql191Organizations';
 import { inboxForOrganization } from './ql192InboxFixtures';
 import { customerForThread } from './ql193CustomerContexts';
-import { applyQueueAction, handoffStepLabels, rosterForOrganization, sortedQueueTasks, taskVersion, type MockHandoffStep, type MockQueueAction, type MockQueueState } from './ql194WorkQueue';
+import { applyQueueAction, handoffStepLabels, rosterForOrganization, sortedQueueTasks, type MockHandoffStep, type MockQueueAction, type MockQueueState } from './ql194WorkQueue';
 import { ql294LaneCounts, ql294Lanes, ql294MatchesLane, ql294Shortcut, ql294ShortcutHelp, type Ql294Lane } from './ql294OperatorWorklist';
+import { ql318ReviewGate, ql318TaskCard } from './ql318Workboard';
 import './ql194-follow-up-queue.css';
+import './ql318-workboard-visual.css';
 
 type QueueFilter = 'all' | 'attention' | 'unassigned' | 'done';
 const queueFilters: readonly { id: QueueFilter; label: string }[] = [
@@ -23,9 +25,9 @@ export function Ql194FollowUpQueue({ organization, queue, setQueue, initialThrea
   onOpenThread: (threadId: string) => void;
   onOpenContact: (contactId: string) => void;
 }) {
-  const tasks = queue.organizationId === organization.id ? queue.tasks : [];
+  const tasks = queue.organizationId === organization.id ? queue.tasks.filter((task) => task.organizationId === organization.id) : [];
   const roster = rosterForOrganization(organization.id);
-  const threadById = new Map(inboxForOrganization(organization.id).map((thread) => [thread.id, thread]));
+  const threadById = useMemo(() => new Map(inboxForOrganization(organization.id).map((thread) => [thread.id, thread])), [organization.id]);
   const initialTaskId = tasks.find((task) => task.threadId === initialThreadId)?.id;
   const [selectedId, setSelectedId] = useState(initialTaskId ?? tasks[0]?.id ?? '');
   const [search, setSearch] = useState('');
@@ -35,6 +37,7 @@ export function Ql194FollowUpQueue({ organization, queue, setQueue, initialThrea
   const [lane, setLane] = useState<Ql294Lane>('all');
   const [handoffRecipient, setHandoffRecipient] = useState(roster[0]?.id ?? '');
   const [handoffStep, setHandoffStep] = useState<MockHandoffStep>('verify-context');
+  const [reviewedKey, setReviewedKey] = useState<string | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const counts = ql294LaneCounts(queue, ownerFilter);
@@ -66,8 +69,10 @@ export function Ql194FollowUpQueue({ organization, queue, setQueue, initialThrea
   const customer = source ? customerForThread(organization.id, source.id) : undefined;
   const jumpSource = initialThreadId ? threadById.get(initialThreadId) : undefined;
   const existingJumpTask = jumpSource && tasks.find((task) => task.threadId === jumpSource.id);
+  const selectedCard = selected ? ql318TaskCard(organization.id, queue, selected.id) : null;
+  const reviewGate = ql318ReviewGate(organization.id, queue, selected?.id ?? '');
   const handoff = selected && queue.handoffs.find((entry) => entry.organizationId === organization.id && entry.taskId === selected.id);
-  const handoffStale = Boolean(handoff && selected && handoff.taskVersion !== taskVersion(selected));
+  const reviewed = reviewGate.state === 'READY' && reviewedKey === reviewGate.reviewKey;
   const metrics = {
     open: tasks.filter((task) => task.status !== 'done').length,
     unassigned: tasks.filter((task) => task.status !== 'done' && task.ownerId === null).length,
@@ -90,16 +95,16 @@ export function Ql194FollowUpQueue({ organization, queue, setQueue, initialThrea
   }
 
   return (
-    <section className="ql194-queue" data-ql194-release="ql194-assignment-follow-up-queue-v1" data-organization={organization.id} aria-labelledby="ql194-heading">
+    <section className="ql194-queue ql318" data-ql194-release="ql194-assignment-follow-up-queue-v1" data-ql318-release="workboard-history-safe-review-v1" data-organization={organization.id} aria-labelledby="ql194-heading">
       <header className="ql194-header">
         <div>
-          <p className="ql191-eyebrow">QL-194 · Operator work queue</p>
+          <p className="ql191-eyebrow">QL-318 · Operator Command / Assignment workboard</p>
           <h3 id="ql194-heading">{organization.name} · Assignments & follow-ups</h3>
           <p>Practice routing conversation work to a fictional team, without contacting customers.</p>
         </div>
         <button type="button" className="ql191-help-button" aria-expanded={showHelp} aria-controls="ql194-help" aria-label="Help with assignments and follow-ups" onClick={() => setShowHelp((previous) => !previous)}>ⓘ Help</button>
       </header>
-      {showHelp && <div id="ql194-help" className="ql194-help" role="region" aria-label="Assignment worklist help and keyboard shortcuts"><p>Choose an example task to set its demonstration owner, status, priority or due window. Open the linked inbox or Customer 360 for source context. The due windows are examples—not actual dates, timers or service guarantees. Waiting means a simulated blocked handoff. Prepare a structured, unsent handoff preview, then refresh it if task details change. Changes survive navigating inside this company during this session, but reset on company switch or page reload. These receipts are not real audit records.</p><h4>⌨ Assignment shortcuts</h4><p>Use these outside all editable fields. Standard Tab, Shift + Tab, Enter and Space are always available.</p><dl className="ql294-shortcuts">{ql294ShortcutHelp.map((item) => <div key={item.keys}><dt><kbd>{item.keys}</kbd></dt><dd>{item.action}</dd></div>)}</dl></div>}
+      {showHelp && <div id="ql194-help" className="ql194-help" role="region" aria-label="Assignment worklist help and keyboard shortcuts"><p>Choose an example task to set its demonstration owner, status, priority or due window. Open the linked inbox or Customer 360 for source context. The due windows are examples—not actual dates, timers or service guarantees. Waiting means a simulated blocked handoff. Prepare a structured, unsent handoff preview, then refresh it if task details change. Changes survive navigating inside this company during this session, but reset on company switch or page reload. These receipts are not real audit records.</p><p><strong>Safe handoff review:</strong> the preview is UNSENT. If any task field changes—even if changed back—its old text is hidden. Prepare a new summary before using <em>Review current UNSENT summary in this tab</em>. This local review does not approve, deliver or notify anyone. Task history is fictional and session-only.</p><h4>⌨ Assignment shortcuts</h4><p>Use these outside all editable fields. Standard Tab, Shift + Tab, Enter and Space are always available.</p><dl className="ql294-shortcuts">{ql294ShortcutHelp.map((item) => <div key={item.keys}><dt><kbd>{item.keys}</kbd></dt><dd>{item.action}</dd></div>)}</dl></div>}
       <p className="ql191-synthetic-banner" role="note">DISABLED SYNTHETIC WORK QUEUE — fictional operators, due windows, tasks and receipts. No real staff assignments, dispatch, task notifications, CRM/tenant records, API requests or server/browser storage writes. No live permissions or customer contact are authorized.</p>
 
       <div className="ql194-stats" aria-label="Mock queue metrics">
@@ -137,12 +142,17 @@ export function Ql194FollowUpQueue({ organization, queue, setQueue, initialThrea
           </div>
           <p className="ql194-count" role="status">{filtered.length} of {tasks.length} fictional assignments</p>
           {filtered.length ? <div className="ql194-task-list" ref={listRef}>
-            {filtered.map((task) => <button type="button" key={task.id} className={selected?.id === task.id ? 'ql194-task active' : 'ql194-task'} aria-pressed={selected?.id === task.id} onClick={() => setSelectedId(task.id)}>
-              <span className="ql194-task-flags"><span>{dueLabels[task.due]}</span><span>{task.priority === 'high' ? 'High priority' : 'Normal'}</span></span>
-              <strong>{task.title}</strong>
-              <small>{roster.find((person) => person.id === task.ownerId)?.label ?? 'Unassigned'} · {task.status === 'waiting' ? 'Waiting / blocked' : task.status}</small>
-              <small>{threadById.get(task.threadId)?.channel.toUpperCase()} source · fictional</small>
-            </button>)}
+            {filtered.map((task) => {
+              const card = ql318TaskCard(organization.id, queue, task.id);
+              if (!card) return null;
+              return <button type="button" key={task.id} className={selected?.id === task.id ? 'ql194-task active' : 'ql194-task'} data-attention={card.attention} aria-pressed={selected?.id === task.id} onClick={() => setSelectedId(task.id)}>
+                <span className="ql194-task-flags"><span>{card.due}</span><span>{card.severity}</span></span>
+                <strong>{task.title}</strong>
+                <span className="ql318-task-attention">{card.attentionLabel}</span>
+                <small>Owner: {card.owner} · Status: {task.status === 'waiting' ? 'Waiting / blocked' : task.status}</small>
+                <small>{threadById.get(task.threadId)?.channel.toUpperCase()} source · fictional · {card.history.length} local changes</small>
+              </button>;
+            })}
           </div> : <div className="ql194-empty"><p>No sample follow-ups match the filters.</p><button type="button" onClick={() => { setSearch(''); setOwnerFilter('all'); setFilter('all'); setLane('all'); }}>Clear queue filters</button></div>}
         </section>
 
@@ -151,6 +161,12 @@ export function Ql194FollowUpQueue({ organization, queue, setQueue, initialThrea
             <p className="ql191-eyebrow">Selected sample assignment · not a live work order</p>
             <h4>{selected.title}</h4>
             <p>{source.contactLabel} · {source.sourceLabel}</p>
+            {selectedCard && <div className="ql318-selected-summary" aria-label="Selected fictional assignment summary">
+              <div><span>Fictional owner</span><strong>{selectedCard.owner}</strong></div>
+              <div><span>Due window</span><strong>{selectedCard.due}</strong></div>
+              <div><span>Severity</span><strong>{selectedCard.severity}</strong></div>
+              <div data-attention={selectedCard.attention}><span>Attention state</span><strong>{selectedCard.attentionLabel}</strong></div>
+            </div>}
             <div className="ql194-source-context"><strong>Source:</strong> {source.subject} · {source.summary}</div>
             <div className="ql194-controls">
               <div><label htmlFor="ql194-assignee">Fictional owner</label><select id="ql194-assignee" value={selected.ownerId ?? ''} onChange={(event) => dispatch({ kind: 'assign', taskId: selected.id, ownerId: event.target.value || null })}>
@@ -176,11 +192,13 @@ export function Ql194FollowUpQueue({ organization, queue, setQueue, initialThrea
               <div className="ql294-handoff-controls"><div><label htmlFor="ql294-handoff-recipient">Fictional handoff recipient</label><select id="ql294-handoff-recipient" value={handoffRecipient} onChange={(event) => setHandoffRecipient(event.target.value)}>{roster.map((person) => <option key={person.id} value={person.id}>{person.label}</option>)}</select></div><div><label htmlFor="ql294-handoff-step">Suggested next action</label><select id="ql294-handoff-step" value={handoffStep} onChange={(event) => setHandoffStep(event.target.value as MockHandoffStep)}>{Object.entries(handoffStepLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></div></div>
               <button className="ql294-prepare" type="button" disabled={selected.status === 'done'} onClick={() => dispatch({ kind: 'handoff', taskId: selected.id, recipientId: handoffRecipient, nextStep: handoffStep })}>Prepare unsent handoff summary</button>
               {selected.status === 'done' && <p>Reopen this demonstration item before preparing a new handoff.</p>}
-              {handoff && <div className={handoffStale ? 'ql294-preview stale' : 'ql294-preview'} role="status" aria-live="polite"><strong>{handoffStale ? 'OUTDATED · Refresh this preview' : 'UNSENT · Current handoff preview'}</strong><p>{handoff.summary}</p><small>{handoffStale ? 'Assignment details changed after the preview was prepared. Do not rely on this outdated summary.' : 'Locally prepared only. No receipt of delivery, staff action or approval.'}</small></div>}
+              {handoff && <div className={reviewGate.state === 'STALE' ? 'ql294-preview stale' : 'ql294-preview'} role="status" aria-live="polite"><strong>{reviewGate.state === 'STALE' ? 'OUTDATED · Refresh this preview' : 'UNSENT · Current handoff preview'}</strong>{reviewGate.state === 'READY' && <p>{reviewGate.summary}</p>}<small>{reviewGate.state === 'STALE' ? 'Old summary hidden. Any assignment edit after preparation invalidates it, even when reversed. Prepare a fresh summary before in-tab review.' : 'Locally prepared only. No delivery, staff action, owner approval or notification.'}</small></div>}
+              <div className="ql318-review-actions"><button type="button" disabled={reviewGate.state !== 'READY'} onClick={() => setReviewedKey(reviewGate.reviewKey)}>Review current UNSENT summary in this tab</button><span>{reviewGate.state === 'MISSING' ? 'Prepare a local summary first.' : reviewGate.state === 'STALE' ? 'Refresh required before review.' : reviewed ? 'Read in this tab · no approval or delivery.' : 'Current draft ready for in-tab readback only.'}</span></div>
+              {reviewed && <div className="ql318-review-readback" role="status"><strong>READ LOCALLY · UNSENT · NOT AN APPROVAL</strong><p>{reviewGate.summary}</p><small>Only this fictional organization’s task and roster. No staff notification, customer reply or workflow handoff occurred.</small></div>}
             </section>
             <div className="ql194-receipts">
               <h5>Session-only change receipts</h5>
-              {queue.receipts.filter((receipt) => receipt.taskId === selected.id).length ? <ol>{queue.receipts.filter((receipt) => receipt.taskId === selected.id).map((receipt) => <li key={receipt.id}>Demo action {receipt.sequence}: {receipt.description}</li>)}</ol> : <p>Nothing changed in this demonstration session.</p>}
+              {selectedCard?.history.length ? <ol>{selectedCard.history.map((receipt) => <li key={receipt.id}>Demo action {receipt.sequence}: {receipt.description}</li>)}</ol> : <p>Nothing changed in this demonstration session.</p>}
               <small>Not an authorization, a signed audit trail, or an external notification.</small>
             </div>
             <div className="ql194-disabled"><button type="button" disabled>Notify owner disabled</button><button type="button" disabled>Dispatch job disabled</button><button type="button" disabled>Send reply disabled</button></div>

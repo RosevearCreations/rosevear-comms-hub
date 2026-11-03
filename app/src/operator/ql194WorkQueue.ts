@@ -40,6 +40,8 @@ export interface MockHandoffSummary {
   recipientId: string;
   nextStep: MockHandoffStep;
   taskVersion: string;
+  /** Session-only receipt sequence at preparation; later edits cannot revive a stale preview. */
+  preparedAtSequence: number;
   summary: string;
 }
 
@@ -172,6 +174,7 @@ export function applyQueueAction(organizationId: OrganizationId, state: MockQueu
       recipientId: recipient.id,
       nextStep: action.nextStep,
       taskVersion: taskVersion(original),
+      preparedAtSequence: state.nextReceipt,
       summary: `${original.title} · ${thread.channel.toUpperCase()} source · ${original.status === 'waiting' ? 'Waiting / blocked' : 'Open'} · ${original.due} example · ${original.priority} priority. Current demo owner: ${rosterForOrganization(organizationId).find((member) => member.id === original.ownerId)?.label ?? 'Unassigned'}. Handoff preview for ${recipient.label}: ${handoffStepLabels[action.nextStep]}.`
     };
     const receipt: MockQueueReceipt = { id: `${organizationId}-receipt-${state.nextReceipt}`, taskId: original.id, organizationId, sequence: state.nextReceipt, description: `Prepared UNSENT handoff preview for ${recipient.label}` };
