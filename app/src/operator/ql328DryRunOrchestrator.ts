@@ -63,7 +63,7 @@ export function ql328Orchestrate(request:Ql328Request):Ql328Outcome{
   const selected=scenario??fallbackScenario;
   const fixture=source?ql327SyntheticFixture(source.id):null;
   let fixtureDecision='DENY_UNKNOWN_SOURCE';
-  if(fixture){
+  if(fixture && source){
     const trial:{[key:string]:unknown}={...fixture,capabilities:[...fixture.capabilities]};
     if(selected.id==='wrong_tenant')trial.tenant_id=source.role==='support'?'np-other-company-demo':'np-other-business';
     if(selected.id==='missing_consent')delete trial.consent_marker;

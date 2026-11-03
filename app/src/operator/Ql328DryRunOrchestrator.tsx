@@ -7,7 +7,7 @@ import './ql328-dry-run-orchestrator.css';
 const SUMMARY=ql328FailureMatrix();
 
 export function Ql328DryRunOrchestrator(){
-  const [source,setSource]=useState(QL327_SOURCE_MATRIX[0].id);
+  const [source,setSource]=useState<string>(QL327_SOURCE_MATRIX[0].id);
   const [scenario,setScenario]=useState<Ql328Scenario>('baseline');
   const [attempt,setAttempt]=useState(1);
   const [run,setRun]=useState(false);
