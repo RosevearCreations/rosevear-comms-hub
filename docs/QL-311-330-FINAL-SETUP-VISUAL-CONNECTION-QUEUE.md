@@ -2,7 +2,7 @@
 
 **Approved for scheduling on 2026-11-02 by owner direction:** twenty sequential **software-only** builds. The batch is authorized as a **queue and bounded scope**, not a blanket production release approval, external account authorization, permission to represent genuine owner acceptance, or an instruction to implement all twenty immediately.
 
-**Queue:** 20 planned · **4 Production GREEN in this batch** · **16 remaining** · **next QL-315**. QL-311 through QL-314 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md), [QL-313](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md), [QL-314](build-records/QL-314_UNIFIED_INBOX_VISUAL_TRIAGE_SAVED_FILTER_RECOVERY.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
+**Queue:** 20 planned · **5 Production GREEN in this batch** · **15 remaining** · **next QL-316**. QL-311 through QL-315 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md), [QL-313](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md), [QL-314](build-records/QL-314_UNIFIED_INBOX_VISUAL_TRIAGE_SAVED_FILTER_RECOVERY.md), [QL-315](build-records/QL-315_CONVERSATION_TIMELINE_DELIVERY_DRAFT_RECOVERY.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
 
 ## Target outcome and autonomous authority
 
@@ -49,6 +49,8 @@ After QL-330, the disabled-preview application should feel like a coherent moder
 - **Boundary:** Existing reviewed preference persistence only; no real mailbox attachment or new customer storage.
 
 ### QL-315 — Conversation Timeline, Delivery-State Visual Language & Unsent Draft Recovery
+
+**Release: Production GREEN** — [code PR #604](https://github.com/RosevearCreations/rosevear-comms-hub/pull/604) · [exact-main test, Worker asset and safety receipt](build-records/QL-315_CONVERSATION_TIMELINE_DELIVERY_DRAFT_RECOVERY.md). Source-linked chronological steps, text-plus-colour mock receipt states and scoped UNSENT draft readback shipped. No real customer delivery or provider retry was implemented. Manual screen-reader and physical-device acceptance remain pending.
 
 - **Deliver:** Readable event timeline with distinct synthetic delivered/failed/retried states, accessible source provenance, contextual reply guidance and clearly labelled UNSENT draft recovery.
 - **Acceptance:** QL-293/297 timelines retain deterministic order and replay semantics; draft recovery works in the same company/thread, exposes stale context and clears without cross-brand leakage; screen-reader chronological reading verified.
@@ -160,6 +162,6 @@ After QL-330, the disabled-preview application should feel like a coherent moder
 | QL-329–330 | Regression, final reconciliation and owner packet | 2 | 0 | 2 |
 | **Total QL-311–330** | **Final autonomous-setup batch** | **20** | **2** | **18** |
 
-**Build-by-build release gate:** A build must have a source diff and focused regression, complete app suite, TypeScript, QL-171 safety check, production asset build, GitHub feature→`dev`→`main` receipt, all applicable **exact-main** successful checks (including `Workers Builds: rosevear-comms-hub`), and SHA-256 comparison of live Worker JS/CSS with tested artifacts. Document the exact code/main receipt in its individual `docs/build-records/` record; update the queue ledger from `2/20` one release at a time. A later documentation-only receipt commit must also pass its own applicable final checks. Cloudflare **production GREEN** means released preview code only.
+**Build-by-build release gate:** A build must have a source diff and focused regression, complete app suite, TypeScript, QL-171 safety check, production asset build, GitHub feature→`dev`→`main` receipt, all applicable **exact-main** successful checks (including `Workers Builds: rosevear-comms-hub`), and SHA-256 comparison of live Worker JS/CSS with tested artifacts. Document the exact code/main receipt in its individual `docs/build-records/` record; update the queue ledger one release at a time. A later documentation-only receipt commit must also pass its own applicable final checks. Cloudflare **production GREEN** means released preview code only.
 
 **After QL-330:** No automatic batch. Gather real owner observations from physical devices, independently verified signed source evidence and source-owner/custodian decisions, and measured production results. The owner must choose/authorize a separate next roadmap. Do not remove the ACK `UNDER_REVIEW` classification or the six `DISCONNECTED / HOLD` gates by implication.
