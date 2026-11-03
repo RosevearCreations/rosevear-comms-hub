@@ -2,7 +2,7 @@
 
 **Approved for scheduling on 2026-11-02 by owner direction:** twenty sequential **software-only** builds. The batch is authorized as a **queue and bounded scope**, not a blanket production release approval, external account authorization, permission to represent genuine owner acceptance, or an instruction to implement all twenty immediately.
 
-**Queue:** 20 planned · **3 Production GREEN in this batch** · **17 remaining** · **next QL-314**. QL-311 through QL-313 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md), [QL-313](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
+**Queue:** 20 planned · **4 Production GREEN in this batch** · **16 remaining** · **next QL-315**. QL-311 through QL-314 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md), [QL-313](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md), [QL-314](build-records/QL-314_UNIFIED_INBOX_VISUAL_TRIAGE_SAVED_FILTER_RECOVERY.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
 
 ## Target outcome and autonomous authority
 
@@ -41,6 +41,8 @@ After QL-330, the disabled-preview application should feel like a coherent moder
 - **Boundary:** No claim of owner-tested physical devices; use virtual/device emulation evidence only.
 
 ### QL-314 — Unified Inbox Visual Triage, Clear Empty States & Saved Filters
+
+**Release: Production GREEN** — [code PR #602](https://github.com/RosevearCreations/rosevear-comms-hub/pull/602) · [verified production receipt](build-records/QL-314_UNIFIED_INBOX_VISUAL_TRIAGE_SAVED_FILTER_RECOVERY.md). Styled existing inbox lanes, removable text filter chips, matching-result/readback badges, honest empty states and validated in-tab saved-view recovery are live in disabled preview. Real-device screenshots remain pending.
 
 - **Deliver:** Standard priority lanes, source/owner badges, search/filter chips, count summaries and recoverable in-tab saved triage views using existing QL-292 behaviour.
 - **Acceptance:** Fictional inbox fixtures remain correctly company-scoped; search and reset results agree with lane counts; empty/loading/error states are accessible; no active queue action triggers a real message.
