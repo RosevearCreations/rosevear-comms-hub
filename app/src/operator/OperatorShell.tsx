@@ -11,6 +11,7 @@ import { Ql296GuidedIntake } from './Ql296GuidedIntake';
 import { Ql297Omnichannel } from './Ql297Omnichannel';
 import { Ql298RoutingStudio } from './Ql298RoutingStudio';
 import { Ql299AccessibilityReview } from './Ql299AccessibilityReview';
+import { Ql320OperatorJourney } from './Ql320OperatorJourney';
 import { Ql178OperatorTaskSimulation } from './Ql178OperatorTaskSimulation';
 import { Ql179PhoneSmsEventEmulator } from './Ql179PhoneSmsEventEmulator';
 import { Ql180RoutingIvrPreview } from './Ql180RoutingIvrPreview';
@@ -186,6 +187,7 @@ const QL271_COMMAND_WORKSPACES: ReadonlySet<OperatorWorkspace> = new Set([
 ]);
 
 const firstOrganization = initialOperatorOrganization(import.meta.env.VITE_DEFAULT_BRAND).id;
+const QL320_FRONT_END_WORKSPACES: ReadonlySet<OperatorWorkspace> = new Set(['dashboard','inbox','contacts','guided_intake','routing_studio','queue','accessibility_review','composer']);
 
 export function OperatorShell() {
   const [organizationId, setOrganizationId] = useState<OrganizationId>(firstOrganization);
@@ -444,6 +446,10 @@ export function OperatorShell() {
               <button type="button" onClick={()=>setWorkspace('it_command')}>I.T. connections</button>
               <button type="button" onClick={()=>setWorkspace('system_status')}>Safety status</button></div>
           </details>
+          {QL320_FRONT_END_WORKSPACES.has(workspace) && <Ql320OperatorJourney
+            key={`ql320-journey-${organization.id}`} organizationId={organization.id} organizationName={organization.name}
+            workspace={workspace} queue={queueState} drafts={composerDrafts} onNavigate={setWorkspace}
+            onOpenThread={openThread} onOpenContact={openCustomer} onOpenQueue={openQueue} onOpenComposer={openComposer} />}
           {workspace === 'dashboard' && <Ql191OperatorDashboard key={`dashboard-${organization.id}`} organization={organization} onNavigate={setWorkspace} />}
           {workspace === 'connections' && <Ql270Connections onNavigate={setWorkspace} />}
           {commandWorkspace && <Ql271CommandSurfaces mode={workspace as Ql271CommandMode} organizationId={organization.id} onNavigate={setWorkspace} onSelectOrganization={changeOrganization} />}
