@@ -16,6 +16,7 @@ import { Ql324ConnectionCatalogue } from './Ql324ConnectionCatalogue';
 import { Ql325ProofGateReadback } from './Ql325ProofGateReadback';
 import { Ql326ConnectionConfiguration } from './Ql326ConnectionConfiguration';
 import { Ql327ContractCompatibility } from './Ql327ContractCompatibility';
+import { Ql328DryRunOrchestrator } from './Ql328DryRunOrchestrator';
 import type { MockQueueState } from './ql194WorkQueue';
 import { Ql302StatisticsTrend } from './Ql302StatisticsTrend';
 import { Ql303CapabilityReadiness } from './Ql303CapabilityReadiness';
@@ -164,6 +165,7 @@ export function Ql271CommandSurfaces({ mode, organizationId, queue, onNavigate, 
     {mode === 'it_command' && <Ql325ProofGateReadback />}
     {mode === 'it_command' && <Ql326ConnectionConfiguration />}
     {mode === 'it_command' && <Ql327ContractCompatibility />}
+    {mode === 'it_command' && <Ql328DryRunOrchestrator />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql303CapabilityReadiness />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql307ProofEvidence />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql308TenantContracts />}
