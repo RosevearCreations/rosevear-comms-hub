@@ -53,7 +53,7 @@ describe('QL-302 accessible analytics explorer', () => {
     await act(async () => button('Analytics').click());
     expect(host.querySelector('[data-ql302-release]')).not.toBeNull();
     expect(host.querySelectorAll('.ql302-bar-row')).toHaveLength(4);
-    expect(host.querySelectorAll('.ql302 tbody tr')).toHaveLength(4);
+    expect(host.querySelectorAll('.ql302-grid tbody tr')).toHaveLength(4);
     expect(host.querySelector('.ql302 tfoot')?.textContent).toContain('4');
     expect(host.textContent).toContain('no feed connected or queried');
     const range = host.querySelectorAll<HTMLSelectElement>('.ql302 select')[0];
