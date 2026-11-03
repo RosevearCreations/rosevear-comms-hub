@@ -2,7 +2,7 @@
 
 **Approved for scheduling on 2026-11-02 by owner direction:** twenty sequential **software-only** builds. The batch is authorized as a **queue and bounded scope**, not a blanket production release approval, external account authorization, permission to represent genuine owner acceptance, or an instruction to implement all twenty immediately.
 
-**Queue:** 20 planned · **6 Production GREEN in this batch** · **14 remaining** · **next QL-317**. QL-311 through QL-316 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md), [QL-313](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md), [QL-314](build-records/QL-314_UNIFIED_INBOX_VISUAL_TRIAGE_SAVED_FILTER_RECOVERY.md), [QL-315](build-records/QL-315_CONVERSATION_TIMELINE_DELIVERY_DRAFT_RECOVERY.md), [QL-316](build-records/QL-316_CONTACT_CONSENT_FOUR_BUSINESS_INTAKE_VISUAL.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
+**Queue:** 20 planned · **7 Production GREEN in this batch** · **13 remaining** · **next QL-318**. QL-311 through QL-317 have independently verified software release receipts ([QL-311](build-records/QL-311_UNIFIED_COMMAND_NAVIGATION_CONFIG_HELP.md), [QL-312](build-records/QL-312_STANDARD_THEME_GRAPHICS_TYPOGRAPHY_CONSISTENCY.md), [QL-313](build-records/QL-313_RESPONSIVE_SHELL_TOUCH_DEVICE_RECOVERY.md), [QL-314](build-records/QL-314_UNIFIED_INBOX_VISUAL_TRIAGE_SAVED_FILTER_RECOVERY.md), [QL-315](build-records/QL-315_CONVERSATION_TIMELINE_DELIVERY_DRAFT_RECOVERY.md), [QL-316](build-records/QL-316_CONTACT_CONSENT_FOUR_BUSINESS_INTAKE_VISUAL.md), [QL-317](build-records/QL-317_ROUTING_IVR_MAP_SAFE_FALLBACK_POLISH.md)). Each QL item is individually implemented, tested, promoted to `dev`/`main`, and verified before changing its queue status. Do not count a draft, local test, PR, fixture, or approved plan as GREEN.
 
 ## Target outcome and autonomous authority
 
@@ -65,6 +65,8 @@ After QL-330, the disabled-preview application should feel like a coherent moder
 - **Boundary:** No real contact ingestion, merge, quote delivery, booking or consent write.
 
 ### QL-317 — Multi-Line Routing, IVR Scenario Map & Safe Fallback Studio Polish
+
+**Release: Production GREEN** — [code PR #608](https://github.com/RosevearCreations/rosevear-comms-hub/pull/608) · [exact-main tests, Worker asset receipts and held-boundary evidence](build-records/QL-317_ROUTING_IVR_MAP_SAFE_FALLBACK_POLISH.md). The existing QL-298 simulator now has a matching accessible five-stage map/table pair, nine guided case presets, independent edit/revert controls, explicit cross-company/unknown-line holds, one-cycle repeat stop and contextual help. Owner device and screen-reader acceptance remain pending.
 
 - **Deliver:** Visualize fictional line→business→menu→hours→fallback decisions in an accessible table/diagram pair, with conflict indicators, edit/revert controls and guided scenario comparisons.
 - **Acceptance:** QL-298 fixture cases cover wrong brand, unknown line, closed hours, missing option and fallback loops; every unsafe route resolves to a documented disabled/held path; diagram/table parity tested.
