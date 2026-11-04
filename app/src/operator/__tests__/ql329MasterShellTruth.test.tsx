@@ -120,7 +120,7 @@ describe('QL-329 cross-device and accessible UI regression (emulation, not physi
     expect(screen.textContent).toContain('Yard Workers');
     expect(screen.textContent).toContain('Camp Rosevear');
     expect(screen.textContent).toContain('0 / 6 CONNECTED');
-    expect(screen.textContent).toContain('NO CUSTOMER');
+    expect(screen.textContent).toContain('NO_CUSTOMER_TENANT');
   });
   it('switches shell and scenario, reveals local context, and never accesses source or storage',async()=>{
     const spy=vi.spyOn(globalThis,'fetch');
