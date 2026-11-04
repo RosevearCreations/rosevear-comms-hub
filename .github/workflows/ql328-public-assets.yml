@@ -11,6 +11,8 @@ on:
       - docs/build-records/QL-329_*
       - docs/build-records/QL-330_*
       - docs/build-records/QL-331_*
+      - docs/build-records/QL-332_*
+      - docs/QL-332-MANAGED-CUSTODY-BOOTSTRAP-ROTATION.md
       - docs/ROSEVEAR_SOURCE_OF_TRUTH_V3_QL331.md
       - docs/ROSEVEAR_SOURCE_OF_TRUTH_V2_2026-11-03.md
       - docs/ROSEVEAR_MASTER_CONNECTION_CONTROL_PLANE_V1.md
