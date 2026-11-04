@@ -30,7 +30,7 @@ test('QL-171 baseline inventories all surfaces, data paths and gaps without auth
   // QL-272 reviews two additional localStorage operations in the preexisting
   // allowlisted localRepository: one get and one set for versioned UI layouts.
   assert.equal(report.sinkCounts['browser-storage'], 5);
-  assert.equal(report.sinkCounts['supabase-query'], 5);
+  assert.equal(report.sinkCounts['supabase-query'], 9);
   assert.equal(report.sinkCounts['supabase-mutation'], 0);
   assert.equal(report.sinkCounts['raw-network'], 0);
   assert.equal(report.liveCallsEnabled, false);
@@ -69,6 +69,16 @@ test('customer-table reads are not silently added to the synthetic read client',
   const report = assessQl171Baseline(snapshot);
   assert.equal(report.status, 'DRIFT');
   assert.ok(report.issues.some(issue => issue.includes('unreviewed table contacts')));
+});
+
+test('QL-331 master read-only allowlist is limited to four RLS metadata tables', () => {
+  const safe=assessQl171Baseline(baseline);
+  assert.equal(safe.status, 'PASS',safe.issues.join('\n'));
+  const snapshot=changeSource('app/src/operator/ql331MasterAccess.ts',source=>`${source}\nclient.from('contacts')`);
+  const drift=assessQl171Baseline(snapshot);
+  assert.equal(drift.status,'DRIFT');
+  assert.ok(drift.issues.some(issue=>issue.includes('unreviewed table contacts')));
+  assert.equal(drift.sinkCounts['supabase-mutation'],0);
 });
 
 test('new Supabase write APIs are not hidden inside an allowlisted read file', () => {

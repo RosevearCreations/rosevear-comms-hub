@@ -39,7 +39,9 @@ const SINK_RULES = Object.freeze([
   { id: 'supabase-query', pattern: /\.from\(\s*['"]([^'"]+)['"]\s*\)/g, allowedTables: {
     'app/src/auth/AdminSessionGate.tsx': ['app_admins'],
     'app/src/supabase/readModel.ts': ['brands', 'app_admins'],
-    'app/src/integrations/supabaseReadOnlyClient.ts': ['ql_public_synthetic_conversations', 'ql_public_system_status']
+    'app/src/integrations/supabaseReadOnlyClient.ts': ['ql_public_synthetic_conversations', 'ql_public_system_status'],
+    // QL-331: reviewed SELECT-only Postgres-RLS metadata boundary; no customer data or writes.
+    'app/src/operator/ql331MasterAccess.ts': ['master_principals', 'master_shell_grants', 'master_shell_registry', 'master_child_tenants']
   } },
   { id: 'supabase-mutation', pattern: /\.(?:insert|upsert|delete|update|rpc|invoke)\s*\(/g, allowed: [] },
   { id: 'raw-network', pattern: /\b(?:fetch\s*\(|new\s+WebSocket\s*\(|new\s+EventSource\s*\(|navigator\.sendBeacon\s*\()/g, allowed: [] },
