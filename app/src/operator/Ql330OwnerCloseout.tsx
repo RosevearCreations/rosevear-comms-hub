@@ -12,6 +12,7 @@ export function Ql330OwnerCloseout({mode='it_command'}:{mode?:'it_command'|'mana
   const [procedureId,setProcedureId]=useState<Ql330ProcedureId>('connect-readonly');
   const [draft,setDraft]=useState<Ql330ProcedureDraft>(()=>ql330InitialDraft('connect-readonly'));
   const [reviewed,setReviewed]=useState<Readonly<Record<string,boolean>>>({});
+  const [selectedRevision,setSelectedRevision]=useState<typeof QL330_REVISION_OPTIONS[number]['id']>('add_review');
   const [showChecklist,setShowChecklist]=useState(false);
   const [showReceipt,setShowReceipt]=useState(false);
   const selected=QL330_PROCEDURES.find(p=>p.id===procedureId)!;
@@ -61,11 +62,10 @@ export function Ql330OwnerCloseout({mode='it_command'}:{mode?:'it_command'|'mana
           <select id="ql330-procedure" value={procedureId} onChange={e=>choose(e.currentTarget.value)}>
             {QL330_PROCEDURES.map(p=><option key={p.id} value={p.id}>{p.label}</option>)}</select></label>
           <label htmlFor="ql330-revision">Safe addition
-          <select id="ql330-revision" defaultValue="add_review">
+          <select id="ql330-revision" value={selectedRevision} onChange={e=>setSelectedRevision(e.currentTarget.value as typeof QL330_REVISION_OPTIONS[number]['id'])}>
             {QL330_REVISION_OPTIONS.map(x=><option key={x.id} value={x.id}>{x.label}</option>)}</select></label></div>
         <div className="ql330-actions"><button type="button" onClick={()=>{
-          const picker=document.getElementById('ql330-revision') as HTMLSelectElement|null;
-          revise(picker?.value??'add_review');
+          revise(selectedRevision);
         }}>Preview next version</button>
           <button type="button" onClick={()=>setDraft(ql330InitialDraft(procedureId))}>Revert local draft</button></div>
         <div className="ql330-outcome" role="status" aria-live="polite"><strong>{selected.label} · proposed v{draft.version} · DRAFT / UNSENT</strong>
