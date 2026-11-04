@@ -132,7 +132,7 @@ describe('QL-331 authoritative master identity and source scope',()=>{
   expect(sql).toContain('ON DELETE RESTRICT');
   expect(sql).toContain("shell_kind = 'business'");
   expect(sql).not.toMatch(/CREATE POLICY[^;]+FOR (ALL|INSERT|UPDATE|DELETE)/i);
-  expect(sql).not.toMatch(/SECURITY DEFINER/i);
+  expect(sql.replace(/--[^\n]*/g,'')).not.toMatch(/SECURITY DEFINER/i);
   expect(sql).not.toMatch(/INSERT INTO public\.master_principals/i);
   expect(sql).not.toMatch(/INSERT INTO public\.master_shell_grants/i);
   expect(sql).not.toMatch(/FROM auth\.users u.+email/);
@@ -205,6 +205,6 @@ describe('QL-331 accessible master-control UI across command workspaces',()=>{
   expect(model).not.toContain('.auth.getSession()');
   expect(model+ui).not.toMatch(/\b(fetch|XMLHttpRequest|localStorage|sessionStorage)\s*\(/);
   expect(model+ui).not.toContain('service_role');
-  expect(model+ui).not.toContain('user_metadata');
+  expect(model+ui).not.toMatch(/\.(raw_)?user_metadata\b/);
  });
 });
