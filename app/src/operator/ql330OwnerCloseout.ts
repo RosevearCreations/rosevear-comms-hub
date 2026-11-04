@@ -60,8 +60,7 @@ const maxSteps=18;
 export const QL330_REVISION_OPTIONS=[
  {id:'add_review',label:'Add independent review follow-up',step:'review_followup'},
  {id:'add_freshness',label:'Add reporting freshness review',step:'report_freshness'},
- {id:'add_latency',label:'Add nonproduction latency review',step:'measure_latency'},
- {id:'add_failure',label:'Add explicit fail-closed checkpoint',step:'pause_on_failure'}
+ {id:'add_latency',label:'Add nonproduction latency review',step:'measure_latency'}
 ] as const;
 
 export function ql330InitialDraft(id:Ql330ProcedureId):Ql330ProcedureDraft{
