@@ -3,7 +3,7 @@
   "created_date": "2026-11-03",
   "owner_intent": "plan ten deep integration builds, database-managed procedures, autonomous safe monitoring",
   "base_verified_main": "e6d6714cbdc7359bf94a60352b4f769f21011174",
-  "implementation_status": "QL-331_SOFTWARE_AND_RLS_GREEN_1_OF_10",
+  "implementation_status": "QL-332_SOFTWARE_AND_PRIVATE_METADATA_DB_GREEN_2_OF_10_KEY_CUSTODY_HOLD",
   "implementation_authorization": "PER_BUILD_OR_SEPARATE_EXPLICIT_AUTOMATION_AUTHORIZATION",
   "auto_start": false,
   "auto_activate_connections": false,
@@ -69,14 +69,18 @@
       "depends_on": [
         "QL-331"
       ],
-      "status": "PLANNED",
+      "status": "CODE_GREEN",
       "deliverables": [
         "managed_kms",
         "rotation",
         "issuer_proof"
       ],
       "connection_state": "DISCONNECTED / HOLD",
-      "production_activation": "SEPARATE_EXPLICIT_OWNER_AND_SOURCE_OWNER_APPROVAL"
+      "production_activation": "SEPARATE_EXPLICIT_OWNER_AND_SOURCE_OWNER_APPROVAL",
+      "verified_metadata_db_rls": true,
+      "verified_managed_key_enrollment": false,
+      "verified_real_rotation": false,
+      "verified_source_owner_test": false
     },
     {
       "id": "QL-333",
