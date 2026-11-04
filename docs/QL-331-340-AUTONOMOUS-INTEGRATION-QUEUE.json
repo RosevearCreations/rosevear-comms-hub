@@ -90,7 +90,7 @@
         "QL-331",
         "QL-332"
       ],
-      "status": "PLANNED",
+      "status": "IMPLEMENTED_PUBLIC_DISCOVERY / SIGNATURE_AND_SOURCE_TRUST_HELD",
       "deliverables": [
         "six_sources",
         "contract_pin",
