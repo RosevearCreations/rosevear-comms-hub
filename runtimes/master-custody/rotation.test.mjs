@@ -150,6 +150,10 @@ test('SQL is client inaccessible, no seeded identities/keys, and custody receipt
   assert.match(sql,/CREATE TRIGGER master_custody_receipt_no_edit/);
   assert.match(sql,/UNIQUE \(shell_id,purpose,key_version\)/);
   assert.match(sql,/master_rotation_single_inflight_per_scope/);
+  for(const index of ['master_managed_handle_issuer_fk','master_managed_handle_workload_fk',
+    'master_rotation_previous_handle_fk','master_rotation_candidate_handle_fk',
+    'master_custody_receipt_shell_fk','master_custody_receipt_job_fk'])
+    assert.match(sql,new RegExp(index));
   assert.doesNotMatch(sql,/GRANT (?:SELECT|INSERT|UPDATE|DELETE|EXECUTE).*TO (?:anon|authenticated)/i);
   assert.doesNotMatch(sql,/INSERT INTO public\.master_/i);
   assert.doesNotMatch(sql,/SECURITY DEFINER/i);

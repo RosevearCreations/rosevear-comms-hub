@@ -80,6 +80,10 @@ CREATE TABLE public.master_managed_key_handles (
   )),
   CHECK (state <> 'REVOKED' OR revoked_at IS NOT NULL)
 );
+CREATE INDEX master_managed_handle_issuer_fk
+  ON public.master_managed_key_handles(shell_id,issuer_record_id);
+CREATE INDEX master_managed_handle_workload_fk
+  ON public.master_managed_key_handles(workload_id);
 COMMENT ON TABLE public.master_managed_key_handles IS
   'Opaque Vault/KMS reference, not a secret. All key changes require the private broker and authenticated source-side evidence.';
 
@@ -116,6 +120,10 @@ CREATE UNIQUE INDEX master_rotation_single_inflight_per_scope
   ON public.master_rotation_jobs(shell_id,purpose)
   WHERE state IN ('DUE','CLAIMED','DUAL_KEY','BOTH_VERIFIED');
 CREATE INDEX master_rotation_due_lookup ON public.master_rotation_jobs(state,due_at);
+CREATE INDEX master_rotation_previous_handle_fk
+  ON public.master_rotation_jobs(shell_id,purpose,previous_handle_id);
+CREATE INDEX master_rotation_candidate_handle_fk
+  ON public.master_rotation_jobs(shell_id,purpose,candidate_handle_id);
 COMMENT ON TABLE public.master_rotation_jobs IS
   'Serialized overlap/cutover intentions; no pg_cron or live key rotation enabled without private worker enrollment.';
 
@@ -130,6 +138,10 @@ CREATE TABLE public.master_custody_receipts (
   broker_receipt_sha256 char(64) NOT NULL CHECK (broker_receipt_sha256 ~ '^[0-9a-f]{64}$'),
   inserted_at timestamptz NOT NULL DEFAULT now()
 );
+CREATE INDEX master_custody_receipt_shell_fk
+  ON public.master_custody_receipts(shell_id);
+CREATE INDEX master_custody_receipt_job_fk
+  ON public.master_custody_receipts(job_id);
 COMMENT ON TABLE public.master_custody_receipts IS
   'Append-only nonsecret digests; no bearer tokens, plaintext keys, customer data or invented signed receipts.';
 
