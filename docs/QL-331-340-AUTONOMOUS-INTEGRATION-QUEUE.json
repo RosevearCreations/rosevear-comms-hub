@@ -1,0 +1,238 @@
+{
+  "schema": "rosevear.ql331-340.queue.v1",
+  "created_date": "2026-11-03",
+  "owner_intent": "plan ten deep integration builds, database-managed procedures, autonomous safe monitoring",
+  "base_verified_main": "e6d6714cbdc7359bf94a60352b4f769f21011174",
+  "implementation_status": "PLANNED_NOT_EXECUTED",
+  "implementation_authorization": "PER_BUILD_OR_SEPARATE_EXPLICIT_AUTOMATION_AUTHORIZATION",
+  "auto_start": false,
+  "auto_activate_connections": false,
+  "connection_count_verified": 0,
+  "connection_count_target": 6,
+  "source_roles": {
+    "business_shells": [
+      "yw",
+      "icamp",
+      "rosiedazzlers",
+      "devilndove"
+    ],
+    "support_services": [
+      "ai-data-platform",
+      "rosevear-ai-hub"
+    ],
+    "shared_service": "rosevear-comms-hub",
+    "future_master": "rosevear-master"
+  },
+  "secrets_policy": "NO_PLAINTEXT_IN_DATABASE_ROWS_OR_BROWSER; OPAQUE_VAULT_KMS_REFERENCES_ONLY",
+  "state_transitions": [
+    "PLANNED",
+    "CODE_GREEN",
+    "DISCOVERY_VERIFIED",
+    "NONPROD_CONNECTED",
+    "PROD_CONNECTED",
+    "HOLD"
+  ],
+  "automatic_nonsecret_discovery_allowed": true,
+  "real_connect_requires": [
+    "original_signed_source_proof",
+    "issuer_custody",
+    "source_owner_test_approval",
+    "owner_scoped_test_approval",
+    "server_workload_identity",
+    "managed_kms_key_handle",
+    "tenant_scope",
+    "signed_both_end_receipts"
+  ],
+  "builds": [
+    {
+      "id": "QL-331",
+      "number": 331,
+      "title": "Authenticated Master Control Plane, Shell Registry & Tenant Entitlements",
+      "depends_on": [],
+      "status": "PLANNED",
+      "deliverables": [
+        "master_auth",
+        "shell_registry",
+        "source_child_isolation"
+      ],
+      "connection_state": "DISCONNECTED / HOLD",
+      "production_activation": "SEPARATE_EXPLICIT_OWNER_AND_SOURCE_OWNER_APPROVAL"
+    },
+    {
+      "id": "QL-332",
+      "number": 332,
+      "title": "Managed Vault/KMS, Peer Identity Bootstrap & Automated Rotation",
+      "depends_on": [
+        "QL-331"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "managed_kms",
+        "rotation",
+        "issuer_proof"
+      ],
+      "connection_state": "DISCONNECTED / HOLD",
+      "production_activation": "SEPARATE_EXPLICIT_OWNER_AND_SOURCE_OWNER_APPROVAL"
+    },
+    {
+      "id": "QL-333",
+      "number": 333,
+      "title": "Six-Source Contract Discovery, Signed Manifest Pinning & Identity Compatibility",
+      "depends_on": [
+        "QL-331",
+        "QL-332"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "six_sources",
+        "contract_pin",
+        "yw_mapping"
+      ],
+      "connection_state": "DISCONNECTED / HOLD",
+      "production_activation": "SEPARATE_EXPLICIT_OWNER_AND_SOURCE_OWNER_APPROVAL"
+    },
+    {
+      "id": "QL-334",
+      "number": 334,
+      "title": "Database-Driven Procedure Engine, Safe Workflow Scheduler & Approval Ledger",
+      "depends_on": [
+        "QL-331",
+        "QL-332",
+        "QL-333"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "procedure_versions",
+        "audit",
+        "fail_closed"
+      ],
+      "connection_state": "DISCONNECTED / HOLD",
+      "production_activation": "SEPARATE_EXPLICIT_OWNER_AND_SOURCE_OWNER_APPROVAL"
+    },
+    {
+      "id": "QL-335",
+      "number": 335,
+      "title": "YW & iCamp Shell-Level Signed Nonproduction Handshakes",
+      "depends_on": [
+        "QL-331",
+        "QL-332",
+        "QL-333",
+        "QL-334"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "yw_shell",
+        "icamp_shell",
+        "signed_receipts"
+      ],
+      "connection_state": "DISCONNECTED / HOLD",
+      "production_activation": "SEPARATE_EXPLICIT_OWNER_AND_SOURCE_OWNER_APPROVAL"
+    },
+    {
+      "id": "QL-336",
+      "number": 336,
+      "title": "Rosie Dazzlers & Devil n Dove Child-Shell Migration / Connections",
+      "depends_on": [
+        "QL-331",
+        "QL-332",
+        "QL-333",
+        "QL-334",
+        "QL-335"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "detailer_shell",
+        "maker_shell",
+        "isolation"
+      ],
+      "connection_state": "DISCONNECTED / HOLD",
+      "production_activation": "SEPARATE_EXPLICIT_OWNER_AND_SOURCE_OWNER_APPROVAL"
+    },
+    {
+      "id": "QL-337",
+      "number": 337,
+      "title": "AI Data Platform Broker, Comms Event Contracts & Idempotent Effects",
+      "depends_on": [
+        "QL-331",
+        "QL-332",
+        "QL-333",
+        "QL-334",
+        "QL-335",
+        "QL-336"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "broker",
+        "comms_envelopes",
+        "replay_protection"
+      ],
+      "connection_state": "DISCONNECTED / HOLD",
+      "production_activation": "SEPARATE_EXPLICIT_OWNER_AND_SOURCE_OWNER_APPROVAL"
+    },
+    {
+      "id": "QL-338",
+      "number": 338,
+      "title": "Rosevear AI Hub Secure Local Relay, Device Proof & Offline Recovery",
+      "depends_on": [
+        "QL-331",
+        "QL-332",
+        "QL-334",
+        "QL-337"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "ai_hub",
+        "relay_off_by_default",
+        "owner_device_acceptance"
+      ],
+      "connection_state": "DISCONNECTED / HOLD",
+      "production_activation": "SEPARATE_EXPLICIT_OWNER_AND_SOURCE_OWNER_APPROVAL"
+    },
+    {
+      "id": "QL-339",
+      "number": 339,
+      "title": "Unified Child-Safe Client Portal Tracking & Consent-Aware Journeys",
+      "depends_on": [
+        "QL-331",
+        "QL-332",
+        "QL-333",
+        "QL-334",
+        "QL-335",
+        "QL-336",
+        "QL-337"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "portal",
+        "child_grants",
+        "retention"
+      ],
+      "connection_state": "DISCONNECTED / HOLD",
+      "production_activation": "SEPARATE_EXPLICIT_OWNER_AND_SOURCE_OWNER_APPROVAL"
+    },
+    {
+      "id": "QL-340",
+      "number": 340,
+      "title": "Master Reporting, Six-Source Evidence, SLOs & Production Handoff",
+      "depends_on": [
+        "QL-331",
+        "QL-332",
+        "QL-333",
+        "QL-334",
+        "QL-335",
+        "QL-336",
+        "QL-337",
+        "QL-338",
+        "QL-339"
+      ],
+      "status": "PLANNED",
+      "deliverables": [
+        "reports",
+        "six_source_evidence",
+        "owner_acceptance"
+      ],
+      "connection_state": "DISCONNECTED / HOLD",
+      "production_activation": "SEPARATE_EXPLICIT_OWNER_AND_SOURCE_OWNER_APPROVAL"
+    }
+  ]
+}
