@@ -2,16 +2,16 @@
 
 **Created:** 2026-11-03 (America/Toronto) · **Status:** 10 PLANNED, 0 implemented · **Supersedes no earlier Source of Truth**.
 
-**Previous batch:** QL-311–330 = **20/20 Production GREEN for disabled-preview software**, final main receipt \`e6d6714cbdc7359bf94a60352b4f769f21011174\`.
-**Present external reality:** 0/6 verified active source connections; all \`DISCONNECTED / HOLD\`, Windows AI Hub relay OFF, ACK UNDER_REVIEW/PARKED_FOR_LATER. The planned master SSO, private control-plane runtime, real source-signed trust, key custody and proposed QL-330 database schema are **not deployed**.
+**Previous batch:** QL-311–330 = **20/20 Production GREEN for disabled-preview software**, final main receipt `e6d6714cbdc7359bf94a60352b4f769f21011174`.
+**Present external reality:** 0/6 verified active source connections; all `DISCONNECTED / HOLD`, Windows AI Hub relay OFF, ACK UNDER_REVIEW/PARKED_FOR_LATER. The planned master SSO, private control-plane runtime, real source-signed trust, key custody and proposed QL-330 database schema are **not deployed**.
 
 This is an implementation queue **authorized for roadmap creation**, not a blanket authorization to migrate external databases, create privileged keys, alter peer permissions, connect to private Windows devices, send real communications, sign on anyone's behalf, or start all 10 code builds automatically. Begin a build only upon a scoped owner instruction (or an explicit future automation authorization). Do not report a functional connection from repo access, READY hosting, seeded data, fixture proofs or a UI screenshot.
 
 ## Non-negotiable topology
 
 **Rosevear Master (future authenticated control plane)** → **AI Data Platform (verified broker)** → **four business application shells**:
-- **Yard Workers** shell \`yw\` / source app-id \`yard-workers\`; independent landscaping companies (including Rosevear Landscaping) are children, NEVER connector identities.
-- **iCamp** shell \`icamp\`; campgrounds (including Camp Rosevear) are child tenants, NEVER connector identities.
+- **Yard Workers** shell `yw` / source app-id `yard-workers`; independent landscaping companies (including Rosevear Landscaping) are children, NEVER connector identities.
+- **iCamp** shell `icamp`; campgrounds (including Camp Rosevear) are child tenants, NEVER connector identities.
 - **Auto Detailing shell** using Rosie Dazzlers logic; Rosie is the first owned child and future detailers must be tenant-isolated. Existing Rosie site is NOT YET a provisioned multi-child shell.
 - **Maker Commerce shell** using Devil n Dove logic; Devil n Dove is the first owned child, future makers tenant-isolated. Existing site is NOT YET a provisioned multi-child shell.
 
@@ -66,7 +66,7 @@ Every build must publish exact source commits per modified repository, narrow fo
 
 **Goal:** Make source integration versioning discoverable and safe without manual code/env edits for each child.
 
-**Implementation:** Review all seven GitHub repos and the existing source-owned health/capabilities contracts. Introduce versioned signed, **nonsecret** manifest schemas and server-only adapter registry for four business shells plus AI Data Platform and AI Hub. Explicitly reconcile broker registry \`yw\` vs source app-id \`yard-workers\`, iCamp shell vs campground tenant scope, and Rosie/Devil owned-business→future shell identities. Pin issuer, audience, allowed HTTPS origin/path, contract version, source revision, requested minimal scope and normal failure behavior. Do not silently rewrite signed v1 payloads; add a negotiated backward-compatible mapping.
+**Implementation:** Review all seven GitHub repos and the existing source-owned health/capabilities contracts. Introduce versioned signed, **nonsecret** manifest schemas and server-only adapter registry for four business shells plus AI Data Platform and AI Hub. Explicitly reconcile broker registry `yw` vs source app-id `yard-workers`, iCamp shell vs campground tenant scope, and Rosie/Devil owned-business→future shell identities. Pin issuer, audience, allowed HTTPS origin/path, contract version, source revision, requested minimal scope and normal failure behavior. Do not silently rewrite signed v1 payloads; add a negotiated backward-compatible mapping.
 
 **Autonomy:** Periodic public manifest discovery, schema comparison, version drift reports and automatic compatible adapter proposal; incompatible major changes remain HOLD until reviewed.
 
@@ -90,7 +90,7 @@ Every build must publish exact source commits per modified repository, narrow fo
 
 **Goal:** First actual independent read-only connectivity for the two existing SaaS shells.
 
-**Implementation:** Implement exact master→AI Data Platform→YW platform shell and iCamp platform shell adapters; source-side server-only authentication and signed GET health/capabilities with the minimum required audience/issuer. YW \`yw\` / \`yard-workers\` identity map must be explicit; iCamp must not require a specific campground to identify the shell, while any requested child data must have a separately source-owned child grant. Install approved nonproduction key handles only after independent source-owner and owner TEST decisions.
+**Implementation:** Implement exact master→AI Data Platform→YW platform shell and iCamp platform shell adapters; source-side server-only authentication and signed GET health/capabilities with the minimum required audience/issuer. YW `yw` / `yard-workers` identity map must be explicit; iCamp must not require a specific campground to identify the shell, while any requested child data must have a separately source-owned child grant. Install approved nonproduction key handles only after independent source-owner and owner TEST decisions.
 
 **Autonomy:** Once each individually approved, run recurring monitored heartbeat, expiry checks, version negotiation and bounded recovery; quarantine a failed source without affecting the other.
 
