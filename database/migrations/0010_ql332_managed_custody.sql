@@ -103,6 +103,7 @@ CREATE TABLE public.master_rotation_jobs (
   owner_authorization_sha256 char(64) CHECK (owner_authorization_sha256 ~ '^[0-9a-f]{64}$'),
   source_authorization_sha256 char(64) CHECK (source_authorization_sha256 ~ '^[0-9a-f]{64}$'),
   created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (shell_id,job_id),
   FOREIGN KEY (shell_id,purpose,previous_handle_id)
     REFERENCES public.master_managed_key_handles(shell_id,purpose,handle_id) ON DELETE RESTRICT,
   FOREIGN KEY (shell_id,purpose,candidate_handle_id)
@@ -130,18 +131,18 @@ COMMENT ON TABLE public.master_rotation_jobs IS
 CREATE TABLE public.master_custody_receipts (
   receipt_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   shell_id text NOT NULL REFERENCES public.master_shell_registry(shell_id) ON DELETE RESTRICT,
-  job_id uuid REFERENCES public.master_rotation_jobs(job_id) ON DELETE RESTRICT,
+  job_id uuid,
   event_kind text NOT NULL CHECK (event_kind IN
     ('BOOTSTRAP_VERIFIED','KEY_STAGED','DUAL_KEY_VERIFIED','CUTOVER','QUARANTINED','EMERGENCY_REVOKED','DENIED')),
   idempotency_sha256 char(64) NOT NULL UNIQUE CHECK (idempotency_sha256 ~ '^[0-9a-f]{64}$'),
   source_receipt_sha256 char(64) NOT NULL CHECK (source_receipt_sha256 ~ '^[0-9a-f]{64}$'),
   broker_receipt_sha256 char(64) NOT NULL CHECK (broker_receipt_sha256 ~ '^[0-9a-f]{64}$'),
-  inserted_at timestamptz NOT NULL DEFAULT now()
+  inserted_at timestamptz NOT NULL DEFAULT now(),
+  FOREIGN KEY (shell_id,job_id)
+    REFERENCES public.master_rotation_jobs(shell_id,job_id) ON DELETE RESTRICT
 );
-CREATE INDEX master_custody_receipt_shell_fk
-  ON public.master_custody_receipts(shell_id);
 CREATE INDEX master_custody_receipt_job_fk
-  ON public.master_custody_receipts(job_id);
+  ON public.master_custody_receipts(shell_id,job_id);
 COMMENT ON TABLE public.master_custody_receipts IS
   'Append-only nonsecret digests; no bearer tokens, plaintext keys, customer data or invented signed receipts.';
 
