@@ -13,6 +13,7 @@ export function Ql330OwnerCloseout({mode='it_command'}:{mode?:'it_command'|'mana
   const [draft,setDraft]=useState<Ql330ProcedureDraft>(()=>ql330InitialDraft('connect-readonly'));
   const [reviewed,setReviewed]=useState<Readonly<Record<string,boolean>>>({});
   const [selectedRevision,setSelectedRevision]=useState<typeof QL330_REVISION_OPTIONS[number]['id']>('add_review');
+  const [revisionError,setRevisionError]=useState('');
   const [showChecklist,setShowChecklist]=useState(false);
   const [showReceipt,setShowReceipt]=useState(false);
   const selected=QL330_PROCEDURES.find(p=>p.id===procedureId)!;
@@ -36,10 +37,11 @@ export function Ql330OwnerCloseout({mode='it_command'}:{mode?:'it_command'|'mana
   function choose(id:string){
     const cast=id as Ql330ProcedureId;
     if(!QL330_PROCEDURES.some(p=>p.id===cast))return;
-    setProcedureId(cast);setDraft(ql330InitialDraft(cast));
+    setProcedureId(cast);setDraft(ql330InitialDraft(cast));setRevisionError('');
   }
   function revise(option:string){
-    try{setDraft(current=>ql330ProposeRevision(current,option as typeof QL330_REVISION_OPTIONS[number]['id']));}catch{return;}
+    try{const next=ql330ProposeRevision(draft,option as typeof QL330_REVISION_OPTIONS[number]['id']);setDraft(next);setRevisionError('');}
+    catch(error){setRevisionError(error instanceof Error?error.message:'INVALID_PROCEDURE');}
   }
   return <section className="ql330" data-ql330-release="reconciliation-and-control-plane-blueprint-v1" aria-labelledby="ql330-title">
     <header className="ql330-heading">
@@ -67,8 +69,8 @@ export function Ql330OwnerCloseout({mode='it_command'}:{mode?:'it_command'|'mana
         <div className="ql330-actions"><button type="button" onClick={()=>{
           revise(selectedRevision);
         }}>Preview next version</button>
-          <button type="button" onClick={()=>setDraft(ql330InitialDraft(procedureId))}>Revert local draft</button></div>
-        <div className="ql330-outcome" role="status" aria-live="polite"><strong>{selected.label} · proposed v{draft.version} · DRAFT / UNSENT</strong>
+          <button type="button" onClick={()=>{setDraft(ql330InitialDraft(procedureId));setRevisionError('');}}>Revert local draft</button></div>
+        <div className="ql330-outcome" role="status" aria-live="polite">{revisionError&&<p>Not changed: {revisionError}</p>}<strong>{selected.label} · proposed v{draft.version} · DRAFT / UNSENT</strong>
           <p>{draft.changeReason}. Mandatory gates remain pinned; approved: NO · persisted: NO · connection activated: NO.</p></div>
         <ol className="ql330-steps">{steps.map(step=><li key={step.id}>
           <strong>{step.label}</strong><span>{step.automation.replaceAll('_',' ')}</span><small>Gate: {step.gate}</small></li>)}</ol>
@@ -96,7 +98,7 @@ export function Ql330OwnerCloseout({mode='it_command'}:{mode?:'it_command'|'mana
       <button type="button" className="ql330-reveal-button" aria-expanded={showChecklist} aria-controls="ql330-checklist" onClick={()=>setShowChecklist(x=>!x)}>
         {showChecklist?'Hide':'Show'} owner walkthrough ({checked} / {checkList.length} checked locally)</button>
       {showChecklist&&<div id="ql330-checklist" className="ql330-checklist">{checkList.map(item=><label key={item.id}>
-        <input type="checkbox" checked={!!reviewed[item.id]} onChange={e=>setReviewed(before=>({...before,[item.id]:e.currentTarget.checked}))}/>
+        <input type="checkbox" checked={!!reviewed[item.id]} onChange={e=>{const checked=e.currentTarget.checked;setReviewed(before=>({...before,[item.id]:checked}));}}/>
         <span>{item.label}</span></label>)}</div>}
       <p>Original source-signed Proof-B, independent custodian, source-owner TEST, audited master identity, per-child grants, vault key custody and Windows relay remain unverified or OFF.</p>
     </section>}

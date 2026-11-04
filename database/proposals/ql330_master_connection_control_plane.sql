@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS rosevear_control.procedure_steps (
   step_id text NOT NULL CHECK (step_id IN (
     'discover_manifest','verify_issuer','approve_test','resolve_vault',
     'probe_readonly','verify_receipt','enable_scoped','portal_scope',
-    'portal_readback','report_freshness','report_export','pause_on_failure','review_followup')),
+    'portal_readback','report_freshness','report_export','measure_latency','pause_on_failure','review_followup')),
   gate_id text NOT NULL,
   PRIMARY KEY (procedure_id,version,sequence_number),
   UNIQUE (procedure_id,version,step_id),

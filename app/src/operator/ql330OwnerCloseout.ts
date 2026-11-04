@@ -26,6 +26,7 @@ export const QL330_STEP_LIBRARY=[
   {id:'portal_readback',label:'Reconcile tenant-owned portal activity',automation:'AUTOMATIC_AFTER_GRANTS',gate:'AUTHENTICATED_SOURCE_DATA'},
   {id:'report_freshness',label:'Calculate approved reporting freshness and lineage',automation:'AUTOMATIC_AFTER_GRANTS',gate:'SIGNED_SOURCE_LINEAGE'},
   {id:'report_export',label:'Export only explicitly approved report scope',automation:'REQUIRES_HUMAN_AUTHORITY',gate:'REPORT_ACCESS_GRANT'},
+  {id:'measure_latency',label:'Measure gateway latency and record a safe performance budget',automation:'AUTOMATIC_AFTER_GRANTS',gate:'MEASURED_NONPRODUCTION'},
   {id:'pause_on_failure',label:'Stop, retain evidence and quarantine failed source',automation:'AUTOMATIC',gate:'FAIL_CLOSED'},
   {id:'review_followup',label:'Track owner next action and independent evidence',automation:'AUTOMATIC',gate:'REVIEW_ONLY'}
 ] as const;
@@ -59,6 +60,7 @@ const maxSteps=18;
 export const QL330_REVISION_OPTIONS=[
  {id:'add_review',label:'Add independent review follow-up',step:'review_followup'},
  {id:'add_freshness',label:'Add reporting freshness review',step:'report_freshness'},
+ {id:'add_latency',label:'Add nonproduction latency review',step:'measure_latency'},
  {id:'add_failure',label:'Add explicit fail-closed checkpoint',step:'pause_on_failure'}
 ] as const;
 
@@ -81,7 +83,8 @@ export function ql330ProposeRevision(base:Ql330ProcedureDraft,
    requiredById[base.id].some(step=>!steps.includes(step)))throw Error('UNSAFE_BASE_PROCEDURE');
  const positions=requiredById[base.id].map(step=>steps.indexOf(step));
  if(positions.some((position,i)=>i>0&&position<positions[i-1]))throw Error('UNSAFE_GATE_ORDER');
- if(!steps.includes(chosen.step)){
+ if(steps.includes(chosen.step))throw Error('UNCHANGED_PROCEDURE');
+ {
    if(steps.length===maxSteps)throw Error('MAX_PROCEDURE_STEPS');
    // Insert review-only additions before the stop checkpoint. Mandatory gate order remains unchanged.
    const stopIndex=steps.indexOf('pause_on_failure');

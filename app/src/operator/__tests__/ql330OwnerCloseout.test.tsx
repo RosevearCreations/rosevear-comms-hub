@@ -39,9 +39,10 @@ describe('QL-330 procedure governance and autonomous connection HOLD contracts',
     expect(next.version).toBe(2);expect(next.parentVersion).toBe(1);
     expect(next.steps).toContain('review_followup');
     expect(next).toMatchObject({approved:false,persisted:false,connectionEnabled:false});
-    const after=ql330ProposeRevision(next,'add_freshness');
+    const after=ql330ProposeRevision(next,'add_latency');
     expect(after.version).toBe(3);
     expect(after.approved).toBe(false);
+    expect(()=>ql330ProposeRevision(after,'add_latency')).toThrow('UNCHANGED_PROCEDURE');
   });
   it('protects connection proof, owner consent, encrypted secret, TEST and signed-receipt gate order',()=>{
     const source=ql330InitialDraft('connect-readonly');
@@ -101,7 +102,7 @@ describe('QL-330 I.T., Management, Analytics, Status owner walkthrough UI',()=>{
     expect(screen.textContent).toContain('database');
   });
   it('renders the model across Management, Analytics and Status surfaces with consistent holds',async()=>{
-    for(const mode of ['Management','Statistical','System Status']){
+    for(const mode of ['Management','Analytics & statistics','System status']){
       const screen=await open(mode);
       expect(screen.textContent).toContain('0 / 6 CONNECTED');
       expect(screen.textContent).toContain('Master');
