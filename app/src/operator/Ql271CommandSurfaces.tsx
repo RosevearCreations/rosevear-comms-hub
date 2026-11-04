@@ -23,6 +23,7 @@ import { Ql331MasterControl } from './Ql331MasterControl';
 import { Ql332CustodyControl } from './Ql332CustodyControl';
 import { Ql333DiscoveryControl } from './Ql333DiscoveryControl';
 import { Ql334ProcedureCenter } from './Ql334ProcedureCenter';
+import { Ql335ShellReadiness } from './Ql335ShellReadiness';
 import type { MockQueueState } from './ql194WorkQueue';
 import { Ql302StatisticsTrend } from './Ql302StatisticsTrend';
 import { Ql303CapabilityReadiness } from './Ql303CapabilityReadiness';
@@ -179,6 +180,7 @@ export function Ql271CommandSurfaces({ mode, organizationId, queue, onNavigate, 
     <Ql332CustodyControl mode={mode} />
     <Ql333DiscoveryControl />
     {mode === 'it_command' && <Ql334ProcedureCenter />}
+    {mode === 'it_command' && <Ql335ShellReadiness />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql303CapabilityReadiness />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql307ProofEvidence />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql308TenantContracts />}
