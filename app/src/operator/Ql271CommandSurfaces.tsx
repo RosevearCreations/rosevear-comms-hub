@@ -21,6 +21,7 @@ import { Ql329MasterShellTruth } from './Ql329MasterShellTruth';
 import { Ql330OwnerCloseout } from './Ql330OwnerCloseout';
 import { Ql331MasterControl } from './Ql331MasterControl';
 import { Ql332CustodyControl } from './Ql332CustodyControl';
+import { Ql333DiscoveryControl } from './Ql333DiscoveryControl';
 import type { MockQueueState } from './ql194WorkQueue';
 import { Ql302StatisticsTrend } from './Ql302StatisticsTrend';
 import { Ql303CapabilityReadiness } from './Ql303CapabilityReadiness';
@@ -174,6 +175,7 @@ export function Ql271CommandSurfaces({ mode, organizationId, queue, onNavigate, 
     <Ql330OwnerCloseout mode={mode} />
     <Ql331MasterControl mode={mode} />
     <Ql332CustodyControl mode={mode} />
+    <Ql333DiscoveryControl />
     {(mode === 'it_command' || mode === 'system_status') && <Ql303CapabilityReadiness />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql307ProofEvidence />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql308TenantContracts />}
