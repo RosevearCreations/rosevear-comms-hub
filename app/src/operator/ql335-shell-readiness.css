@@ -1,0 +1,20 @@
+.ql335{margin:1.35rem 0;padding:clamp(1rem,2vw,1.65rem);border-radius:22px;color:#f2ebff;background:linear-gradient(130deg,#111a39,#281d4b 72%,#251e3e);border:1px solid #9e80e966;box-shadow:0 14px 34px #070a1830}
+.ql335-heading{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:1rem}
+.ql335 h3{margin:.15rem 0 .55rem;color:#faf5ff;font-size:clamp(1.3rem,2.4vw,1.8rem)}
+.ql335 p{max-width:72ch;line-height:1.55;color:#e1d9f8}
+.ql335-status,.ql335-held{font-weight:750;color:#ffcf93}
+.ql335-status{white-space:normal;border:1px solid #ffc27396;padding:.65rem 1rem;border-radius:20px;background:#56362260}
+.ql335-source-switch{display:flex;flex-wrap:wrap;gap:.75rem;margin:1.25rem 0}
+.ql335-source-switch button{min-height:48px;min-width:180px;padding:.65rem 1rem;border:1px solid #a39bc9;border-radius:14px;background:#191d3d;color:#faf8ff;text-align:left;cursor:pointer;font-weight:700}
+.ql335-source-switch button span{display:block;font-size:.77rem;color:#d1bff2;font-weight:500;margin-top:.15rem}
+.ql335-source-switch button[aria-pressed=true]{background:#57438f;border-color:#f8cc7b;box-shadow:0 0 0 1px #f8cc7b}
+.ql335-detail{padding:1rem;border:1px solid #7566a6;border-radius:17px;background:#11172d99}
+.ql335-detail h4,.ql335-gates h4{margin:.2rem 0 .65rem;font-size:1.12rem;color:#f6e3ae}
+.ql335-detail dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,255px),1fr));gap:.8rem}
+.ql335-detail dt{font-size:.79rem;color:#c5b7e7}.ql335-detail dd{margin:.2rem 0 0;overflow-wrap:anywhere}
+.ql335-detail code{color:#f2e4ff;word-break:break-word}
+.ql335-links{display:flex;flex-wrap:wrap;gap:1rem;margin-top:.9rem}.ql335 a{color:#fce0a4;text-underline-offset:3px}
+.ql335-gates{margin-top:1rem}.ql335-gates ol{padding-left:1.3rem}.ql335-gates li{margin:.55rem 0;color:#f1ecfb}.ql335-gates li span{color:#eec778;margin-right:.55rem}
+.ql335 button:focus-visible,.ql335 a:focus-visible{outline:3px solid #f7d38c;outline-offset:4px}
+@media(forced-colors:active){.ql335,.ql335-detail,.ql335-source-switch button{border:1px solid CanvasText}.ql335-source-switch button[aria-pressed=true]{outline:2px solid Highlight}}
+@media(prefers-reduced-motion:reduce){.ql335 *{scroll-behavior:auto;transition:none!important}}
