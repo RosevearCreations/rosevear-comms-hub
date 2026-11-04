@@ -54,4 +54,6 @@ jobs:
       - run: node ../scripts/ql190-packet-integrity-audit.mjs
       - run: node --test ../scripts/__tests__/ql190-packet-integrity-audit.test.mjs
       - run: node ../scripts/ql171-operator-baseline.mjs
+      - run: node --test ../scripts/__tests__/ql329-asset-budget.test.mjs
       - run: npm run build
+      - run: node ../scripts/ql329-asset-budget.mjs

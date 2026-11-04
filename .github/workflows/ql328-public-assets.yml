@@ -1,12 +1,15 @@
-name: QL-328 Public Disabled-Preview Asset Verification
+name: Public Disabled-Preview Asset Verification (QL-328 onward)
 
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths:
+      - app/**
       - .github/workflows/ql328-public-assets.yml
       - docs/build-records/QL-328_*
+      - docs/build-records/QL-329_*
+      - docs/ROSEVEAR_SOURCE_OF_TRUTH_V2_2026-11-03.md
 
 permissions:
   contents: read
