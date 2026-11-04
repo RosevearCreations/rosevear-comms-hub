@@ -9,7 +9,10 @@ on:
       - .github/workflows/ql328-public-assets.yml
       - docs/build-records/QL-328_*
       - docs/build-records/QL-329_*
+      - docs/build-records/QL-330_*
       - docs/ROSEVEAR_SOURCE_OF_TRUTH_V2_2026-11-03.md
+      - docs/ROSEVEAR_MASTER_CONNECTION_CONTROL_PLANE_V1.md
+      - docs/QL-330-OWNER-WALKTHROUGH-CLOSEOUT.md
 
 permissions:
   contents: read
