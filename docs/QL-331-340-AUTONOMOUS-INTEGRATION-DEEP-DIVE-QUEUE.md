@@ -1,10 +1,12 @@
 # Rosevear Suite — QL-331–340 Autonomous Deep-Integration Roadmap
 
-**Created:** 2026-11-03 (America/Toronto) · **Updated:** QL-332 code/database custody metadata GREEN (managed keys and workload remain HOLD), **8 PLANNED remaining**, **0/6 source connections**. No future numbered build auto-started.
+**Created:** 2026-11-03 (America/Toronto) · **Updated:** QL-334 database procedure drafts, fail-closed scheduler and six-source navigation implemented; original signed identity, master owner and workload remain HOLD, **6 PLANNED remaining**, **0/6 authenticated source connections**. No future numbered build auto-started.
 
 **QL-331 evidence:** [release receipt](build-records/QL-331_MASTER_AUTH_SHELL_REGISTRY_RLS.md), [owner bootstrap guide](QL-331-MASTER-IDENTITY-AND-SHELL-RLS.md), [Source of Truth v3](ROSEVEAR_SOURCE_OF_TRUTH_V3_QL331.md). No genuine owner Auth user enrolled.
 
 **QL-332 evidence:** [actual Supabase migration, private rotation acceptance, pending real managed trust](build-records/QL-332_MANAGED_CUSTODY_ROTATION_DB_AND_RELEASE.md), [bootstrap and recovery guide](QL-332-MANAGED-CUSTODY-BOOTSTRAP-ROTATION.md). Five FORCE RLS custody tables are installed and empty; all external keys and live source handshakes are HOLD. QL-333 public discovery implementation is recorded in [the six-repo contract handoff](build-records/QL-333_SIX_SOURCE_MANIFEST_DISCOVERY.md); original external signatures and live protected source connections remain HOLD.
+
+**QL-334 evidence:** [Database procedure engine, approval ledger and six-app connection centre](build-records/QL-334_DATABASE_PROCEDURE_ENGINE_RELEASE.md). Seven additional private tables hold 18 unapproved draft templates, disabled schedules and public connection links. The client shows the six-source links and the missing external authority. No private jobs or communications may start from draft data.
 
 **Previous batch:** QL-311–330 = **20/20 Production GREEN for disabled-preview software**, final main receipt `e6d6714cbdc7359bf94a60352b4f769f21011174`.
 **Present external reality:** 0/6 verified active source connections; all `DISCONNECTED / HOLD`, Windows AI Hub relay OFF, ACK UNDER_REVIEW/PARKED_FOR_LATER. QL-332's narrow metadata schema is applied, but master SSO, private broker runtime, original source-signed trust, actual managed key custody and the much broader QL-330 proposal are **not deployed**.

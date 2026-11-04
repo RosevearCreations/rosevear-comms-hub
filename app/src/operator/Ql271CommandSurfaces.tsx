@@ -22,6 +22,7 @@ import { Ql330OwnerCloseout } from './Ql330OwnerCloseout';
 import { Ql331MasterControl } from './Ql331MasterControl';
 import { Ql332CustodyControl } from './Ql332CustodyControl';
 import { Ql333DiscoveryControl } from './Ql333DiscoveryControl';
+import { Ql334ProcedureCenter } from './Ql334ProcedureCenter';
 import type { MockQueueState } from './ql194WorkQueue';
 import { Ql302StatisticsTrend } from './Ql302StatisticsTrend';
 import { Ql303CapabilityReadiness } from './Ql303CapabilityReadiness';
@@ -147,6 +148,7 @@ export function Ql271CommandSurfaces({ mode, organizationId, queue, onNavigate, 
         <span aria-hidden="true">{tab.glyph}</span>{tab.label}
       </button>)}
     </nav>
+    {mode === 'it_command' && <p className="ql334-shortcut"><a href="#ql334-title">Open six-app connection centre · QL-334</a> — public source links and private trust status</p>}
 
     <Ql319AdminPreferences mode={mode} preferences={preferences} saved={saved} storageAvailable={storageAvailable}
       onNavigate={onNavigate} onChange={updatePreferences}
@@ -176,6 +178,7 @@ export function Ql271CommandSurfaces({ mode, organizationId, queue, onNavigate, 
     <Ql331MasterControl mode={mode} />
     <Ql332CustodyControl mode={mode} />
     <Ql333DiscoveryControl />
+    {mode === 'it_command' && <Ql334ProcedureCenter />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql303CapabilityReadiness />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql307ProofEvidence />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql308TenantContracts />}

@@ -20,6 +20,7 @@ jobs:
       - run: npm run check
       - run: npm test
       - run: node --test ../runtimes/master-custody/rotation.test.mjs
+      - run: node --test ../runtimes/master-procedures/engine.test.mjs ../runtimes/master-discovery/manifest.test.mjs
       - run: node ../scripts/__tests__/ql170-release-receipt.test.mjs
       - run: node --test ../scripts/__tests__/ql171-operator-baseline.test.mjs
       - run: node --test ../scripts/__tests__/ql188-synthetic-server-harness.test.mjs
