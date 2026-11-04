@@ -22,3 +22,11 @@ Comms Hub is a shared communications service, not a master identity issuer. All 
 **QL-331 output:** additive master_* database tables with RLS, source-controlled migration, verified-auth SELECT-only optional UI, true negative database authorization tests, and no fabricated owner. [Implementation/owner bootstrap](QL-331-MASTER-IDENTITY-AND-SHELL-RLS.md).
 
 **Next:** QL-332 managed vault/key custody and eventual real owner/master enrollment, then QL-333–340 signed source connection, isolation and client portal/reporting pilots. Software code GREEN, DB migration GREEN and real connected sources are three **separate** status claims.
+
+## Verified QL-331 post-migration state
+
+The master SQL is **actually applied** in Comms Hub Supabase project gxujcwpktaickcgzyvnu, as migrations 20261104023753 (ql331_master_shell_auth_rls) and 20261104023949 (ql331_master_fk_index_hardening). The exact applied SQL is source tracked under supabase/migrations/ and database/migrations/0008–0009; PR #638 reconciled remote migration history after an initial Supabase Preview failure.
+
+Five new master tables have FORCE RLS, four business shells and two supports, all DISCONNECTED / HOLD. Master principals, child tenants, delegated grants and audit evidence are all zero rows. No actual Supabase Auth user is enrolled. Anonymous SELECT and authenticated writes to master tables are denied, and a simulated unregistered subject sees zero master shell rows.
+
+QL-331 CI: 1,403/1,403 tests, QL-171 safety, TypeScript and bundle budget PASS. Public Worker assets match exact source hashes. Next QL-332 addresses vault/KMS bootstrap, but external app connections stay 0/6 without authentic owner/source authorization.
