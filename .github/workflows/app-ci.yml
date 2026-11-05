@@ -27,6 +27,21 @@ jobs:
       - name: Run unchanged fail-closed release gates (QL-336A)
         run: bash ../scripts/ql336a-required-gates.sh
 
+  original-owner-keys-windows:
+    name: QL-340 Windows encrypted owner key safety
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify Windows key material never needs an unattended approval
+        run: node --test runtimes/hub-relay/owner-authority-custody.test.mjs
+      - name: Inspect missing keys without generating authority or network access
+        run: node runtimes/hub-relay/owner-authority-custody.mjs --inspect
+
   public-worker-asset-parity:
     name: Public Worker JS/CSS SHA-256 parity
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
