@@ -45,13 +45,13 @@ export function inspectPublicAuthorityCandidate(candidate,role){
   }catch{return {verified:false,state:'DENY_INVALID_AUTHORITY_PIN'};}
 }
 
-function roleDirectory(role,env=process.env){
+export function roleDirectory(role,env=process.env){
   if(process.platform!=='win32'||!env.LOCALAPPDATA||!ROLES.includes(role))
     throw new Error('ORIGINAL_WINDOWS_OWNER_REQUIRED');
   return join(env.LOCALAPPDATA,'RosevearAIHub','CommsRelay','OwnerAuthorities',role);
 }
 
-function restrictDirectory(directory){
+export function restrictDirectory(directory){
   mkdirSync(directory,{recursive:true,mode:0o700});
   const accountName=userInfo().username,domain=process.env.USERDOMAIN;
   if(!accountName||!domain)throw new Error('HOLD_WINDOWS_OWNER_ACCOUNT_UNVERIFIED');
@@ -61,7 +61,7 @@ function restrictDirectory(directory){
   if(result.status!==0)throw new Error('HOLD_PRIVATE_OWNER_DIRECTORY_ACL_UNVERIFIED');
 }
 
-async function hiddenPassphrase(prompt){
+export async function hiddenPassphrase(prompt){
   if(!process.stdin.isTTY||typeof process.stdin.setRawMode!=='function')
     throw new Error('OWNER_INTERACTIVE_TERMINAL_REQUIRED');
   return new Promise((done,reject)=>{
@@ -80,7 +80,7 @@ async function hiddenPassphrase(prompt){
   });
 }
 
-function fileNames(role,directory){return {
+export function fileNames(role,directory){return {
   privateKey:join(directory,`${role}.private.pem`),
   candidate:join(directory,`${role}.public-candidate.json`)};}
 
