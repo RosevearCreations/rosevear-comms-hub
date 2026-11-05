@@ -21,7 +21,8 @@ const signed=e=>({envelope:e,signature:sign(null,Buffer.from(canonicalize(e)),ke
   keyId:'portal-key-ql339'});
 const grants=e=>({identityAuthenticated:true,workloadAuthenticated:true,sourceOwnerTestApproved:true,
   commsOwnerTestApproved:true,originalIssuerWitnessed:true,signerIndependentlyPinned:true,
-  signedSourceReceiptVerified:true,ownerGrantVerified:true,consentReceiptVerified:true,
+  signedSourceReceiptVerified:true,ownerGrantVerified:true,childDelegationVerified:true,
+  consentReceiptVerified:true,
   consentActive:true,sessionValid:true,issuer:e.issuer,shellId:e.shellId,tenantId:e.tenantId,
   childId:e.childId,subjectRef:e.subjectRef,consentReceiptSha256:e.consentReceiptSha256,
   ownerGrantSha256:e.ownerGrantSha256,sourceReceiptSha256:e.sourceReceiptSha256,
@@ -41,13 +42,16 @@ test('strict minimal metadata contract excludes customer fields and unknown even
     assert.equal(inspectPortalJourney({...sample(),...patch},NOW).decision,'DENY_SOURCE_SCOPE_OR_RETENTION');
   assert.equal(inspectPortalJourney({...sample(),expiresAt:'2026-11-05T13:59:59.000Z'},NOW).decision,
     'HOLD_EXPIRED_OR_FUTURE');
+  assert.equal(inspectPortalJourney({...sample(),issuedAt:'2026-11-05T14:00:20.000Z',
+    expiresAt:'2026-11-05T14:00:10.000Z'},NOW).decision,'HOLD_EXPIRED_OR_FUTURE');
 });
 
 test('source signature, provenance, exact child, active consent and real owner gates required',()=>{
   assert.equal(verify(),'VERIFIED_PRIVATE_RECEIPT_HELD');
   for(const flag of ['identityAuthenticated','workloadAuthenticated','sourceOwnerTestApproved',
     'commsOwnerTestApproved','originalIssuerWitnessed','signerIndependentlyPinned',
-    'signedSourceReceiptVerified','ownerGrantVerified','consentReceiptVerified','sessionValid'])
+    'signedSourceReceiptVerified','ownerGrantVerified','childDelegationVerified',
+    'consentReceiptVerified','sessionValid'])
     assert.equal(verify(()=>{},t=>{t[flag]=false}),'HOLD_MISSING_OR_REVOKED_CHILD_AUTHORITY',flag);
   for(const flag of ['sessionRevoked','roleRevoked','grantRevoked'])
     assert.equal(verify(()=>{},t=>{t[flag]=true}),'HOLD_MISSING_OR_REVOKED_CHILD_AUTHORITY',flag);

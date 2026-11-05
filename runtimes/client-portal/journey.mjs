@@ -36,6 +36,7 @@ export function inspectPortalJourney(e,now=Date.now()){
     e.retentionDays<1||e.retentionDays>365)return held('DENY_SOURCE_SCOPE_OR_RETENTION');
   if(!date(e.issuedAt)||!date(e.expiresAt)||!Number.isFinite(now)||
     Date.parse(e.issuedAt)>now+30_000||Date.parse(e.expiresAt)<=now||
+    Date.parse(e.expiresAt)<=Date.parse(e.issuedAt)||
     Date.parse(e.expiresAt)-Date.parse(e.issuedAt)>300_000)
     return held('HOLD_EXPIRED_OR_FUTURE');
   return held('SCHEMA_VALID_TEST_ONLY',{eventSha256:sha(canonicalize(e))});
@@ -53,6 +54,7 @@ export function verifyPortalJourney(packet,trust={},now=Date.now()){
     trust.sourceOwnerTestApproved!==true||trust.commsOwnerTestApproved!==true||
     trust.originalIssuerWitnessed!==true||trust.signerIndependentlyPinned!==true||
     trust.signedSourceReceiptVerified!==true||trust.ownerGrantVerified!==true||
+    trust.childDelegationVerified!==true||
     trust.consentReceiptVerified!==true||trust.sessionValid!==true||
     trust.roleRevoked===true||trust.sessionRevoked===true||trust.grantRevoked===true||
     trust.audience!==e.audience||trust.issuer!==e.issuer||trust.shellId!==e.shellId||
