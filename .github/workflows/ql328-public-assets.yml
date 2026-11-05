@@ -1,22 +1,9 @@
 name: Public Disabled-Preview Asset Verification (QL-328 onward)
 
+# QL-336A: main-push verification moved into App scaffold CI, as the
+# same named fail-closed job. Keep this independent manual rerun available.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - app/**
-      - .github/workflows/ql328-public-assets.yml
-      - docs/build-records/QL-328_*
-      - docs/build-records/QL-329_*
-      - docs/build-records/QL-330_*
-      - docs/build-records/QL-331_*
-      - docs/build-records/QL-332_*
-      - docs/QL-332-MANAGED-CUSTODY-BOOTSTRAP-ROTATION.md
-      - docs/ROSEVEAR_SOURCE_OF_TRUTH_V3_QL331.md
-      - docs/ROSEVEAR_SOURCE_OF_TRUTH_V2_2026-11-03.md
-      - docs/ROSEVEAR_MASTER_CONNECTION_CONTROL_PLANE_V1.md
-      - docs/QL-330-OWNER-WALKTHROUGH-CLOSEOUT.md
 
 permissions:
   contents: read
@@ -35,63 +22,17 @@ jobs:
       VITE_PHONE_SMS_PERSISTENCE_ENABLED: 'false'
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
       - name: Rebuild disabled production preview
+        working-directory: app
         run: |
-          cd app
           npm ci --no-audit --no-fund
           npm run build
       - name: Verify public Worker serves exact built assets
-        run: |
-          python3 - <<'PY'
-          import hashlib
-          import re
-          import sys
-          import time
-          import urllib.request
-          from pathlib import Path
-
-          origin = 'https://rosevear-comms-hub.devilndovelive.workers.dev'
-          folder = Path('app/dist')
-          local_html = (folder / 'index.html').read_text(encoding='utf-8')
-          def names(text):
-              return sorted(set(re.findall(r'/assets/index-[A-Za-z0-9_-]+\.(?:js|css)', text)))
-          expected = names(local_html)
-          if len(expected) != 2 or not any(s.endswith('.js') for s in expected) or not any(s.endswith('.css') for s in expected):
-              sys.exit('UNVERIFIED: expected exactly one JS and one CSS index asset in local build')
-          hashes = {}
-          for item in expected:
-              data = (folder / item.lstrip('/')).read_bytes()
-              hashes[item] = hashlib.sha256(data).hexdigest()
-          def get(path):
-              req = urllib.request.Request(origin + path, headers={'User-Agent':'Rosevear-Comms-Hub-Public-Release-Verification/1'})
-              with urllib.request.urlopen(req, timeout=15) as response:
-                  if response.status != 200:
-                      raise ValueError('Public asset returned non-200')
-                  return response.read()
-          for attempt in range(1, 16):
-              try:
-                  remote_html = get('/').decode('utf-8')
-                  actual = names(remote_html)
-                  if actual != expected:
-                      raise ValueError('Worker HTML asset references do not match local build')
-                  for item in expected:
-                      remote_hash = hashlib.sha256(get(item)).hexdigest()
-                      if remote_hash != hashes[item]:
-                          raise ValueError('SHA-256 mismatch for public asset: ' + item)
-                  print('PUBLIC_WORKER_ASSET_PARITY=GREEN')
-                  print('SOURCE_SHA=' + __import__('os').environ.get('GITHUB_SHA','unknown'))
-                  print('WORKER_ORIGIN=' + origin)
-                  for item in expected:
-                      print(item + ' SHA256=' + hashes[item])
-                  print('NETWORK_SCOPE=PUBLIC_WORKER_STATIC_HTML_JS_CSS_ONLY')
-                  print('PROVIDER_CONNECTIONS=0 SOURCE_WRITES=0 SECRET_READS=0 ACK_SENT=0')
-                  sys.exit(0)
-              except Exception as exc:
-                  print('Attempt ' + str(attempt) + '/15: ' + str(exc), flush=True)
-                  if attempt < 15:
-                      time.sleep(15)
-          sys.exit('UNVERIFIED: public worker assets did not match tested build')
-          PY
+        run: python3 scripts/ql328-public-asset-parity.py

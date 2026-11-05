@@ -5,6 +5,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   app-build:
     runs-on: ubuntu-latest
@@ -13,50 +16,43 @@ jobs:
         working-directory: app
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
       - run: npm ci --no-audit --no-fund
-      - run: npm run check
-      - run: npm test
-      - run: node --test ../runtimes/master-custody/rotation.test.mjs
-      - run: node --test ../runtimes/master-procedures/engine.test.mjs ../runtimes/master-discovery/manifest.test.mjs
-      - run: node --test ../runtimes/shell-handshakes/protocol.test.mjs
-      - run: node ../scripts/__tests__/ql170-release-receipt.test.mjs
-      - run: node --test ../scripts/__tests__/ql171-operator-baseline.test.mjs
-      - run: node --test ../scripts/__tests__/ql188-synthetic-server-harness.test.mjs
-      - run: node ../scripts/__tests__/ql208-provider-gateway-sandbox.test.mjs
-      - run: node ../scripts/__tests__/ql238-integration-handshake.test.mjs
-      - run: node ../scripts/__tests__/ql239-credential-rotation-dry-run.test.mjs
-      - run: node ../scripts/__tests__/ql240-nonproduction-receipt-verifier.test.mjs
-      - run: node ../scripts/__tests__/ql241-external-gateway-retrieval.test.mjs
-      - run: node ../scripts/__tests__/ql242-gateway-audit-owner-rehearsal.test.mjs
-      - run: node ../scripts/__tests__/ql243-secure-gateway-connection.test.mjs
-      - run: node ../scripts/__tests__/ql244-witnessed-handshake-review.test.mjs
-      - run: node ../scripts/__tests__/ql245-six-app-evidence-review.test.mjs
-      - run: node ../scripts/__tests__/ql247-six-app-github-census.test.mjs
-      - run: node ../scripts/__tests__/ql248-proof-commit-reconciliation.test.mjs
-      - run: node ../scripts/__tests__/ql249-public-github-origin-retest.test.mjs
-      - run: node ../scripts/__tests__/ql250-pin-custody-window-witness.test.mjs
-      - run: node ../scripts/__tests__/ql251-witness-return-test-authorization.test.mjs
-      - run: node ../scripts/__tests__/ql252-proof-custody-owner-intake.test.mjs
-      - run: node ../scripts/__tests__/ql253-proof-origin-pin-registry-owner-test.test.mjs
-      - run: node ../scripts/__tests__/ql254-proof-followup-witness-relay.test.mjs
-      - run: node ../scripts/__tests__/ql255-response-disposition-owner-relay.test.mjs
-      - run: node ../scripts/__tests__/ql256-connection-readiness.test.mjs
-      - run: node ../scripts/__tests__/ql257-six-response-config-routing.test.mjs
-      - run: npm run test -- src/operator/__tests__/ql258OwnerActionIntake.test.tsx
-      - run: npm run test -- src/operator/__tests__/ql259SixAppReturnIntake.test.tsx
-      - run: npm run test -- src/operator/__tests__/ql260NarrativeTriage.test.tsx
-      - run: npm run test -- src/operator/__tests__/ql261SixAppPreflight.test.tsx
-      - run: npm run test -- src/operator/__tests__/ql262EvidenceIsolationReview.test.tsx
-      - run: npm run test -- src/operator/__tests__/ql263OriginalReceiptReadiness.test.tsx
-      - run: npm run test -- src/operator/__tests__/ql264SixRepoDirectHandoff.test.tsx
-      - run: node --test ../scripts/__tests__/ql261-six-app-guide-integrity.test.mjs
-      - run: node --test ../scripts/__tests__/ql189-operations-safety-harness.test.mjs
-      - run: node ../scripts/ql190-packet-integrity-audit.mjs
-      - run: node --test ../scripts/__tests__/ql190-packet-integrity-audit.test.mjs
-      - run: node ../scripts/ql171-operator-baseline.mjs
-      - run: node --test ../scripts/__tests__/ql329-asset-budget.test.mjs
-      - run: npm run build
-      - run: node ../scripts/ql329-asset-budget.mjs
+      - name: Run unchanged fail-closed release gates (QL-336A)
+        run: bash ../scripts/ql336a-required-gates.sh
+
+  public-worker-asset-parity:
+    name: Public Worker JS/CSS SHA-256 parity
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    needs: app-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      VITE_ENABLE_SUPABASE_CLIENT: 'false'
+      VITE_ENABLE_HOSTED_DATABASE: 'false'
+      VITE_PHONE_SMS_PROVIDER_ENABLED: 'false'
+      VITE_PHONE_SMS_LIVE_PILOT_ENABLED: 'false'
+      VITE_PHONE_SMS_CALLBACKS_ENABLED: 'false'
+      VITE_PHONE_SMS_PERSISTENCE_ENABLED: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - name: Rebuild disabled production preview
+        working-directory: app
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+      - name: Verify public Worker serves exact built assets
+        run: python3 scripts/ql328-public-asset-parity.py
