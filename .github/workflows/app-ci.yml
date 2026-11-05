@@ -31,6 +31,8 @@ jobs:
     name: QL-340 Windows encrypted owner key safety
     runs-on: windows-latest
     steps:
+      - name: Allow existing long repository paths in Git for Windows
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
         with:
           persist-credentials: false

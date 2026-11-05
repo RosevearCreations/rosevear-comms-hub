@@ -56,6 +56,7 @@ test('main and PR application CI retain required gate names and fail-closed depe
   assert.match(appCi, /permissions:\s*\n\s*contents: read/);
   assert.match(appCi, /original-owner-keys-windows:\s*\n\s*name: QL-340 Windows encrypted owner key safety/);
   assert.match(appCi, /runs-on: windows-latest/);
+  assert.match(appCi, /git config --global core\.longpaths true/);
   assert.match(appCi, /node --test runtimes\/hub-relay\/owner-authority-custody\.test\.mjs/);
 });
 
