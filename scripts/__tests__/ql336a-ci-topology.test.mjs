@@ -15,7 +15,8 @@ const gates = read('scripts/ql336a-required-gates.sh');
 test('QL-336A retains all 43 existing application checks in their original order', () => {
   const commands = gates.split('\n')
     .filter((line) => line.startsWith('run_gate ')
-      && !line.includes('ql336a-ci-topology.test.mjs'))
+      && !line.includes('ql336a-ci-topology.test.mjs')
+      && !line.includes('master-broker/event-inbox.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
   // SHA-256 of the 43 exact gate commands in origin/dev's pre-QL336A app-ci.yml,
   // excluding the npm ci step, which remains an independent workflow step.

@@ -168,7 +168,7 @@
         "QL-335",
         "QL-336"
       ],
-      "status": "PLANNED",
+      "status": "TEST_CONTRACT_AND_PRIVATE_INBOX_IMPLEMENTED / AUTHENTIC_BROKER_DELIVERY_HELD",
       "deliverables": [
         "broker",
         "comms_envelopes",
