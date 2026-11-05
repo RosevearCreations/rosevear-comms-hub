@@ -132,6 +132,8 @@ Every build must publish exact source commits per modified repository, narrow fo
 
 **Dependencies:** QL-331–336 for source onboarding, with independent broker authorization. This is supporting application **#5**.
 
+**QL-337 implementation evidence:** [Private broker TEST envelope, append-only idempotency ledger and independent AI Data Platform preparation](build-records/QL-337_AI_BROKER_IDEMPOTENT_COMMS_EVENTS.md). No live signed source exchange or outbound event delivery has been authorized; six source connections remain HELD.
+
 ## QL-338 — Rosevear AI Hub Secure Local Relay, Device Proof & Offline Recovery
 
 **Goal:** Integrate the Windows local/private support system without exposing its internal services publicly.
@@ -183,4 +185,4 @@ Every build must publish exact source commits per modified repository, narrow fo
 
 **QL-336A implementation evidence:** [CI workflow consolidation, byte-for-byte verifier preservation and branch custody audit](build-records/QL-336A_CI_CONSOLIDATION_AND_BRANCH_CLEANUP.md). Exact-main promotion evidence must be reconciled separately. Historical branch deletion remains HELD until authenticated branch-ref deletion is available.
 
-**Next prioritized:** QL-337 — AI Data Platform Broker, Comms Event Contracts & Idempotent Effects. No QL-341 is specified or automatically scheduled.
+**Next prioritized:** QL-338 — Rosevear AI Hub Secure Local Relay, Device Proof & Offline Recovery. No QL-341 is specified or automatically scheduled.
