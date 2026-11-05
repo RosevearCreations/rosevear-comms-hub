@@ -19,6 +19,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('master-broker/event-inbox.test.mjs')
       && !line.includes('hub-relay/heartbeat.test.mjs')
       && !line.includes('hub-relay/private-receiver.test.mjs')
+      && !line.includes('hub-relay/owner-authority-custody.test.mjs')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
   // SHA-256 of the 43 exact gate commands in origin/dev's pre-QL336A app-ci.yml,
@@ -36,6 +37,10 @@ test('QL-336A retains all 43 existing application checks in their original order
   assert.ok(gates.includes(newReceiverGate), 'QL-339B receiver verifier is required');
   assert.ok(gates.indexOf(originalHubGate) < gates.indexOf(newReceiverGate));
   assert.ok(gates.indexOf(newReceiverGate) < gates.indexOf(portalGate));
+  const ownerKeyGate = 'run_gate node --test ../runtimes/hub-relay/owner-authority-custody.test.mjs';
+  assert.ok(gates.includes(ownerKeyGate), 'QL-340 owner signer custody gate remains required');
+  assert.ok(gates.indexOf(newReceiverGate) < gates.indexOf(ownerKeyGate));
+  assert.ok(gates.indexOf(ownerKeyGate) < gates.indexOf(portalGate));
 });
 
 test('main and PR application CI retain required gate names and fail-closed dependency', () => {
@@ -49,6 +54,10 @@ test('main and PR application CI retain required gate names and fail-closed depe
   assert.match(appCi, /python3 scripts\/ql328-public-asset-parity\.py/);
   assert.match(appCi, /persist-credentials: false/);
   assert.match(appCi, /permissions:\s*\n\s*contents: read/);
+  assert.match(appCi, /original-owner-keys-windows:\s*\n\s*name: QL-340 Windows encrypted owner key safety/);
+  assert.match(appCi, /runs-on: windows-latest/);
+  assert.match(appCi, /git config --global core\.longpaths true/);
+  assert.match(appCi, /node --test runtimes\/hub-relay\/owner-authority-custody\.test\.mjs/);
 });
 
 test('production parity has one push trigger; an independently runnable manual proof remains', () => {

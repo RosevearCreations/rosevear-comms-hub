@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test heartbeat.test.mjs private-receiver.test.mjs server.test.mjs",
+    "test": "node --test heartbeat.test.mjs private-receiver.test.mjs server.test.mjs owner-authority-custody.test.mjs",
     "start": "node server.mjs --serve"
   },
   "dependencies": {
