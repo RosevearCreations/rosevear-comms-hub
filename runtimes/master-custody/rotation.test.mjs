@@ -59,7 +59,9 @@ const args = h => ({shellId:'yw',purpose:'BROKER_SIGN',
   now:()=>NOW,nonce:randomUUID()});
 
 test('requires exact authentic shell and independent trusted workload + issuer + owner decisions',()=>{
-  assert.equal(requireVerifiedCustody(scope()).shellId,'yw');
+  // The fixture's original 24-hour certificate expires after 2026-11-05.
+  // Fix the clock to the fixture epoch; production custody still uses real time.
+  assert.equal(requireVerifiedCustody(scope(),{now:NOW}).shellId,'yw');
   for(const [change,code] of [
     [{shellId:'rosevear-landscaping'},'UNKNOWN_SHELL'],
     [{workload:{...scope().workload,state:'PENDING'}},'WORKLOAD_NOT_ATTESTED'],
