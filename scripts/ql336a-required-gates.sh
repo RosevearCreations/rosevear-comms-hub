@@ -56,4 +56,5 @@ run_gate node ../scripts/ql329-asset-budget.mjs
 run_gate node --test ../scripts/__tests__/ql336a-ci-topology.test.mjs
 run_gate node --test ../runtimes/master-broker/event-inbox.test.mjs
 run_gate node --test ../runtimes/hub-relay/heartbeat.test.mjs
+run_gate node --test ../runtimes/hub-relay/private-receiver.test.mjs ../runtimes/hub-relay/server.test.mjs
 run_gate node --test ../runtimes/client-portal/journey.test.mjs

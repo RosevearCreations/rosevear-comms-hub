@@ -18,6 +18,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql336a-ci-topology.test.mjs')
       && !line.includes('master-broker/event-inbox.test.mjs')
       && !line.includes('hub-relay/heartbeat.test.mjs')
+      && !line.includes('hub-relay/private-receiver.test.mjs')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
   // SHA-256 of the 43 exact gate commands in origin/dev's pre-QL336A app-ci.yml,
@@ -29,6 +30,12 @@ test('QL-336A retains all 43 existing application checks in their original order
   assert.match(gates, /"\$@"/);
   assert.match(appCi, /npm ci --no-audit --no-fund/);
   assert.match(appCi, /bash \.\.\/scripts\/ql336a-required-gates\.sh/);
+  const originalHubGate = 'run_gate node --test ../runtimes/hub-relay/heartbeat.test.mjs';
+  const newReceiverGate = 'run_gate node --test ../runtimes/hub-relay/private-receiver.test.mjs ../runtimes/hub-relay/server.test.mjs';
+  const portalGate = 'run_gate node --test ../runtimes/client-portal/journey.test.mjs';
+  assert.ok(gates.includes(newReceiverGate), 'QL-339B receiver verifier is required');
+  assert.ok(gates.indexOf(originalHubGate) < gates.indexOf(newReceiverGate));
+  assert.ok(gates.indexOf(newReceiverGate) < gates.indexOf(portalGate));
 });
 
 test('main and PR application CI retain required gate names and fail-closed dependency', () => {
