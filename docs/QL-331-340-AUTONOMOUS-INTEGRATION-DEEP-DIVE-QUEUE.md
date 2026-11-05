@@ -146,6 +146,8 @@ Every build must publish exact source commits per modified repository, narrow fo
 
 **Dependencies:** QL-331–334, QL-337 broker and a supervised local device authorization.
 
+**QL-338 implementation evidence:** [Hub relay TEST-only contract, append-only device receipt ledger, offline queue/circuit-breaker and exact owner field handoff](build-records/QL-338_HUB_LOCAL_RELAY_AND_OWNER_HANDOFF.md). Windows source has a read-only diagnostic, but owner machine identity, real signer custody, original TLS/ACL witness and TEST approval remain absent. Relay OFF; 0/6 authenticated connections.
+
 ## QL-339 — Unified Child-Safe Client Portal Tracking & Consent-Aware Case Journeys
 
 **Goal:** Deliver real multi-shell client portal activity tracking without pooling the data of unrelated businesses.
