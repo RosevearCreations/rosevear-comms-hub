@@ -1,5 +1,7 @@
 # Rosevear Comms Hub
 
+**Current private integration:** [QL-339B authenticated receiver, enrollment and field readiness](docs/build-records/QL-339B_AUTHENTICATED_PRIVATE_RECEIVER_AND_TEST_HANDSHAKE.md). Source deployment alone does not mean the Windows device is connected. All customer messaging and device effects remain disabled.
+
 Shared Quo-lite communication hub for RosieDazzlers and DevilnDove.
 
 This repository is the source of truth and first runnable scaffold for a shared customer communication platform: contacts, conversations, phone/SMS readiness, quote/custom-order intake, follow-up tasks, and AI-assisted summaries/drafts.
