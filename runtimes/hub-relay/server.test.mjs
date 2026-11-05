@@ -13,7 +13,7 @@ test('private service explicitly starts only on loopback with reviewed owner pin
     source:{keyId:'s-owner',publicKeyPem:'source public key placeholder'},
     master:{keyId:'m-owner',publicKeyPem:'master public key placeholder'}}),{mode:0o600});
   let closed=false;
-  const pool={query:async()=>({rows:[]}),connect:async()=>{
+  const pool={query:async()=>({rows:[{receiver_role:'ql340c_private_receiver'}]}),connect:async()=>{
     throw Error('no write expected');},end:async()=>{closed=true;}};
   const options={connectionString:'postgresql://example.invalid/private',
     authorityConfigPath:path,poolFactory:async()=>pool,port:0};
@@ -26,4 +26,7 @@ test('private service explicitly starts only on loopback with reviewed owner pin
   assert.equal(closed,true);
   await assert.rejects(()=>startConfiguredPrivateReceiver({...options,connectionString:''}),
     /PRIVATE_HOST_POSTGRES/);
+  await assert.rejects(()=>startConfiguredPrivateReceiver({...options,
+    poolFactory:async()=>({query:async()=>({rows:[{receiver_role:'postgres'}]}),
+      end:async()=>{}})}),/PRIVATE_RECEIVER_DATABASE_ROLE_NOT_VERIFIED/);
 });
