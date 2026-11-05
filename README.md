@@ -1,5 +1,7 @@
 # Rosevear Comms Hub
 
+**QL-340 owner action:** [Create separate original source/master owner signing keys on Windows](docs/build-records/QL-340_OWNER_SIGNER_CREATION_AND_HOLD.md). These encrypted local keys do not automatically enroll the Hub, start Tailscale Serve, or authorize a real TEST handshake.
+
 **Current private integration:** [QL-339B authenticated receiver, enrollment and field readiness](docs/build-records/QL-339B_AUTHENTICATED_PRIVATE_RECEIVER_AND_TEST_HANDSHAKE.md). Source deployment alone does not mean the Windows device is connected. All customer messaging and device effects remain disabled.
 
 Shared Quo-lite communication hub for RosieDazzlers and DevilnDove.
