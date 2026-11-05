@@ -127,7 +127,7 @@
         "QL-333",
         "QL-334"
       ],
-      "status": "PLANNED",
+      "status": "SOURCE_SIGNED_TEST_CODE_RELEASED / ORIGINAL_PRIVATE_TRUST_HELD",
       "deliverables": [
         "yw_shell",
         "icamp_shell",
@@ -147,7 +147,7 @@
         "QL-334",
         "QL-335"
       ],
-      "status": "PLANNED",
+      "status": "SOURCE_CHILD_SHELL_PREPARATION / BACKUP_BACKFILL_AND_AUTHENTIC_TEST_HELD",
       "deliverables": [
         "detailer_shell",
         "maker_shell",
