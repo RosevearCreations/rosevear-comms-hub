@@ -187,7 +187,7 @@
         "QL-334",
         "QL-337"
       ],
-      "status": "PLANNED",
+      "status": "SOURCE_CODE_PREPARED_PRIVATE_RELAY_OFF_FIELD_TEST_HELD",
       "deliverables": [
         "ai_hub",
         "relay_off_by_default",
