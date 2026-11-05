@@ -3,7 +3,7 @@ import {createHash,createPublicKey,verify} from 'node:crypto';
 import {canonicalize} from '../master-discovery/manifest.mjs';
 
 export const HUB_RELAY_SCHEMA='rosevear.hub.relay.heartbeat.v1';
-const FIELDS=['schemaVersion','issuer','deviceId','workloadId','environment','sequence',
+const FIELDS=['schemaVersion','issuer','audience','deviceId','workloadId','environment','sequence',
   'nonce','sessionId','issuedAt','expiresAt','capabilities','queueDepth','relayMode'];
 const exact=(o,keys)=>o&&typeof o==='object'&&!Array.isArray(o)&&
   Object.keys(o).length===keys.length&&Object.keys(o).every(k=>keys.includes(k));
@@ -24,6 +24,7 @@ export function verifyHubHeartbeat(packet,trust={},now=Date.now()){
     return held('DENY_HEARTBEAT_SCHEMA');
   const e=packet.envelope;
   if(e.schemaVersion!==HUB_RELAY_SCHEMA||e.issuer!=='rosevear-ai-hub'||
+    e.audience!=='rosevear-comms-hub:nonproduction'||
     !ID.test(e.deviceId??'')||!ID.test(e.workloadId??'')||e.environment!=='TEST'||
     !Number.isSafeInteger(e.sequence)||e.sequence<1||
     !NONCE.test(e.nonce??'')||!UUID.test(e.sessionId??'')||

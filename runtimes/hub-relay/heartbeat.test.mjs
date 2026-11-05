@@ -9,6 +9,7 @@ const keys=generateKeyPairSync('ed25519');
 const signed=e=>({envelope:e,keyId:'hub-ql338',signature:sign(null,
   Buffer.from(canonicalize(e)),keys.privateKey).toString('base64url')});
 const e={schemaVersion:'rosevear.hub.relay.heartbeat.v1',issuer:'rosevear-ai-hub',
+  audience:'rosevear-comms-hub:nonproduction',
   deviceId:'hub-windows-owner-1',workloadId:'hub-probe',environment:'TEST',sequence:1,
   nonce:'abcdefghijABCDEFGHIJ1234',sessionId:'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
   issuedAt:'2026-11-05T15:00:00.000Z',expiresAt:'2026-11-05T15:01:30.000Z',
@@ -30,7 +31,8 @@ test('QL-338 signed TEST device receipt is held pending real Windows origin',()=
 });
 
 test('QL-338 field and scope denials protect device, audience, and secrets',()=>{
-  for(const altered of [{deviceId:'other-device'},{issuer:'unknown'},{environment:'PROD'},
+  for(const altered of [{deviceId:'other-device'},{issuer:'unknown'},
+    {audience:'wrong-service'},{environment:'PROD'},
     {capabilities:['camera.read']},{queueDepth:101},{sequence:0},{relayMode:'INBOUND_PUBLIC'},
     {privateKey:'forbidden'},{expiresAt:'2026-11-05T14:59:59.000Z'}]){
     assert.match(verifyHubHeartbeat(signed({...e,...altered}),trust,now).state,/^(DENY|HOLD)/);
