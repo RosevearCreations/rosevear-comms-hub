@@ -1,0 +1,24 @@
+.ql339-portal { display:grid;gap:18px;min-width:0;background:linear-gradient(135deg,#101c34,#192544 56%,#102d3b);border:1px solid #477d97;border-radius:20px;padding:clamp(17px,2.3vw,28px);color:#edf8ff; }
+.ql339-head { display:flex;align-items:start;justify-content:space-between;gap:18px;flex-wrap:wrap; }
+.ql339-head h4 {font-size:clamp(1.25rem,2vw,1.7rem);margin:.3rem 0 .7rem;color:#fff;}
+.ql339-head p {color:#c4d9eb;max-width:720px;line-height:1.55;}
+.ql339-kicker {text-transform:uppercase;letter-spacing:.12em;color:#9de6e4!important;font-size:.77rem;font-weight:800;}
+.ql339-badge {display:block;flex:none;border:1px solid #ac8440;border-radius:99px;padding:10px 13px;color:#ffe1a8;background:#59442150;font-size:.74rem;font-weight:900;letter-spacing:.04em;}
+.ql339-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+.ql339-grid article {border:1px solid #3a5e7d;border-radius:13px;background:#1a3452;padding:16px;min-width:0;display:grid;gap:8px;}
+.ql339-grid h5,.ql339-action h5 {margin:0;color:#fff;font-size:1rem;}
+.ql339-grid p,.ql339-grid small,.ql339-action p {color:#bbd4e7;line-height:1.5;margin:0;}
+.ql339-grid span {color:#ffdfaa;font-size:.83rem;}
+.ql339-grid small {font-size:.77rem;}
+.ql339-action {background:#0d253b;border:1px solid #426b83;border-radius:15px;padding:20px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;}
+.ql339-action>div {flex:1 1 500px;}
+.ql339-action ol {margin:12px 0 10px;padding-left:23px;color:#d2e8f4;line-height:1.7;}
+.ql339-action a {align-self:center;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:12px 15px;border:1px solid #7bd8de;border-radius:12px;background:#136e7b;color:#effcff;font-weight:800;text-decoration:none;}
+.ql339-action a:hover {background:#208c9b;}
+.ql339-portal details {border-top:1px solid #466581;padding-top:14px;color:#d3eaf6;line-height:1.55;}
+.ql339-portal summary {cursor:pointer;font-weight:800;min-height:44px;display:flex;align-items:center;}
+.ql339-portal :is(a,summary):focus-visible {outline:3px solid #9cf2ed;outline-offset:3px;}
+@media(max-width:1100px){.ql339-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:560px){.ql339-grid{grid-template-columns:1fr;}.ql339-action{padding:15px;}}
+@media(forced-colors:active){.ql339-portal,.ql339-grid article,.ql339-action{border:1px solid CanvasText;}.ql339-badge{border:1px solid CanvasText;}}
+@media(prefers-reduced-motion:reduce){.ql339-action a{transition:none;}}
