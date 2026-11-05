@@ -20,6 +20,7 @@ import {QL287_OBSERVED_AT,QL287_PUBLIC_SOURCE_RECHECK,ql287PinnedProofUrl} from 
 import {QL288_OBSERVED_AT,QL288_PUBLIC_SOURCE_RECHECK,ql288PinnedProofUrl} from './ql288ReceiptCustodianSourceQueue';
 import {QL289_OBSERVED_AT,QL289_PUBLIC_SOURCE_RECHECK,ql289PinnedProofUrl} from './ql289ProvenanceWitnessReceiptAging';
 import {QL290_OBSERVED_AT,QL290_PUBLIC_SOURCE_RECHECK,ql290PinnedProofUrl} from './ql290OriginWitnessPriority';
+import {Ql339PortalJourneys} from './Ql339PortalJourneys';
 import './ql270-connections.css';
 
 export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspace)=>void}){
@@ -86,6 +87,8 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
       <article><span>Local TEST drafts</span><strong>{readyDrafts} <small>/ 6</small></strong><div className="ql270-meter"><i style={{width:`${readyDrafts/6*100}%`}}/></div><small>Session-only plans, not connections</small></article>
       <article><span>Live pilot holds</span><strong>12 <small>/ 12</small></strong><div className="ql270-meter ql270-meter-alert"><i style={{width:'100%'}}/></div><small>Calls, messaging and dispatch OFF</small></article>
     </div>
+
+    <Ql339PortalJourneys />
 
     <div className="ql270-map" role="group" aria-label="Integration roles and separation">
       <div className="ql270-map-centre"><span>◆</span><strong>Comms Hub</strong><small>Orchestrator · HELD</small></div>
