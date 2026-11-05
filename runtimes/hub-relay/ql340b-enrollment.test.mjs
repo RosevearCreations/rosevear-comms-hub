@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {createHash,generateKeyPairSync} from 'node:crypto';
-import {mkdtempSync,readFileSync,writeFileSync} from 'node:fs';
+import {existsSync,mkdtempSync,readFileSync,writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {spawnSync} from 'node:child_process';
@@ -110,3 +110,31 @@ test('CLI produces only unsigned requests from reviewed local fixture paths; no 
   const help=spawnSync(process.execPath,[cli,'--help'],{encoding:'utf8',timeout:5000});
   assert.equal(help.status,0);assert.equal(JSON.parse(help.stdout).liveConnection,false);
 });
+
+test('Windows-only: signed synthetic record and public pins stay in a private ACL directory',
+  {skip:process.platform!=='win32'},async()=>{
+    const dir=mkdtempSync(join(tmpdir(),'ql340b-windows-private-test-'));
+    const prior=process.env.LOCALAPPDATA;process.env.LOCALAPPDATA=dir;
+    try{
+      const issuedAt=Date.now();
+      const r=createEnrollmentRequest({...candidates,witnessHashes,now:issuedAt});
+      const s=signOwnerRequest({request:r,role:'source',localCandidate:source.publicCandidate,
+        encryptedPrivateKeyPem:source.encryptedPrivateKeyPem,
+        passphrase:'not-a-real-source-passphrase',now:issuedAt});
+      const m=signOwnerRequest({request:r,role:'master',localCandidate:master.publicCandidate,
+        encryptedPrivateKeyPem:master.encryptedPrivateKeyPem,
+        passphrase:'not-a-real-master-passphrase',now:issuedAt});
+      const requestPath=join(dir,'request.json'),sourcePath=join(dir,'source.json'),
+        masterPath=join(dir,'master.json');
+      writeFileSync(requestPath,JSON.stringify(r));
+      writeFileSync(sourcePath,JSON.stringify(s));
+      writeFileSync(masterPath,JSON.stringify(m));
+      const result=await runCeremonyCli(['--assemble',requestPath,sourcePath,masterPath]);
+      assert.equal(result.databaseEnrollmentCreated,false);
+      assert.equal(result.receiverActivated,false);
+      assert.equal(existsSync(result.pinsPath),true);
+      assert.equal(existsSync(result.enrollmentPath),true);
+      await assert.rejects(()=>runCeremonyCli(['--assemble',requestPath,sourcePath,masterPath]),
+        /DENY_EXISTING_SIGNED_ENROLLMENT_NO_OVERWRITE/);
+    }finally{process.env.LOCALAPPDATA=prior;}
+  });
