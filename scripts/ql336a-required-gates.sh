@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# QL-336A: exact carry-forward of the former app-ci.yml verifier chain.
+# Invoke from app/, so existing relative paths and working directories remain unchanged.
+set -euo pipefail
+
+run_gate() {
+  printf '\n[QL-336A REQUIRED]'
+  printf ' %q' "$@"
+  printf '\n'
+  "$@"
+}
+
+run_gate npm run check
+run_gate npm test
+run_gate node --test ../runtimes/master-custody/rotation.test.mjs
+run_gate node --test ../runtimes/master-procedures/engine.test.mjs ../runtimes/master-discovery/manifest.test.mjs
+run_gate node --test ../runtimes/shell-handshakes/protocol.test.mjs
+run_gate node ../scripts/__tests__/ql170-release-receipt.test.mjs
+run_gate node --test ../scripts/__tests__/ql171-operator-baseline.test.mjs
+run_gate node --test ../scripts/__tests__/ql188-synthetic-server-harness.test.mjs
+run_gate node ../scripts/__tests__/ql208-provider-gateway-sandbox.test.mjs
+run_gate node ../scripts/__tests__/ql238-integration-handshake.test.mjs
+run_gate node ../scripts/__tests__/ql239-credential-rotation-dry-run.test.mjs
+run_gate node ../scripts/__tests__/ql240-nonproduction-receipt-verifier.test.mjs
+run_gate node ../scripts/__tests__/ql241-external-gateway-retrieval.test.mjs
+run_gate node ../scripts/__tests__/ql242-gateway-audit-owner-rehearsal.test.mjs
+run_gate node ../scripts/__tests__/ql243-secure-gateway-connection.test.mjs
+run_gate node ../scripts/__tests__/ql244-witnessed-handshake-review.test.mjs
+run_gate node ../scripts/__tests__/ql245-six-app-evidence-review.test.mjs
+run_gate node ../scripts/__tests__/ql247-six-app-github-census.test.mjs
+run_gate node ../scripts/__tests__/ql248-proof-commit-reconciliation.test.mjs
+run_gate node ../scripts/__tests__/ql249-public-github-origin-retest.test.mjs
+run_gate node ../scripts/__tests__/ql250-pin-custody-window-witness.test.mjs
+run_gate node ../scripts/__tests__/ql251-witness-return-test-authorization.test.mjs
+run_gate node ../scripts/__tests__/ql252-proof-custody-owner-intake.test.mjs
+run_gate node ../scripts/__tests__/ql253-proof-origin-pin-registry-owner-test.test.mjs
+run_gate node ../scripts/__tests__/ql254-proof-followup-witness-relay.test.mjs
+run_gate node ../scripts/__tests__/ql255-response-disposition-owner-relay.test.mjs
+run_gate node ../scripts/__tests__/ql256-connection-readiness.test.mjs
+run_gate node ../scripts/__tests__/ql257-six-response-config-routing.test.mjs
+run_gate npm run test -- src/operator/__tests__/ql258OwnerActionIntake.test.tsx
+run_gate npm run test -- src/operator/__tests__/ql259SixAppReturnIntake.test.tsx
+run_gate npm run test -- src/operator/__tests__/ql260NarrativeTriage.test.tsx
+run_gate npm run test -- src/operator/__tests__/ql261SixAppPreflight.test.tsx
+run_gate npm run test -- src/operator/__tests__/ql262EvidenceIsolationReview.test.tsx
+run_gate npm run test -- src/operator/__tests__/ql263OriginalReceiptReadiness.test.tsx
+run_gate npm run test -- src/operator/__tests__/ql264SixRepoDirectHandoff.test.tsx
+run_gate node --test ../scripts/__tests__/ql261-six-app-guide-integrity.test.mjs
+run_gate node --test ../scripts/__tests__/ql189-operations-safety-harness.test.mjs
+run_gate node ../scripts/ql190-packet-integrity-audit.mjs
+run_gate node --test ../scripts/__tests__/ql190-packet-integrity-audit.test.mjs
+run_gate node ../scripts/ql171-operator-baseline.mjs
+run_gate node --test ../scripts/__tests__/ql329-asset-budget.test.mjs
+run_gate npm run build
+run_gate node ../scripts/ql329-asset-budget.mjs
+run_gate node --test ../scripts/__tests__/ql336a-ci-topology.test.mjs

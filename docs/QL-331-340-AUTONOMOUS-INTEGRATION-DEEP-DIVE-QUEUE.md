@@ -181,4 +181,6 @@ Every build must publish exact source commits per modified repository, narrow fo
 
 **Machine-readable planning metadata:** [QL-331–340 registry](QL-331-340-AUTONOMOUS-INTEGRATION-QUEUE.json). **Prior canonical context:** [Source of Truth v2](ROSEVEAR_SOURCE_OF_TRUTH_V2_2026-11-03.md), [QL-330 control-plane blueprint](ROSEVEAR_MASTER_CONNECTION_CONTROL_PLANE_V1.md), [QL-330 verified receipt](build-records/QL-330_FINAL_OWNER_CLOSEDOWN_AND_MASTER_CONNECTION_DESIGN.md).
 
-**Next prioritized:** QL-336A — CI Workflow Consolidation, Required-Gate Preservation & Safe Merged-Branch Cleanup. QL-337 remains the following broker integration build. No QL-341 is specified or automatically scheduled.
+**QL-336A implementation evidence:** [CI workflow consolidation, byte-for-byte verifier preservation and branch custody audit](build-records/QL-336A_CI_CONSOLIDATION_AND_BRANCH_CLEANUP.md). Exact-main promotion evidence must be reconciled separately. Historical branch deletion remains HELD until authenticated branch-ref deletion is available.
+
+**Next prioritized:** QL-337 — AI Data Platform Broker, Comms Event Contracts & Idempotent Effects. No QL-341 is specified or automatically scheduled.
