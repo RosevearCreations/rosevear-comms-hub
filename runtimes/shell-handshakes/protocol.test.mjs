@@ -19,7 +19,7 @@ const create=(shellId='yw',path=SHELL_GET_PATHS[0],proof=trust)=>
   makeShellChallenge({shellId,path,nonce,nowMs:now,trust:proof});
 
 test('QL335 independent YW shell != landscaping company and iCamp shell != campground',()=>{
-  assert.deepEqual(Object.keys(SHELLS),['yw','icamp']);
+  assert.deepEqual(Object.keys(SHELLS),['yw','icamp','rosiedazzlers','devilndove']);
   assert.equal(SHELLS.yw.sourceAppId,'yard-workers');
   assert.equal(SHELLS.icamp.sourceAppId,'icamp');
   assert.equal(create('yw').challenge.source_app_id,'yard-workers');
@@ -27,6 +27,21 @@ test('QL335 independent YW shell != landscaping company and iCamp shell != campg
   for(const child of ['rosevear-landscaping','camp-rosevear','rosevear-landscaping-demo']){
     assert.notEqual(create(child).status,'CHALLENGE_READY_PRIVATE_SIGNING_REQUIRED');
   }
+});
+test('QL-336 legacy Rosie and Devil child businesses cannot become shell identities from a signer alone',()=>{
+  for(const shellId of ['rosiedazzlers','devilndove']){
+    assert.equal(create(shellId).status,'HOLD_MISSING_SIGNED_TEST_AUTHORITY');
+    assert.equal(create(shellId).connected,false);
+    for(const missing of ['sourceChildIsolationVerified','sourceMigrationApproved','originalDataBackupVerified']){
+      const ready={...trust,sourceChildIsolationVerified:true,sourceMigrationApproved:true,
+        originalDataBackupVerified:true,[missing]:false};
+      assert.equal(create(shellId,SHELL_GET_PATHS[0],ready).status,'HOLD_MISSING_SIGNED_TEST_AUTHORITY');
+    }
+    assert.equal(create(shellId,SHELL_GET_PATHS[0],{...trust,sourceChildIsolationVerified:true,
+      sourceMigrationApproved:true,originalDataBackupVerified:true}).challenge.shell_id,shellId);
+  }
+  for(const childId of ['rosie-dazzlers-first-child','devil-n-dove-first-child'])
+    assert.equal(create(childId).status,'HOLD_MISSING_SIGNED_TEST_AUTHORITY');
 });
 test('No verified source signer, owner source consent, handle, workload or pinned nonproduction origin means no challenge',()=>{
   for(const key of Object.keys(trust)){

@@ -10,6 +10,8 @@
 
 **QL-335 evidence:** [YW & iCamp shell-level signed TEST protocol](build-records/QL-335_YW_ICAMP_SIGNED_SHELL_HANDSHAKE.md). Independent per-platform request/receipt validation and FORCE RLS metadata installed; **both real connections remain HOLD** with no source TEST authority, original private signer, verified workload or real signed GET receipt.
 
+**QL-336 preparation evidence:** [Rosie/Devil first-child boundaries and source-only signed TEST prerequisites](build-records/QL-336_OWNED_CHILD_SHELL_MIGRATION_PREPARATION.md). Source-owned pending schema, legacy-safe HOLD routes and cross-child refusal tests prepared; actual source migrations/backfills remain blocked on current source backups and separate review. No real private source connection is established.
+
 **Previous batch:** QL-311–330 = **20/20 Production GREEN for disabled-preview software**, final main receipt `e6d6714cbdc7359bf94a60352b4f769f21011174`.
 **Present external reality:** 0/6 verified active source connections; all `DISCONNECTED / HOLD`, Windows AI Hub relay OFF, ACK UNDER_REVIEW/PARKED_FOR_LATER. QL-332's narrow metadata schema is applied, but master SSO, private broker runtime, original source-signed trust, actual managed key custody and the much broader QL-330 proposal are **not deployed**.
 
@@ -179,4 +181,4 @@ Every build must publish exact source commits per modified repository, narrow fo
 
 **Machine-readable planning metadata:** [QL-331–340 registry](QL-331-340-AUTONOMOUS-INTEGRATION-QUEUE.json). **Prior canonical context:** [Source of Truth v2](ROSEVEAR_SOURCE_OF_TRUTH_V2_2026-11-03.md), [QL-330 control-plane blueprint](ROSEVEAR_MASTER_CONNECTION_CONTROL_PLANE_V1.md), [QL-330 verified receipt](build-records/QL-330_FINAL_OWNER_CLOSEDOWN_AND_MASTER_CONNECTION_DESIGN.md).
 
-**Next proposed build when separately authorized:** QL-331 — Authenticated Master Control Plane, Shell Registry & Tenant Entitlements. No QL-341 is specified or automatically scheduled.
+**Next prioritized:** QL-336A — CI Workflow Consolidation, Required-Gate Preservation & Safe Merged-Branch Cleanup. QL-337 remains the following broker integration build. No QL-341 is specified or automatically scheduled.

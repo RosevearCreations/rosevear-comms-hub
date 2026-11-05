@@ -11,7 +11,11 @@ export const SHELL_GET_PATHS=Object.freeze([
 ]);
 export const SHELLS=Object.freeze({
   yw:{sourceAppId:'yard-workers',sourceIssuer:'yard-workers'},
-  icamp:{sourceAppId:'icamp',sourceIssuer:'icamp'}
+  icamp:{sourceAppId:'icamp',sourceIssuer:'icamp'},
+  // QL-336: these are future reusable platform shells, not the present
+  // Rosie Dazzlers or Devil n Dove *child* business identities.
+  rosiedazzlers:{sourceAppId:'rosiedazzlers',sourceIssuer:'rosiedazzlers',legacyChild:true},
+  devilndove:{sourceAppId:'devilndove',sourceIssuer:'devilndove',legacyChild:true}
 });
 const HEX=/^[a-f0-9]{64}$/;
 const NONCE=/^[A-Za-z0-9_-]{43}$/;
@@ -51,7 +55,9 @@ const validChallenge=c=>exact(c,ALLOWED)&&Object.hasOwn(SHELLS,c.shell_id)&&
 /** Build a canonical challenge without signing it. No KMS = no sendable request. */
 export function makeShellChallenge({shellId,path,nonce,nowMs,trust}={}){
   if(!Object.hasOwn(SHELLS,shellId)||!SHELL_GET_PATHS.includes(path)||
-    !NONCE.test(nonce??'')||!Number.isSafeInteger(nowMs)||!trustReady(trust))
+    !NONCE.test(nonce??'')||!Number.isSafeInteger(nowMs)||!trustReady(trust)||
+    (SHELLS[shellId].legacyChild && (trust?.sourceChildIsolationVerified!==true ||
+      trust?.sourceMigrationApproved!==true || trust?.originalDataBackupVerified!==true)))
     return verdict('HOLD_MISSING_SIGNED_TEST_AUTHORITY');
   const challenge={status:'SHELL_TEST_CHALLENGE',contract:SHELL_CONTRACT,
     shell_id:shellId,source_app_id:SHELLS[shellId].sourceAppId,
@@ -86,6 +92,8 @@ export async function acceptAtSource(envelope,{expectedShell,nowMs,trust,brokerP
   const c=envelope?.challenge;
   if(!Object.hasOwn(SHELLS,expectedShell)||!validChallenge(c)||
     !isSource(c,expectedShell)||c.contract!==SHELL_CONTRACT||c.status!=='SHELL_TEST_CHALLENGE'||
+    (SHELLS[expectedShell].legacyChild && (trust?.sourceChildIsolationVerified!==true ||
+      trust?.sourceMigrationApproved!==true || trust?.originalDataBackupVerified!==true))||
     c.environment!=='nonproduction'||c.method!=='GET'||!SHELL_GET_PATHS.includes(c.path)||
     c.issuer!=='ai-data-platform'||c.scope!==scopeFor(c.path)||!NONCE.test(c.nonce??'')||
     !validTime(c,nowMs)||!trustReady(trust)||
@@ -128,6 +136,8 @@ export async function verifyAtMaster(challenge,sourceEnvelope,{sourcePublicKeyPe
   nowMs,claimReceiptNonce,trust}={}){
   const r=sourceEnvelope?.receipt;
   if(!validChallenge(challenge)||
+    (SHELLS[challenge.shell_id]?.legacyChild && (trust?.sourceChildIsolationVerified!==true ||
+      trust?.sourceMigrationApproved!==true || trust?.originalDataBackupVerified!==true))||
     !trustReady(trust)||!validTime(challenge,nowMs)||
     !r||Object.keys(r).sort().join('|')!==[
       'contract','shell_id','source_app_id','environment','status','capabilities_enabled',
