@@ -1,0 +1,13 @@
+{
+  "name": "@rosevear/comms-private-hub-receiver",
+  "version": "0.0.0-ql339b",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test heartbeat.test.mjs private-receiver.test.mjs server.test.mjs",
+    "start": "node server.mjs --serve"
+  },
+  "dependencies": {
+    "pg": "8.23.1"
+  }
+}
