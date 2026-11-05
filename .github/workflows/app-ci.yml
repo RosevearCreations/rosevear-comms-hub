@@ -41,6 +41,8 @@ jobs:
           node-version: 22
       - name: Verify Windows key material never needs an unattended approval
         run: node --test runtimes/hub-relay/owner-authority-custody.test.mjs
+      - name: Verify Windows offline dual-owner TEST enrollment ceremony
+        run: node --test runtimes/hub-relay/ql340b-enrollment.test.mjs
       - name: Inspect missing keys without generating authority or network access
         run: node runtimes/hub-relay/owner-authority-custody.mjs --inspect
 

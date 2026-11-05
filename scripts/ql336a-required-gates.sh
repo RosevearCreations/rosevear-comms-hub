@@ -58,4 +58,5 @@ run_gate node --test ../runtimes/master-broker/event-inbox.test.mjs
 run_gate node --test ../runtimes/hub-relay/heartbeat.test.mjs
 run_gate node --test ../runtimes/hub-relay/private-receiver.test.mjs ../runtimes/hub-relay/server.test.mjs
 run_gate node --test ../runtimes/hub-relay/owner-authority-custody.test.mjs
+run_gate node --test ../runtimes/hub-relay/ql340b-enrollment.test.mjs
 run_gate node --test ../runtimes/client-portal/journey.test.mjs
