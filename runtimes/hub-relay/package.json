@@ -1,10 +1,10 @@
 {
   "name": "@rosevear/comms-private-hub-receiver",
-  "version": "0.0.0-ql340c",
+  "version": "0.0.0-ql341",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test heartbeat.test.mjs private-receiver.test.mjs server.test.mjs owner-authority-custody.test.mjs ql340b-enrollment.test.mjs ql340c-activation-check.test.mjs",
+    "test": "node --test heartbeat.test.mjs private-receiver.test.mjs server.test.mjs owner-authority-custody.test.mjs ql340b-enrollment.test.mjs ql340c-activation-check.test.mjs ql341-private-readback.test.mjs",
     "start": "node server.mjs --serve"
   },
   "dependencies": {
