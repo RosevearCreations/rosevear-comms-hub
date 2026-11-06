@@ -74,6 +74,17 @@ export function Ql350PrivateBridgePanel(){
       </ol>
       <p>No firewall, Tailnet grant, Windows LAN Caddyfile, signed TEST request, database enrollment or other application repository is changed. Original issuer approval and both owners’ decisions remain independent. See the QL-352 runbook in <code>docs/build-records</code>.</p>
     </details>
+    <details className="ql351-windows-guide ql353-owner-guide">
+      <summary>QL-353 · Original-owner enrollment, authenticated session and first signed receipt</summary>
+      <ol>
+        <li><strong>Ree’s Windows server · PowerShell:</strong> after updating a clean <code>main</code>, run <code>.\runtimes\hub-relay\ql353-windows-original-readback.ps1 -Status</code>. This checks original local evidence filenames and listener states without decrypting keys or contacting the database.</li>
+        <li><strong>Jack’s separate laptop:</strong> independently review the original issuer evidence, signed source/master ownership decisions and exact public candidate fingerprints. The previous QL-352 HTTPS <code>503</code> result proves encrypted transport only—it is not consent or a device receipt.</li>
+        <li><strong>Original private database administrator:</strong> separately verify one exact <code>REVIEWED_TEST</code> enrollment, no revocation and one genuine signed device receipt using the dedicated read-only verifier. The receiver role remains <code>NOLOGIN</code> until specifically approved; never expose a connection string in the browser.</li>
+        <li><strong>Authenticated private operator:</strong> the server requires a short-lived original-device session with independent issuer and both-owner attestation, exact same-origin/CSRF checks and revocation verification. No browser button can self-enroll or issue this session.</li>
+        <li><strong>First signed TEST receipt:</strong> reconcile an independently reviewed owner packet, exact original device pin and one durable QL-342 signed receipt. A valid first receipt still leaves all six application connections <code>DISCONNECTED / HOLD</code> until separate source TEST authority exists.</li>
+      </ol>
+      <p>QL-353 does not overwrite the QL-351 or QL-352 staged manifests. Their checkout hashes may deliberately go stale after a new release; a later activation must be explicitly reconciled, never silently repinned. Detailed field directions: <code>docs/build-records/QL-353_ORIGINAL_OWNER_SESSION_AND_FIRST_SIGNED_TEST_RECEIPT.md</code>.</p>
+    </details>
     <div className="ql350-peer-grid" aria-label="Six supervised source TEST actions">
       {QL349_PUBLIC_SOURCES.map(source=><article key={source.id}>
         <div><strong>{source.label}</strong><span>DISCONNECTED / HOLD</span></div>
