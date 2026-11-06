@@ -2,6 +2,7 @@ import {useState,type ChangeEvent} from 'react';
 import {parseQl342Preflight,type Ql342Preflight} from './ql342OwnerGate';
 import {Ql343OwnerEvidencePanel} from './Ql343OwnerEvidencePanel';
 import {Ql344ReceiverOffPanel} from './Ql344ReceiverOffPanel';
+import {Ql345IssuerOwnerPanel} from './Ql345IssuerOwnerPanel';
 import './ql342-owner-gate.css';
 
 export function Ql342OwnerGatePanel(){
@@ -57,6 +58,7 @@ export function Ql342OwnerGatePanel(){
     </aside>
     <Ql343OwnerEvidencePanel/>
     <Ql344ReceiverOffPanel/>
+    <Ql345IssuerOwnerPanel/>
     <footer>NO LIVE CONNECTIONS · NO CUSTOMER CALLS OR SMS · NO HOME DEVICE ACTIONS · ORIGINAL OWNERS RETAIN ALL SIGNING AUTHORITY</footer>
   </section>;
 }
