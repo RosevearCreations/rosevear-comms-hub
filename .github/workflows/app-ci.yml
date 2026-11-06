@@ -62,6 +62,8 @@ jobs:
         run: node --test runtimes/hub-relay/ql345-issuer-owner-preflight.test.mjs
       - name: Verify QL-346 original issuer signature and separately signed TEST owner approval remain offline
         run: node --test runtimes/hub-relay/ql346-issuer-test-readiness.test.mjs
+      - name: Verify QL-347 dual-owner custody reconciliation never enables enrollment
+        run: node --test runtimes/hub-relay/ql347-custody-handoff.test.mjs
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest
