@@ -70,6 +70,11 @@ jobs:
         run: node --test runtimes/hub-relay/ql349-six-peer-orchestrator.test.mjs
       - name: Verify QL-350 private bridge, operator session and guided TEST fail-closed
         run: node --test runtimes/hub-relay/ql350-private-control-bridge.test.mjs
+      - name: Verify QL-351 original Windows adapter provenance and isolated owner staging
+        run: node --test runtimes/hub-relay/ql351-windows-private-adapter.test.mjs
+      - name: Verify QL-351 non-original Windows CI runner cannot install adapter
+        shell: pwsh
+        run: .\runtimes\hub-relay\ql351-windows-private-adapter.ps1 -Status
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest
