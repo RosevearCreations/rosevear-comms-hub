@@ -30,6 +30,8 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql342aRollbackDrillPanel.test.tsx')
       && !line.includes('ql343-owner-evidence-review.test.mjs')
       && !line.includes('ql343OwnerEvidencePanel.test.tsx')
+      && !line.includes('ql344-off-attestation.test.mjs')
+      && !line.includes('ql344ReceiverOffPanel.test.tsx')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
   // SHA-256 of the 43 exact gate commands in origin/dev's pre-QL336A app-ci.yml,
@@ -86,6 +88,13 @@ test('QL-336A retains all 43 existing application checks in their original order
   assert.ok(gates.indexOf(inertPanelGate)<gates.indexOf(ownerEvidenceGate));
   assert.ok(gates.indexOf(ownerEvidenceGate)<gates.indexOf(ownerEvidenceUiGate));
   assert.ok(gates.indexOf(ownerEvidenceUiGate)<gates.indexOf(portalGate));
+  const receiverOffGate='run_gate node --test ../runtimes/hub-relay/ql344-off-attestation.test.mjs';
+  const receiverOffUiGate='run_gate npm run test -- src/operator/__tests__/ql344ReceiverOffPanel.test.tsx';
+  assert.ok(gates.includes(receiverOffGate),'QL-344 original bytes and receiver-OFF review are required');
+  assert.ok(gates.includes(receiverOffUiGate),'QL-344 safe owner review dashboard is required');
+  assert.ok(gates.indexOf(ownerEvidenceUiGate)<gates.indexOf(receiverOffGate));
+  assert.ok(gates.indexOf(receiverOffGate)<gates.indexOf(receiverOffUiGate));
+  assert.ok(gates.indexOf(receiverOffUiGate)<gates.indexOf(portalGate));
 });
 
 test('main and PR application CI retain required gate names and fail-closed dependency', () => {
@@ -111,6 +120,8 @@ test('main and PR application CI retain required gate names and fail-closed depe
   assert.match(appCi, /ql340c-windows-operator\.ps1 -OwnerPreflight/);
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql342a-rollback-drill\.test\.mjs/);
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql343-owner-evidence-review\.test\.mjs/);
+  assert.match(appCi, /node --test runtimes\/hub-relay\/ql344-off-attestation\.test\.mjs/);
+  assert.match(appCi, /ql344-windows-off-observer\.ps1 -Status/);
 });
 
 test('production parity has one push trigger; an independently runnable manual proof remains', () => {
