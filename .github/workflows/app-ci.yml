@@ -75,6 +75,11 @@ jobs:
       - name: Verify QL-351 non-original Windows CI runner cannot install adapter
         shell: pwsh
         run: .\runtimes\hub-relay\ql351-windows-private-adapter.ps1 -Status
+      - name: Verify QL-352 Tailnet-only transport and independent LAN process safety
+        run: node --test runtimes/hub-relay/ql352-tailnet-gateway.test.mjs runtimes/hub-relay/ql352-windows-tailnet-gateway.test.mjs
+      - name: Verify QL-352 CI runner can only perform inert status readback
+        shell: pwsh
+        run: .\runtimes\hub-relay\ql352-windows-tailnet-gateway.ps1 -Status
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest
