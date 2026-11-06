@@ -22,6 +22,7 @@ import {QL289_OBSERVED_AT,QL289_PUBLIC_SOURCE_RECHECK,ql289PinnedProofUrl} from 
 import {QL290_OBSERVED_AT,QL290_PUBLIC_SOURCE_RECHECK,ql290PinnedProofUrl} from './ql290OriginWitnessPriority';
 import {Ql339PortalJourneys} from './Ql339PortalJourneys';
 import {Ql341PrivateConnectionDashboard} from './Ql341PrivateConnectionDashboard';
+import {Ql342OwnerGatePanel} from './Ql342OwnerGatePanel';
 import './ql270-connections.css';
 
 export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspace)=>void}){
@@ -90,6 +91,7 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
     </div>
 
     <Ql341PrivateConnectionDashboard />
+    <Ql342OwnerGatePanel />
     <Ql339PortalJourneys />
 
     <div className="ql270-map" role="group" aria-label="Integration roles and separation">
