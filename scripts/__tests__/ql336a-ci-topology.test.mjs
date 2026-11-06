@@ -26,6 +26,8 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql341PrivateConnectionDashboard.test.tsx')
       && !line.includes('hub-relay/ql342-owner-decision.test.mjs')
       && !line.includes('ql342OwnerGatePanel.test.tsx')
+      && !line.includes('ql342a-rollback-drill.test.mjs')
+      && !line.includes('ql342aRollbackDrillPanel.test.tsx')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
   // SHA-256 of the 43 exact gate commands in origin/dev's pre-QL336A app-ci.yml,
@@ -68,6 +70,13 @@ test('QL-336A retains all 43 existing application checks in their original order
   assert.ok(gates.indexOf(dashboardGate) < gates.indexOf(decisionGate));
   assert.ok(gates.indexOf(decisionGate) < gates.indexOf(ownerPanelGate));
   assert.ok(gates.indexOf(ownerPanelGate) < gates.indexOf(portalGate));
+  const inertGate='run_gate node --test ../runtimes/hub-relay/ql342a-rollback-drill.test.mjs';
+  const inertPanelGate='run_gate npm run test -- src/operator/__tests__/ql342aRollbackDrillPanel.test.tsx';
+  assert.ok(gates.includes(inertGate),'QL-342A local-only child stop verification is required');
+  assert.ok(gates.includes(inertPanelGate),'QL-342A owner-safe drill guidance is required');
+  assert.ok(gates.indexOf(ownerPanelGate)<gates.indexOf(inertGate));
+  assert.ok(gates.indexOf(inertGate)<gates.indexOf(inertPanelGate));
+  assert.ok(gates.indexOf(inertPanelGate)<gates.indexOf(portalGate));
 });
 
 test('main and PR application CI retain required gate names and fail-closed dependency', () => {
@@ -91,6 +100,7 @@ test('main and PR application CI retain required gate names and fail-closed depe
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql341-private-readback\.test\.mjs/);
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql342-owner-decision\.test\.mjs/);
   assert.match(appCi, /ql340c-windows-operator\.ps1 -OwnerPreflight/);
+  assert.match(appCi, /node --test runtimes\/hub-relay\/ql342a-rollback-drill\.test\.mjs/);
 });
 
 test('production parity has one push trigger; an independently runnable manual proof remains', () => {

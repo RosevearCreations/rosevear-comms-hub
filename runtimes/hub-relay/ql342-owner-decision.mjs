@@ -9,6 +9,7 @@ import {verifiedCandidatePins,hashWitnessFiles} from './ql340b-enrollment.mjs';
 import {verifyDeviceEnrollment} from './enrollment.mjs';
 import {verifySignedTestReceipt} from './ql341-private-readback.mjs';
 import {restrictDirectory} from './owner-authority-custody.mjs';
+import {inspectInertDrillDocument} from './ql342a-rollback-drill.mjs';
 
 export const QL342_DECISION_SCHEMA='rosevear.hub.ql342.owner-enrollment-review.v1';
 export const QL342_RECEIPT_SCHEMA='rosevear.hub.ql342.one-test-receipt.v1';
@@ -50,12 +51,17 @@ export function reviewOwnerEnrollment({enrollment,pins,candidates,evidenceDigest
     typeof rollbackRecord.verifiedServerPath==='string'&&
     /[\\/]runtimes[\\/]hub-relay[\\/]server\.mjs$/i.test(rollbackRecord.verifiedServerPath)&&
     Number.isFinite(Date.parse(rollbackRecord.capturedAtUTC??''));
+  const inertRollbackDrill=inspectInertDrillDocument(rollbackRecord,
+    {expectedComputer:'DESKTOP-AE894KC',now});
   return held('ORIGINAL_OWNER_SIGNATURES_VALID_FIELD_DECISION_PENDING',{
     schema:QL342_DECISION_SCHEMA,payloadSha256:sha(canonicalize(p)),
     deviceSpkiSha256:p.deviceSpkiSha256,
     originalOwnerSignaturesVerified:true,
     fourCurrentWitnessHashesMatch:true,
     actualReceiverStopDocumentPresent:Boolean(originalStop),
+    inertRollbackDrillDocumentPresent:inertRollbackDrill.validDrillDocument,
+    inertRollbackDrillIsNotActualReceiverStop:true,
+    originalFieldWitnessStillRequired:true,
     stopPreflightIsNotActiveStop:true,
     sourceTestAuthorized:false,databaseEnrollmentCreated:false,
     originalWitnessDigests:Object.fromEntries(fields.map(k=>[k,evidenceDigests[k]])),
