@@ -1,5 +1,6 @@
 import {useState,type ChangeEvent} from 'react';
 import {parseQl342Preflight,type Ql342Preflight} from './ql342OwnerGate';
+import {Ql343OwnerEvidencePanel} from './Ql343OwnerEvidencePanel';
 import './ql342-owner-gate.css';
 
 export function Ql342OwnerGatePanel(){
@@ -53,6 +54,7 @@ export function Ql342OwnerGatePanel(){
           <li>It does not establish a genuine six-app heartbeat or activate any connection.</li></ul>
         <p>Save the local evidence and have Ree and Jack independently review it before any separate owner-signing ceremony. All missing trust remains <strong>HOLD</strong>.</p></div>
     </aside>
+    <Ql343OwnerEvidencePanel/>
     <footer>NO LIVE CONNECTIONS · NO CUSTOMER CALLS OR SMS · NO HOME DEVICE ACTIONS · ORIGINAL OWNERS RETAIN ALL SIGNING AUTHORITY</footer>
   </section>;
 }
