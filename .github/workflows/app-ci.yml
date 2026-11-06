@@ -58,6 +58,8 @@ jobs:
       - name: Verify QL-344 Windows observer remains read-only on non-original CI machines
         shell: pwsh
         run: .\runtimes\hub-relay\ql344-windows-off-observer.ps1 -Status
+      - name: Verify QL-345 independent review dispositions never authorize TEST enrollment
+        run: node --test runtimes/hub-relay/ql345-issuer-owner-preflight.test.mjs
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest
