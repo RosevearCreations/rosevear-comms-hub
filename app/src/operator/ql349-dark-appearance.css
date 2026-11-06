@@ -1,0 +1,58 @@
+/* QL-349: user-requested modern dark workspace. This layer is LAST so it also
+   covers historical bright panels while retaining an explicit Light option. */
+.ql172-shell[data-ql349-appearance='dark']{
+  --ql312-canvas:#081a2c;--ql312-card:#122c41;--ql312-ink:#f0f7ff;
+  --ql312-muted:#b4cadf;--ql312-border:#476985;--ql312-focus:#ffd27c;
+  --ql312-shadow:0 11px 28px #020b17a3;
+  color:#e9f4ff;background:#071726;
+}
+.ql172-shell[data-ql349-appearance='dark'][data-ql270-shell='categorized'] .ql172-main{
+  background:radial-gradient(circle at 87% 0,#174a6755,transparent 44%),linear-gradient(150deg,#071828,#0d2234 58%,#101e35)!important;
+  color:#e9f4ff;
+}
+.ql172-shell[data-ql349-appearance='dark'] :is(.ql172-context,.ql312-toolbar,.ql311-workspace-guide,.ql313-responsive-help){
+  background:linear-gradient(122deg,#132c43,#18334b 60%,#252746)!important;
+  border-color:#4c7090!important;color:#ebf5ff!important;
+  box-shadow:0 8px 24px #020c1d55;
+}
+.ql172-shell[data-ql349-appearance='dark'] .ql172-context{border-top:3px solid #68d8ec!important}
+.ql172-shell[data-ql349-appearance='dark'] .ql172-context :is(h2,p,.ql172-kicker){color:#eff9ff!important}
+.ql172-shell[data-ql349-appearance='dark'] .ql172-context p:not(.ql172-kicker){color:#bed3e6!important}
+.ql172-shell[data-ql349-appearance='dark'] .ql172-context-badge{
+  color:#ffdfa5!important;border:1px solid #a0783d;background:#4b3b24!important;
+}
+.ql172-shell[data-ql349-appearance='dark'] .ql312-toolbar-intro :is(strong,small),
+.ql172-shell[data-ql349-appearance='dark'] :is(.ql312-style-help,.ql312-style-help summary,.ql311-workspace-guide summary,.ql313-responsive-help summary){color:#eaf7ff!important}
+.ql172-shell[data-ql349-appearance='dark'] :is(.ql312-choice,.ql312-swatch){
+  background:#10273d!important;border-color:#587a96!important;color:#eaf6ff!important;
+}
+.ql172-shell[data-ql349-appearance='dark'] .ql312-choice :is(span,button){color:#d5e9fb}
+.ql172-shell[data-ql349-appearance='dark'] .ql312-choice button[aria-pressed='true']{
+  background:#2776a5!important;color:#fff!important;border-color:#81d9f3!important;
+}
+.ql172-shell[data-ql349-appearance='dark'] :is(.ql311-breadcrumb,.ql311-breadcrumb strong){color:#cfe4f5!important}
+.ql172-shell[data-ql349-appearance='dark'] :is(.ql311-breadcrumb button,.ql311-guide-actions button){
+  color:#eaf7ff!important;background:#193c59!important;border-color:#5584a4!important;
+}
+.ql172-shell[data-ql349-appearance='dark'] :is(.ql191-panel,.ql191-metric,.ql299-list article,
+  .ql192-inbox-stats>div,.ql292-lane,.ql292-lanes,.ql314-active-filters,
+  .ql301-cases article,.ql298-grid>section){
+  background:linear-gradient(145deg,#132f45,#102438)!important;
+  color:#e8f5ff!important;border-color:#426782!important;
+}
+.ql172-shell[data-ql349-appearance='dark'] :is(.ql191-panel,.ql191-metric,.ql299-list article,
+  .ql192-inbox-stats>div,.ql292-lane,.ql301-cases article,.ql298-grid>section)
+  :is(h2,h3,h4,h5,strong,p,small,label){color:#e2f0fc}
+.ql172-shell[data-ql349-appearance='dark'] .ql172-main :is(input:not([type='checkbox']):not([type='radio']),textarea,select){
+  background-color:#0b2337;color:#f1f8ff;border-color:#547a98;
+}
+.ql172-shell[data-ql349-appearance='dark'] .ql172-main input::placeholder{color:#a8c2d8}
+.ql172-shell[data-ql349-appearance='dark'] .ql172-main a{color:#95e6f4}
+.ql172-shell[data-ql349-appearance='dark'] .ql172-main :is(button,summary):focus-visible{
+  outline:3px solid #ffd27c;outline-offset:3px;
+}
+.ql172-shell[data-ql349-appearance='dark'] .ql313-responsive-help p,
+.ql172-shell[data-ql349-appearance='dark'] .ql311-workspace-guide p{color:#c9dfef}
+@media (forced-colors:active){
+  .ql172-shell[data-ql349-appearance='dark'] :is(.ql172-main,.ql172-context,.ql312-toolbar,.ql311-workspace-guide,.ql313-responsive-help){background:Canvas!important;color:CanvasText!important}
+}
