@@ -36,6 +36,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql345IssuerOwnerPanel.test.tsx')
       && !line.includes('ql346-issuer-test-readiness.test.mjs')
       && !line.includes('ql346IssuerTrustPanel.test.tsx')
+      && !line.includes('hub-relay/ql350-private-control-bridge.test.mjs')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
   // SHA-256 of the 43 exact gate commands in origin/dev's pre-QL336A app-ci.yml,
@@ -113,6 +114,10 @@ test('QL-336A retains all 43 existing application checks in their original order
   assert.ok(gates.indexOf(issuerUiGate)<gates.indexOf(verifiedIssuerGate));
   assert.ok(gates.indexOf(verifiedIssuerGate)<gates.indexOf(verifiedIssuerUiGate));
   assert.ok(gates.indexOf(verifiedIssuerUiGate)<gates.indexOf(portalGate));
+  const privateBridgeGate='run_gate node --test ../runtimes/hub-relay/ql350-private-control-bridge.test.mjs';
+  assert.ok(gates.includes(privateBridgeGate),'QL-350 private operator and signed TEST gate is required');
+  assert.ok(gates.indexOf(verifiedIssuerUiGate)<gates.indexOf(privateBridgeGate));
+  assert.ok(gates.indexOf(privateBridgeGate)<gates.indexOf(portalGate));
 });
 
 test('main and PR application CI retain required gate names and fail-closed dependency', () => {
@@ -142,6 +147,7 @@ test('main and PR application CI retain required gate names and fail-closed depe
   assert.match(appCi, /ql344-windows-off-observer\.ps1 -Status/);
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql345-issuer-owner-preflight\.test\.mjs/);
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql346-issuer-test-readiness\.test\.mjs/);
+  assert.match(appCi, /node --test runtimes\/hub-relay\/ql350-private-control-bridge\.test\.mjs/);
 });
 
 test('production parity has one push trigger; an independently runnable manual proof remains', () => {
