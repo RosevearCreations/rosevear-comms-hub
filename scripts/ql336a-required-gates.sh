@@ -60,4 +60,6 @@ run_gate node --test ../runtimes/hub-relay/private-receiver.test.mjs ../runtimes
 run_gate node --test ../runtimes/hub-relay/owner-authority-custody.test.mjs
 run_gate node --test ../runtimes/hub-relay/ql340b-enrollment.test.mjs
 run_gate node --test ../runtimes/hub-relay/ql340c-activation-check.test.mjs
+run_gate node --test ../runtimes/hub-relay/ql341-private-readback.test.mjs
+run_gate npm run test -- src/operator/__tests__/ql341PrivateConnectionDashboard.test.tsx
 run_gate node --test ../runtimes/client-portal/journey.test.mjs

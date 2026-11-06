@@ -45,6 +45,8 @@ jobs:
         run: node --test runtimes/hub-relay/ql340b-enrollment.test.mjs
       - name: Verify QL-340C signed TEST activation scope and hold controls
         run: node --test runtimes/hub-relay/ql340c-activation-check.test.mjs
+      - name: Verify QL-341 private six-peer registry and TEST witness fail-closed
+        run: node --test runtimes/hub-relay/ql341-private-readback.test.mjs
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest

@@ -6,7 +6,9 @@ param(
     [Parameter(ParameterSetName = 'Store')][switch]$StoreCredential,
     [Parameter(ParameterSetName = 'Start')][switch]$Start,
     [Parameter(ParameterSetName = 'Stop')][switch]$Stop,
-    [Parameter(ParameterSetName = 'SelfTest')][switch]$SelfTest
+    [Parameter(ParameterSetName = 'SelfTest')][switch]$SelfTest,
+    [Parameter(ParameterSetName = 'Readback')][switch]$Readback,
+    [Parameter(ParameterSetName = 'Readback')][string]$SignedPacketPath
 )
 
 $ErrorActionPreference = 'Stop'
@@ -21,6 +23,7 @@ $pinFile = Join-Path $base 'Enrollment\ql340b-private-owner-public-pins.json'
 $enrollmentFile = Join-Path $base 'Enrollment\ql340b-signed-test-enrollment.json'
 $serverFile = Join-Path $PSScriptRoot 'server.mjs'
 $checkFile = Join-Path $PSScriptRoot 'ql340c-activation-check.mjs'
+$privateReadbackFile = Join-Path $PSScriptRoot 'ql341-private-readback.mjs'
 $evidenceDir = Join-Path $base 'Evidence'
 $tlsCert = Join-Path $base 'TLS\comms-ql340b.crt'
 
@@ -133,6 +136,28 @@ if ($Stop) {
     $receiptPath = Join-Path $evidenceDir ('ql340c-stopped-' + (Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssfffZ') + '.json')
     $receipt | ConvertTo-Json -Depth 4 | Out-File -FilePath $receiptPath -NoClobber -Encoding UTF8
     Write-PrivateState 'FIELD_RECEIVER_STOPPED_REVIEW_REQUIRED' @{ stopReceiptPath = $receiptPath }
+    exit 0
+}
+
+if ($Readback) {
+    if (-not (Test-Path $credentialFile)) { throw 'HOLD_PRIVATE_DATABASE_CREDENTIAL_REQUIRED' }
+    if (@(Get-ReceiverListeners).Count -ne 0) { throw 'HOLD_STOP_RECEIVER_BEFORE_READ_ONLY_RECONCILIATION' }
+    if ($SignedPacketPath -and -not (Test-Path $SignedPacketPath)) {
+        throw 'HOLD_ORIGINAL_SIGNED_TEST_PACKET_FILE_REQUIRED'
+    }
+    Secure-OwnerDirectory
+    $secure = (Get-Content -Raw $credentialFile).Trim() | ConvertTo-SecureString
+    $pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
+    try { $env:DATABASE_URL = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer) }
+    finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer) }
+    try {
+        if ($SignedPacketPath) { & node $privateReadbackFile --readback $SignedPacketPath }
+        else { & node $privateReadbackFile --readback }
+        if ($LASTEXITCODE -ne 0) { throw 'HOLD_PRIVATE_PEER_READBACK_NOT_VERIFIED' }
+    } finally {
+        Remove-Item Env:DATABASE_URL -ErrorAction SilentlyContinue
+        $secure.Dispose()
+    }
     exit 0
 }
 
