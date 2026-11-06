@@ -21,6 +21,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('hub-relay/private-receiver.test.mjs')
       && !line.includes('hub-relay/owner-authority-custody.test.mjs')
       && !line.includes('hub-relay/ql340b-enrollment.test.mjs')
+      && !line.includes('hub-relay/ql340c-activation-check.test.mjs')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
   // SHA-256 of the 43 exact gate commands in origin/dev's pre-QL336A app-ci.yml,
@@ -46,6 +47,10 @@ test('QL-336A retains all 43 existing application checks in their original order
   assert.ok(gates.includes(ceremonyGate), 'QL-340B signed enrollment ceremony gate is required');
   assert.ok(gates.indexOf(ownerKeyGate) < gates.indexOf(ceremonyGate));
   assert.ok(gates.indexOf(ceremonyGate) < gates.indexOf(portalGate));
+  const activationGate = 'run_gate node --test ../runtimes/hub-relay/ql340c-activation-check.test.mjs';
+  assert.ok(gates.includes(activationGate), 'QL-340C fail-closed receiver activation checks are required');
+  assert.ok(gates.indexOf(ceremonyGate) < gates.indexOf(activationGate));
+  assert.ok(gates.indexOf(activationGate) < gates.indexOf(portalGate));
 });
 
 test('main and PR application CI retain required gate names and fail-closed dependency', () => {
@@ -64,6 +69,8 @@ test('main and PR application CI retain required gate names and fail-closed depe
   assert.match(appCi, /git config --global core\.longpaths true/);
   assert.match(appCi, /node --test runtimes\/hub-relay\/owner-authority-custody\.test\.mjs/);
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql340b-enrollment\.test\.mjs/);
+  assert.match(appCi, /node --test runtimes\/hub-relay\/ql340c-activation-check\.test\.mjs/);
+  assert.match(appCi, /ql340c-windows-operator\.ps1 -SelfTest/);
 });
 
 test('production parity has one push trigger; an independently runnable manual proof remains', () => {

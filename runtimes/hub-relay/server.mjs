@@ -41,6 +41,11 @@ export async function startConfiguredPrivateReceiver({connectionString,authority
     finally{client.release();}
   };
   try{
+    // Fail closed before opening a TCP listener. A syntactically plausible DSN is
+    // not proof that PostgreSQL accepted the dedicated least-privilege identity.
+    const identity=await query('SELECT current_user AS receiver_role');
+    if(identity.rows?.[0]?.receiver_role!=='ql340c_private_receiver')
+      throw Error('PRIVATE_RECEIVER_DATABASE_ROLE_NOT_VERIFIED');
     const server=await startLoopbackReceiver({
       resolveTrust:postgresDeviceTrustResolver(query,authorities),transaction}, {port});
     server.once('close',()=>pool.end());
