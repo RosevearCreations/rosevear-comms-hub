@@ -1,6 +1,7 @@
 import {useState,type ChangeEvent} from 'react';
 import {parseQl342Preflight,type Ql342Preflight} from './ql342OwnerGate';
 import {Ql343OwnerEvidencePanel} from './Ql343OwnerEvidencePanel';
+import {Ql344ReceiverOffPanel} from './Ql344ReceiverOffPanel';
 import './ql342-owner-gate.css';
 
 export function Ql342OwnerGatePanel(){
@@ -55,6 +56,7 @@ export function Ql342OwnerGatePanel(){
         <p>Save the local evidence and have Ree and Jack independently review it before any separate owner-signing ceremony. All missing trust remains <strong>HOLD</strong>.</p></div>
     </aside>
     <Ql343OwnerEvidencePanel/>
+    <Ql344ReceiverOffPanel/>
     <footer>NO LIVE CONNECTIONS · NO CUSTOMER CALLS OR SMS · NO HOME DEVICE ACTIONS · ORIGINAL OWNERS RETAIN ALL SIGNING AUTHORITY</footer>
   </section>;
 }
