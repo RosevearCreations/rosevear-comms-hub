@@ -74,4 +74,5 @@ run_gate node --test ../runtimes/hub-relay/ql345-issuer-owner-preflight.test.mjs
 run_gate npm run test -- src/operator/__tests__/ql345IssuerOwnerPanel.test.tsx
 run_gate node --test ../runtimes/hub-relay/ql346-issuer-test-readiness.test.mjs
 run_gate npm run test -- src/operator/__tests__/ql346IssuerTrustPanel.test.tsx
+run_gate node --test ../runtimes/hub-relay/ql350-private-control-bridge.test.mjs
 run_gate node --test ../runtimes/client-portal/journey.test.mjs

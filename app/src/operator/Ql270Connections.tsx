@@ -24,6 +24,7 @@ import {Ql339PortalJourneys} from './Ql339PortalJourneys';
 import {Ql341PrivateConnectionDashboard} from './Ql341PrivateConnectionDashboard';
 import {Ql342OwnerGatePanel} from './Ql342OwnerGatePanel';
 import {Ql349ConnectionControlCenter} from './Ql349ConnectionControlCenter';
+import {Ql350PrivateBridgePanel} from './Ql350PrivateBridgePanel';
 import './ql270-connections.css';
 
 export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspace)=>void}){
@@ -92,6 +93,7 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
     </div>
 
     <Ql349ConnectionControlCenter />
+    <Ql350PrivateBridgePanel />
     <Ql341PrivateConnectionDashboard />
     <Ql342OwnerGatePanel />
     <Ql339PortalJourneys />
