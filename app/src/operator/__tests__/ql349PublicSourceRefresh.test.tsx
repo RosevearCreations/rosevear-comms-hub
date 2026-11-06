@@ -52,6 +52,35 @@ it('never marks forged public status, wrong identity or missing source as connec
   expect(unavailable.state).toBe('PUBLIC_MANIFEST_MISSING_OR_UNREACHABLE');
 });
 
+it('survives exhausted GitHub API quota using explicitly unpinned public manifests only',async()=>{
+  const requests:string[]=[];
+  const rateLimited=vi.fn(async (url:string)=>{
+    requests.push(url);
+    const source=QL349_PUBLIC_SOURCES.find(s=>url.includes(`/${s.repo}/`))!;
+    return url.includes('/commits/main')?
+      {ok:false,status:403,redirected:false,url}:
+      {ok:true,status:200,redirected:false,url,headers:{get:()=>null},
+        text:async()=>JSON.stringify(manifest(source))};
+  }) as unknown as typeof fetch;
+  const result=await refreshSixPublicSources(rateLimited);
+  expect(result).toHaveLength(6);
+  expect(result.every(s=>s.state==='PUBLIC_MANIFEST_FOUND_UNPINNED_TRUST_HELD')).toBe(true);
+  expect(result.every(s=>!s.commitSha&&s.connection==='DISCONNECTED / HOLD')).toBe(true);
+  expect(requests).toHaveLength(12);
+  expect(requests.filter(x=>x.includes('/main/')&&x.includes('raw.githubusercontent.com'))).toHaveLength(6);
+});
+
+it('never treats an API rate-limit fallback mismatch as a valid descriptor',async()=>{
+  const source=QL349_PUBLIC_SOURCES[0];
+  const rateLimited=vi.fn(async(url:string)=>url.includes('/commits/main')?
+    {ok:false,status:429,redirected:false,url}:
+    {ok:true,status:200,redirected:false,url,headers:{get:()=>null},
+      text:async()=>JSON.stringify({...manifest(source),repository:'malicious/wrong'})}) as unknown as typeof fetch;
+  const found=await refreshOnePublicSource(source,rateLimited);
+  expect(found.state).toBe('PUBLIC_MANIFEST_INCOMPATIBLE_HELD');
+  expect(found.connection).toBe('DISCONNECTED / HOLD');
+});
+
 let root:Root;let host:HTMLDivElement;
 beforeEach(async()=>{Object.assign(globalThis,{IS_REACT_ACT_ENVIRONMENT:true});
   host=document.createElement('div');document.body.append(host);root=createRoot(host);
