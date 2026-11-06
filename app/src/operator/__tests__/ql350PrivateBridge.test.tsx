@@ -54,6 +54,9 @@ it('public disabled preview offers guidance, not active TEST dispatch',async()=>
   expect(host.querySelectorAll('.ql350-peer-grid article')).toHaveLength(6);
   expect(host.querySelector('.ql351-windows-guide summary')?.textContent).toContain('QL-351');
   expect(host.textContent).toContain('ql351-windows-private-adapter.ps1');
+  expect(host.querySelector('.ql352-tailnet-guide summary')?.textContent).toContain('QL-352');
+  expect(host.textContent).toContain('ql352-windows-tailnet-gateway.ps1');
+  expect(host.textContent).toContain('transport-only HOLD gateway');
   expect(host.textContent).toContain('Jack’s separate laptop');
   expect([...host.querySelectorAll<HTMLButtonElement>('.ql350-peer-grid button')]
     .every(b=>b.disabled)).toBe(true);

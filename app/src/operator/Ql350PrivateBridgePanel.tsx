@@ -62,6 +62,18 @@ export function Ql350PrivateBridgePanel(){
       </ol>
       <p>Installation does not turn on Tailscale Serve, send a handshake, copy signing keys, connect customers or change the other five repositories. The full field procedures are in <code>docs/build-records/QL-351_WINDOWS_ADAPTER_FIRST_TEST_OWNER_RUNBOOK.md</code> in the repository.</p>
     </details>
+    <details className="ql351-windows-guide ql352-tailnet-guide">
+      <summary>QL-352 · Private Tailscale HTTPS gateway — original Windows owner steps</summary>
+      <ol>
+        <li><strong>On Ree’s Windows server · PowerShell:</strong> update to a clean <code>main</code>, then run <code>.\runtimes\hub-relay\ql352-windows-tailnet-gateway.ps1 -Status</code>. Confirm that Caddy still serves LAN <code>192.168.68.74:8443</code> and Tailscale owns <code>100.77.246.3</code>.</li>
+        <li><strong>On Ree’s Windows server:</strong> locate the existing original TLS certificate and matching <em>private</em> key under the current user’s private CommsRelay TLS folder. Do not copy the private key to Jack or the browser. If the existing key is absent, stay on HOLD.</li>
+        <li><strong>With Ree supervising:</strong> run the QL-352 script with <code>-Stage</code>, then <code>-Validate</code>. This creates a separate deny-all Caddyfile; the original LAN Caddy configuration is untouched.</li>
+        <li><strong>In Tailscale Admin · Access controls / Tests:</strong> independently confirm that Jack’s laptop <code>100.114.56.26</code> may reach Ree’s Tailscale address on TCP <code>8443</code> but not <code>8788</code>. Do not grant wider access.</li>
+        <li><strong>Only with owner supervision:</strong> use <code>-SupervisedStart</code> in a dedicated PowerShell window. On Jack’s laptop test TCP <code>8443</code>. An HTTPS response of <code>403</code> or <code>503</code> is intentional: this is still a transport-only HOLD gateway, not an authenticated Comms connection.</li>
+        <li><strong>For safe recovery:</strong> on Ree’s original Windows machine use <code>-Stop</code> in a second PowerShell window. This stops only the exact QL-352 process and confirms the original LAN Caddy remains running.</li>
+      </ol>
+      <p>No firewall, Tailnet grant, Windows LAN Caddyfile, signed TEST request, database enrollment or other application repository is changed. Original issuer approval and both owners’ decisions remain independent. See the QL-352 runbook in <code>docs/build-records</code>.</p>
+    </details>
     <div className="ql350-peer-grid" aria-label="Six supervised source TEST actions">
       {QL349_PUBLIC_SOURCES.map(source=><article key={source.id}>
         <div><strong>{source.label}</strong><span>DISCONNECTED / HOLD</span></div>
