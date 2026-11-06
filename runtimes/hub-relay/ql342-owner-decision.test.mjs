@@ -125,7 +125,10 @@ test('field preflight does not invent original signer, password, receiver or obs
   assert.equal(snapshot.receiverActivated,false);
   const help=await ql342Cli(['--help']);
   assert.equal(help.networkRequests,0);
-  await assert.rejects(()=>ql342Cli(['--verify-one','foo','bar']),/HOLD_REE_ORIGINAL_WINDOWS/);
+  const expectedHold=process.platform==='win32'
+    ? /HOLD_PRIVATE_DATABASE_CREDENTIAL_REQUIRED/
+    : /HOLD_REE_ORIGINAL_WINDOWS_HOST_REQUIRED/;
+  await assert.rejects(()=>ql342Cli(['--verify-one','foo','bar']),expectedHold);
   const sql=readFileSync(new URL('../../supabase/migrations/20261106004637_ql341_six_private_peers_and_receipt_readback.sql',import.meta.url),'utf8');
   assert.match(sql,/FORCE ROW LEVEL SECURITY/);
   const operator=readFileSync(new URL('./ql340c-windows-operator.ps1',import.meta.url),'utf8');
