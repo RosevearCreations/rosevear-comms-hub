@@ -15,10 +15,10 @@ param(
 $ErrorActionPreference = 'Stop'
 $schema = 'rosevear.hub.ql351.original-windows-private-adapter.v1'
 $originalComputer = 'DESKTOP-AE894KC'
-$isWindows = $env:OS -eq 'Windows_NT' -and -not [string]::IsNullOrEmpty($env:LOCALAPPDATA)
-$base = if ($isWindows) { Join-Path $env:LOCALAPPDATA 'RosevearAIHub\CommsRelay' } else { $null }
-$adapterDir = if ($isWindows) { Join-Path $base 'Adapter' } else { $null }
-$manifestPath = if ($isWindows) { Join-Path $adapterDir 'ql351-installed.json' } else { $null }
+$ql351WindowsHost = $env:OS -eq 'Windows_NT' -and -not [string]::IsNullOrEmpty($env:LOCALAPPDATA)
+$base = if ($ql351WindowsHost) { Join-Path $env:LOCALAPPDATA 'RosevearAIHub\CommsRelay' } else { $null }
+$adapterDir = if ($ql351WindowsHost) { Join-Path $base 'Adapter' } else { $null }
+$manifestPath = if ($ql351WindowsHost) { Join-Path $adapterDir 'ql351-installed.json' } else { $null }
 $operator = Join-Path $PSScriptRoot 'ql340c-windows-operator.ps1'
 $required = @('ql351-windows-private-adapter.ps1','ql340c-windows-operator.ps1','ql340c-activation-check.mjs',
     'ql340b-ceremony.mjs','ql341-private-readback.mjs','ql342-owner-decision.mjs',
@@ -26,12 +26,12 @@ $required = @('ql351-windows-private-adapter.ps1','ql340c-windows-operator.ps1',
     'ql350-private-control-bridge.mjs','server.mjs')
 
 function Get-ListenerCount {
-    if (-not $isWindows) { return 0 }
+    if (-not $ql351WindowsHost) { return 0 }
     return @(Get-NetTCPConnection -LocalPort 8788 -State Listen -ErrorAction SilentlyContinue).Count
 }
 
 function Assert-OriginalHost {
-    if (-not $isWindows -or $env:COMPUTERNAME -cne $originalComputer) {
+    if (-not $ql351WindowsHost -or $env:COMPUTERNAME -cne $originalComputer) {
         throw 'HOLD_ONLY_ORIGINAL_REE_WINDOWS_HOST_CAN_INSTALL_OR_RUN_TEST'
     }
 }
@@ -71,14 +71,14 @@ function Assert-Installed {
 }
 
 function Write-State($state) {
-    $installed = $isWindows -and (Test-Path -LiteralPath $manifestPath -PathType Leaf)
-    $credential = $isWindows -and (Test-Path (Join-Path $base 'Receiver\ql340c-database.dpapi'))
-    $enrollment = $isWindows -and (Test-Path (Join-Path $base 'Enrollment\ql340b-signed-test-enrollment.json'))
+    $installed = $ql351WindowsHost -and (Test-Path -LiteralPath $manifestPath -PathType Leaf)
+    $credential = $ql351WindowsHost -and (Test-Path (Join-Path $base 'Receiver\ql340c-database.dpapi'))
+    $enrollment = $ql351WindowsHost -and (Test-Path (Join-Path $base 'Enrollment\ql340b-signed-test-enrollment.json'))
     [ordered]@{
         schema = $schema
         state = $state
         computer = $env:COMPUTERNAME
-        originalHost = ($isWindows -and $env:COMPUTERNAME -ceq $originalComputer)
+        originalHost = ($ql351WindowsHost -and $env:COMPUTERNAME -ceq $originalComputer)
         adapterInstalled = [bool]$installed
         existingEncryptedCredentialPresent = [bool]$credential
         originalSignedEnrollmentFilePresent = [bool]$enrollment
@@ -91,7 +91,7 @@ function Write-State($state) {
 }
 
 if ($Status -or (-not ($Install -or $Preflight -or $Readback -or $SupervisedReceiver -or $VerifyOneReceipt))) {
-    Write-State $(if ($isWindows -and $env:COMPUTERNAME -ceq $originalComputer) {
+    Write-State $(if ($ql351WindowsHost -and $env:COMPUTERNAME -ceq $originalComputer) {
         'ORIGINAL_HOST_READ_ONLY_INSPECTION' } else { 'HOLD_ORIGINAL_WINDOWS_HOST_REQUIRED' })
     exit 0
 }
