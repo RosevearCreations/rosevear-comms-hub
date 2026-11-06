@@ -85,6 +85,19 @@ export function Ql350PrivateBridgePanel(){
       </ol>
       <p>QL-353 does not overwrite the QL-351 or QL-352 staged manifests. Their checkout hashes may deliberately go stale after a new release; a later activation must be explicitly reconciled, never silently repinned. Detailed field directions: <code>docs/build-records/QL-353_ORIGINAL_OWNER_SESSION_AND_FIRST_SIGNED_TEST_RECEIPT.md</code>.</p>
     </details>
+    <details className="ql351-windows-guide ql354-owner-guide">
+      <summary>QL-354 · Ree + Jack original enrollment and first genuine TEST challenge</summary>
+      <ol>
+        <li><strong>Ree · DESKTOP-AE894KC:</strong> update a clean <code>main</code>, then run <code>.\runtimes\hub-relay\ql354-windows-owner-handoff.ps1 -Status</code>. Keep LAN Caddy up, QL-352 Tailnet gateway stopped and original receiver <code>8788</code> OFF.</li>
+        <li><strong>Jack · Templar:</strong> run the same <code>-Status</code> command in Jack’s checkout. Verify the original encrypted <em>master</em> key is still on Jack’s laptop. Ree’s encrypted <em>source</em> key stays on Ree’s machine.</li>
+        <li><strong>Both owners and separate original issuer:</strong> authenticate original issuer custody and the separate field witness independently. Review the four original evidence byte hashes, three public candidates and exact 20-minute TEST scope. Earlier QL-345 <em>review acknowledgement</em> is not enrollment consent.</li>
+        <li><strong>Ree and Jack · original local PowerShell:</strong> only after separate real approvals use <code>ql340b-ceremony.mjs --prepare</code>, <code>--inspect-request</code>, <code>--sign source</code> on Ree, <code>--sign master</code> on Jack, then <code>--assemble</code> on Ree. Transfer public request and signed approval files only; never private keys or passphrases.</li>
+        <li><strong>Ree · PowerShell:</strong> run <code>ql354-windows-owner-handoff.ps1 -InspectSigned -RequestPath … -EvidencePathsFile …</code> to verify real Ed25519 signatures and the exact original witness bytes; a successful cryptographic review still requires independently verified issuer/witness authority.</li>
+        <li><strong>Independent Supabase administrator:</strong> after verifying both external authorities and the precise original signatures, append exactly one reviewed TEST enrollment. Keep the admin login away from the Windows receiver; separately authorize only a dedicated encrypted least-privilege receiver credential.</li>
+        <li><strong>Original AI Hub device signer and private receiver:</strong> only after all gates pass, prepare one fresh 90-second, read-only device challenge, sign on the original device, supervise one TEST POST, stop the exact receiver and reconcile exactly one immutable signed receipt.</li>
+      </ol>
+      <p>This build contains <strong>server-only</strong> proof and one-shot intake/challenge functions. The public browser cannot authenticate an issuer, insert enrollment, mint a device signature, enable a database login or activate a receiver. Six apps stay <strong>DISCONNECTED / HOLD</strong> until independently authorized source tests. Exact commands: <code>docs/build-records/QL-354_ORIGINAL_CUSTODY_SIGNED_ENROLLMENT_AND_FIRST_TEST_CHALLENGE.md</code>.</p>
+    </details>
     <div className="ql350-peer-grid" aria-label="Six supervised source TEST actions">
       {QL349_PUBLIC_SOURCES.map(source=><article key={source.id}>
         <div><strong>{source.label}</strong><span>DISCONNECTED / HOLD</span></div>

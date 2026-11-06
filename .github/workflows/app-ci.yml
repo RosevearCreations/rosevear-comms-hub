@@ -85,6 +85,11 @@ jobs:
       - name: Verify QL-353 CI runner cannot observe or enroll the original device
         shell: pwsh
         run: .\runtimes\hub-relay\ql353-windows-original-readback.ps1 -Status
+      - name: Verify QL-354 original dual-owner intake and first challenge fail closed
+        run: node --test runtimes/hub-relay/ql354-original-owner-intake.test.mjs runtimes/hub-relay/ql354-windows-owner-handoff.test.mjs
+      - name: Verify QL-354 nonoriginal Windows runner cannot authorize or enroll
+        shell: pwsh
+        run: .\runtimes\hub-relay\ql354-windows-owner-handoff.ps1 -Status
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest
