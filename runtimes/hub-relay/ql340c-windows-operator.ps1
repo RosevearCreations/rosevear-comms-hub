@@ -10,6 +10,7 @@ param(
     [Parameter(ParameterSetName = 'Readback')][switch]$Readback,
     [Parameter(ParameterSetName = 'Readback')][string]$SignedPacketPath,
     [Parameter(ParameterSetName = 'OwnerPreflight')][switch]$OwnerPreflight,
+    [Parameter(ParameterSetName = 'RollbackDrill')][switch]$RollbackDrill,
     [Parameter(ParameterSetName = 'ReviewEnrollment')][switch]$ReviewEnrollment,
     [Parameter(ParameterSetName = 'ReviewEnrollment', Mandatory = $true)][string]$EvidencePathsFile,
     [Parameter(ParameterSetName = 'VerifyOneReceipt')][switch]$VerifyOneReceipt,
@@ -31,6 +32,7 @@ $serverFile = Join-Path $PSScriptRoot 'server.mjs'
 $checkFile = Join-Path $PSScriptRoot 'ql340c-activation-check.mjs'
 $privateReadbackFile = Join-Path $PSScriptRoot 'ql341-private-readback.mjs'
 $ownerReviewFile = Join-Path $PSScriptRoot 'ql342-owner-decision.mjs'
+$inertDrillFile = Join-Path $PSScriptRoot 'ql342a-rollback-drill.mjs'
 $evidenceDir = Join-Path $base 'Evidence'
 $tlsCert = Join-Path $base 'TLS\comms-ql340b.crt'
 
@@ -62,6 +64,28 @@ function Secure-OwnerDirectory {
     $grant = '{0}:(OI)(CI)F' -f $identity
     & icacls.exe $credentialDir /inheritance:r /grant:r $grant /remove:g '*S-1-1-0' '*S-1-5-32-545' | Out-Null
     if ($LASTEXITCODE -ne 0) { throw 'HOLD_PRIVATE_CREDENTIAL_ACL_FAILED' }
+}
+
+if ($RollbackDrill) {
+    # Only an inert child on a randomly selected loopback port. NEVER -Stop,
+    # -Start, a production receiver, a credential read or a Tailscale change.
+    if ($env:COMPUTERNAME -cne 'DESKTOP-AE894KC') {
+        throw 'HOLD_ORIGINAL_REE_WINDOWS_HOST_REQUIRED_FOR_DRILL'
+    }
+    if (@(Get-ReceiverListeners).Count -ne 0) {
+        throw 'HOLD_REAL_RECEIVER_MUST_BE_OFF_BEFORE_INERT_DRILL'
+    }
+    if ($env:DATABASE_URL) { throw 'HOLD_NO_DATABASE_CREDENTIAL_IN_DRILL_PROCESS' }
+    if (-not (Test-Path $evidenceDir)) {
+        throw 'HOLD_PRIVATE_EVIDENCE_DIRECTORY_MISSING'
+    }
+    $serveStatus = (& tailscale.exe serve status | Out-String)
+    if ($LASTEXITCODE -ne 0 -or $serveStatus -notmatch 'No serve config') {
+        throw 'HOLD_TAILSCALE_SERVE_MUST_REMAIN_OFF'
+    }
+    & node $inertDrillFile --run
+    if ($LASTEXITCODE -ne 0) { throw 'HOLD_INERT_ROLLBACK_DRILL_FAILED' }
+    exit 0
 }
 
 if ($OwnerPreflight) {

@@ -41,6 +41,18 @@ export function Ql342OwnerGatePanel(){
           `${readback.candidateFileCount}/3 public candidates present · ${readback.signedEnrollmentPresent?'signed enrollment file present':'signatures not locally present'} · receiver OFF`)}</span>
         <p>Imported statuses remain owner-supplied claims until independently checked on Ree’s machine. Never upload credentials or private keys.</p></div>
     </div>
+    <aside className="ql342-drill" aria-labelledby="ql342-drill-title" data-ql342a="inert-drill-offline">
+      <div><span className="ql342-tag">QL-342A · Supervised rollback drill</span>
+        <h5 id="ql342-drill-title">Rehearse a safe shutdown on Ree’s Windows PC</h5>
+        <p>Starts a separate, harmless TEST process on a temporary local-only port, checks its identity and response, stops it, and verifies that the port closes. The real receiver stays OFF.</p>
+        <code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\runtimes\hub-relay\ql340c-windows-operator.ps1 -RollbackDrill</code>
+        <p>Run from the updated repository on DESKTOP-AE894KC. Type <strong>RUN_INERT_LOOPBACK_DRILL</strong> at the prompt to approve this local drill only.</p></div>
+      <div className="ql342-drill-boundary"><h5>What the drill does not prove</h5>
+        <ul><li>It is <strong>not</strong> a stop of the real receiver on port 8788.</li>
+          <li>It does not sign the original-owner enrollment or authorize a database credential.</li>
+          <li>It does not establish a genuine six-app heartbeat or activate any connection.</li></ul>
+        <p>Save the local evidence and have Ree and Jack independently review it before any separate owner-signing ceremony. All missing trust remains <strong>HOLD</strong>.</p></div>
+    </aside>
     <footer>NO LIVE CONNECTIONS · NO CUSTOMER CALLS OR SMS · NO HOME DEVICE ACTIONS · ORIGINAL OWNERS RETAIN ALL SIGNING AUTHORITY</footer>
   </section>;
 }

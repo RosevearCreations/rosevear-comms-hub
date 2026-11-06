@@ -74,6 +74,25 @@ test('original Ree/Jack owner signatures and all four original evidence hashes v
   assert.equal(result.deviceActions,false);
 });
 
+test('valid-looking inert rollback drill remains distinct from original active receiver stop witness',()=>{
+  const rollbackRecord={schema:'rosevear.hub.ql342a.inert-rollback-drill.v1',
+    state:'INERT_LOOPBACK_PROCESS_STOPPED_OWNER_REVIEW_REQUIRED',computer:'DESKTOP-AE894KC',
+    startedAt:new Date(now-1000).toISOString(),stoppedAt:new Date(now).toISOString(),
+    stoppedInertPid:123,loopbackAddress:'127.0.0.1',loopbackPort:43012,
+    inertChildSha256:'a'.repeat(64),challengeSha256:'b'.repeat(64),
+    exactInertChallengeVerified:true,inertProcessExitObserved:true,loopbackPortClosedAfterStop:true,
+    originalReceiverStopped:false,originalReceiverPortUsed:false,databaseCredentialsRead:false,
+    originalOwnerSignaturesCreated:false,databaseEnrollmentCreated:false,
+    customerCommunications:false,deviceActions:false,connected:false};
+  const result=reviewOwnerEnrollment({enrollment,pins,candidates,evidenceDigests,
+    rollbackRecord,now});
+  assert.equal(result.inertRollbackDrillDocumentPresent,true);
+  assert.equal(result.actualReceiverStopDocumentPresent,false);
+  assert.equal(result.originalFieldWitnessStillRequired,true);
+  assert.equal(result.approved,false);
+  assert.equal(result.sourceTestAuthorized,false);
+});
+
 test('unreviewed owner, swapped master, forged evidence, expired and forged signed enrollment fail closed',()=>{
   const input={enrollment,pins,candidates,evidenceDigests,now};
   assert.match(reviewOwnerEnrollment({...input,pins:{...pins,master:pins.source}}).state,/DENY/);
