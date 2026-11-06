@@ -34,6 +34,8 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql344ReceiverOffPanel.test.tsx')
       && !line.includes('ql345-issuer-owner-preflight.test.mjs')
       && !line.includes('ql345IssuerOwnerPanel.test.tsx')
+      && !line.includes('ql346-issuer-test-readiness.test.mjs')
+      && !line.includes('ql346IssuerTrustPanel.test.tsx')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
   // SHA-256 of the 43 exact gate commands in origin/dev's pre-QL336A app-ci.yml,
@@ -104,6 +106,13 @@ test('QL-336A retains all 43 existing application checks in their original order
   assert.ok(gates.indexOf(receiverOffUiGate)<gates.indexOf(issuerGate));
   assert.ok(gates.indexOf(issuerGate)<gates.indexOf(issuerUiGate));
   assert.ok(gates.indexOf(issuerUiGate)<gates.indexOf(portalGate));
+  const verifiedIssuerGate='run_gate node --test ../runtimes/hub-relay/ql346-issuer-test-readiness.test.mjs';
+  const verifiedIssuerUiGate='run_gate npm run test -- src/operator/__tests__/ql346IssuerTrustPanel.test.tsx';
+  assert.ok(gates.includes(verifiedIssuerGate),'QL-346 original signed heartbeat and distinct owner TEST consent are required');
+  assert.ok(gates.includes(verifiedIssuerUiGate),'QL-346 read-only issuer trust and owner guidance are required');
+  assert.ok(gates.indexOf(issuerUiGate)<gates.indexOf(verifiedIssuerGate));
+  assert.ok(gates.indexOf(verifiedIssuerGate)<gates.indexOf(verifiedIssuerUiGate));
+  assert.ok(gates.indexOf(verifiedIssuerUiGate)<gates.indexOf(portalGate));
 });
 
 test('main and PR application CI retain required gate names and fail-closed dependency', () => {
@@ -132,6 +141,7 @@ test('main and PR application CI retain required gate names and fail-closed depe
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql344-off-attestation\.test\.mjs/);
   assert.match(appCi, /ql344-windows-off-observer\.ps1 -Status/);
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql345-issuer-owner-preflight\.test\.mjs/);
+  assert.match(appCi, /node --test runtimes\/hub-relay\/ql346-issuer-test-readiness\.test\.mjs/);
 });
 
 test('production parity has one push trigger; an independently runnable manual proof remains', () => {
