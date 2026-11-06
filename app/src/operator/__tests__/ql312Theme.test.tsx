@@ -26,6 +26,7 @@ describe('QL-312 shared Standard Theme controls and cross-category design',()=>{
     const shell=host.querySelector<HTMLElement>('.ql172-shell')!;
     expect(shell.getAttribute('data-ql312-density')).toBe('comfortable');
     expect(shell.getAttribute('data-ql312-contrast')).toBe('standard');
+    expect(shell.getAttribute('data-ql349-appearance')).toBe('dark');
     expect(host.querySelector('[data-ql312-controls="true"]')).not.toBeNull();
     expect(host.querySelector('.ql172-status')?.textContent).toContain('DISABLED PREVIEW');
     expect(host.textContent).toContain('No live integrations');
@@ -37,12 +38,15 @@ describe('QL-312 shared Standard Theme controls and cross-category design',()=>{
     const shell=host.querySelector<HTMLElement>('.ql172-shell')!;
     expect(shell.dataset.ql312Density).toBe('compact');
     expect(shell.dataset.ql312Contrast).toBe('high');
-    expect(host.querySelector<HTMLButtonElement>('.ql312-choice button[aria-pressed="true"]')?.textContent).toBe('Compact');
-    expect([...host.querySelectorAll<HTMLButtonElement>('.ql312-choice button[aria-pressed="true"]')].map(button=>button.textContent)).toEqual(['Compact','High']);
+    expect(shell.dataset.ql349Appearance).toBe('dark');
+    expect([...host.querySelectorAll<HTMLButtonElement>('.ql312-choice button[aria-pressed="true"]')].some(button=>button.textContent==='Compact')).toBe(true);
+    expect([...host.querySelectorAll<HTMLButtonElement>('.ql312-choice button[aria-pressed="true"]')].map(button=>button.textContent)).toEqual(['Dark','Compact','High']);
     expect(window.localStorage.length).toBe(0);
     await choose('Comfortable');await choose('Standard');
     expect(shell.dataset.ql312Density).toBe('comfortable');
     expect(shell.dataset.ql312Contrast).toBe('standard');
+    await choose('Light');expect(shell.dataset.ql349Appearance).toBe('light');
+    await choose('Dark');expect(shell.dataset.ql349Appearance).toBe('dark');
   });
 
   it('explains six named colours and the three text-described permission-safe status types',async()=>{
@@ -53,7 +57,7 @@ describe('QL-312 shared Standard Theme controls and cross-category design',()=>{
     expect(help.querySelectorAll('.ql312-chip')).toHaveLength(3);
     expect(help.textContent).toContain('DISCONNECTED / HOLD');
     expect(help.textContent).toContain('UNDER REVIEW');
-    expect(help.textContent).toContain('Neither control enables an integration');
+    expect(help.textContent).toContain('No display control enables an integration');
   });
 
   it('keeps the same theme controls across each of the six active command categories',async()=>{

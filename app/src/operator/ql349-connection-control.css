@@ -1,0 +1,19 @@
+.ql349-control{display:grid;gap:16px;margin:16px 0 20px;padding:clamp(17px,2.3vw,27px);border:1px solid #477995;border-radius:20px;background:radial-gradient(circle at 100% 0,#21517555,transparent 50%),linear-gradient(138deg,#0a1b2c,#132d41 67%,#242446);color:#edf9ff;box-shadow:0 14px 30px #02091733}
+.ql349-control header{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.ql349-control header small{color:#81deed;font-size:.74rem;letter-spacing:.11em;text-transform:uppercase;font-weight:900}
+.ql349-control h4{margin:5px 0 7px;font-size:clamp(1.15rem,2vw,1.55rem);color:#fff}
+.ql349-control p{line-height:1.5;color:#c5d9e9;margin:0}
+.ql349-hold,.ql349-grid article span{display:inline-flex;padding:7px 10px;align-items:center;border:1px solid #ae8544;border-radius:99px;background:#524025;color:#ffe5ac;font-size:.74rem;font-weight:900}
+.ql349-actionbar{display:flex;align-items:center;flex-wrap:wrap;gap:13px;padding:13px;border:1px solid #466c89;background:#0d273c;border-radius:14px}
+.ql349-actionbar button{border:1px solid #60d7e6;border-radius:10px;min-height:44px;padding:10px 16px;background:#087d9e;color:#fff;font-weight:900;cursor:pointer}
+.ql349-actionbar button:hover:not(:disabled){background:#149fc3}.ql349-actionbar button:disabled{opacity:.62;cursor:wait}
+.ql349-actionbar p{font-size:.82rem;flex:1;min-width:220px}
+.ql349-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(235px,100%),1fr));gap:11px}
+.ql349-grid article{min-width:0;border:1px solid #426986;border-radius:14px;padding:14px;display:grid;gap:9px;background:linear-gradient(145deg,#19364b,#11273c)}
+.ql349-grid article>div{display:flex;align-items:start;justify-content:space-between;gap:9px;flex-wrap:wrap}
+.ql349-grid strong{color:#f5fbff}.ql349-grid small{color:#b4ccdc;overflow-wrap:anywhere}.ql349-grid p{font-size:.8rem}
+.ql349-grid .ql349-revision{color:#90e3ec}
+.ql349-next{padding:14px;border-left:4px solid #46c4dc;border-radius:10px;background:#0c2437;display:grid;gap:6px}
+.ql349-next strong{color:#9be5ef}.ql349-next p{font-size:.83rem}
+.ql349-control footer{font-size:.71rem;color:#aebfd0;border-top:1px solid #476884;padding-top:12px}
+@media (prefers-reduced-motion:reduce){.ql349-control *{transition:none!important}}

@@ -110,7 +110,7 @@ import { type Ql244Ledger } from './ql244WitnessedHandshake';
 import { Ql245SixAppEvidence } from './Ql245SixAppEvidence';
 import { Ql270Connections } from './Ql270Connections';
 import {ql311FilteredSections,ql311NavigationSections,ql311SectionForWorkspace,type Ql311SectionId} from './ql311Navigation';
-import {Ql312ThemeControls, type Ql312Contrast, type Ql312Density} from './Ql312ThemeControls';
+import {Ql312ThemeControls, type Ql312Contrast, type Ql312Density, type Ql349Appearance} from './Ql312ThemeControls';
 import { Ql271CommandSurfaces, type Ql271CommandMode } from './Ql271CommandSurfaces';
 import { type Ql245Ledger } from './ql245SixAppEvidence';
 import { seedQueueForOrganization, type MockQueueState } from './ql194WorkQueue';
@@ -120,6 +120,7 @@ import type { Ql183Feedback } from './ql183OperatorUsabilityAcceptance';
 import './operator-shell.css';
 import './ql312-theme.css';
 import './ql313-responsive.css';
+import './ql349-dark-appearance.css';
 
 const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; description: string }> = [
   { id: 'accessibility_review', label: 'Accessibility owner walkthrough', description: 'Device-by-device keyboard, focus, contrast, zoom and screen-reader review queue' },
@@ -197,6 +198,7 @@ export function OperatorShell() {
   const [navigationSearch,setNavigationSearch] = useState('');
   const [themeDensity,setThemeDensity] = useState<Ql312Density>('comfortable');
   const [themeContrast,setThemeContrast] = useState<Ql312Contrast>('standard');
+  const [appearance,setAppearance] = useState<Ql349Appearance>('dark');
   const [mobileNavigationOpen,setMobileNavigationOpen] = useState(false);
   const [expandedSections,setExpandedSections]=useState<ReadonlySet<Ql311SectionId>>(()=>new Set(['front_end']));
   const [contactJump, setContactJump] = useState<string | null>(null);
@@ -345,7 +347,7 @@ export function OperatorShell() {
   }, []);
 
   return (
-    <div className="ql172-shell" data-organization={organization.id} data-ql191-release="ql191-four-organization-console-v2" data-ql270-shell="categorized" data-ql271-command={commandWorkspace?'true':'false'} data-ql312-density={themeDensity} data-ql312-contrast={themeContrast} data-ql313-nav-open={mobileNavigationOpen?'true':'false'}>
+    <div className="ql172-shell" data-organization={organization.id} data-ql191-release="ql191-four-organization-console-v2" data-ql270-shell="categorized" data-ql271-command={commandWorkspace?'true':'false'} data-ql312-density={themeDensity} data-ql312-contrast={themeContrast} data-ql349-appearance={appearance} data-ql313-nav-open={mobileNavigationOpen?'true':'false'}>
       <a className="ql172-skip-link" href="#ql172-workspace">Skip to operator workspace</a>
       <header className="ql172-header">
         <div>
@@ -421,7 +423,7 @@ export function OperatorShell() {
         </aside>
 
         <main id="ql172-workspace" tabIndex={-1} className="ql172-main" aria-label="Selected operator workspace">
-          <Ql312ThemeControls density={themeDensity} onDensityChange={setThemeDensity} contrast={themeContrast} onContrastChange={setThemeContrast} />
+          <Ql312ThemeControls density={themeDensity} onDensityChange={setThemeDensity} contrast={themeContrast} onContrastChange={setThemeContrast} appearance={appearance} onAppearanceChange={setAppearance} />
           <details className="ql313-responsive-help"><summary>ⓘ Phone, tablet, zoom & table navigation help</summary>
             <p>At tablet or phone widths, use <strong>Browse workspaces</strong> to reveal the business and category menu. Choose a workspace to return to its heading, or use <strong>Done browsing</strong> / Escape to close the menu. The current business, search and display choices remain available when the screen rotates or reflows.</p>
             <p>Wide evidence tables scroll horizontally <em>inside their own card</em>; swipe within the table or use Shift + mouse wheel. No action is hidden behind the table edge. Browser zoom from 200–400% is encouraged for readability review, but simulated viewport checks are not proof of physical owner-device acceptance.</p>
