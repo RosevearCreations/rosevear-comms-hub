@@ -8,7 +8,7 @@ The existing QL-345 review acknowledgement states explicitly that it **does not*
 
 ## Original device signature (offline; no network)
 
-On Ree's original `DESKTOP-AE894KC`, in the **Rosevear AI Hub** project, the already-enrolled local private signing key can produce a 90-second outbound-only TEST proof, with the existing interactive protected-key process:
+On Ree's original `DESKTOP-AE894KC`, in the **Rosevear AI Hub** project, the existing locally protected signing key (not yet independently enrolled for the Comms Hub) can produce a 90-second outbound-only TEST proof through the existing interactive protected-key process:
 
 ```powershell
 node .\scripts\ql339b-windows-signer.mjs --sign-once
