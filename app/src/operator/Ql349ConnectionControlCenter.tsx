@@ -15,7 +15,9 @@ export function Ql349ConnectionControlCenter(){
     finally{setBusy(false);}
   }
   const checked=observations.length;
-  const discovered=observations.filter(s=>s.state==='PUBLIC_MANIFEST_FOUND_TRUST_HELD').length;
+  const discovered=observations.filter(s=>s.state==='PUBLIC_MANIFEST_FOUND_TRUST_HELD'||
+    s.state==='PUBLIC_MANIFEST_FOUND_UNPINNED_TRUST_HELD').length;
+  const unpinned=observations.filter(s=>s.state==='PUBLIC_MANIFEST_FOUND_UNPINNED_TRUST_HELD').length;
   return <section className="ql349-control" aria-labelledby="ql349-title" data-ql349="public-discovery-private-test-held">
     <header><div><small>QL-349 · Connection Control Plane</small>
       <h4 id="ql349-title">One hub, six source contracts, no repeated key entry</h4>
@@ -24,7 +26,7 @@ export function Ql349ConnectionControlCenter(){
     <div className="ql349-actionbar"><button type="button" disabled={busy}
       onClick={refresh}>{busy?'Checking source contracts…':'Refresh six source contracts'}</button>
       <p role="status">{busy?'Checking immutable main-commit descriptors in order…':
-        checked?`${discovered}/6 public descriptors found · 0 authenticated private connections · no source writes`:
+        checked?`${discovered}/6 public descriptors found${unpinned?` (${unpinned} unpinned: GitHub API rate-limited)`:''} · 0 authenticated private connections · no source writes`:
           'No public source refresh in this session. Existing private status remains HOLD.'}</p></div>
     <div className="ql349-grid" aria-label="Per-application connection verification">
       {QL349_PUBLIC_SOURCES.map(source=>{
@@ -34,6 +36,10 @@ export function Ql349ConnectionControlCenter(){
           <small>RosevearCreations/{source.repo}</small>
           <p>{result?.state==='PUBLIC_MANIFEST_FOUND_TRUST_HELD'?
             'Published descriptor found · original signer and TEST receipt not verified':
+            result?.state==='PUBLIC_MANIFEST_FOUND_UNPINNED_TRUST_HELD'?
+              'Public manifest found · API rate-limited, revision not pinned · signer still HOLD':
+            result?.state==='PUBLIC_API_RATE_LIMIT_HELD'?
+              'GitHub API rate-limited · raw manifest unavailable · retry later':
             result?.state==='PUBLIC_MANIFEST_INCOMPATIBLE_HELD'?'Manifest mismatch · independent review required':
             result?'Public descriptor unavailable · hold and retry later':
             'Awaiting public contract recheck · private handshake not observed'}</p>
