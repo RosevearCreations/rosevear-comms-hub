@@ -23,6 +23,7 @@ import {QL290_OBSERVED_AT,QL290_PUBLIC_SOURCE_RECHECK,ql290PinnedProofUrl} from 
 import {Ql339PortalJourneys} from './Ql339PortalJourneys';
 import {Ql341PrivateConnectionDashboard} from './Ql341PrivateConnectionDashboard';
 import {Ql342OwnerGatePanel} from './Ql342OwnerGatePanel';
+import {Ql349ConnectionControlCenter} from './Ql349ConnectionControlCenter';
 import './ql270-connections.css';
 
 export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspace)=>void}){
@@ -90,6 +91,7 @@ export function Ql270Connections({onNavigate}:{onNavigate:(view:OperatorWorkspac
       <article><span>Live pilot holds</span><strong>12 <small>/ 12</small></strong><div className="ql270-meter ql270-meter-alert"><i style={{width:'100%'}}/></div><small>Calls, messaging and dispatch OFF</small></article>
     </div>
 
+    <Ql349ConnectionControlCenter />
     <Ql341PrivateConnectionDashboard />
     <Ql342OwnerGatePanel />
     <Ql339PortalJourneys />

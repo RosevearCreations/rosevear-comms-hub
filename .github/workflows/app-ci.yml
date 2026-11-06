@@ -66,6 +66,8 @@ jobs:
         run: node --test runtimes/hub-relay/ql347-custody-handoff.test.mjs
       - name: Verify QL-348 one TEST receipt and six-peer diagnostics remain read-only
         run: node --test runtimes/hub-relay/ql348-supervised-test-diagnostics.test.mjs
+      - name: Verify QL-349 six-source TEST orchestration and independent failure recovery
+        run: node --test runtimes/hub-relay/ql349-six-peer-orchestrator.test.mjs
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest

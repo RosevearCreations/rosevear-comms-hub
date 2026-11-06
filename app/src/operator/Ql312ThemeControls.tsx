@@ -1,5 +1,6 @@
 export type Ql312Density = 'comfortable' | 'compact';
 export type Ql312Contrast = 'standard' | 'high';
+export type Ql349Appearance = 'dark' | 'light';
 
 const categorySwatches = [
   { name: 'Front End / Operator', tone: 'cyan' },
@@ -10,16 +11,23 @@ const categorySwatches = [
   { name: 'System Status', tone: 'rose' }
 ] as const;
 
-export function Ql312ThemeControls({ density, onDensityChange, contrast, onContrastChange }: {
+export function Ql312ThemeControls({ density, onDensityChange, contrast, onContrastChange, appearance, onAppearanceChange }: {
   density: Ql312Density;
   onDensityChange: (next: Ql312Density) => void;
   contrast: Ql312Contrast;
   onContrastChange: (next: Ql312Contrast) => void;
+  appearance: Ql349Appearance;
+  onAppearanceChange: (next: Ql349Appearance) => void;
 }) {
   return <section className="ql312-toolbar" aria-label="Standard theme display controls" data-ql312-controls="true">
     <div className="ql312-brand-mark" aria-hidden="true">◈</div>
-    <div className="ql312-toolbar-intro"><strong>Standard Theme</strong><small>QL-312 · visual controls · this session only</small></div>
+    <div className="ql312-toolbar-intro"><strong>Operations Command Theme</strong><small>QL-349 · dark by default · this session only</small></div>
     <div className="ql312-toolbar-actions">
+      <div className="ql312-choice" role="group" aria-label="Appearance">
+        <span>Appearance</span>
+        <button type="button" aria-pressed={appearance === 'dark'} onClick={() => onAppearanceChange('dark')}>Dark</button>
+        <button type="button" aria-pressed={appearance === 'light'} onClick={() => onAppearanceChange('light')}>Light</button>
+      </div>
       <div className="ql312-choice" role="group" aria-label="Card density">
         <span>Cards</span>
         <button type="button" aria-pressed={density === 'comfortable'} onClick={() => onDensityChange('comfortable')}>Comfortable</button>
@@ -42,7 +50,7 @@ export function Ql312ThemeControls({ density, onDensityChange, contrast, onContr
         <span className="ql312-chip ql312-chip-hold">DISCONNECTED / HOLD · no live connection</span>
         <span className="ql312-chip ql312-chip-review">UNDER REVIEW · evidence not approved</span>
       </div>
-      <p>Comfortable and Compact only change visual spacing. High contrast increases visible borders and focus. Neither control enables an integration, saves a preference, or counts as an owner device test. Use browser zoom for 200–400% readability checks.</p>
+      <p>Dark and Light change appearance only; Dark is the default. Comfortable and Compact change spacing. High contrast increases visible borders and focus. No display control enables an integration or counts as an owner device test. Use browser zoom for 200–400% readability checks.</p>
       <p>Optional Supabase admin login remains off and is not needed for the public six-app proof handoff. The QL-311 technical configuration help above the application explains any missing <code>VITE_</code> values; leave them unset until separately approved.</p>
     </details>
   </section>;
