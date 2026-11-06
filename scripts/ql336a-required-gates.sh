@@ -70,4 +70,6 @@ run_gate node --test ../runtimes/hub-relay/ql343-owner-evidence-review.test.mjs
 run_gate npm run test -- src/operator/__tests__/ql343OwnerEvidencePanel.test.tsx
 run_gate node --test ../runtimes/hub-relay/ql344-off-attestation.test.mjs
 run_gate npm run test -- src/operator/__tests__/ql344ReceiverOffPanel.test.tsx
+run_gate node --test ../runtimes/hub-relay/ql345-issuer-owner-preflight.test.mjs
+run_gate npm run test -- src/operator/__tests__/ql345IssuerOwnerPanel.test.tsx
 run_gate node --test ../runtimes/client-portal/journey.test.mjs

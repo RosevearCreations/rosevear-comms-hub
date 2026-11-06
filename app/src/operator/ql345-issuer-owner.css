@@ -1,0 +1,10 @@
+.ql345{display:grid;gap:14px;border:1px solid #738ea9;border-radius:18px;padding:clamp(16px,2vw,24px);background:linear-gradient(135deg,#172a3b,#263c58 55%,#393659);color:#edf7ff}
+.ql345 header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:15px}.ql345 header small{font-size:.74rem;color:#c9d6ff;font-weight:850;letter-spacing:.07em;text-transform:uppercase}
+.ql345 h5{color:#fff;font-size:1.2rem;margin:7px 0}.ql345 h6{color:#fff;font-size:.93rem;margin:0 0 8px}.ql345 p{font-size:.83rem;line-height:1.53;color:#deebf8;margin:8px 0}
+.ql345 header strong{border:1px solid #e8b276;border-radius:99px;background:#5b4337;color:#ffe6c2;font-size:.73rem;padding:9px 12px;align-self:start}
+.ql345-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0;list-style:none;margin:0}.ql345-grid li{background:#20394d;border:1px solid #67859b;border-radius:12px;padding:13px}
+.ql345-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.ql345-actions>div{background:#11283c;border:1px solid #7890ad;border-radius:12px;padding:14px;min-width:0}
+.ql345 code{display:block;background:#071c2d;border:1px solid #748ba4;border-radius:9px;color:#cbecff;overflow-wrap:anywhere;font-size:.74rem;padding:10px;margin:9px 0}
+.ql345 label{display:block;font-weight:750;font-size:.84rem;margin:0 0 7px}.ql345 input{background:#243e55;border:1px solid #adc2dc;border-radius:8px;color:white;padding:8px;max-width:100%}
+.ql345-status{color:#ffe0a1!important;font-weight:750}.ql345 footer{border-top:1px solid #6989a2;padding-top:11px;font-size:.71rem;letter-spacing:.04em;color:#cee0ee}
+.ql345 :focus-visible{outline:3px solid #bde7ff;outline-offset:3px}@media(max-width:800px){.ql345-grid,.ql345-actions{grid-template-columns:1fr}}
