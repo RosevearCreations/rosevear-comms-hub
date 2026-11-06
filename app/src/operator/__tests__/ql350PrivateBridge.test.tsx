@@ -52,6 +52,9 @@ it('never sends private credentials or source URLs and uses same-origin only',as
 
 it('public disabled preview offers guidance, not active TEST dispatch',async()=>{
   expect(host.querySelectorAll('.ql350-peer-grid article')).toHaveLength(6);
+  expect(host.querySelector('.ql351-windows-guide summary')?.textContent).toContain('QL-351');
+  expect(host.textContent).toContain('ql351-windows-private-adapter.ps1');
+  expect(host.textContent).toContain('Jack’s separate laptop');
   expect([...host.querySelectorAll<HTMLButtonElement>('.ql350-peer-grid button')]
     .every(b=>b.disabled)).toBe(true);
   vi.stubGlobal('fetch',vi.fn(async()=>({ok:false,status:404,redirected:false})));

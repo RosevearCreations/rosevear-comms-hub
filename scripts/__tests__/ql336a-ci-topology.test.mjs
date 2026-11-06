@@ -37,6 +37,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql346-issuer-test-readiness.test.mjs')
       && !line.includes('ql346IssuerTrustPanel.test.tsx')
       && !line.includes('hub-relay/ql350-private-control-bridge.test.mjs')
+      && !line.includes('hub-relay/ql351-windows-private-adapter.test.mjs')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
   // SHA-256 of the 43 exact gate commands in origin/dev's pre-QL336A app-ci.yml,
@@ -117,6 +118,10 @@ test('QL-336A retains all 43 existing application checks in their original order
   const privateBridgeGate='run_gate node --test ../runtimes/hub-relay/ql350-private-control-bridge.test.mjs';
   assert.ok(gates.includes(privateBridgeGate),'QL-350 private operator and signed TEST gate is required');
   assert.ok(gates.indexOf(verifiedIssuerUiGate)<gates.indexOf(privateBridgeGate));
+  const windowsAdapterGate='run_gate node --test ../runtimes/hub-relay/ql351-windows-private-adapter.test.mjs';
+  assert.ok(gates.includes(windowsAdapterGate),'QL-351 original Windows adapter provenance and HOLD gate is required');
+  assert.ok(gates.indexOf(privateBridgeGate)<gates.indexOf(windowsAdapterGate));
+  assert.ok(gates.indexOf(windowsAdapterGate)<gates.indexOf(portalGate));
   assert.ok(gates.indexOf(privateBridgeGate)<gates.indexOf(portalGate));
 });
 
@@ -148,6 +153,8 @@ test('main and PR application CI retain required gate names and fail-closed depe
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql345-issuer-owner-preflight\.test\.mjs/);
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql346-issuer-test-readiness\.test\.mjs/);
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql350-private-control-bridge\.test\.mjs/);
+  assert.match(appCi, /node --test runtimes\/hub-relay\/ql351-windows-private-adapter\.test\.mjs/);
+  assert.match(appCi, /ql351-windows-private-adapter\.ps1 -Status/);
 });
 
 test('production parity has one push trigger; an independently runnable manual proof remains', () => {

@@ -50,6 +50,18 @@ export function Ql350PrivateBridgePanel(){
       <article><strong>3 · Original signed TEST receipt</strong><span>{status?.originalReceiptVerified?'Authentic private witness observed':'Signed device receipt HOLD'}</span></article>
       <article><strong>4 · Individual source TESTs</strong><span>Separate source-owner signature and append-only witness required</span></article>
     </div>
+    <details className="ql351-windows-guide">
+      <summary>QL-351 · Install the original Windows adapter — owner walkthrough</summary>
+      <ol>
+        <li><strong>Here in Comms Hub · I.T. / Connections:</strong> check the private bridge. A public disabled-preview HOLD is expected until the original private service is installed and authenticated.</li>
+        <li><strong>On Ree’s original Windows server · PowerShell:</strong> open the <code>rosevear-comms-hub</code> repository at clean, updated <code>main</code>; run <code>.\runtimes\hub-relay\ql351-windows-private-adapter.ps1 -Status</code>, then <code>-Install</code>. The owner must confirm staging.</li>
+        <li><strong>On Ree’s Windows server · PowerShell:</strong> run the same adapter with <code>-Preflight</code> and <code>-Readback</code>. Existing DPAPI secrets remain on the machine; a staged adapter alone does not grant TEST authority.</li>
+        <li><strong>On Jack’s separate laptop:</strong> review and independently sign the exact TEST request using the existing QL-340B ceremony. Keep his private key on his laptop.</li>
+        <li><strong>With both original approvals:</strong> complete the separate database enrollment with an independently authorized operator. Only then, on Ree’s server, use <code>-SupervisedReceiver</code>; stop and independently verify exactly one signed receipt.</li>
+        <li><strong>Back here:</strong> check the authenticated private bridge again; proceed to each application only when its own source authority and witness are independently confirmed.</li>
+      </ol>
+      <p>Installation does not turn on Tailscale Serve, send a handshake, copy signing keys, connect customers or change the other five repositories. The full field procedures are in <code>docs/build-records/QL-351_WINDOWS_ADAPTER_FIRST_TEST_OWNER_RUNBOOK.md</code> in the repository.</p>
+    </details>
     <div className="ql350-peer-grid" aria-label="Six supervised source TEST actions">
       {QL349_PUBLIC_SOURCES.map(source=><article key={source.id}>
         <div><strong>{source.label}</strong><span>DISCONNECTED / HOLD</span></div>
