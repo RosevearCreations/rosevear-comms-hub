@@ -65,6 +65,9 @@ it('public disabled preview offers guidance, not active TEST dispatch',async()=>
   expect(host.textContent).toContain('ql354-windows-owner-handoff.ps1');
   expect(host.textContent).toContain('--sign master');
   expect(host.textContent).toContain('90-second');
+  expect(host.querySelector('.ql355-authority-guide summary')?.textContent).toContain('QL-355');
+  expect(host.textContent).toContain('original issuer');
+  expect(host.textContent).toContain('separate field witness');
   expect([...host.querySelectorAll<HTMLButtonElement>('.ql350-peer-grid button')]
     .every(b=>b.disabled)).toBe(true);
   vi.stubGlobal('fetch',vi.fn(async()=>({ok:false,status:404,redirected:false})));
