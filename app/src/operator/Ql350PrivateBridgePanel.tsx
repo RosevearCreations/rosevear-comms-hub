@@ -98,6 +98,17 @@ export function Ql350PrivateBridgePanel(){
       </ol>
       <p>This build contains <strong>server-only</strong> proof and one-shot intake/challenge functions. The public browser cannot authenticate an issuer, insert enrollment, mint a device signature, enable a database login or activate a receiver. Six apps stay <strong>DISCONNECTED / HOLD</strong> until independently authorized source tests. Exact commands: <code>docs/build-records/QL-354_ORIGINAL_CUSTODY_SIGNED_ENROLLMENT_AND_FIRST_TEST_CHALLENGE.md</code>.</p>
     </details>
+    <details className="ql351-windows-guide ql355-authority-guide">
+      <summary>QL-355 · Independent issuer signature, separate owner ceremony and first private TEST acceptance</summary>
+      <ol>
+        <li><strong>Ree · original Windows server:</strong> from a clean updated <code>main</code>, run <code>.\runtimes\hub-relay\ql354-windows-owner-handoff.ps1 -Status</code>. Leave the original LAN service untouched and the private receiver OFF until authorization is proven.</li>
+        <li><strong>Jack · Templar laptop:</strong> independently run the same read-only <code>-Status</code> command on Jack’s checkout. Verify the master key never leaves his laptop and compare the exact fresh 20-minute request digest with Ree.</li>
+        <li><strong>Original independent authorities:</strong> an externally pinned original issuer and a separate field witness must each provide a genuine Ed25519 signature over the same restricted TEST enrollment digest. A screenshot, unchecked JSON flag, TLS certificate or copied public key is insufficient.</li>
+        <li><strong>Separate owner decisions:</strong> Ree signs <em>source</em> and Jack signs <em>master</em> using their local encrypted keys, only after the independent authority review. A private administrator may then perform a single append-only enrollment; no public screen can enable a database login.</li>
+        <li><strong>One original-device TEST:</strong> only a genuinely authenticated private operator and verified Tailnet transport can accept an original device-signed 90-second challenge plus exactly one matching durable PostgreSQL receipt. That is a TEST acceptance, <em>not</em> a six-app production connection.</li>
+      </ol>
+      <p><strong>Current state: DISCONNECTED / HOLD.</strong> QL-355 adds private, cryptographic verification functions and explicit fail-closed acceptance; it does not invent original signatures or alter the six HELD source grants. See <code>docs/build-records/QL-355_INDEPENDENT_ISSUER_DUAL_OWNER_AND_FIRST_PRIVATE_TEST.md</code> for the original-host and laptop handoff.</p>
+    </details>
     <div className="ql350-peer-grid" aria-label="Six supervised source TEST actions">
       {QL349_PUBLIC_SOURCES.map(source=><article key={source.id}>
         <div><strong>{source.label}</strong><span>DISCONNECTED / HOLD</span></div>

@@ -41,6 +41,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('hub-relay/ql352-tailnet-gateway.test.mjs')
       && !line.includes('hub-relay/ql353-original-owner-session.test.mjs')
       && !line.includes('hub-relay/ql354-original-owner-intake.test.mjs')
+      && !line.includes('hub-relay/ql355-independent-authority.test.mjs')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
   // SHA-256 of the 43 exact gate commands in origin/dev's pre-QL336A app-ci.yml,
@@ -173,6 +174,11 @@ test('main and PR application CI retain required gate names and fail-closed depe
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql354-original-owner-intake\.test\.mjs runtimes\/hub-relay\/ql354-windows-owner-handoff\.test\.mjs/);
   assert.match(appCi, /ql354-windows-owner-handoff\.ps1 -Status/);
   assert.match(gates, /run_gate node --test \.\.\/runtimes\/hub-relay\/ql354-original-owner-intake\.test\.mjs/);
+  const ql354Gate='run_gate node --test ../runtimes/hub-relay/ql354-original-owner-intake.test.mjs ../runtimes/hub-relay/ql354-windows-owner-handoff.test.mjs';
+  const ql355Gate='run_gate node --test ../runtimes/hub-relay/ql355-independent-authority.test.mjs';
+  assert.ok(gates.includes(ql355Gate),'QL-355 original external authority and first genuine TEST acceptance gate is required');
+  assert.ok(gates.indexOf(ql354Gate)<gates.indexOf(ql355Gate));
+  assert.match(appCi,/node --test runtimes\/hub-relay\/ql355-independent-authority\.test\.mjs/);
 });
 
 test('production parity has one push trigger; an independently runnable manual proof remains', () => {
