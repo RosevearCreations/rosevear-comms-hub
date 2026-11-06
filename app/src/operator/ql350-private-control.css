@@ -28,6 +28,12 @@
 .ql350-peer-grid small{display:block;color:#b8d1e5;min-height:2.2rem;margin:.55rem 0}
 .ql350-peer-grid button{width:100%}
 .ql350-private .ql350-note{font-size:.83rem;border-top:1px solid #446581;padding-top:1rem;margin-top:1.2rem}
+.ql351-windows-guide{border:1px solid #5285a1;border-radius:14px;background:#0a2136;padding:1rem;margin:1rem 0;color:#d7eaf8}
+.ql351-windows-guide summary{color:#a4ecf8;font-weight:800;cursor:pointer;font-size:1rem}
+.ql351-windows-guide summary:focus-visible{outline:3px solid #ffdb91;outline-offset:4px}
+.ql351-windows-guide ol{display:grid;gap:.65rem;padding-left:1.4rem;margin:1rem 0}
+.ql351-windows-guide li{line-height:1.55;color:#d1e4f3}
+.ql351-windows-guide code{color:#d7faf4;background:#193b50;padding:.12rem .3rem;border-radius:4px;overflow-wrap:anywhere}
 @media(max-width:1000px){.ql350-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:710px){.ql350-peer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:480px){.ql350-steps,.ql350-peer-grid{grid-template-columns:1fr}}

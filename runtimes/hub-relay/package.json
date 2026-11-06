@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test heartbeat.test.mjs private-receiver.test.mjs server.test.mjs owner-authority-custody.test.mjs ql340b-enrollment.test.mjs ql340c-activation-check.test.mjs ql341-private-readback.test.mjs ql342-owner-decision.test.mjs ql342a-rollback-drill.test.mjs ql343-owner-evidence-review.test.mjs ql344-off-attestation.test.mjs ql345-issuer-owner-preflight.test.mjs ql346-issuer-test-readiness.test.mjs ql347-custody-handoff.test.mjs ql348-supervised-test-diagnostics.test.mjs ql349-six-peer-orchestrator.test.mjs ql350-private-control-bridge.test.mjs",
+    "test": "node --test heartbeat.test.mjs private-receiver.test.mjs server.test.mjs owner-authority-custody.test.mjs ql340b-enrollment.test.mjs ql340c-activation-check.test.mjs ql341-private-readback.test.mjs ql342-owner-decision.test.mjs ql342a-rollback-drill.test.mjs ql343-owner-evidence-review.test.mjs ql344-off-attestation.test.mjs ql345-issuer-owner-preflight.test.mjs ql346-issuer-test-readiness.test.mjs ql347-custody-handoff.test.mjs ql348-supervised-test-diagnostics.test.mjs ql349-six-peer-orchestrator.test.mjs ql350-private-control-bridge.test.mjs ql351-windows-private-adapter.test.mjs",
     "start": "node server.mjs --serve"
   },
   "dependencies": {
