@@ -66,4 +66,6 @@ run_gate node --test ../runtimes/hub-relay/ql342-owner-decision.test.mjs
 run_gate npm run test -- src/operator/__tests__/ql342OwnerGatePanel.test.tsx
 run_gate node --test ../runtimes/hub-relay/ql342a-rollback-drill.test.mjs
 run_gate npm run test -- src/operator/__tests__/ql342aRollbackDrillPanel.test.tsx
+run_gate node --test ../runtimes/hub-relay/ql343-owner-evidence-review.test.mjs
+run_gate npm run test -- src/operator/__tests__/ql343OwnerEvidencePanel.test.tsx
 run_gate node --test ../runtimes/client-portal/journey.test.mjs
