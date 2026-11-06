@@ -4,6 +4,7 @@ import {Ql343OwnerEvidencePanel} from './Ql343OwnerEvidencePanel';
 import {Ql344ReceiverOffPanel} from './Ql344ReceiverOffPanel';
 import {Ql345IssuerOwnerPanel} from './Ql345IssuerOwnerPanel';
 import {Ql346IssuerTrustPanel} from './Ql346IssuerTrustPanel';
+import {Ql348DiagnosticsPanel} from './Ql348DiagnosticsPanel';
 import './ql342-owner-gate.css';
 
 export function Ql342OwnerGatePanel(){
@@ -61,6 +62,7 @@ export function Ql342OwnerGatePanel(){
     <Ql344ReceiverOffPanel/>
     <Ql345IssuerOwnerPanel/>
     <Ql346IssuerTrustPanel/>
+    <Ql348DiagnosticsPanel/>
     <footer>NO LIVE CONNECTIONS · NO CUSTOMER CALLS OR SMS · NO HOME DEVICE ACTIONS · ORIGINAL OWNERS RETAIN ALL SIGNING AUTHORITY</footer>
   </section>;
 }
