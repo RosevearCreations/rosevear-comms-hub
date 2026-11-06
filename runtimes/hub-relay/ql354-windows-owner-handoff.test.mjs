@@ -16,6 +16,7 @@ test('QL-354 distinct original Ree and Jack host and user identities stay mandat
   assert.match(code,/ql354-original-owner-intake\.mjs/);
 });
 test('QL-354 cannot activate a service, load credentials or grant database authority',()=>{
+  assert.doesNotMatch(code,/\$isWindows\s*=/i,'PowerShell reserves the automatic IsWindows variable');
   assert.match(code,/Get-NetTCPConnection/);
   assert.match(code,/DISCONNECTED \/ HOLD/);
   assert.match(code,/receiverActivated=\$false/);
