@@ -5,6 +5,8 @@ const script=readFileSync(new URL('./ql351-windows-private-adapter.ps1',import.m
 
 test('QL-351 staging is original-host-only, requires owner consent and never overwrites existing keys',()=>{
   assert.match(script,/DESKTOP-AE894KC/);
+  assert.match(script,/\$ql351WindowsHost/);
+  assert.doesNotMatch(script,/\$isWindows\b/i);
   assert.match(script,/Assert-OriginalHost/);
   assert.match(script,/STAGE_QL351_ORIGINAL_WINDOWS/);
   assert.match(script,/DENY_EXISTING_ADAPTER_INSTALLATION_NO_OVERWRITE/);
