@@ -47,12 +47,17 @@ jobs:
         run: node --test runtimes/hub-relay/ql340c-activation-check.test.mjs
       - name: Verify QL-341 private six-peer registry and TEST witness fail-closed
         run: node --test runtimes/hub-relay/ql341-private-readback.test.mjs
+      - name: Verify QL-342 dual-owner decision and exactly one TEST receipt safety
+        run: node --test runtimes/hub-relay/ql342-owner-decision.test.mjs
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest
       - name: Verify QL-340C receiver remains offline without real owner approvals
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -Status
+      - name: Verify QL-342 original Windows owner preflight stays read-only
+        shell: pwsh
+        run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -OwnerPreflight
       - name: Inspect missing keys without generating authority or network access
         run: node runtimes/hub-relay/owner-authority-custody.mjs --inspect
 

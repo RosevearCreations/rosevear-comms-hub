@@ -8,7 +8,13 @@ param(
     [Parameter(ParameterSetName = 'Stop')][switch]$Stop,
     [Parameter(ParameterSetName = 'SelfTest')][switch]$SelfTest,
     [Parameter(ParameterSetName = 'Readback')][switch]$Readback,
-    [Parameter(ParameterSetName = 'Readback')][string]$SignedPacketPath
+    [Parameter(ParameterSetName = 'Readback')][string]$SignedPacketPath,
+    [Parameter(ParameterSetName = 'OwnerPreflight')][switch]$OwnerPreflight,
+    [Parameter(ParameterSetName = 'ReviewEnrollment')][switch]$ReviewEnrollment,
+    [Parameter(ParameterSetName = 'ReviewEnrollment', Mandatory = $true)][string]$EvidencePathsFile,
+    [Parameter(ParameterSetName = 'VerifyOneReceipt')][switch]$VerifyOneReceipt,
+    [Parameter(ParameterSetName = 'VerifyOneReceipt', Mandatory = $true)][string]$OriginalPacketPath,
+    [Parameter(ParameterSetName = 'VerifyOneReceipt', Mandatory = $true)][string]$OwnerReviewPath
 )
 
 $ErrorActionPreference = 'Stop'
@@ -24,6 +30,7 @@ $enrollmentFile = Join-Path $base 'Enrollment\ql340b-signed-test-enrollment.json
 $serverFile = Join-Path $PSScriptRoot 'server.mjs'
 $checkFile = Join-Path $PSScriptRoot 'ql340c-activation-check.mjs'
 $privateReadbackFile = Join-Path $PSScriptRoot 'ql341-private-readback.mjs'
+$ownerReviewFile = Join-Path $PSScriptRoot 'ql342-owner-decision.mjs'
 $evidenceDir = Join-Path $base 'Evidence'
 $tlsCert = Join-Path $base 'TLS\comms-ql340b.crt'
 
@@ -55,6 +62,45 @@ function Secure-OwnerDirectory {
     $grant = '{0}:(OI)(CI)F' -f $identity
     & icacls.exe $credentialDir /inheritance:r /grant:r $grant /remove:g '*S-1-1-0' '*S-1-5-32-545' | Out-Null
     if ($LASTEXITCODE -ne 0) { throw 'HOLD_PRIVATE_CREDENTIAL_ACL_FAILED' }
+}
+
+if ($OwnerPreflight) {
+    $result = & node $ownerReviewFile --preflight
+    if ($LASTEXITCODE -ne 0) { throw 'HOLD_PRIVATE_OWNER_PREFLIGHT_NOT_VERIFIED' }
+    $record = $result | ConvertFrom-Json
+    $record | Add-Member -NotePropertyName computer -NotePropertyValue $env:COMPUTERNAME
+    $record | Add-Member -NotePropertyName localListenerCount -NotePropertyValue @(Get-ReceiverListeners).Count
+    $record | ConvertTo-Json -Compress -Depth 5
+    exit 0
+}
+
+if ($ReviewEnrollment) {
+    if (@(Get-ReceiverListeners).Count -ne 0) { throw 'HOLD_RECEIVER_MUST_REMAIN_OFF_DURING_REVIEW' }
+    if (-not (Test-Path $EvidencePathsFile)) { throw 'HOLD_ORIGINAL_FIELD_EVIDENCE_PATHS_REQUIRED' }
+    & node $ownerReviewFile --review $EvidencePathsFile
+    if ($LASTEXITCODE -ne 0) { throw 'HOLD_ORIGINAL_OWNER_DECISION_NOT_VERIFIED' }
+    exit 0
+}
+
+if ($VerifyOneReceipt) {
+    if (@(Get-ReceiverListeners).Count -ne 0) { throw 'HOLD_STOP_RECEIVER_BEFORE_RECEIPT_READBACK' }
+    if (-not (Test-Path $credentialFile)) { throw 'HOLD_PRIVATE_DATABASE_CREDENTIAL_REQUIRED' }
+    if (-not (Test-Path $OriginalPacketPath) -or -not (Test-Path $OwnerReviewPath)) {
+        throw 'HOLD_ORIGINAL_SIGNED_PACKET_AND_REVIEW_REQUIRED'
+    }
+    Secure-OwnerDirectory
+    $secure = (Get-Content -Raw $credentialFile).Trim() | ConvertTo-SecureString
+    $pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
+    try { $env:DATABASE_URL = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer) }
+    finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer) }
+    try {
+        & node $ownerReviewFile --verify-one $OriginalPacketPath $OwnerReviewPath
+        if ($LASTEXITCODE -ne 0) { throw 'HOLD_EXACT_ONE_ORIGINAL_SIGNED_TEST_RECEIPT_REQUIRED' }
+    } finally {
+        Remove-Item Env:DATABASE_URL -ErrorAction SilentlyContinue
+        $secure.Dispose()
+    }
+    exit 0
 }
 
 if ($SelfTest) {
