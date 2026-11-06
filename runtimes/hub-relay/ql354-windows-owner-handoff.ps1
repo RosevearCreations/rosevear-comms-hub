@@ -8,9 +8,9 @@ param(
     [Parameter(ParameterSetName='InspectSigned',Mandatory=$true)][string]$EvidencePathsFile
 )
 $ErrorActionPreference='Stop'
-$isWindows=$env:OS -eq 'Windows_NT' -and -not [string]::IsNullOrEmpty($env:LOCALAPPDATA)
-$ree=$isWindows -and $env:COMPUTERNAME -ieq 'DESKTOP-AE894KC' -and $env:USERNAME -ieq 'Ree'
-$jack=$isWindows -and $env:COMPUTERNAME -ieq 'Templar' -and $env:USERNAME -ieq 'jfros'
+$ql354OnWindows=$env:OS -eq 'Windows_NT' -and -not [string]::IsNullOrEmpty($env:LOCALAPPDATA)
+$ree=$ql354OnWindows -and $env:COMPUTERNAME -ieq 'DESKTOP-AE894KC' -and $env:USERNAME -ieq 'Ree'
+$jack=$ql354OnWindows -and $env:COMPUTERNAME -ieq 'Templar' -and $env:USERNAME -ieq 'jfros'
 
 function Read-Hold($state,$properties=@{}) {
     $result=[ordered]@{
