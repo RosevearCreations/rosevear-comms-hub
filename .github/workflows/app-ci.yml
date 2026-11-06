@@ -51,6 +51,8 @@ jobs:
         run: node --test runtimes/hub-relay/ql342-owner-decision.test.mjs
       - name: Verify QL-342A inert Windows loopback shutdown and review safety
         run: node --test runtimes/hub-relay/ql342a-rollback-drill.test.mjs
+      - name: Verify QL-343 original public evidence and independent signing review boundaries
+        run: node --test runtimes/hub-relay/ql343-owner-evidence-review.test.mjs
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest
