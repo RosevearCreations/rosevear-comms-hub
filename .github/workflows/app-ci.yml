@@ -80,6 +80,11 @@ jobs:
       - name: Verify QL-352 CI runner can only perform inert status readback
         shell: pwsh
         run: .\runtimes\hub-relay\ql352-windows-tailnet-gateway.ps1 -Status
+      - name: Verify QL-353 original-owner private session and exactly one genuine receipt gate
+        run: node --test runtimes/hub-relay/ql353-original-owner-session.test.mjs runtimes/hub-relay/ql353-windows-original-readback.test.mjs
+      - name: Verify QL-353 CI runner cannot observe or enroll the original device
+        shell: pwsh
+        run: .\runtimes\hub-relay\ql353-windows-original-readback.ps1 -Status
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest

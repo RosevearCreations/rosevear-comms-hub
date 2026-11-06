@@ -39,6 +39,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('hub-relay/ql350-private-control-bridge.test.mjs')
       && !line.includes('hub-relay/ql351-windows-private-adapter.test.mjs')
       && !line.includes('hub-relay/ql352-tailnet-gateway.test.mjs')
+      && !line.includes('hub-relay/ql353-original-owner-session.test.mjs')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
   // SHA-256 of the 43 exact gate commands in origin/dev's pre-QL336A app-ci.yml,
@@ -127,6 +128,10 @@ test('QL-336A retains all 43 existing application checks in their original order
   assert.ok(gates.includes(tailnetGatewayGate),'QL-352 private Tailnet transport-only HOLD gate is required');
   assert.ok(gates.indexOf(windowsAdapterGate)<gates.indexOf(tailnetGatewayGate));
   assert.ok(gates.indexOf(tailnetGatewayGate)<gates.indexOf(portalGate));
+  const ownerSessionGate='run_gate node --test ../runtimes/hub-relay/ql353-original-owner-session.test.mjs ../runtimes/hub-relay/ql353-windows-original-readback.test.mjs';
+  assert.ok(gates.includes(ownerSessionGate),'QL-353 original owner session and first receipt verification gate is required');
+  assert.ok(gates.indexOf(tailnetGatewayGate)<gates.indexOf(ownerSessionGate));
+  assert.ok(gates.indexOf(ownerSessionGate)<gates.indexOf(portalGate));
   assert.ok(gates.indexOf(privateBridgeGate)<gates.indexOf(portalGate));
 });
 
@@ -162,6 +167,8 @@ test('main and PR application CI retain required gate names and fail-closed depe
   assert.match(appCi, /ql351-windows-private-adapter\.ps1 -Status/);
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql352-tailnet-gateway\.test\.mjs runtimes\/hub-relay\/ql352-windows-tailnet-gateway\.test\.mjs/);
   assert.match(appCi, /ql352-windows-tailnet-gateway\.ps1 -Status/);
+  assert.match(appCi, /node --test runtimes\/hub-relay\/ql353-original-owner-session\.test\.mjs runtimes\/hub-relay\/ql353-windows-original-readback\.test\.mjs/);
+  assert.match(appCi, /ql353-windows-original-readback\.ps1 -Status/);
 });
 
 test('production parity has one push trigger; an independently runnable manual proof remains', () => {
