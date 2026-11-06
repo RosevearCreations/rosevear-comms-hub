@@ -26,7 +26,12 @@ independently enrolled. Nothing in QL-349 rotates, extracts or recreates them.
    is schema/identity/scope checked, size bounded, nonsecret, GET-only and
    fail-closed. It does not edit a repository, send a private GET or mark a
    source `CONNECTED`. It is a live public metadata refresh, not a signed
-   handshake or a private database readback.
+   handshake or a private database readback. If GitHub's shared anonymous API
+   returns HTTP 403/429, it falls back to six explicit `main` raw-file reads.
+   Those are displayed as **found but unpinned**, never as immutable SHA-pinned
+   or independently trusted records. This field fallback addresses the real
+   60-requests-per-hour public API exhaustion observed during production QA;
+   the source signer and all six private connections stay HOLD.
 3. Private Node `ql349-six-peer-orchestrator.mjs`: an exact six-source registry,
    strict HELD private peer queue, and a one-operation-at-a-time TEST executor.
    Its required callbacks must be supplied by an independently authorized
