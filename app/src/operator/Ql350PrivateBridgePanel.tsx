@@ -179,6 +179,17 @@ export function Ql350PrivateBridgePanel(){
       </ol>
       <p>See <code>docs/build-records/QL-361_ARCHIVED_ORIGINAL_TEST_CHAIN_REDACTION_AUDIT_AND_SIX_APP_HANDOFF.md</code>. Production release GREEN remains separate from the private original connection HOLD.</p>
     </details>
+    <details className="ql351-windows-guide ql362-source-owner-guide">
+      <summary>QL-362 · Per-source owner signatures, one approved private GET and six-app HOLD safety</summary>
+      <ol>
+        <li><strong>Both original Windows owners:</strong> on a clean updated <code>main</code>, run <code>.\runtimes\hub-relay\ql362-windows-source-owner-handoff.ps1 -Status</code>. The result is read-only and cannot approve a source.</li>
+        <li><strong>Ree-only original handoff:</strong> after a genuine QL-361 signed auditor handoff, use <code>-CandidateReadback -HandoffId ql361-...json -SourceId yw</code> (or one exact listed source). Jack cannot read Ree's owner-ACL folder.</li>
+        <li><strong>Independent trust check:</strong> private runtime rehashes both original archive and QL-361 handoff, rechecks six HELD peers, one real original signed receipt, no revocations, restricted receiver role and a fresh receiver-OFF observation.</li>
+        <li><strong>One offline exact request:</strong> validate a separately signed Ed25519 source-owner approval and a different pinned master-owner approval bound to the same fresh 90-second source/commit/manifest/origin and GET-only intent.</li>
+        <li><strong>One private GET maximum:</strong> require a durable unique operation claim, pinned signed source manifest, private TLS/no-redirect sender, strictly redacted health response, independent signed source receipt and immutable witness readback. Any failure ends on HOLD without automatic retry.</li>
+      </ol>
+      <p><strong>No persistent connection is granted.</strong> All six sources remain <code>DISCONNECTED / HOLD</code> even after a valid one-source health-only GET. See <code>docs/build-records/QL-362_SOURCE_OWNER_OFFLINE_AUTHORIZATION_AND_FIRST_GET_GATE.md</code>.</p>
+    </details>
     <div className="ql350-peer-grid" aria-label="Six supervised source TEST actions">
       {QL349_PUBLIC_SOURCES.map(source=><article key={source.id}>
         <div><strong>{source.label}</strong><span>DISCONNECTED / HOLD</span></div>
