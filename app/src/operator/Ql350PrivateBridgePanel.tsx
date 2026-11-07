@@ -190,6 +190,16 @@ export function Ql350PrivateBridgePanel(){
       </ol>
       <p><strong>No persistent connection is granted.</strong> All six sources remain <code>DISCONNECTED / HOLD</code> even after a valid one-source health-only GET. See <code>docs/build-records/QL-362_SOURCE_OWNER_OFFLINE_AUTHORIZATION_AND_FIRST_GET_GATE.md</code>.</p>
     </details>
+    <details className="ql351-windows-guide ql363-source-compatibility-guide">
+      <summary>QL-363 · Six-source signed health compatibility and independent private GET closeout</summary>
+      <ol>
+        <li><strong>Each source shell:</strong> publish a separately signed, TEST-only health contract matching the exact source ID, tenant boundary, immutable commit, independently pinned manifest, and <code>GET /api/integration/v1/shell/health</code>. A manifest alone is not permission.</li>
+        <li><strong>Private server:</strong> authenticate each of the six original source signer pins separately, verify the protected six-HELD-peer readback and obtain an independent TLS certificate pin for the chosen source.</li>
+        <li><strong>After actual QL-362 dual-owner approval:</strong> one private GET returns only the bounded health-only JSON body and its source-signed receipt. Redirects, excess fields, invalid signatures, expired scope and automatic retries are denied.</li>
+        <li><strong>Independent closure:</strong> reread the immutable original QL-362 source/master approval and witness, confirm Ree's receiver and Tailnet gateway are OFF, verify six peers remain HELD, and require a distinct independently signed closeout.</li>
+      </ol>
+      <p><strong>No simulated success changes connection status.</strong> A genuine signed source TEST still leaves every application <code>DISCONNECTED / HOLD</code> pending its own connection and tenant approval. See <code>docs/build-records/QL-363_SIX_SOURCE_HEALTH_SIGNED_RECEIPTS_AND_INDEPENDENT_TEST_CLOSURE.md</code>.</p>
+    </details>
     <div className="ql350-peer-grid" aria-label="Six supervised source TEST actions">
       {QL349_PUBLIC_SOURCES.map(source=><article key={source.id}>
         <div><strong>{source.label}</strong><span>DISCONNECTED / HOLD</span></div>
