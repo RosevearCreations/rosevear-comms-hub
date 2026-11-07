@@ -8,6 +8,9 @@ import {consumeQl359VerifiedCloseoutForArchive} from './ql359-supervised-private
 import {validateSixHeldPeers} from './ql341-private-readback.mjs';
 
 export const QL360_SCHEMA='rosevear.hub.ql360.original-private-evidence-archive.v1';
+// Private, process-local one-use proof. A copied successful JSON response or
+// a hash of a file is never an authenticated QL-361 archive capability.
+const verifiedArchives=new WeakMap();
 const SHA=/^[a-f0-9]{64}$/;
 const sha=value=>createHash('sha256').update(canonicalize(value)).digest('hex');
 const held=(state,extra={})=>({schema:QL360_SCHEMA,state,
@@ -99,13 +102,33 @@ export async function archiveQl360OriginalPostTestEvidence({closeout,query,
       canonicalize(check.evidence)!==canonicalize(evidence)||
       sha(check.evidence)!==evidenceSha256)
       return held('HOLD_ATOMIC_ORIGINAL_ARCHIVE_READBACK_NOT_VERIFIED');
-    return held('ORIGINAL_PRIVATE_TEST_ARCHIVE_VERIFIED_ALL_SIX_PEERS_STILL_HELD',{
+    const result=Object.freeze(held('ORIGINAL_PRIVATE_TEST_ARCHIVE_VERIFIED_ALL_SIX_PEERS_STILL_HELD',{
       authenticatedOriginalArchive:true,timeBoundShutdownWitnessVerified:true,
       exactOneImmutableReceiptVerified:true,sixPeersHeldVerified:true,
       exportedEvidenceCount:6,archiveAccepted:true,
       archiveId:stored.archiveId,evidenceSha256,
-      nextAction:'Keep six integrations HELD until each source independently authorizes its own scoped signed TEST'});
+      nextAction:'Keep six integrations HELD until each source independently authorizes its own scoped signed TEST'}));
+    verifiedArchives.set(result,{archiveId:stored.archiveId,evidenceSha256,
+      sessionId:authentic.sessionId,transcriptSha256:authentic.transcriptSha256,
+      witnessSpkiSha256:authentic.independentWitnessPinSha256,
+      archivedAt:now});
+    return result;
   }catch{return held('HOLD_PRIVATE_ORIGINAL_EVIDENCE_READBACK_OR_ARCHIVE_UNAVAILABLE');}
+}
+
+/** QL-361 consumes only a genuinely verified, unexpired original archive.
+ * The proof cannot be serialized into a queue or transmitted to a browser.
+ * It is deleted on first use, including failed downstream audit attempts. */
+export function consumeQl360VerifiedArchiveForAudit({archive,now=Date.now()}={}){
+  if(!Number.isFinite(now)||!archive||!verifiedArchives.has(archive))return null;
+  const proof=verifiedArchives.get(archive);
+  verifiedArchives.delete(archive);
+  if(now<proof.archivedAt||now-proof.archivedAt>600_000||
+    archive.archiveAccepted!==true||archive.connected!==false||
+    archive.connectedCount!==0||archive.exportedEvidenceCount!==6||
+    archive.archiveId!==proof.archiveId||archive.evidenceSha256!==proof.evidenceSha256)
+    return null;
+  return Object.freeze({...proof});
 }
 
 export function ql360Cli(args=process.argv.slice(2)){
