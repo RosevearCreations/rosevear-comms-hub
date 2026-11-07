@@ -134,6 +134,11 @@ jobs:
       - name: Verify QL-365A nonoriginal Windows CI cannot prepare, sign, assemble or enroll
         shell: pwsh
         run: node runtimes/hub-relay/ql365a-first-time-trust-cli.mjs --status
+      - name: Verify QL-365B dual original-key review receipts, external independent decisions and supervised TEST HOLD
+        run: node --test runtimes/hub-relay/ql365b-original-reconciliation.test.mjs
+      - name: Verify QL-365B nonoriginal Windows CI remains inert and cannot review or reconcile
+        shell: pwsh
+        run: node runtimes/hub-relay/ql365b-original-review-cli.mjs --status
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest
