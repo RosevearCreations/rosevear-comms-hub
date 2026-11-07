@@ -144,6 +144,11 @@ jobs:
       - name: Verify QL-365C nonoriginal Windows CI cannot enroll reviewer or initiate TEST
         shell: pwsh
         run: node runtimes/hub-relay/ql365c-original-preflight-cli.mjs --status
+      - name: Verify QL-365D original dual-owner one-source signatures and six-app handoff fail closed
+        run: node --test runtimes/hub-relay/ql365d-first-test-ceremony.test.mjs
+      - name: Verify QL-365D nonoriginal Windows CI cannot prepare signatures or authorize TEST
+        shell: pwsh
+        run: node runtimes/hub-relay/ql365d-original-test-cli.mjs --status
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest
