@@ -109,6 +109,18 @@ export function Ql350PrivateBridgePanel(){
       </ol>
       <p><strong>Current state: DISCONNECTED / HOLD.</strong> QL-355 adds private, cryptographic verification functions and explicit fail-closed acceptance; it does not invent original signatures or alter the six HELD source grants. See <code>docs/build-records/QL-355_INDEPENDENT_ISSUER_DUAL_OWNER_AND_FIRST_PRIVATE_TEST.md</code> for the original-host and laptop handoff.</p>
     </details>
+    <details className="ql351-windows-guide ql356-field-guide">
+      <summary>QL-356 · Ree/Jack original field request, issuer-pin custody and one genuine TEST receipt</summary>
+      <ol>
+        <li><strong>Ree · DESKTOP-AE894KC:</strong> the observed source key and local LAN listener are present; signed enrollment, approved pins, receiver credential and genuine receipt are absent. Run <code>.\runtimes\hub-relay\ql356-windows-field-handoff.ps1 -Status</code> after updating a clean <code>main</code>.</li>
+        <li><strong>Jack · Templar:</strong> his separate master encrypted key and public candidate are present; no owner decision was signed. Run the same <code>-Status</code> on Jack’s original account.</li>
+        <li><strong>Public-only handoff:</strong> after locating Ree’s four original witness files and coordinating a short review window, Ree can deliberately run <code>-PrepareUnsigned -EvidencePathsFile … -RequestPath …</code>. This creates an unsigned 20-minute TEST request only; it never approves enrollment.</li>
+        <li><strong>Both owners:</strong> use <code>-ReviewRequest -RequestPath …</code> on their own devices. The tool checks the precise original local public candidate and reviewed digest; only Ree can additionally check the four original witness file bytes. Do not send private keys, passphrases or DPAPI files.</li>
+        <li><strong>Independent original issuer and field witness:</strong> both must authenticate their externally pinned Ed25519 identities and sign the same scoped request digest before Ree and Jack sign their individual owner decisions. Until then, original receiver <code>8788</code> stays OFF.</li>
+        <li><strong>First genuine TEST acceptance:</strong> only after real dual-owner approval and private enrollment may a supervised original-device signature, authenticated private operator and one immutable PostgreSQL receipt be accepted. All six source apps remain <code>DISCONNECTED / HOLD</code>.</li>
+      </ol>
+      <p>QL-356 does not create an issuer, sign for Ree or Jack, alter firewall/database credentials, start Caddy, enable the receiver, or turn a public request into trust. The exact PowerShell handoff and STOP checks are in <code>docs/build-records/QL-356_ORIGINAL_ISSUER_PIN_CUSTODY_FIELD_EXECUTION.md</code>.</p>
+    </details>
     <div className="ql350-peer-grid" aria-label="Six supervised source TEST actions">
       {QL349_PUBLIC_SOURCES.map(source=><article key={source.id}>
         <div><strong>{source.label}</strong><span>DISCONNECTED / HOLD</span></div>
