@@ -117,6 +117,11 @@ jobs:
       - name: Verify QL-360 nonoriginal Windows CI cannot export private original evidence
         shell: pwsh
         run: .\runtimes\hub-relay\ql360-windows-evidence-export.ps1 -Status
+      - name: Verify QL-361 archived chain, independently signed redaction audit and six-source hold handoff
+        run: node --test runtimes/hub-relay/ql361-archived-chain-audit.test.mjs runtimes/hub-relay/ql361-windows-private-handoff.test.mjs
+      - name: Verify QL-361 CI/Jack observer cannot read the private original Ree archive
+        shell: pwsh
+        run: .\runtimes\hub-relay\ql361-windows-owner-audit.ps1 -Status
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest
