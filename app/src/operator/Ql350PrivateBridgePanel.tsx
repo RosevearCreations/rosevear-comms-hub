@@ -133,6 +133,18 @@ export function Ql350PrivateBridgePanel(){
       </ol>
       <p>QL-357 preserves existing LAN Caddy, keeps customer/device actions disabled, and never runs its private administrator callback from the browser. See <code>docs/build-records/QL-357_ORIGINAL_OWNER_ENROLLMENT_PRIVATE_RECEIVER_AND_FIRST_CROSS_DEVICE_TEST.md</code>.</p>
     </details>
+    <details className="ql351-windows-guide ql358-field-guide">
+      <summary>QL-358 · Original field verifier, restricted receiver credential and first live TEST reconciliation</summary>
+      <ol>
+        <li><strong>Both Windows owners:</strong> update a clean <code>main</code> and run <code>.\runtimes\hub-relay\ql358-windows-original-field.ps1 -Status</code>. Ree's original source and Jack's separate master candidates exist, but neither is independent issuer approval.</li>
+        <li><strong>Outside original authority:</strong> an already independently pinned issuer and separate field witness authenticate original custody and sign the same fresh 20-minute one-device TEST digest. Without this, do not sign the owner request or enable the receiver.</li>
+        <li><strong>Ree and Jack compare their actual public candidates:</strong> after Ree prepares a fresh unsigned QL-356 request, each runs QL-358 <code>-ReviewRequest -RequestPath …</code>. Ree additionally supplies <code>-EvidencePathsFile …</code> to verify the original four witness bytes; Jack does not import those files.</li>
+        <li><strong>Separate signed decisions:</strong> only after independent custody approvals, Ree signs source and Jack independently signs master using the protected QL-340B ceremony. Ree assembles and runs <code>-ReviewSigned -SignedRequestPath … -SignedEvidencePathsFile …</code>.</li>
+        <li><strong>Dedicated private credential:</strong> one original administrator authenticates the exact signed database enrollment and separately provisions restricted <code>ql340c_private_receiver</code>. Ree runs <code>-CredentialHandoff</code> for a HOLD/readiness readback; only the existing local QL-340C hidden prompt may encrypt the subsequently approved URL with Ree-current-user DPAPI.</li>
+        <li><strong>One genuine TEST receipt:</strong> after <code>-ReceiverReadback</code>, authenticated TLS/Tailnet and one original-device-signed 90-second TEST, Ree stops the exact supervised receiver and uses <code>-VerifyReceipt</code>. Exactly one immutable DB receipt is required; all six app peers remain <code>DISCONNECTED / HOLD</code>.</li>
+      </ol>
+      <p>The QL-358 private runtime uses nonserializable one-use tickets and never generates trust, credentials, or a real TEST in CI. Exact Ree/Jack commands and STOP conditions: <code>docs/build-records/QL-358_ORIGINAL_AUTHORITY_CREDENTIAL_AND_FIRST_LIVE_TEST.md</code>.</p>
+    </details>
     <div className="ql350-peer-grid" aria-label="Six supervised source TEST actions">
       {QL349_PUBLIC_SOURCES.map(source=><article key={source.id}>
         <div><strong>{source.label}</strong><span>DISCONNECTED / HOLD</span></div>
