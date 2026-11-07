@@ -121,6 +121,18 @@ export function Ql350PrivateBridgePanel(){
       </ol>
       <p>QL-356 does not create an issuer, sign for Ree or Jack, alter firewall/database credentials, start Caddy, enable the receiver, or turn a public request into trust. The exact PowerShell handoff and STOP checks are in <code>docs/build-records/QL-356_ORIGINAL_ISSUER_PIN_CUSTODY_FIELD_EXECUTION.md</code>.</p>
     </details>
+    <details className="ql351-windows-guide ql357-activation-guide">
+      <summary>QL-357 · Original-owner enrollment, authenticated private receiver and one real cross-device TEST receipt</summary>
+      <ol>
+        <li><strong>Ree · original server:</strong> update a clean <code>main</code> and run <code>.\runtimes\hub-relay\ql357-windows-owner-activation.ps1 -Status</code>. Jack runs the same command separately on <strong>Templar</strong>. Public candidate and encrypted-key presence are not approvals.</li>
+        <li><strong>Original issuer and separate field witness:</strong> independently authenticate their previously approved public pins and actual custody; both sign the same fresh TEST request digest. Ree and Jack then separately sign their own source/master decisions without exchanging private keys.</li>
+        <li><strong>Ree reviews signatures:</strong> use <code>-ReviewSigned -RequestPath … -EvidencePathsFile …</code> after the real QL-340B ceremony. Until both owner signatures and original witness bytes verify, stop.</li>
+        <li><strong>Private database administrator:</strong> QL-357 can execute one original append-only enrollment only through an authenticated administrator transaction and a nonserializable QL-355 permit. Live database enrollment and receiver credential are still absent; do not grant LOGIN or fabricate a row.</li>
+        <li><strong>Ree checks the approved receiver:</strong> only after actual enrollment and a separately provisioned limited DPAPI credential, run <code>-PrivateReadback</code> while receiver <code>8788</code> is OFF. Separate private-session and Tailnet authentication must then pass before one supervised TEST.</li>
+        <li><strong>First signed TEST receipt:</strong> once the original AI Hub device signs one fresh 90-second health-only challenge, the receiver is stopped and Ree uses <code>-VerifyReceipt -OriginalPacketPath … -OwnerReviewPath …</code>. Exactly one matching immutable database receipt is mandatory. All six app grants stay <code>DISCONNECTED / HOLD</code>.</li>
+      </ol>
+      <p>QL-357 preserves existing LAN Caddy, keeps customer/device actions disabled, and never runs its private administrator callback from the browser. See <code>docs/build-records/QL-357_ORIGINAL_OWNER_ENROLLMENT_PRIVATE_RECEIVER_AND_FIRST_CROSS_DEVICE_TEST.md</code>.</p>
+    </details>
     <div className="ql350-peer-grid" aria-label="Six supervised source TEST actions">
       {QL349_PUBLIC_SOURCES.map(source=><article key={source.id}>
         <div><strong>{source.label}</strong><span>DISCONNECTED / HOLD</span></div>

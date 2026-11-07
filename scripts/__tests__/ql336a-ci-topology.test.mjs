@@ -43,6 +43,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('hub-relay/ql354-original-owner-intake.test.mjs')
       && !line.includes('hub-relay/ql355-independent-authority.test.mjs')
       && !line.includes('hub-relay/ql356-original-field-readback.test.mjs')
+      && !line.includes('hub-relay/ql357-original-activation.test.mjs')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
   // SHA-256 of the 43 exact gate commands in origin/dev's pre-QL336A app-ci.yml,
@@ -185,6 +186,11 @@ test('main and PR application CI retain required gate names and fail-closed depe
   assert.ok(gates.indexOf(ql355Gate)<gates.indexOf(ql356Gate));
   assert.match(appCi,/node --test runtimes\/hub-relay\/ql356-original-field-readback\.test\.mjs runtimes\/hub-relay\/ql356-windows-field-handoff\.test\.mjs/);
   assert.match(appCi,/ql356-windows-field-handoff\.ps1 -Status/);
+  const ql357Gate='run_gate node --test ../runtimes/hub-relay/ql357-original-activation.test.mjs ../runtimes/hub-relay/ql357-windows-owner-activation.test.mjs';
+  assert.ok(gates.includes(ql357Gate),'QL-357 genuine original enrollment private readiness and one TEST receipt gate is required');
+  assert.ok(gates.indexOf(ql356Gate)<gates.indexOf(ql357Gate));
+  assert.match(appCi,/node --test runtimes\/hub-relay\/ql357-original-activation\.test\.mjs runtimes\/hub-relay\/ql357-windows-owner-activation\.test\.mjs/);
+  assert.match(appCi,/ql357-windows-owner-activation\.ps1 -Status/);
 });
 
 test('production parity has one push trigger; an independently runnable manual proof remains', () => {
