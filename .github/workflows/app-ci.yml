@@ -127,6 +127,8 @@ jobs:
       - name: Verify QL-362 CI cannot read source handoff or run unattended source GET
         shell: pwsh
         run: .\runtimes\hub-relay\ql362-windows-source-owner-handoff.ps1 -Status
+      - name: Verify QL-363 six independently source-signed health contracts, exact receipt adapters and immutable closeout
+        run: node --test runtimes/hub-relay/ql363-six-source-health-adapters.test.mjs
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest
