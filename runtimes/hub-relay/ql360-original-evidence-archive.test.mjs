@@ -16,12 +16,14 @@ import {inspectQl358OriginalFieldAndEnrollment,
 import {QL359_CLOSEOUT_ATTESTATION,
   reconcileQl359SupervisedPrivateTest} from './ql359-supervised-private-closeout.mjs';
 import {archiveQl360OriginalPostTestEvidence,ql360Cli} from './ql360-original-evidence-archive.mjs';
+import {buildQl361RedactionReport,QL361_AUDIT_SCHEMA,
+  verifyQl361ArchivedTestAndPrepareHandoff} from './ql361-archived-chain-audit.mjs';
 
 const now=Date.parse('2026-11-07T04:00:00.000Z');
 const sha=data=>createHash('sha256').update(data).digest('hex');
 const canonSha=value=>sha(canonicalize(value));
 const keys={device:generateKeyPairSync('ed25519'),original_issuer:generateKeyPairSync('ed25519'),
-  field_witness:generateKeyPairSync('ed25519')};
+  field_witness:generateKeyPairSync('ed25519'),redaction_auditor:generateKeyPairSync('ed25519')};
 const ree=createOwnerAuthorityCandidate({role:'source',keyId:'ql360-test-ree',passphrase:'synthetic-ree-only'});
 const jack=createOwnerAuthorityCandidate({role:'master',keyId:'ql360-test-jack',passphrase:'synthetic-jack-only'});
 const device={schema:'rosevear.hub.ql339b.public-candidate.v1',
@@ -194,4 +196,110 @@ test('QL-360 creates redacted original-only six-app evidence with hash-verified 
   assert.equal(result.connectedCount,0);
   assert.equal(result.customerCommunications,false);
   assert.equal(result.deviceActions,false);
+});
+
+const originalStoppedRecheck=async({sessionId,transcriptSha256})=>({
+  state:'ORIGINAL_REE_ALL_PRIVATE_RECEIVERS_OFF_RECHECK',
+  originalComputer:'DESKTOP-AE894KC',originalUser:'Ree',sessionId,
+  transcriptSha256,receiverListenerCount:0,tailnetGatewayListenerCount:0,
+  observedAt:now+4_000});
+const pendingCandidateStore=()=>{
+  let copy=null;
+  return {
+    writeOriginalPrivateHandoff:async({handoff,handoffSha256,mode})=>{
+      assert.equal(mode,'OWNER_ONLY_CREATE_NEW');
+      assert.equal(canonSha(handoff),handoffSha256);
+      assert.equal(handoff.candidates.length,6);
+      assert.equal(handoff.connectedCount,0);
+      assert.equal(handoff.candidates.every(x=>!x.sourceTestAuthorized),true);
+      copy=JSON.parse(JSON.stringify(handoff));
+      assert.doesNotMatch(JSON.stringify(copy),/UNTRUSTED_SECRET_MARKER|person@example\.invalid/);
+      return {state:'ORIGINAL_REE_QL361_HANDOFF_WRITTEN_NEW',
+        originalComputer:'DESKTOP-AE894KC',originalUser:'Ree',
+        ownerOnlyAcl:true,atomicCreateNew:true,handoffId:'ql361-candidate-archive-1',
+        sha256:handoffSha256};
+    },
+    readOriginalPrivateHandoff:async()=>({
+      state:'ORIGINAL_REE_QL361_HANDOFF_READBACK_VERIFIED',
+      originalComputer:'DESKTOP-AE894KC',originalUser:'Ree',
+      ownerOnlyAcl:true,handoffId:'ql361-candidate-archive-1',
+      sha256:canonSha(copy),handoff:copy}),
+    readCopy:()=>copy
+  };
+};
+async function auditedOriginalArchive(){
+  const closeout=await verifiedCloseout();
+  const store=privateArchive();
+  const originalArchive=await archiveQl360OriginalPostTestEvidence({closeout,
+    query,observeOriginalShutdown:shutdown,...store,now:now+3_000});
+  assert.equal(originalArchive.archiveAccepted,true,originalArchive.state);
+  const report=buildQl361RedactionReport({archiveId:originalArchive.archiveId,
+    archiveSha256:originalArchive.evidenceSha256,
+    peers:peers.map(p=>({peerId:p.peer_id,kind:p.peer_kind,repository:p.source_repo}))});
+  const reportSha256=canonSha(report);
+  const auditAttestation=signed('redaction_auditor',QL361_AUDIT_SCHEMA,{
+    audience:'rosevear-comms-hub:original-archive:TEST',
+    scope:'independent-redaction-review-owner-handoff-only',
+    archiveId:originalArchive.archiveId,
+    archiveSha256:originalArchive.evidenceSha256,
+    redactionReportSha256:reportSha256},60_000);
+  const candidateStore=pendingCandidateStore();
+  return {originalArchive,query,readOriginalPrivateArchive:store.readOriginalPrivateArchive,
+    observeOriginalShutdown:originalStoppedRecheck,
+    auditAttestation,resolvePinnedAuthority:authorities.resolvePinnedAuthority,
+    verifyIndependentCustody:authorities.verifyIndependentCustody,
+    ...candidateStore,candidateStore,now:now+5_000};
+}
+
+test('QL-361 refuses forged archive claims, missing trust callbacks, and changed original archive bytes',async()=>{
+  assert.match((await verifyQl361ArchivedTestAndPrepareHandoff()).state,/ORIGINAL_READBACK/);
+  const input=await auditedOriginalArchive();
+  assert.match((await verifyQl361ArchivedTestAndPrepareHandoff({
+    ...input,originalArchive:{...input.originalArchive}})).state,/UNREPLAYED/);
+  const result=await verifyQl361ArchivedTestAndPrepareHandoff({...input,
+    readOriginalPrivateArchive:async()=>({ownerOnlyAcl:false})});
+  assert.match(result.state,/ARCHIVE_BYTES_CHANGED/);
+  assert.match((await verifyQl361ArchivedTestAndPrepareHandoff(input)).state,/UNREPLAYED/);
+});
+
+test('QL-361 denies live receiver, absent signed auditor or stale original archive capability',async()=>{
+  const active=await auditedOriginalArchive();
+  assert.match((await verifyQl361ArchivedTestAndPrepareHandoff({...active,
+    observeOriginalShutdown:async()=>({receiverListenerCount:1})})).state,/STOP_RECHECK/);
+  const unsigned=await auditedOriginalArchive();
+  assert.match((await verifyQl361ArchivedTestAndPrepareHandoff({...unsigned,
+    auditAttestation:{...unsigned.auditAttestation,signature:'A'.repeat(86)}})).state,/SIGNED_REDACTION_AUDIT/);
+  const stale=await auditedOriginalArchive();
+  assert.match((await verifyQl361ArchivedTestAndPrepareHandoff({
+    ...stale,now:now+700_000})).state,/UNREPLAYED/);
+});
+
+test('QL-361 rechecks one immutable receipt and six HELD peers, with independent signed redaction audit',async()=>{
+  const input=await auditedOriginalArchive();
+  const result=await verifyQl361ArchivedTestAndPrepareHandoff(input);
+  assert.equal(result.ownerControlledHandoffVerified,true,result.state);
+  assert.equal(result.archivedOriginalChainVerified,true);
+  assert.equal(result.independentRedactionAuditVerified,true);
+  assert.equal(result.candidateCount,6);
+  assert.equal(result.connected,false);
+  assert.equal(result.databaseWrites,0);
+  const handoff=input.candidateStore.readCopy();
+  assert.equal(handoff.auditAttestation.payload.role,'redaction_auditor');
+  assert.equal(handoff.candidates.every(p=>p.state==='AWAITING_INDEPENDENT_SOURCE_OWNER_SIGNATURE'),true);
+  assert.equal(handoff.candidates.every(p=>p.customerDataAllowed===false),true);
+  assert.equal(handoff.nextAction,'SIX_SEPARATE_SOURCE_OWNER_SIGNED_TEST_DECISIONS_REQUIRED');
+  assert.match((await verifyQl361ArchivedTestAndPrepareHandoff(input)).state,/UNREPLAYED/);
+});
+
+test('QL-361 refuses drifted database receipt counts and private handoff write/readback claims',async()=>{
+  const drift=await auditedOriginalArchive();
+  const out=await verifyQl361ArchivedTestAndPrepareHandoff({...drift,
+    query:async sql=>sql.includes('count(receipt_id)')?{rows:[{count:2}]}:query(sql)});
+  assert.match(out.state,/PEER_DRIFT/);
+  const badStore=await auditedOriginalArchive();
+  assert.match((await verifyQl361ArchivedTestAndPrepareHandoff({...badStore,
+    writeOriginalPrivateHandoff:async()=>({ownerOnlyAcl:false})})).state,/CANDIDATE_WRITE/);
+  const badReadback=await auditedOriginalArchive();
+  assert.match((await verifyQl361ArchivedTestAndPrepareHandoff({...badReadback,
+    readOriginalPrivateHandoff:async()=>({sha256:'0'.repeat(64)})})).state,/READBACK_CHANGED/);
 });

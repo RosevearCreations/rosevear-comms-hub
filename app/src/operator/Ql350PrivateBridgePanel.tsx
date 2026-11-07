@@ -168,6 +168,17 @@ export function Ql350PrivateBridgePanel(){
       </ol>
       <p>See <code>docs/build-records/QL-360_ORIGINAL_PRIVATE_TRUST_ARCHIVE_SHUTDOWN_AND_SIX_APP_EXPORT.md</code>. No browser control grants live original trust or exports secrets.</p>
     </details>
+    <details className="ql351-windows-guide ql361-audit-guide">
+      <summary>QL-361 · Original TEST chain, independent redaction audit and six-app owner handoff</summary>
+      <ol>
+        <li><strong>Both original Windows owners:</strong> from a clean <code>main</code>, run <code>.\runtimes\hub-relay\ql361-windows-owner-audit.ps1 -Status</code>. This is a local HOLD readback, never an issuer or owner signature.</li>
+        <li><strong>Ree original machine only:</strong> after a genuine QL-359 signed TEST and QL-360 owner-only archive, use <code>-ArchiveDigest -ArchiveId ql360-...json</code> to inspect the claimed archival hash. Jack cannot read Ree's protected folder.</li>
+        <li><strong>Independent redaction auditor:</strong> a separately pinned and authenticated Ed25519 auditor must verify the exact allowlisted six-app archive report, then sign its time-limited digest. No self-selected key or copied JSON passes.</li>
+        <li><strong>Fresh chain readback:</strong> the private server rechecks the owner-only archive hash, authenticated restricted database role, one immutable TEST receipt, zero revocations, six unchanged HELD peers and the receiver still OFF.</li>
+        <li><strong>Ree private handoff:</strong> six offline application candidates are stored create-new with current-user Windows ACL and digest readback. All still require each source owner's separate signed TEST authorization. No user messages, devices, database writes or external connections are enabled.</li>
+      </ol>
+      <p>See <code>docs/build-records/QL-361_ARCHIVED_ORIGINAL_TEST_CHAIN_REDACTION_AUDIT_AND_SIX_APP_HANDOFF.md</code>. Production release GREEN remains separate from the private original connection HOLD.</p>
+    </details>
     <div className="ql350-peer-grid" aria-label="Six supervised source TEST actions">
       {QL349_PUBLIC_SOURCES.map(source=><article key={source.id}>
         <div><strong>{source.label}</strong><span>DISCONNECTED / HOLD</span></div>
