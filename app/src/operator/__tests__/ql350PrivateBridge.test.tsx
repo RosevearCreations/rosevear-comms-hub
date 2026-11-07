@@ -85,6 +85,8 @@ it('public disabled preview offers guidance, not active TEST dispatch',async()=>
   expect(host.querySelector('.ql362-source-owner-guide summary')?.textContent).toContain('QL-362');
   expect(host.textContent).toContain('ql362-windows-source-owner-handoff.ps1');
   expect(host.textContent).toContain('All six sources remain');
+  expect(host.querySelector('.ql363-source-compatibility-guide summary')?.textContent).toContain('QL-363');
+  expect(host.textContent).toContain('QL-363_SIX_SOURCE_HEALTH');
   expect(host.textContent).toContain('-CredentialHandoff');
   expect(host.textContent).toContain('ql340c_private_receiver');
   expect(host.textContent).toContain('-PrepareUnsigned');
