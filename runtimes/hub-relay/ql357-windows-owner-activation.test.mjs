@@ -12,6 +12,11 @@ test('QL-357 Windows guide binds original Ree and independent Jack to distinct l
   assert.match(script,/DENY_JACK_CANNOT_EXECUTE_ORIGINAL_REE_PRIVATE_ACTION/);
 });
 
+test('QL-357 does not assign PowerShell 7 automatic read-only IsWindows variable',()=>{
+  assert.doesNotMatch(script,/\$IsWindows\s*=/i);
+  assert.match(script,/\$ql357OnWindows=/);
+});
+
 test('QL-357 only reads original signed proof and current-user DPAPI via protected preexisting operators',()=>{
   assert.match(script,/ql354-windows-owner-handoff\.ps1/);
   assert.match(script,/-InspectSigned/);

@@ -13,9 +13,9 @@ param(
     [Parameter(ParameterSetName='VerifyReceipt',Mandatory=$true)][string]$OwnerReviewPath
 )
 $ErrorActionPreference='Stop'
-$isWindows=$env:OS -eq 'Windows_NT' -and -not [string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)
-$ree=$isWindows -and $env:COMPUTERNAME -ieq 'DESKTOP-AE894KC' -and $env:USERNAME -ieq 'Ree'
-$jack=$isWindows -and $env:COMPUTERNAME -ieq 'Templar' -and $env:USERNAME -ieq 'jfros'
+$ql357OnWindows=$env:OS -eq 'Windows_NT' -and -not [string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)
+$ree=$ql357OnWindows -and $env:COMPUTERNAME -ieq 'DESKTOP-AE894KC' -and $env:USERNAME -ieq 'Ree'
+$jack=$ql357OnWindows -and $env:COMPUTERNAME -ieq 'Templar' -and $env:USERNAME -ieq 'jfros'
 function Write-Hold($state,$extra=@{}) {
     $result=[ordered]@{
         schema='rosevear.hub.ql357.windows-owner-activation.v1'
