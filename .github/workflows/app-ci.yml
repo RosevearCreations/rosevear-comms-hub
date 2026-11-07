@@ -107,6 +107,11 @@ jobs:
       - name: Verify QL-358 nonoriginal Windows CI remains inert and credential-free
         shell: pwsh
         run: .\runtimes\hub-relay\ql358-windows-original-field.ps1 -Status
+      - name: Verify QL-359 original authority, witnessed receiver STOP and signed TEST closeout
+        run: node --test runtimes/hub-relay/ql359-supervised-private-closeout.test.mjs runtimes/hub-relay/ql359-windows-supervised-test.test.mjs
+      - name: Verify QL-359 nonoriginal Windows CI cannot provision or execute a private TEST
+        shell: pwsh
+        run: .\runtimes\hub-relay\ql359-windows-supervised-test.ps1 -Status
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest
