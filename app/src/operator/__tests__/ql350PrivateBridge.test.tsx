@@ -70,6 +70,9 @@ it('public disabled preview offers guidance, not active TEST dispatch',async()=>
   expect(host.textContent).toContain('separate field witness');
   expect(host.querySelector('.ql356-field-guide summary')?.textContent).toContain('QL-356');
   expect(host.textContent).toContain('ql356-windows-field-handoff.ps1');
+  expect(host.querySelector('.ql357-activation-guide summary')?.textContent).toContain('QL-357');
+  expect(host.textContent).toContain('ql357-windows-owner-activation.ps1');
+  expect(host.textContent).toContain('-PrivateReadback');
   expect(host.textContent).toContain('-PrepareUnsigned');
   expect([...host.querySelectorAll<HTMLButtonElement>('.ql350-peer-grid button')]
     .every(b=>b.disabled)).toBe(true);

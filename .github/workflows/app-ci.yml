@@ -97,6 +97,11 @@ jobs:
       - name: Verify QL-356 nonoriginal Windows runner is inert
         shell: pwsh
         run: .\runtimes\hub-relay\ql356-windows-field-handoff.ps1 -Status
+      - name: Verify QL-357 original signed enrollment private receiver and one cross-device TEST gate
+        run: node --test runtimes/hub-relay/ql357-original-activation.test.mjs runtimes/hub-relay/ql357-windows-owner-activation.test.mjs
+      - name: Verify QL-357 nonoriginal Windows CI cannot enroll or activate
+        shell: pwsh
+        run: .\runtimes\hub-relay\ql357-windows-owner-activation.ps1 -Status
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest

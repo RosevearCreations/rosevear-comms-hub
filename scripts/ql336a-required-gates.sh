@@ -81,4 +81,5 @@ run_gate node --test ../runtimes/hub-relay/ql353-original-owner-session.test.mjs
 run_gate node --test ../runtimes/hub-relay/ql354-original-owner-intake.test.mjs ../runtimes/hub-relay/ql354-windows-owner-handoff.test.mjs
 run_gate node --test ../runtimes/hub-relay/ql355-independent-authority.test.mjs
 run_gate node --test ../runtimes/hub-relay/ql356-original-field-readback.test.mjs ../runtimes/hub-relay/ql356-windows-field-handoff.test.mjs
+run_gate node --test ../runtimes/hub-relay/ql357-original-activation.test.mjs ../runtimes/hub-relay/ql357-windows-owner-activation.test.mjs
 run_gate node --test ../runtimes/client-portal/journey.test.mjs
