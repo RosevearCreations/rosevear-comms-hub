@@ -199,6 +199,7 @@ const syntheticQl362Result={schema:QL362_SCHEMA,
 const syntheticSourceReceipt={state:'INDEPENDENT_PINNED_SOURCE_GET_RECEIPT_VERIFIED',
   sourceId:'yw',operationId,requestSha256,receiptSha256:sha(body),
   sourceSignerAuthenticated:true,nonproductionIsolationVerified:true,
+  connected:false,connectionState:'DISCONNECTED / HOLD',
   sourceSignerSpkiSha256:spki(sourceKeys.yw.signer)};
 const witness={state:'ORIGINAL_PRIVATE_IMMUTABLE_GET_WITNESS_READBACK',
   sourceId:'yw',operationId,requestSha256,receiptSha256:sha(body),
@@ -249,6 +250,9 @@ test('QL-363 closure refuses fake QL-362 result, changed DB, absent STOP or audi
   const fakedOriginal=await verifyQl363IndependentClosure({...closureArgs,
     readOriginalQl362ImmutableProof:async()=>({state:'CLAIMED_BY_BROWSER'})});
   assert.match(fakedOriginal.state,/PROOF_NOT_RECORDED/);
+  const unnamedSourceSigner=await verifyQl363IndependentClosure({...closureArgs,
+    sourceReceipt:{...syntheticSourceReceipt,sourceSignerSpkiSha256:null}});
+  assert.match(unnamedSourceSigner.state,/EVIDENCE_MISSING/);
   const forged=await verifyQl363IndependentClosure({...closureArgs,
     independentlySignedClosure:{...closure,signature:'A'.repeat(86)}});
   assert.match(forged.state,/SIGNATURE_INVALID/);
