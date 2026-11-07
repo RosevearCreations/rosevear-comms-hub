@@ -129,6 +129,11 @@ jobs:
         run: .\runtimes\hub-relay\ql362-windows-source-owner-handoff.ps1 -Status
       - name: Verify QL-363 six independently source-signed health contracts, exact receipt adapters and immutable closeout
         run: node --test runtimes/hub-relay/ql363-six-source-health-adapters.test.mjs
+      - name: Verify QL-365A first-time separate owner trust, signatures, original OFF baseline and unchanged receiver HOLD
+        run: node --test runtimes/hub-relay/ql365a-first-time-trust.test.mjs
+      - name: Verify QL-365A nonoriginal Windows CI cannot prepare, sign, assemble or enroll
+        shell: pwsh
+        run: node runtimes/hub-relay/ql365a-first-time-trust-cli.mjs --status
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest
