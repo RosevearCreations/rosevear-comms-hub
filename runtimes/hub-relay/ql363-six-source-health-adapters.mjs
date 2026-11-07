@@ -76,6 +76,7 @@ export async function verifyQl363SourceHealthContract({record,peer,
     const id=record?.sourceId,s=SOURCES[id],p=record?.contract?.payload;
     if(!s||peer?.peerId!==id||peer.repository!==s.repo||
       !COMMIT.test(record.commitSha??'')||
+      !SHA.test(record.tlsSpkiSha256??'')||
       record.manifest?.source_id!==id||
       inspectManifest(record.manifest,record.manifestTrustPin).status!==
         'SIGNED_MANIFEST_VERIFIED_SOURCE_GRANT_HELD'||
@@ -315,8 +316,11 @@ export async function verifyQl363IndependentClosure({ql362Result,sourceReceipt,
       sourceReceipt.sourceId!==id||sourceReceipt.operationId!==r.operationId||
       !sameSha(sourceReceipt.requestSha256,r.requestSha256)||
       !sameSha(sourceReceipt.receiptSha256,r.receiptSha256)||
+      !SHA.test(sourceReceipt.sourceSignerSpkiSha256??'')||
       sourceReceipt.sourceSignerAuthenticated!==true||
       sourceReceipt.nonproductionIsolationVerified!==true||
+      sourceReceipt.connected!==false||
+      sourceReceipt.connectionState!=='DISCONNECTED / HOLD'||
       originalWitnessReadback?.state!=='ORIGINAL_PRIVATE_IMMUTABLE_GET_WITNESS_READBACK'||
       originalWitnessReadback.sourceId!==id||
       originalWitnessReadback.operationId!==r.operationId||
