@@ -157,6 +157,17 @@ export function Ql350PrivateBridgePanel(){
       </ol>
       <p>The original database still has no live original enrollment or TEST receipt. Software <code>main</code> GREEN does not constitute live authorization. See <code>docs/build-records/QL-359_ORIGINAL_AUTHORITY_SUPERVISED_PRIVATE_TEST.md</code> for owner steps and exact STOP boundaries.</p>
     </details>
+    <details className="ql351-windows-guide ql360-archive-guide">
+      <summary>QL-360 · Original-host trust archive, witnessed receiver shutdown and private six-app evidence export</summary>
+      <ol>
+        <li><strong>Ree and Jack:</strong> on their original Windows devices and a clean <code>main</code>, run <code>.\runtimes\hub-relay\ql360-windows-evidence-export.ps1 -Status</code>. Neither status nor public files constitutes original issuer approval.</li>
+        <li><strong>Real QL-359 prerequisite:</strong> independently authenticated original issuer/witness, two separate signed owner decisions, actual original device enrollment, restricted Ree-only receiver credential, and exactly one signed private TEST receipt. The current database remains on HOLD.</li>
+        <li><strong>Ree stops the actual receiver:</strong> QL-340C's existing supervised <code>-Stop</code> returns an original process-verified stop receipt. QL-360 <code>-ShutdownReadback -StopReceiptPath …</code> verifies its age under 90 seconds and that both receiver and Tailnet gateway listeners are absent.</li>
+        <li><strong>Ree alone exports after proof:</strong> QL-360 <code>-ExportPostTest</code> requires original packet, owner review and fresh stop receipt. It delegates signed receipt verification to QL-359 and the existing owner-protected QL-340C six-app readback.</li>
+        <li><strong>Private archive acceptance:</strong> one nonserializable verified QL-359 closeout, fresh observed shutdown and independent original trust are checked before atomic create-new Windows owner-ACL storage and hash readback. All six peers remain <code>DISCONNECTED / HOLD</code>.</li>
+      </ol>
+      <p>See <code>docs/build-records/QL-360_ORIGINAL_PRIVATE_TRUST_ARCHIVE_SHUTDOWN_AND_SIX_APP_EXPORT.md</code>. No browser control grants live original trust or exports secrets.</p>
+    </details>
     <div className="ql350-peer-grid" aria-label="Six supervised source TEST actions">
       {QL349_PUBLIC_SOURCES.map(source=><article key={source.id}>
         <div><strong>{source.label}</strong><span>DISCONNECTED / HOLD</span></div>

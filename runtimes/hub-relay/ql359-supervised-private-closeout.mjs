@@ -10,6 +10,7 @@ import {validateSixHeldPeers} from './ql341-private-readback.mjs';
 
 export const QL359_SCHEMA='rosevear.hub.ql359.original-supervised-private-test.v1';
 export const QL359_CLOSEOUT_ATTESTATION='rosevear.hub.ql359.independent-closeout-witness.v1';
+const verifiedCloseouts=new WeakSet();
 const SHA=/^[a-f0-9]{64}$/;
 const held=(state,other={})=>({schema:QL359_SCHEMA,state,
   originalIssuerAuthenticated:false,independentWitnessAuthenticated:false,
@@ -130,14 +131,35 @@ export async function reconcileQl359SupervisedPrivateTest({receiverTicket,
       validateSixHeldPeers(peers.rows).length!==6)
       return held('HOLD_POST_TEST_RECEIPT_REVOCATION_OR_SIX_HELD_PEER_DRIFT');
 
-    return held('ONE_SUPERVISED_ORIGINAL_PRIVATE_TEST_CLOSED_SIX_PEERS_STILL_HELD',{
+    const result=Object.freeze(held('ONE_SUPERVISED_ORIGINAL_PRIVATE_TEST_CLOSED_SIX_PEERS_STILL_HELD',{
       originalIssuerAuthenticated:true,independentWitnessAuthenticated:true,
       ownersIndependentlyApproved:true,databaseEnrollmentVerified:true,
       dedicatedReceiverCredentialVerified:true,supervisedReceiverStopVerified:true,
       independentCloseoutWitnessVerified:true,firstPrivateTestReceiptVerified:true,
       verifiedReceiptCount:1,deviceId:accepted.deviceId,sessionId,
-      transcriptSha256,closedAt:new Date(now).toISOString()});
+      transcriptSha256,independentWitnessPinSha256:witness.witnessSpkiSha256,
+      closedAt:new Date(now).toISOString()}));
+    verifiedCloseouts.add(result);
+    return result;
   }catch{return held('HOLD_ORIGINAL_POST_TEST_READBACK_OR_CLOSEOUT_FAILED');}
+}
+
+/** QL-360 archive can consume the genuine QL-359 closeout once. JSON copies,
+ * forged booleans, expired receipts and replays are NOT capabilities. */
+export function consumeQl359VerifiedCloseoutForArchive({closeout,now=Date.now()}={}){
+  if(!Number.isFinite(now)||!verifiedCloseouts.has(closeout))return null;
+  verifiedCloseouts.delete(closeout);
+  const closedAt=Date.parse(closeout.closedAt);
+  if(!Number.isFinite(closedAt)||now<closedAt||now-closedAt>90_000||
+    closeout.firstPrivateTestReceiptVerified!==true||
+    closeout.independentCloseoutWitnessVerified!==true||
+    closeout.supervisedReceiverStopVerified!==true||
+    closeout.verifiedReceiptCount!==1||closeout.connected!==false||
+    !SHA.test(closeout.transcriptSha256??'')||
+    !SHA.test(closeout.independentWitnessPinSha256??''))return null;
+  return Object.freeze({closedAt,deviceId:closeout.deviceId,
+    sessionId:closeout.sessionId,transcriptSha256:closeout.transcriptSha256,
+    independentWitnessPinSha256:closeout.independentWitnessPinSha256});
 }
 
 export function ql359Cli(args=process.argv.slice(2)){
