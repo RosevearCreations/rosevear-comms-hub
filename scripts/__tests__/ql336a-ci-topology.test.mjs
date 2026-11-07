@@ -46,6 +46,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('hub-relay/ql357-original-activation.test.mjs')
       && !line.includes('hub-relay/ql358-field-credential-reconciliation.test.mjs')
       && !line.includes('hub-relay/ql359-supervised-private-closeout.test.mjs')
+      && !line.includes('hub-relay/ql360-original-evidence-archive.test.mjs')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
   // SHA-256 of the 43 exact gate commands in origin/dev's pre-QL336A app-ci.yml,
@@ -203,6 +204,11 @@ test('main and PR application CI retain required gate names and fail-closed depe
   assert.ok(gates.indexOf(ql358Gate)<gates.indexOf(ql359Gate));
   assert.match(appCi,/node --test runtimes\/hub-relay\/ql359-supervised-private-closeout\.test\.mjs runtimes\/hub-relay\/ql359-windows-supervised-test\.test\.mjs/);
   assert.match(appCi,/ql359-windows-supervised-test\.ps1 -Status/);
+  const ql360Gate='run_gate node --test ../runtimes/hub-relay/ql360-original-evidence-archive.test.mjs ../runtimes/hub-relay/ql360-windows-evidence-export.test.mjs ../runtimes/hub-relay/ql360-windows-private-storage.test.mjs';
+  assert.ok(gates.includes(ql360Gate),'QL-360 original host independent archive, 90-second shutdown and six HELD source export gate is required');
+  assert.ok(gates.indexOf(ql359Gate)<gates.indexOf(ql360Gate));
+  assert.match(appCi,/node --test runtimes\/hub-relay\/ql360-original-evidence-archive\.test\.mjs runtimes\/hub-relay\/ql360-windows-evidence-export\.test\.mjs runtimes\/hub-relay\/ql360-windows-private-storage\.test\.mjs/);
+  assert.match(appCi,/ql360-windows-evidence-export\.ps1 -Status/);
 });
 
 test('production parity has one push trigger; an independently runnable manual proof remains', () => {

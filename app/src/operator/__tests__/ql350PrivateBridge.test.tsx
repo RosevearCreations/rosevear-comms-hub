@@ -77,6 +77,8 @@ it('public disabled preview offers guidance, not active TEST dispatch',async()=>
   expect(host.textContent).toContain('ql358-windows-original-field.ps1');
   expect(host.querySelector('.ql359-closeout-guide summary')?.textContent).toContain('QL-359');
   expect(host.textContent).toContain('ql359-windows-supervised-test.ps1');
+  expect(host.querySelector('.ql360-archive-guide summary')?.textContent).toContain('QL-360');
+  expect(host.textContent).toContain('ql360-windows-evidence-export.ps1');
   expect(host.textContent).toContain('-CredentialHandoff');
   expect(host.textContent).toContain('ql340c_private_receiver');
   expect(host.textContent).toContain('-PrepareUnsigned');
