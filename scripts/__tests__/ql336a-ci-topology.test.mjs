@@ -45,6 +45,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('hub-relay/ql356-original-field-readback.test.mjs')
       && !line.includes('hub-relay/ql357-original-activation.test.mjs')
       && !line.includes('hub-relay/ql358-field-credential-reconciliation.test.mjs')
+      && !line.includes('hub-relay/ql359-supervised-private-closeout.test.mjs')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
   // SHA-256 of the 43 exact gate commands in origin/dev's pre-QL336A app-ci.yml,
@@ -197,6 +198,11 @@ test('main and PR application CI retain required gate names and fail-closed depe
   assert.ok(gates.indexOf(ql357Gate)<gates.indexOf(ql358Gate));
   assert.match(appCi,/node --test runtimes\/hub-relay\/ql358-field-credential-reconciliation\.test\.mjs runtimes\/hub-relay\/ql358-windows-original-field\.test\.mjs/);
   assert.match(appCi,/ql358-windows-original-field\.ps1 -Status/);
+  const ql359Gate='run_gate node --test ../runtimes/hub-relay/ql359-supervised-private-closeout.test.mjs ../runtimes/hub-relay/ql359-windows-supervised-test.test.mjs';
+  assert.ok(gates.includes(ql359Gate),'QL-359 witnessed original STOP, independent closeout and genuine device-signed TEST gate is required');
+  assert.ok(gates.indexOf(ql358Gate)<gates.indexOf(ql359Gate));
+  assert.match(appCi,/node --test runtimes\/hub-relay\/ql359-supervised-private-closeout\.test\.mjs runtimes\/hub-relay\/ql359-windows-supervised-test\.test\.mjs/);
+  assert.match(appCi,/ql359-windows-supervised-test\.ps1 -Status/);
 });
 
 test('production parity has one push trigger; an independently runnable manual proof remains', () => {

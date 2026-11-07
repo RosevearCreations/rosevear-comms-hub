@@ -145,6 +145,18 @@ export function Ql350PrivateBridgePanel(){
       </ol>
       <p>The QL-358 private runtime uses nonserializable one-use tickets and never generates trust, credentials, or a real TEST in CI. Exact Ree/Jack commands and STOP conditions: <code>docs/build-records/QL-358_ORIGINAL_AUTHORITY_CREDENTIAL_AND_FIRST_LIVE_TEST.md</code>.</p>
     </details>
+    <details className="ql351-windows-guide ql359-closeout-guide">
+      <summary>QL-359 · Independent original trust, owner-only private credential and supervised TEST closeout</summary>
+      <ol>
+        <li><strong>Ree and Jack, original Windows machines:</strong> on a clean <code>main</code> run <code>.\runtimes\hub-relay\ql359-windows-supervised-test.ps1 -Status</code>. Their local candidate files do not authenticate an issuer.</li>
+        <li><strong>Independent issuer and separate field witness:</strong> verify previously approved external public pins, custody, revocation and the same fresh QL-340B request digest. Both owners then independently review and sign their exact source/master decisions.</li>
+        <li><strong>Private original enrollment:</strong> only an authenticated original administrator may record the one reviewed device after all approvals. The receiver role currently has <code>NOLOGIN</code>; this panel cannot provision it.</li>
+        <li><strong>Ree-only credential:</strong> after administrator-approved restricted receiver provisioning, run QL-359 <code>-CredentialReadback</code>, then use QL-340C's original current-user hidden DPAPI <code>-StoreCredential</code> prompt. Never share the database URL.</li>
+        <li><strong>Supervised first TEST:</strong> verify original private operator, limited PostgreSQL role and TLS/Tailnet, then perform one real 90-second original-device-signed health-only TEST using the preexisting owner-supervised receiver procedure.</li>
+        <li><strong>Ree stops and witnesses:</strong> after QL-340C <code>-Stop</code>, use QL-359 <code>-StopWitness</code> and <code>-ReceiptReview</code>. Private acceptance additionally checks an independently authenticated stop/witness transcript, exactly one immutable receipt and all six apps still <code>DISCONNECTED / HOLD</code>.</li>
+      </ol>
+      <p>The original database still has no live original enrollment or TEST receipt. Software <code>main</code> GREEN does not constitute live authorization. See <code>docs/build-records/QL-359_ORIGINAL_AUTHORITY_SUPERVISED_PRIVATE_TEST.md</code> for owner steps and exact STOP boundaries.</p>
+    </details>
     <div className="ql350-peer-grid" aria-label="Six supervised source TEST actions">
       {QL349_PUBLIC_SOURCES.map(source=><article key={source.id}>
         <div><strong>{source.label}</strong><span>DISCONNECTED / HOLD</span></div>
