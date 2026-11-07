@@ -112,6 +112,11 @@ jobs:
       - name: Verify QL-359 nonoriginal Windows CI cannot provision or execute a private TEST
         shell: pwsh
         run: .\runtimes\hub-relay\ql359-windows-supervised-test.ps1 -Status
+      - name: Verify QL-360 original owner trust archive witnessed receiver shutdown and six HELD peers
+        run: node --test runtimes/hub-relay/ql360-original-evidence-archive.test.mjs runtimes/hub-relay/ql360-windows-evidence-export.test.mjs runtimes/hub-relay/ql360-windows-private-storage.test.mjs
+      - name: Verify QL-360 nonoriginal Windows CI cannot export private original evidence
+        shell: pwsh
+        run: .\runtimes\hub-relay\ql360-windows-evidence-export.ps1 -Status
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest
