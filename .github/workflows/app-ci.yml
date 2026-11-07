@@ -90,6 +90,8 @@ jobs:
       - name: Verify QL-354 nonoriginal Windows runner cannot authorize or enroll
         shell: pwsh
         run: .\runtimes\hub-relay\ql354-windows-owner-handoff.ps1 -Status
+      - name: Verify QL-355 original external issuer signature, independent witness and one TEST acceptance
+        run: node --test runtimes/hub-relay/ql355-independent-authority.test.mjs
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest
