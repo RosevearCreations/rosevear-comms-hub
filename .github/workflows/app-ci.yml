@@ -122,6 +122,11 @@ jobs:
       - name: Verify QL-361 CI/Jack observer cannot read the private original Ree archive
         shell: pwsh
         run: .\runtimes\hub-relay\ql361-windows-owner-audit.ps1 -Status
+      - name: Verify QL-362 separately pinned source/master owner signatures, one GET and six-app HOLD isolation
+        run: node --test runtimes/hub-relay/ql362-source-owner-first-get.test.mjs runtimes/hub-relay/ql362-windows-source-owner-handoff.test.mjs
+      - name: Verify QL-362 CI cannot read source handoff or run unattended source GET
+        shell: pwsh
+        run: .\runtimes\hub-relay\ql362-windows-source-owner-handoff.ps1 -Status
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest

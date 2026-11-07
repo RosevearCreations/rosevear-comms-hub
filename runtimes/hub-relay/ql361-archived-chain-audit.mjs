@@ -73,6 +73,16 @@ function verifyArchiveShape(evidence,proof,peers){
   return canonicalize(actual)===canonicalize(expected);
 }
 
+/** Reusable strict redaction shape check for subsequent PRIVATE readbacks.
+ * It validates schema/held contents, not original issuer identity on its own. */
+export function validateQl361ArchivedEvidenceForHeldPeers({evidence,peers}={}){
+  if(!evidence||!Array.isArray(peers)||peers.length!==6)return false;
+  return verifyArchiveShape(evidence,{
+    sessionId:evidence.sessionId,
+    transcriptSha256:evidence.signedTranscriptSha256,
+    witnessSpkiSha256:evidence.externallyPinnedWitnessSpkiSha256},peers);
+}
+
 /** Public-safe document shape; private original storage MUST rehash it. */
 export function validateQl361HandoffShape(document){
   if(!keysExact(document,['schema','kind','archiveId','archiveSha256',
