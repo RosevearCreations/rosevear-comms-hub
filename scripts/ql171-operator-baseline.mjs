@@ -22,6 +22,7 @@ export const SOURCE_ANCHORS = Object.freeze([
   { id: 'ql367-master-owner-gate', path: 'app/src/auth/MasterOwnerSessionGate.tsx', needles: ['signInWithPassword', 'verifyOriginalOwner', 'DISCONNECTED / HOLD'] },
   { id: 'ql368-owner-mfa-recovery', path: 'app/src/auth/MasterOwnerSessionGate.tsx', needles: ['resetPasswordForEmail', 'updateUser({ password:', 'mfa.enroll', 'mfa.challengeAndVerify', 'Pending original-owner approval'] },
   { id: 'ql368-mfa-readiness', path: 'app/src/auth/ql368OwnerMfa.ts', needles: ['listFactors()', 'getAuthenticatorAssuranceLevel()', "level.currentLevel !== 'aal2'", "status === 'verified'"] },
+  { id: 'ql369-owner-ceremony-boundary', path: 'app/src/auth/ql369OwnerEnrollment.ts', needles: ["QL369_FUNCTION = 'ql369-owner-enrollment'", 'functions.invoke(QL369_FUNCTION', "action:'attest'", "action:'activate'"] },
   { id: 'ql367-uuid-owner-lookup', path: 'app/src/auth/ql367OwnerIdentity.ts', needles: ['getUser()', ".from('master_principals')", ".from('master_organization_owner_memberships')"] },
   { id: 'ql367-verified-owner-client', path: 'app/src/supabase/ql367OwnerClient.ts', needles: ['VITE_ENABLE_MASTER_OWNER_LOGIN', 'sb_publishable_', 'gxujcwpktaickcgzyvnu.supabase.co'] },
   { id: 'auth-flags', path: 'app/src/supabase/client.ts', needles: ['VITE_ENABLE_SUPABASE_CLIENT', 'VITE_ENABLE_HOSTED_DATABASE', 'VITE_SUPABASE_PUBLISHABLE_KEY'] },
@@ -51,7 +52,9 @@ const SINK_RULES = Object.freeze([
     // QL-331: reviewed SELECT-only Postgres-RLS metadata boundary; no customer data or writes.
     'app/src/operator/ql331MasterAccess.ts': ['master_principals', 'master_shell_grants', 'master_shell_registry', 'master_child_tenants']
   } },
-  { id: 'supabase-mutation', pattern: /\.(?:insert|upsert|delete|update|rpc|invoke)\s*\(/g, allowed: [] },
+  // The ONLY newly reviewed write is the owner's explicit, MFA-bound Edge
+  // function call. Direct browser table/RPC mutations remain forbidden.
+  { id: 'supabase-mutation', pattern: /\.(?:insert|upsert|delete|update|rpc|invoke)\s*\(/g, allowed: ['app/src/auth/ql369OwnerEnrollment.ts'] },
   { id: 'raw-network', pattern: /\b(?:fetch\s*\(|new\s+WebSocket\s*\(|new\s+EventSource\s*\(|navigator\.sendBeacon\s*\()/g, allowed: [] },
   { id: 'auth-magic-link', pattern: /\.auth\.signInWithOtp\s*\(/g, allowed: ['app/src/auth/AdminSessionGate.tsx'] },
   { id: 'auth-owner-password', pattern: /\.auth\.signInWithPassword\s*\(/g, allowed: ['app/src/auth/MasterOwnerSessionGate.tsx'] },
@@ -116,7 +119,8 @@ export function assessQl171Baseline({ sources = {}, document = '' } = {}) {
         if ('allowedTables' in rule) {
           const table = match[1];
           if (!rule.allowedTables[path]?.includes(table)) issues.push(`${rule.id}: unreviewed table ${table} in ${path}.`);
-        } else if (!rule.allowed.includes(path)) {
+        } else if (!rule.allowed.includes(path) || (rule.id==='supabase-mutation'&&
+          path==='app/src/auth/ql369OwnerEnrollment.ts'&&match[0]!=='.invoke(')) {
           issues.push(`${rule.id}: unreviewed data sink in ${path}.`);
         }
       }
