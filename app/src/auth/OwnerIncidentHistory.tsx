@@ -2,6 +2,7 @@ import {useEffect,useRef,useState} from 'react';
 import type {OwnerIncidentHistory as HistoryState} from './ql377OwnerIncidentHistory';
 import {incidentAgeLabel,ownerIncidentResolutionGuidance} from './ql377OwnerIncidentHistory';
 import {OWNER_EVIDENCE_LABELS,ownerIncidentTriage} from './ql378OwnerIncidentTriage';
+import {ownerReviewPreset,type OwnerReviewPreset} from './ql379OwnerReviewPresets';
 import './ql377OwnerIncidentHistory.css';
 
 type Filter='all'|'showing'|'ended';
@@ -24,11 +25,24 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   const visible=ownerIncidentTriage(entries,{nowMs,search,status:filter,severity,groupRepeats});
   const chosen=visible.find(group=>group.id===selected)??visible[0];
   const represented=visible.reduce((sum,group)=>sum+group.occurrences.length,0);
+  const applyPreset=(preset:OwnerReviewPreset)=>{
+    const next=ownerReviewPreset(preset);
+    navigated.current=false;
+    setSelected(null);setSearch(next.search);setFilter(next.status);
+    setSeverity(next.severity);setGroupRepeats(next.groupRepeats);
+  };
   useEffect(()=>{if(navigated.current&&chosen)detailHeading.current?.focus();},[selected,filter,severity,search,groupRepeats,chosen?.id]);
   return <section className="ql377-history" aria-labelledby="ql377-history-title">
     <h4 id="ql377-history-title">Owner incident observation history</h4>
     <p>This is a bounded history of alerts <em>seen in this open owner shell</em>, not server incident history or source audit evidence. It is kept in memory only, and clears when our MFA session ends or the owner changes.</p>
     <div className="ql377-controls">
+      <div role="group" aria-label="Session review shortcuts" className="ql379-presets">
+        <span>Review shortcuts (this session only):</span>
+        <button type="button" onClick={()=>applyPreset('all')}>All alerts</button>
+        <button type="button" onClick={()=>applyPreset('urgent')}>Action needed</button>
+        <button type="button" onClick={()=>applyPreset('active')}>Still displayed</button>
+        <button type="button" onClick={()=>applyPreset('historical')}>No longer displayed</button>
+      </div>
       <label htmlFor="ql377-filter">Review session observations</label>
       <select id="ql377-filter" value={filter} onChange={event=>{navigated.current=false;setFilter(event.target.value as Filter);}}>
         <option value="all">All observed alerts</option>
