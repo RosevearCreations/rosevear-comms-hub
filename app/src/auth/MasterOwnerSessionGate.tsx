@@ -85,10 +85,13 @@ export function MasterOwnerSessionGate() {
     }
     setBusy(true);
     setMessage('Verifying owner credentials…');
-    const { error } = await client.auth.signInWithPassword({ email: cleanEmail, password });
-    setPassword('');
-    setBusy(false);
-    if (error) {
+    let signInError = true;
+    try {
+      const { error } = await client.auth.signInWithPassword({ email: cleanEmail, password });
+      signInError = Boolean(error);
+    } catch { /* Do not expose network/Auth internals or claim a session. */ }
+    finally { setPassword(''); setBusy(false); }
+    if (signInError) {
       setMessage('Sign-in failed. Check your credentials and try again.');
       setState('SIGNED_OUT');
       return;
@@ -101,13 +104,15 @@ export function MasterOwnerSessionGate() {
     event.preventDefault();
     if (!client || busy || !email.trim()) return;
     setBusy(true);
-    const { error } = await client.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
-      redirectTo: recoveryRedirect()
-    });
-    setBusy(false);
-    setRecoveryRequest(false);
-    setMessage(error ? 'A recovery request could not be confirmed. Please try again later.' :
-      'If this address has an eligible account, a recovery email has been requested. Check its inbox and spam folder.');
+    try {
+      await client.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+        redirectTo: recoveryRedirect()
+      });
+    } catch { /* The external failure must not reveal whether this email exists. */ }
+    finally { setBusy(false); setRecoveryRequest(false); }
+    // The same response for known, unknown, rate-limited and unavailable
+    // accounts prevents the UI from becoming an email-enumeration oracle.
+    setMessage('If this address has an eligible account, a recovery email may arrive. Check the inbox and spam folder; retry later if needed.');
   }
 
   async function completePasswordRecovery(event: FormEvent<HTMLFormElement>) {
@@ -118,10 +123,13 @@ export function MasterOwnerSessionGate() {
       return;
     }
     setBusy(true);
-    const { error } = await client.auth.updateUser({ password: newPassword });
-    setNewPassword('');
-    setConfirmPassword('');
-    if (error) {
+    let updateError = true;
+    try {
+      const { error } = await client.auth.updateUser({ password: newPassword });
+      updateError = Boolean(error);
+    } catch { /* An unconfirmed password change must fail closed. */ }
+    finally { setNewPassword(''); setConfirmPassword(''); }
+    if (updateError) {
       setBusy(false);
       setMessage('Password update failed. No change was confirmed. Request a fresh recovery email and retry.');
       return;
@@ -135,10 +143,16 @@ export function MasterOwnerSessionGate() {
   async function beginTotpEnrollment() {
     if (!client || busy || mfa?.kind !== 'ENROLL' || !identity) return;
     setBusy(true);
-    const { data, error } = await client.auth.mfa.enroll({
-      factorType: 'totp', friendlyName: `Rosevear Creations ${identity.ownerRole} owner`
-    });
-    setBusy(false);
+    let data: Awaited<ReturnType<typeof client.auth.mfa.enroll>>['data'] = null;
+    let error = true;
+    try {
+      const response = await client.auth.mfa.enroll({
+        factorType: 'totp', friendlyName: `Rosevear Creations ${identity.ownerRole} owner`
+      });
+      data = response.data;
+      error = Boolean(response.error);
+    } catch { /* Keep the setup secret and member state locked. */ }
+    finally { setBusy(false); }
     if (error || !data?.id || !data.totp?.secret) {
       setMessage('Authenticator setup could not start. Access remains limited. Please retry.');
       return;
@@ -157,9 +171,12 @@ export function MasterOwnerSessionGate() {
       return;
     }
     setBusy(true);
-    const { error } = await client.auth.mfa.challengeAndVerify({ factorId, code: mfaCode.trim() });
-    setMfaCode('');
-    setBusy(false);
+    let error = true;
+    try {
+      const response = await client.auth.mfa.challengeAndVerify({ factorId, code: mfaCode.trim() });
+      error = Boolean(response.error);
+    } catch { /* An unverified code is not a verified AAL2 session. */ }
+    finally { setMfaCode(''); setBusy(false); }
     if (error) {
       setMessage('The authenticator code was not accepted. Check the current code and retry.');
       return;
@@ -176,7 +193,11 @@ export function MasterOwnerSessionGate() {
     setMfa(null);
     setSetup(null);
     setMfaCode('');
-    const { error } = await client.auth.signOut();
+    let error = true;
+    try {
+      const response = await client.auth.signOut();
+      error = Boolean(response.error);
+    } catch { /* Treat uncertain sign-out as locked, never success. */ }
     if (error) {
       setState('ERROR');
       setMessage('Sign-out could not be confirmed. Access remains locked. Close the browser and try again.');
