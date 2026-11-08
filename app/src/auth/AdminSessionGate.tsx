@@ -75,6 +75,8 @@ function LocalOnlyBanner({ reasons }: { reasons: string[] }) {
       <strong>● PREVIEW MODE</strong>
       <span>Disabled preview — local samples only. Supabase login/reference reads
         {' '}are intentionally off. No live calls, customer records or six-app connections.</span>
+      {import.meta.env.VITE_ENABLE_MASTER_OWNER_LOGIN === 'true' &&
+        <a href="#/master" style={{ color: '#dcc5ff', fontWeight: 700 }}>Ree / Jack owner sign-in →</a>}
       {reasons.length>0&&<details>
         <summary>ⓘ Why the Supabase settings say “missing” · setup help</summary>
         <p><strong>No key is needed for the six-app proof handoff.</strong> These notices explain why optional admin login is OFF, not an error with the public proof review. Keep both enable flags false for the current disabled preview.</p>

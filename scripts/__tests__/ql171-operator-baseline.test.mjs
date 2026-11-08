@@ -30,7 +30,8 @@ test('QL-171 baseline inventories all surfaces, data paths and gaps without auth
   // QL-272 reviews two additional localStorage operations in the preexisting
   // allowlisted localRepository: one get and one set for versioned UI layouts.
   assert.equal(report.sinkCounts['browser-storage'], 5);
-  assert.equal(report.sinkCounts['supabase-query'], 9);
+  // QL-367 adds exactly two UUID-scoped, SELECT-only self-enrollment reads.
+  assert.equal(report.sinkCounts['supabase-query'], 11);
   assert.equal(report.sinkCounts['supabase-mutation'], 0);
   assert.equal(report.sinkCounts['raw-network'], 0);
   assert.equal(report.liveCallsEnabled, false);
@@ -79,6 +80,22 @@ test('QL-331 master read-only allowlist is limited to four RLS metadata tables',
   assert.equal(drift.status,'DRIFT');
   assert.ok(drift.issues.some(issue=>issue.includes('unreviewed table contacts')));
   assert.equal(drift.sinkCounts['supabase-mutation'],0);
+});
+
+test('QL-367 adds only reviewed authenticated owner self-reads and one publishable Auth client', () => {
+  const safe = assessQl171Baseline(baseline);
+  assert.equal(safe.status, 'PASS', safe.issues.join('\n'));
+  assert.equal(safe.sinkCounts['auth-owner-password'], 1);
+  assert.equal(safe.sinkCounts['supabase-mutation'], 0);
+  const extraTable = changeSource('app/src/auth/ql367OwnerIdentity.ts',
+    source => `${source}\nclient.from('contacts')`);
+  const badTable = assessQl171Baseline(extraTable);
+  assert.equal(badTable.status, 'DRIFT');
+  assert.ok(badTable.issues.some(issue => issue.includes('unreviewed table contacts')));
+  const extraLogin = changeSource('app/src/App.tsx', source => `${source}\nsupabase.auth.signInWithPassword({})`);
+  const badLogin = assessQl171Baseline(extraLogin);
+  assert.equal(badLogin.status, 'DRIFT');
+  assert.ok(badLogin.issues.some(issue => issue.includes('auth-owner-password')));
 });
 
 test('new Supabase write APIs are not hidden inside an allowlisted read file', () => {
