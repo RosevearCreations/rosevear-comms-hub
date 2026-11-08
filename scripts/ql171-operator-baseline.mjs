@@ -25,6 +25,8 @@ export const SOURCE_ANCHORS = Object.freeze([
   { id: 'ql369-owner-ceremony-boundary', path: 'app/src/auth/ql369OwnerEnrollment.ts', needles: ["QL369_FUNCTION = 'ql369-owner-enrollment'", 'functions.invoke(QL369_FUNCTION', "action:'attest'", "action:'activate'"] },
   { id: 'ql370-redacted-progress-gateway', path: 'app/src/auth/ql369OwnerEnrollment.ts', needles: ['readOwnerProgress', "action:'status'", 'parseOwnerProgress'] },
   { id: 'ql370-owner-progress-dashboard', path: 'app/src/auth/OwnerProgressDashboard.tsx', needles: ['readOwnerProgress', 'Our enrollment progress', 'DISCONNECTED / HOLD', 'Clear this browser'] },
+  { id: 'ql371-guided-owner-checklist', path: 'app/src/auth/OwnerCeremonyGuide.tsx', needles: ['buildOwnerCeremonySteps', 'Step-by-step enrollment checklist', 'SAFE_OWNER_HANDOFF', 'DISCONNECTED / HOLD'] },
+  { id: 'ql371-readonly-expiry-review', path: 'app/src/auth/ql371OwnerCeremony.ts', needles: ['countdownForAttestation', 'SNAPSHOT_FRESH_MS', 'verifiedActivationEvents === 1', 'DISCONNECTED / HOLD'] },
   { id: 'ql367-uuid-owner-lookup', path: 'app/src/auth/ql367OwnerIdentity.ts', needles: ['getUser()', ".from('master_principals')", ".from('master_organization_owner_memberships')"] },
   { id: 'ql367-verified-owner-client', path: 'app/src/supabase/ql367OwnerClient.ts', needles: ['VITE_ENABLE_MASTER_OWNER_LOGIN', 'sb_publishable_', 'gxujcwpktaickcgzyvnu.supabase.co'] },
   { id: 'auth-flags', path: 'app/src/supabase/client.ts', needles: ['VITE_ENABLE_SUPABASE_CLIENT', 'VITE_ENABLE_HOSTED_DATABASE', 'VITE_SUPABASE_PUBLISHABLE_KEY'] },

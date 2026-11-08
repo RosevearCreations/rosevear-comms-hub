@@ -49,5 +49,31 @@
 .ql370-audit dd { text-align: right; margin: 0; font-size: 13px; overflow-wrap: anywhere; max-width: 60%; }
 .ql370-recovery summary { cursor: pointer; font-weight: 800; color: #e5d3ff; }
 .ql370-recovery ol { line-height: 1.5; padding-left: 22px; }
+.ql371-guide { margin: 22px 0 4px; padding-top: 18px; border-top: 1px solid #71678d; }
+.ql371-guide h3 { margin: 3px 0 10px; font-size: 19px; }
+.ql371-topline { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; }
+.ql371-progress-caption { font-size: 13px; color: #ead39f; font-weight: 750; }
+.ql371-steps { display: grid; gap: 10px; list-style: none; padding: 0; margin: 17px 0; }
+.ql371-step { border: 1px solid #605a80; background: #141a2b; border-radius: 12px; padding: 13px 15px; }
+.ql371-step[aria-current="step"] { outline: 2px solid #e2c488; outline-offset: 2px; }
+.ql371-step-heading { display: flex; align-items: center; gap: 10px; }
+.ql371-step-heading h4 { margin: 0; font-size: 14px; line-height: 1.4; }
+.ql371-number { flex: none; background: #413a60; color: #faf0ff; border-radius: 50%; display: grid; place-items: center; width: 29px; height: 29px; font-weight: 800; }
+.ql371-step p { margin: 6px 0 0 39px; color: #dcd4e8; font-size: 13px; line-height: 1.5; }
+.ql371-step p.ql371-state { color: #e9cf94; font-weight: 800; }
+.ql371-verified { border-left: 4px solid #7ed5b0; }
+.ql371-attention { border-left: 4px solid #f2b573; }
+.ql371-urgent, .ql371-soon, .ql371-boundary { padding: 13px; border-radius: 11px; display: grid; gap: 4px; line-height: 1.5; font-size: 13px; }
+.ql371-urgent { border: 1px solid #f2b573; background: #493033; }
+.ql371-soon { border: 1px solid #d4ba79; background: #3e3543; }
+.ql371-boundary { border: 1px solid #3d867e; background: #183039; }
+.ql371-handoff { margin-top: 16px; padding: 14px 0 0; border-top: 1px solid #615978; }
+.ql371-handoff summary { cursor: pointer; font-weight: 800; color: #e5d3ff; }
+.ql371-handoff label { display: block; font-weight: 700; margin: 12px 0 8px; }
+.ql371-handoff textarea { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #877b9d; border-radius: 10px; background: #090f20; color: #f1eafa; font: 13px/1.6 ui-monospace, monospace; resize: vertical; }
+.ql371-handoff button { margin-top: 10px; min-height: 44px; }
+.ql371-handoff a { color: #e6caff; }
+.ql371-handoff textarea:focus-visible, .ql371-handoff a:focus-visible { outline: 3px solid #cab0ff; outline-offset: 2px; }
 @media (max-width: 540px) { .ql368-security { padding: 14px; } .ql367-card { padding: 24px 20px; } }
 @media (max-width: 480px) { .ql370-grid { grid-template-columns: 1fr; } .ql370-audit dl div { display: block; } .ql370-audit dd { text-align: left; max-width: 100%; margin-top: 3px; } }
+@media (max-width: 480px) { .ql371-step { padding: 12px; } .ql371-step p { margin-left: 0; } .ql371-progress-caption { width: 100%; } }
