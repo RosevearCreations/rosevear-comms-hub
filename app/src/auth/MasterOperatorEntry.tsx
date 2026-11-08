@@ -4,6 +4,9 @@ import {OWNER_ENTRY_SECTIONS,QL374_HISTORICAL_PREREQUISITES,QL374_REQUIRED_GATES
   ownerEntryTruth,type OwnerEntryRole,type OwnerEntrySection} from './ql374OwnerEntry';
 import {OwnerSixAppDrilldown} from './OwnerSixAppDrilldown';
 import {OwnerIncidentReview} from './OwnerIncidentReview';
+import {OwnerIncidentHistory} from './OwnerIncidentHistory';
+import {ownerIncidents,ownerReadbackFreshness} from './ql376OwnerIncidents';
+import {EMPTY_OWNER_HISTORY,observeOwnerIncidents} from './ql377OwnerIncidentHistory';
 import {ownerShellStatus} from './ql375OwnerStatus';
 import './ql374OwnerEntry.css';
 
@@ -15,6 +18,7 @@ type Props={ownerRole:OwnerEntryRole;enrolled:boolean;aal2:boolean;
 export function MasterOperatorEntry({ownerRole,enrolled,aal2,progress}:Props){
   const [section,setSection]=useState<OwnerEntrySection>('home');
   const [nowMs,setNowMs]=useState(()=>Date.now());
+  const [incidentHistory,setIncidentHistory]=useState(EMPTY_OWNER_HISTORY);
   const heading=useRef<HTMLHeadingElement>(null);
   const didNavigate=useRef(false);
   const truth=ownerEntryTruth({role:ownerRole,enrolled,aal2,progress,nowMs});
@@ -27,6 +31,15 @@ export function MasterOperatorEntry({ownerRole,enrolled,aal2,progress}:Props){
   },[]);
 
   useEffect(()=>{
+    const readbackFreshness=ownerReadbackFreshness({progress,role:ownerRole,aal2,nowMs});
+    const currentTruth=ownerEntryTruth({role:ownerRole,enrolled,aal2,progress,nowMs});
+    setIncidentHistory(previous=>observeOwnerIncidents(previous,{
+      role:ownerRole,aal2,freshness:readbackFreshness,
+      incidents:ownerIncidents(currentTruth,readbackFreshness),nowMs
+    }));
+  },[ownerRole,enrolled,aal2,progress,nowMs]);
+
+  useEffect(()=>{
     if(didNavigate.current)heading.current?.focus();
   },[section]);
   function navigate(next:OwnerEntrySection){didNavigate.current=true;setSection(next);}
@@ -34,7 +47,7 @@ export function MasterOperatorEntry({ownerRole,enrolled,aal2,progress}:Props){
 
   return <section className="ql374-entry" aria-labelledby="ql374-title">
     <header className="ql374-heading">
-      <p className="ql370-eyebrow">QL-376 · PERSONAL OWNER OPERATOR SHELL</p>
+      <p className="ql370-eyebrow">QL-377 · PERSONAL OWNER OPERATOR SHELL</p>
       <h2 id="ql374-title">Welcome, {name}</h2>
       <p>We are signed in under an individual owner identity. This is a read-only operator starting point; a personal login is not permission to open a customer's business, use a provider or release a source.</p>
       <span className={truth.state==='STOP_REVIEW'?'ql374-badge ql374-stop':'ql374-badge'}
@@ -68,6 +81,8 @@ export function MasterOperatorEntry({ownerRole,enrolled,aal2,progress}:Props){
       {section==='sources'&&<OwnerSixAppDrilldown truth={truth}/>}
       {section==='it'&&<>
         <OwnerIncidentReview role={ownerRole} aal2={aal2} progress={progress} truth={truth} nowMs={nowMs}/>
+        <OwnerIncidentHistory history={incidentHistory} nowMs={nowMs}
+          authenticated={aal2&&incidentHistory.role===ownerRole}/>
         <div className={truth.state==='STOP_REVIEW'?'ql374-truth ql374-stop':'ql374-truth'}
           role={truth.state==='STOP_REVIEW'?'alert':'status'}>
           <strong>{truth.label}</strong>

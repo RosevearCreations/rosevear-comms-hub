@@ -175,6 +175,8 @@ jobs:
         run: node --test scripts/__tests__/ql375-owner-six-app-status.test.mjs
       - name: Verify QL-376 protected alert filters, freshness and incident review remain non-authorizing
         run: node --test scripts/__tests__/ql376-owner-alert-freshness.test.mjs
+      - name: Verify QL-377 owner incident history stays memory-only, accessible and non-authorizing
+        run: node --test scripts/__tests__/ql377-owner-session-history.test.mjs
       - name: Verify QL-369 original-only activation decisions and no unattended signing
         run: node --test runtimes/hub-relay/ql369-activation-decision.test.mjs
       - name: Verify QL-369 Windows CI does not possess original activation authority
