@@ -154,6 +154,25 @@ test('QL-363 one approved private GET verifies source-signed envelope and binds 
   assert.equal(x.counters.gets,1);
 });
 
+test('QL-363 accepts a separately verified QL-366 two-owner private TEST permit only',async()=>{
+  const x=setup({assertOriginalPrivateExecution:async()=>({
+    state:'QL366_ORIGINAL_REE_DUAL_OWNER_APPROVED_SINGLE_GET',
+    originalComputer:'DESKTOP-AE894KC',receiverStopped:true,requestSha256})});
+  const response=await x.adapter.sendSignedGet({request:intent,requestSha256});
+  const result=await x.adapter.verifySignedSourceReceipt({request:intent,response,
+    requestSha256,receiptSha256:sha(response.body),
+    pinnedSource:{sourceId:'yw',commitSha:intent.sourceCommitSha}});
+  assert.equal(result.state,'INDEPENDENT_PINNED_SOURCE_GET_RECEIPT_VERIFIED');
+  assert.equal(result.connected,false);
+  assert.equal(x.counters.gets,1);
+  const forged=setup({assertOriginalPrivateExecution:async()=>({
+    state:'QL366_ORIGINAL_REE_DUAL_OWNER_APPROVED_SINGLE_GET',
+    originalComputer:'ANOTHER-LAPTOP',receiverStopped:true,requestSha256})});
+  await assert.rejects(forged.adapter.sendSignedGet({request:intent,requestSha256}),
+    /ORIGINAL_PRIVATE_OPERATOR_OR_OFFLINE_APPROVAL/);
+  assert.equal(forged.counters.gets,0);
+});
+
 test('QL-363 blocks missing original owner, TLS pin mismatch and redirect without accepting receipt',async()=>{
   const missing=setup({assertOriginalPrivateExecution:async()=>({state:'UNAUTHENTICATED'})});
   await assert.rejects(missing.adapter.sendSignedGet({request:intent,requestSha256}),/OFFLINE_APPROVAL/);
