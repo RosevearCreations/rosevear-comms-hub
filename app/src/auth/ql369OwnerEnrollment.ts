@@ -1,5 +1,6 @@
 /** QL-369 narrow authenticated owner Edge Function bridge. No direct DB writes,
  * service keys, privileged RPC, signed decisions or automatic enrollment. */
+import {parseOwnerProgress,type OwnerProgress} from './ql370OwnerProgress';
 export const QL369_SHA256 = /^[a-f0-9]{64}$/;
 export const QL369_FUNCTION = 'ql369-owner-enrollment';
 
@@ -16,9 +17,19 @@ export type OwnerCeremonyGateway = {
 type Outcome = { ok: boolean; status: string; activated: boolean; expiresAt?: string };
 const denied = (): Outcome => ({ok:false,status:'HOLD_QL369_AUTHENTICATED_OWNER_CEREMONY_NOT_COMPLETE',activated:false});
 
+// The single reviewed owner-only Edge call is shared by QL-369 decisions and
+// QL-370's strictly read-only snapshot. Never add browser RPC/table mutations.
+async function invokeOwner(gateway:OwnerCeremonyGateway,body:object) {
+  try {
+    return await gateway.functions.invoke(QL369_FUNCTION,{body});
+  } catch {return null;}
+}
+
 async function call(gateway: OwnerCeremonyGateway,body: object): Promise<Outcome> {
   try {
-    const {data,error} = await gateway.functions.invoke(QL369_FUNCTION,{body});
+    const response=await invokeOwner(gateway,body);
+    if(!response)return denied();
+    const {data,error}=response;
     const reply = data as OwnerCeremonyReply | null;
     if (error || !reply || typeof reply.state!=='string' ||
       !/^(OWNER_AAL2_ATTESTED_PENDING_PEER_AND_ORIGINAL_SIGNATURES|DUAL_ORIGINAL_OWNER_MEMBERSHIPS_ACTIVE)$/.test(reply.state) ||
@@ -28,6 +39,18 @@ async function call(gateway: OwnerCeremonyGateway,body: object): Promise<Outcome
     const activated = reply.state==='DUAL_ORIGINAL_OWNER_MEMBERSHIPS_ACTIVE' && reply.activated===true;
     return {ok:true,status:reply.state,activated,expiresAt:reply.expiresAt};
   } catch {return denied();}
+}
+
+export async function readOwnerProgress(gateway:OwnerCeremonyGateway,
+  expectedRole:'source'|'master',intentSha256:string|null=null):
+  Promise<{ok:boolean;progress:OwnerProgress|null}>{
+  if(intentSha256!==null&&(!QL369_SHA256.test(intentSha256)||
+    intentSha256==='0'.repeat(64)))return {ok:false,progress:null};
+  const body=intentSha256===null?{action:'status'}:{action:'status',intentSha256};
+  const response=await invokeOwner(gateway,body);
+  if(!response||response.error)return {ok:false,progress:null};
+  const progress=parseOwnerProgress(response.data,expectedRole);
+  return {ok:Boolean(progress),progress};
 }
 
 export function attestOwnerMfa(gateway: OwnerCeremonyGateway,intentSha256:string):Promise<Outcome>{
