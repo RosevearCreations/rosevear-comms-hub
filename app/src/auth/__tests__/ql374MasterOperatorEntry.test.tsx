@@ -31,12 +31,12 @@ const click=async(text:string)=>{
   await act(async()=>button!.dispatchEvent(new MouseEvent('click',{bubbles:true})));
 };
 describe('QL-374 accessible personal owner navigation',()=>{
-  it('shows personal entry and a three-item status-only navigation',async()=>{
+  it('shows personal entry and a four-item status-only navigation',async()=>{
     await show();
     expect(host.querySelector('#ql374-title')?.textContent).toContain('Ree');
-    expect(host.querySelectorAll('nav[aria-label="Owner operator shell sections"] button')).toHaveLength(3);
+    expect(host.querySelectorAll('nav[aria-label="Owner operator shell sections"] button')).toHaveLength(4);
     expect(host.textContent).toContain('Pending signed approval');
-    expect(host.textContent).toContain('No customer or source operations authorized');
+    expect(host.textContent).toContain('Read-only aggregate status; no per-source authority');
     expect(host.querySelectorAll('input,textarea,select')).toHaveLength(0);
     await click('I.T. and security');
     expect(host.querySelector('button[aria-current="page"]')?.textContent).toContain('I.T. and security');

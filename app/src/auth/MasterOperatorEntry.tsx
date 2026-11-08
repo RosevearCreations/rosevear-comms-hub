@@ -2,6 +2,8 @@ import {useEffect,useRef,useState} from 'react';
 import type {OwnerProgress} from './ql370OwnerProgress';
 import {OWNER_ENTRY_SECTIONS,QL374_HISTORICAL_PREREQUISITES,QL374_REQUIRED_GATES,
   ownerEntryTruth,type OwnerEntryRole,type OwnerEntrySection} from './ql374OwnerEntry';
+import {OwnerSixAppDrilldown} from './OwnerSixAppDrilldown';
+import {ownerShellStatus} from './ql375OwnerStatus';
 import './ql374OwnerEntry.css';
 
 type Props={ownerRole:OwnerEntryRole;enrolled:boolean;aal2:boolean;
@@ -15,6 +17,7 @@ export function MasterOperatorEntry({ownerRole,enrolled,aal2,progress}:Props){
   const heading=useRef<HTMLHeadingElement>(null);
   const didNavigate=useRef(false);
   const truth=ownerEntryTruth({role:ownerRole,enrolled,aal2,progress,nowMs});
+  const aggregate=ownerShellStatus(truth);
   const name=ownerRole==='source'?'Ree':'Jack';
 
   useEffect(()=>{
@@ -30,7 +33,7 @@ export function MasterOperatorEntry({ownerRole,enrolled,aal2,progress}:Props){
 
   return <section className="ql374-entry" aria-labelledby="ql374-title">
     <header className="ql374-heading">
-      <p className="ql370-eyebrow">QL-374 · PERSONAL OWNER OPERATOR SHELL</p>
+      <p className="ql370-eyebrow">QL-375 · PERSONAL OWNER OPERATOR SHELL</p>
       <h2 id="ql374-title">Welcome, {name}</h2>
       <p>We are signed in under an individual owner identity. This is a read-only operator starting point; a personal login is not permission to open a customer's business, use a provider or release a source.</p>
       <span className={truth.state==='STOP_REVIEW'?'ql374-badge ql374-stop':'ql374-badge'}
@@ -54,12 +57,14 @@ export function MasterOperatorEntry({ownerRole,enrolled,aal2,progress}:Props){
           <article><span>Personal identity</span><strong>{name}</strong><small>Server-verified owner role · no shared account</small></article>
           <article><span>Authenticator</span><strong>{aal2?'AAL2 verified':'AAL2 required'}</strong><small>Each owner completes their own challenge</small></article>
           <article><span>Owner membership</span><strong>{enrolled?'Recorded':'Pending signed approval'}</strong><small>Server decides membership and original signatures</small></article>
-          <article><span>Application access</span><strong>Held</strong><small>No customer or source operations authorized</small></article>
+          <article><span>Six-app connections</span><strong>{aggregate.label}</strong><small>Read-only aggregate status; no per-source authority</small></article>
         </div>
         <p>Start with the I.T. summary for a recent protected server reading, or open the getting-started guide. Enrollment controls remain below this personal shell.</p>
-        <div className="ql374-actions"><button type="button" onClick={()=>navigate('it')}>Review protected I.T. status</button>
+        <div className="ql374-actions"><button type="button" onClick={()=>navigate('sources')}>Review six application shells</button>
+          <button type="button" onClick={()=>navigate('it')}>Review protected I.T. status</button>
           <button type="button" onClick={()=>navigate('start')}>Show first-use guide</button></div>
       </>}
+      {section==='sources'&&<OwnerSixAppDrilldown truth={truth}/>}
       {section==='it'&&<>
         <div className={truth.state==='STOP_REVIEW'?'ql374-truth ql374-stop':'ql374-truth'}
           role={truth.state==='STOP_REVIEW'?'alert':'status'}>
@@ -80,11 +85,12 @@ export function MasterOperatorEntry({ownerRole,enrolled,aal2,progress}:Props){
         <ol className="ql374-guide">
           <li>Confirm the header names our own account, not a shared Rosevear identity.</li>
           <li>Complete our own authenticator challenge. The shell is not operational authority.</li>
-          <li>Open I.T. and security and refresh the protected six-shell status below.</li>
+          <li>Review the read-only six-shell catalogue, then open I.T. and security and refresh the protected aggregate status below.</li>
           <li>Review the separate Ree and Jack original-device checklist before any enrollment decision.</li>
           <li>Use the public operator preview for synthetic training only. Private inbox, connection and customer access remain closed until explicit source authorization.</li>
         </ol>
-        <div className="ql374-actions"><button type="button" onClick={()=>navigate('it')}>Next: check I.T. status</button>
+        <div className="ql374-actions"><button type="button" onClick={()=>navigate('sources')}>Next: review six shells</button>
+          <button type="button" onClick={()=>navigate('it')}>Check I.T. status</button>
           <a href="#ql370-refresh-status">Jump to protected enrollment status</a></div>
       </>}
     </section>

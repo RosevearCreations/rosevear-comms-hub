@@ -34,6 +34,8 @@ export const SOURCE_ANCHORS = Object.freeze([
   { id: 'ql374-personal-owner-entry', path: 'app/src/auth/MasterOperatorEntry.tsx', needles: ['ownerEntryTruth', 'aria-live="polite"', 'heading.current?.focus()', 'NOT AUTHORIZED'] },
   { id: 'ql374-owner-auth-gate', path: 'app/src/auth/MasterOwnerSessionGate.tsx', needles: ['MasterOperatorEntry', "mfa?.kind==='VERIFIED'", 'onProtectedReadback={setOperatorReadback}'] },
   { id: 'ql374-preflight-archive', path: 'app/src/operator/Ql271CommandSurfaces.tsx', needles: ['Ql374TruthReconciliation', 'Archived · QL-331', 'Archived · QL-309'] },
+  { id: 'ql375-six-app-no-grants', path: 'app/src/auth/ql375OwnerStatus.ts', needles: ['QL375_SHELLS', 'ownerShellStatus', 'not an individual live source check'] },
+  { id: 'ql375-safe-owner-drilldown', path: 'app/src/auth/OwnerSixAppDrilldown.tsx', needles: ['aria-pressed=', 'detailHeading.current?.focus()', 'not authorized'] },
   { id: 'ql367-uuid-owner-lookup', path: 'app/src/auth/ql367OwnerIdentity.ts', needles: ['getUser()', ".from('master_principals')", ".from('master_organization_owner_memberships')"] },
   { id: 'ql367-verified-owner-client', path: 'app/src/supabase/ql367OwnerClient.ts', needles: ['VITE_ENABLE_MASTER_OWNER_LOGIN', 'sb_publishable_', 'gxujcwpktaickcgzyvnu.supabase.co'] },
   { id: 'auth-flags', path: 'app/src/supabase/client.ts', needles: ['VITE_ENABLE_SUPABASE_CLIENT', 'VITE_ENABLE_HOSTED_DATABASE', 'VITE_SUPABASE_PUBLISHABLE_KEY'] },
