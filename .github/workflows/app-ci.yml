@@ -161,6 +161,8 @@ jobs:
         run: node runtimes/hub-relay/ql368-owner-enrollment-cli.mjs --help
       - name: Verify QL-369 original Ed25519 packet rejection and fail-closed MFA ceremony
         run: node --test supabase/functions/ql369-owner-enrollment/verify.test.mjs
+      - name: Verify QL-370 protected read-only owner progress and negative access cases
+        run: node --test supabase/functions/ql369-owner-enrollment/ql370-progress.test.mjs
       - name: Verify QL-369 original-only activation decisions and no unattended signing
         run: node --test runtimes/hub-relay/ql369-activation-decision.test.mjs
       - name: Verify QL-369 Windows CI does not possess original activation authority
