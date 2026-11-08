@@ -274,7 +274,7 @@ export function MasterOwnerSessionGate() {
     <main className="ql367-screen">
       <section className="ql367-card" aria-label="Rosevear Creations master owner sign-in">
         <div className="ql367-topline"><span>ROSEVEAR CREATIONS</span><a href="#/">← Public preview</a></div>
-        <p className="ql367-overline">Rosevear Comms Hub · QL-372</p>
+        <p className="ql367-overline">Rosevear Comms Hub · QL-373</p>
         <h1>Master Owner Portal</h1>
         <p>Personal authentication and two-owner enrollment readiness for Ree and Jack. Rosevear Creations is the organization, not a shared user account.</p>
 
