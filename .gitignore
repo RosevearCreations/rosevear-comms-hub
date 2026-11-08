@@ -1,6 +1,7 @@
 .env
 .env.*
 !.env.example
+!app/.env.production
 private-ql247-*.json
 private-ql249-*.json
 local-ql247-*.json
