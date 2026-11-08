@@ -65,11 +65,11 @@ describe('QL-371 accessible, read-only handoff',()=>{
     Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText}});
     await act(async()=>root.render(<OwnerCeremonyGuide progress={snapshot()}
       mfaVerified={true} intentSupplied={true} ownerRole="source"/>));
-    const area=host.querySelector('textarea')!;
+    const area=host.querySelector('#ql371-safe-handoff') as HTMLTextAreaElement;
     expect(area.readOnly).toBe(true);
     expect(area.value).toBe(SAFE_OWNER_HANDOFF);
     expect(area.value).not.toContain(sha);
-    const button=[...host.querySelectorAll('button')].find(b=>b.textContent?.includes('Copy safe'))!;
+    const button=[...host.querySelectorAll('button')].find(b=>b.textContent?.includes('Copy safe handoff instructions'))!;
     await act(async()=>button.dispatchEvent(new MouseEvent('click',{bubbles:true})));
     expect(writeText).toHaveBeenCalledExactlyOnceWith(SAFE_OWNER_HANDOFF);
     expect(host.textContent).toContain('No owner evidence or credentials were included');

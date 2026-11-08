@@ -29,6 +29,8 @@ export const SOURCE_ANCHORS = Object.freeze([
   { id: 'ql371-readonly-expiry-review', path: 'app/src/auth/ql371OwnerCeremony.ts', needles: ['countdownForAttestation', 'SNAPSHOT_FRESH_MS', 'verifiedActivationEvents === 1', 'DISCONNECTED / HOLD'] },
   { id: 'ql372-tab-only-safe-resume', path: 'app/src/auth/ql372OwnerResume.ts', needles: ['mayOfferWalkthroughResume', 'WALKTHROUGH_STEP_IDS', 'sessionAal2Verified', 'DISCONNECTED / HOLD'] },
   { id: 'ql372-screenreader-walkthrough', path: 'app/src/auth/OwnerCeremonyWalkthrough.tsx', needles: ['aria-live="polite"', 'headingRef.current?.focus()', 'clearHelpPosition', 'DISCONNECTED / HOLD'] },
+  { id: 'ql373-safe-readiness-advisory', path: 'app/src/auth/ql373OwnerReadiness.ts', needles: ['ownerReadinessIssue', 'STOP_REVIEW', 'OWNER_HELP_LINKS', 'DISCONNECTED / HOLD'] },
+  { id: 'ql373-two-device-review', path: 'app/src/auth/OwnerReadinessSupport.tsx', needles: ['safeAcceptanceNote', 'aria-label="Safe owner help links"', 'readOnly', 'Not an owner signature or activation'] },
   { id: 'ql367-uuid-owner-lookup', path: 'app/src/auth/ql367OwnerIdentity.ts', needles: ['getUser()', ".from('master_principals')", ".from('master_organization_owner_memberships')"] },
   { id: 'ql367-verified-owner-client', path: 'app/src/supabase/ql367OwnerClient.ts', needles: ['VITE_ENABLE_MASTER_OWNER_LOGIN', 'sb_publishable_', 'gxujcwpktaickcgzyvnu.supabase.co'] },
   { id: 'auth-flags', path: 'app/src/supabase/client.ts', needles: ['VITE_ENABLE_SUPABASE_CLIENT', 'VITE_ENABLE_HOSTED_DATABASE', 'VITE_SUPABASE_PUBLISHABLE_KEY'] },
