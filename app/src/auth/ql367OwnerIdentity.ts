@@ -28,6 +28,10 @@ type OwnerQuery = {
 /** Narrowly injectable to test negative-access cases without real credentials. */
 export interface OwnerIdentityGateway {
   auth: {
+    getSession(): Promise<{
+      data: { session: { access_token?: string } | null };
+      error: { message: string } | null;
+    }>;
     getUser(): Promise<{
       data: { user: { id: string; email?: string | null; email_confirmed_at?: string | null } | null };
       error: { message: string } | null;
@@ -60,6 +64,12 @@ const failed = (): OwnerVerification => ({
 
 export async function verifyOriginalOwner(gateway: OwnerIdentityGateway): Promise<OwnerVerification> {
   try {
+    // QL-368: an empty browser session is an ordinary signed-out state, not
+    // an Auth server failure. Session data is NEVER used to authorize access.
+    const { data: sessionData, error: sessionError } = await gateway.auth.getSession();
+    if (sessionError) return failed();
+    if (!sessionData.session) return { state: 'SIGNED_OUT', message: 'Sign in to continue.', identity: null };
+
     // getUser validates the access token against Supabase Auth. Email alone is never authority.
     const { data: authData, error: authError } = await gateway.auth.getUser();
     if (authError) return failed();

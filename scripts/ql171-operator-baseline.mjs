@@ -20,6 +20,8 @@ export const SOURCE_ANCHORS = Object.freeze([
   { id: 'api-local-facade', path: 'app/src/api/hubApi.ts', needles: ['createLocalHubApi', 'updateConversationStatus', 'addInternalNote'] },
   { id: 'admin-auth-gate', path: 'app/src/auth/AdminSessionGate.tsx', needles: ['signInWithOtp', ".from('app_admins')"] },
   { id: 'ql367-master-owner-gate', path: 'app/src/auth/MasterOwnerSessionGate.tsx', needles: ['signInWithPassword', 'verifyOriginalOwner', 'DISCONNECTED / HOLD'] },
+  { id: 'ql368-owner-mfa-recovery', path: 'app/src/auth/MasterOwnerSessionGate.tsx', needles: ['resetPasswordForEmail', 'updateUser({ password:', 'mfa.enroll', 'mfa.challengeAndVerify', 'Pending original-owner approval'] },
+  { id: 'ql368-mfa-readiness', path: 'app/src/auth/ql368OwnerMfa.ts', needles: ['listFactors()', 'getAuthenticatorAssuranceLevel()', "level.currentLevel !== 'aal2'", "status === 'verified'"] },
   { id: 'ql367-uuid-owner-lookup', path: 'app/src/auth/ql367OwnerIdentity.ts', needles: ['getUser()', ".from('master_principals')", ".from('master_organization_owner_memberships')"] },
   { id: 'ql367-verified-owner-client', path: 'app/src/supabase/ql367OwnerClient.ts', needles: ['VITE_ENABLE_MASTER_OWNER_LOGIN', 'sb_publishable_', 'gxujcwpktaickcgzyvnu.supabase.co'] },
   { id: 'auth-flags', path: 'app/src/supabase/client.ts', needles: ['VITE_ENABLE_SUPABASE_CLIENT', 'VITE_ENABLE_HOSTED_DATABASE', 'VITE_SUPABASE_PUBLISHABLE_KEY'] },
@@ -52,7 +54,9 @@ const SINK_RULES = Object.freeze([
   { id: 'supabase-mutation', pattern: /\.(?:insert|upsert|delete|update|rpc|invoke)\s*\(/g, allowed: [] },
   { id: 'raw-network', pattern: /\b(?:fetch\s*\(|new\s+WebSocket\s*\(|new\s+EventSource\s*\(|navigator\.sendBeacon\s*\()/g, allowed: [] },
   { id: 'auth-magic-link', pattern: /\.auth\.signInWithOtp\s*\(/g, allowed: ['app/src/auth/AdminSessionGate.tsx'] },
-  { id: 'auth-owner-password', pattern: /\.auth\.signInWithPassword\s*\(/g, allowed: ['app/src/auth/MasterOwnerSessionGate.tsx'] }
+  { id: 'auth-owner-password', pattern: /\.auth\.signInWithPassword\s*\(/g, allowed: ['app/src/auth/MasterOwnerSessionGate.tsx'] },
+  { id: 'auth-owner-recovery', pattern: /\.auth\.(?:resetPasswordForEmail|updateUser)\s*\(/g, allowed: ['app/src/auth/MasterOwnerSessionGate.tsx'] },
+  { id: 'auth-owner-mfa-change', pattern: /\.auth\.mfa\.(?:enroll|challengeAndVerify|unenroll)\s*\(/g, allowed: ['app/src/auth/MasterOwnerSessionGate.tsx'] }
 ]);
 
 async function walk(directory, root, output) {

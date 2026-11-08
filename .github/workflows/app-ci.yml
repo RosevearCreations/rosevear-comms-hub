@@ -154,6 +154,11 @@ jobs:
       - name: Verify QL-366 CI cannot authorize an original-owner private TEST
         shell: pwsh
         run: node runtimes/hub-relay/ql366-original-owner-test-cli.mjs --help
+      - name: Verify QL-368 independently scoped offline owner enrollment signatures and HOLD
+        run: node --test runtimes/hub-relay/ql368-dual-owner-enrollment.test.mjs
+      - name: Verify QL-368 nonoriginal Windows runner cannot sign enrollment evidence
+        shell: pwsh
+        run: node runtimes/hub-relay/ql368-owner-enrollment-cli.mjs --help
       - name: Verify QL-340C current-user Windows DPAPI without real credentials
         shell: pwsh
         run: .\runtimes\hub-relay\ql340c-windows-operator.ps1 -SelfTest

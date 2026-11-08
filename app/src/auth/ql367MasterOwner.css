@@ -16,3 +16,15 @@
 .ql367-identity h2 { margin: 0 0 10px; font-size: 23px; }
 .ql367-signout { margin: 12px 0 4px; }
 .ql367-card footer { border-top: 1px solid #5d536e; padding-top: 18px; margin-top: 26px; font-size: 13px; line-height: 1.5; color: #c7bfd3; }
+.ql368-security { margin: 20px 0; padding: 20px; border: 1px solid #605777; border-radius: 14px; background: #1d2132; }
+.ql368-security h2 { font-size: 21px; line-height: 1.2; margin: 0 0 16px; }
+.ql368-security p { margin: 10px 0; }
+.ql368-security code { overflow-wrap: anywhere; word-break: break-all; color: #f5dfab; }
+.ql368-security .ql367-form { margin-top: 12px; }
+.ql368-link-button { background: transparent !important; color: #d4c0ff !important; border: 1px solid #7e6ca2 !important; }
+.ql368-good { border-left: 4px solid #7ed5b0; padding: 10px; background: #1a302c; }
+.ql368-steps { display: grid; gap: 11px; padding-left: 22px; line-height: 1.45; }
+.ql368-help { color: #d2cadb; font-size: 14px; }
+.ql368-totp-setup { padding: 14px; border: 1px solid #806f50; border-radius: 10px; background: #262334; }
+.ql368-qr { display: block; width: min(220px, 100%); height: auto; margin: 12px auto; border: 12px solid #fff; border-radius: 8px; }
+@media (max-width: 540px) { .ql368-security { padding: 14px; } .ql367-card { padding: 24px 20px; } }
