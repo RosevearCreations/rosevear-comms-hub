@@ -16,7 +16,7 @@ export function ownerEntryTruth(args:{role:OwnerEntryRole;aal2:boolean;enrolled:
   const {role,aal2,enrolled,progress,nowMs}=args;
   const snapshotAt=progress?Date.parse(progress.snapshotAt):NaN;
   const fresh=Number.isFinite(snapshotAt)&&Number.isFinite(nowMs)&&
-    Math.abs(nowMs-snapshotAt)<=120000;
+    nowMs-snapshotAt<=120000&&snapshotAt-nowMs<=10000;
   const matching=Boolean(aal2&&progress&&progress.ownerRole===role&&
     progress.sessionAal2Verified&&progress.state==='ORIGINAL_OWNER_PROGRESS_READ_ONLY'&&fresh);
   const held=Boolean(matching&&progress?.connectionsState==='DISCONNECTED / HOLD'&&

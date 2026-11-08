@@ -59,6 +59,8 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql374OwnerEntry.test.ts')
       && !line.includes('ql375-owner-six-app-status.test.mjs')
       && !line.includes('ql375OwnerStatus.test.ts')
+      && !line.includes('ql376-owner-alert-freshness.test.mjs')
+      && !line.includes('ql376OwnerIncidents.test.ts')
       && !line.includes('hub-relay/ql369-activation-decision.test.mjs')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));

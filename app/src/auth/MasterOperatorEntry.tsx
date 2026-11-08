@@ -3,6 +3,7 @@ import type {OwnerProgress} from './ql370OwnerProgress';
 import {OWNER_ENTRY_SECTIONS,QL374_HISTORICAL_PREREQUISITES,QL374_REQUIRED_GATES,
   ownerEntryTruth,type OwnerEntryRole,type OwnerEntrySection} from './ql374OwnerEntry';
 import {OwnerSixAppDrilldown} from './OwnerSixAppDrilldown';
+import {OwnerIncidentReview} from './OwnerIncidentReview';
 import {ownerShellStatus} from './ql375OwnerStatus';
 import './ql374OwnerEntry.css';
 
@@ -33,7 +34,7 @@ export function MasterOperatorEntry({ownerRole,enrolled,aal2,progress}:Props){
 
   return <section className="ql374-entry" aria-labelledby="ql374-title">
     <header className="ql374-heading">
-      <p className="ql370-eyebrow">QL-375 · PERSONAL OWNER OPERATOR SHELL</p>
+      <p className="ql370-eyebrow">QL-376 · PERSONAL OWNER OPERATOR SHELL</p>
       <h2 id="ql374-title">Welcome, {name}</h2>
       <p>We are signed in under an individual owner identity. This is a read-only operator starting point; a personal login is not permission to open a customer's business, use a provider or release a source.</p>
       <span className={truth.state==='STOP_REVIEW'?'ql374-badge ql374-stop':'ql374-badge'}
@@ -66,6 +67,7 @@ export function MasterOperatorEntry({ownerRole,enrolled,aal2,progress}:Props){
       </>}
       {section==='sources'&&<OwnerSixAppDrilldown truth={truth}/>}
       {section==='it'&&<>
+        <OwnerIncidentReview role={ownerRole} aal2={aal2} progress={progress} truth={truth} nowMs={nowMs}/>
         <div className={truth.state==='STOP_REVIEW'?'ql374-truth ql374-stop':'ql374-truth'}
           role={truth.state==='STOP_REVIEW'?'alert':'status'}>
           <strong>{truth.label}</strong>
