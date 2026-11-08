@@ -57,6 +57,8 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql373OwnerReadiness.test.ts')
       && !line.includes('ql374-owner-entry-truth-review.test.mjs')
       && !line.includes('ql374OwnerEntry.test.ts')
+      && !line.includes('ql375-owner-six-app-status.test.mjs')
+      && !line.includes('ql375OwnerStatus.test.ts')
       && !line.includes('hub-relay/ql369-activation-decision.test.mjs')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
@@ -168,6 +170,9 @@ test('main and PR application CI retain required gate names and fail-closed depe
   assert.match(appCi, /node --test scripts\/__tests__\/ql374-owner-entry-truth-review\.test\.mjs/);
   assert.match(gates, /run_gate node --test \.\.\/scripts\/__tests__\/ql374-owner-entry-truth-review\.test\.mjs/);
   assert.match(gates, /run_gate npm run test -- src\/auth\/__tests__\/ql374OwnerEntry\.test\.ts src\/auth\/__tests__\/ql374MasterOperatorEntry\.test\.tsx/);
+  assert.match(appCi, /node --test scripts\/__tests__\/ql375-owner-six-app-status\.test\.mjs/);
+  assert.match(gates, /run_gate node --test \.\.\/scripts\/__tests__\/ql375-owner-six-app-status\.test\.mjs/);
+  assert.match(gates, /run_gate npm run test -- src\/auth\/__tests__\/ql375OwnerStatus\.test\.ts src\/auth\/__tests__\/ql375OwnerSixAppDrilldown\.test\.tsx/);
   assert.match(gates, /run_gate node --test \.\.\/supabase\/functions\/ql369-owner-enrollment\/verify\.test\.mjs/);
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql369-activation-decision\.test\.mjs/);
   assert.match(appCi, /node runtimes\/hub-relay\/ql369-owner-activation-cli\.mjs --help/);
