@@ -34,7 +34,7 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
     if(!['ArrowDown','ArrowUp','Home','End'].includes(event.key)||visible.length===0)return;
     if(!(event.target instanceof HTMLButtonElement)||!event.target.classList.contains('ql377-item'))return;
     event.preventDefault();
-    const buttons=Array.from(observationList.current?.querySelectorAll<HTMLButtonElement>('.ql377-item')??[]);
+    const buttons=[...(observationList.current?.querySelectorAll<HTMLButtonElement>('.ql377-item')??[])];
     const current=buttons.indexOf(event.target);
     const next=event.key==='Home'?0:event.key==='End'?buttons.length-1:
       (current+(event.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length;
