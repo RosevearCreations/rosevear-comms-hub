@@ -23,6 +23,17 @@ authority is genuinely verified.
 
 ## Original-device operator steps — use only fresh actual evidence
 
+**Not a repeat-validation checklist.** Ree and Jack already completed and
+shared the QL-359/356 original-host/key status checks, and the public pins
+are in `QL365A_PINS`. See the
+[previously completed field validation record](../handoffs/QL365D_PRIOR_FIELD_VALIDATION_RECONCILIATION.md).
+Do **not** ask either owner to rerun those scripts or six app synthetic tests
+to finish an integration report. The following procedure applies **only** if
+an independent original issuer and reviewers have actually been appointed and
+the original operator is coordinating a newly approved private TEST ceremony.
+Freshness requirements are part of that specific future operation; they do not
+erase already completed preliminary validation.
+
 1. **Both computers:** Agree on a 20-minute live review window, and choose
    **one** source ID: `yw`, `icamp`, `rosiedazzlers`, `devilndove`,
    `ai-data-platform` or `rosevear-ai-hub`. Ree operates original
