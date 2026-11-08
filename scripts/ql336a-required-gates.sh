@@ -100,4 +100,6 @@ run_gate node --test ../scripts/__tests__/ql375-owner-six-app-status.test.mjs
 run_gate npm run test -- src/auth/__tests__/ql375OwnerStatus.test.ts src/auth/__tests__/ql375OwnerSixAppDrilldown.test.tsx
 run_gate node --test ../scripts/__tests__/ql376-owner-alert-freshness.test.mjs
 run_gate npm run test -- src/auth/__tests__/ql376OwnerIncidents.test.ts src/auth/__tests__/ql376OwnerIncidentReview.test.tsx
+run_gate node --test ../scripts/__tests__/ql377-owner-session-history.test.mjs
+run_gate npm run test -- src/auth/__tests__/ql377OwnerIncidentHistory.test.ts src/auth/__tests__/ql377OwnerIncidentHistoryUI.test.tsx src/auth/__tests__/ql377OwnerShellNavigation.test.tsx
 run_gate node --test ../runtimes/hub-relay/ql369-activation-decision.test.mjs
