@@ -103,5 +103,6 @@ run_gate npm run test -- src/auth/__tests__/ql376OwnerIncidents.test.ts src/auth
 run_gate node --test ../scripts/__tests__/ql377-owner-session-history.test.mjs
 run_gate npm run test -- src/auth/__tests__/ql377OwnerIncidentHistory.test.ts src/auth/__tests__/ql377OwnerIncidentHistoryUI.test.tsx src/auth/__tests__/ql377OwnerShellNavigation.test.tsx
 run_gate node --test ../scripts/__tests__/ql378-owner-incident-triage.test.mjs
+run_gate node --test ../scripts/__tests__/ql379-owner-review-presets.test.mjs
 run_gate npm run test -- src/auth/__tests__/ql378OwnerIncidentTriage.test.ts src/auth/__tests__/ql378OwnerIncidentTriageUI.test.tsx
 run_gate node --test ../runtimes/hub-relay/ql369-activation-decision.test.mjs
