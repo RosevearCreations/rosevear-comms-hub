@@ -32,7 +32,7 @@ test('QL-171 baseline inventories all surfaces, data paths and gaps without auth
   assert.equal(report.sinkCounts['browser-storage'], 5);
   // QL-367 adds exactly two UUID-scoped, SELECT-only self-enrollment reads.
   assert.equal(report.sinkCounts['supabase-query'], 11);
-  assert.equal(report.sinkCounts['supabase-mutation'], 0);
+  assert.equal(report.sinkCounts['supabase-mutation'], 1); // QL-369: one owner-only Edge invoke
   assert.equal(report.sinkCounts['raw-network'], 0);
   assert.equal(report.liveCallsEnabled, false);
   assert.equal(report.smsEnabled, false);
@@ -48,7 +48,7 @@ test('QL-272 scoped local layout storage expands the reviewed boundary without i
   const report = assessQl171Baseline(baseline);
   assert.equal(report.status, 'PASS', report.issues.join('\n'));
   assert.equal(report.sinkCounts['raw-network'], 0);
-  assert.equal(report.sinkCounts['supabase-mutation'], 0);
+  assert.equal(report.sinkCounts['supabase-mutation'], 1);
 });
 
 test('entrypoint drift fails if a mounted preview or the gate disappears', () => {
@@ -79,7 +79,7 @@ test('QL-331 master read-only allowlist is limited to four RLS metadata tables',
   const drift=assessQl171Baseline(snapshot);
   assert.equal(drift.status,'DRIFT');
   assert.ok(drift.issues.some(issue=>issue.includes('unreviewed table contacts')));
-  assert.equal(drift.sinkCounts['supabase-mutation'],0);
+  assert.equal(drift.sinkCounts['supabase-mutation'],1);
 });
 
 test('QL-367 adds only reviewed authenticated owner self-reads and one publishable Auth client', () => {
@@ -88,7 +88,7 @@ test('QL-367 adds only reviewed authenticated owner self-reads and one publishab
   assert.equal(safe.sinkCounts['auth-owner-password'], 1);
   assert.equal(safe.sinkCounts['auth-owner-recovery'], 2);
   assert.equal(safe.sinkCounts['auth-owner-mfa-change'], 2);
-  assert.equal(safe.sinkCounts['supabase-mutation'], 0);
+  assert.equal(safe.sinkCounts['supabase-mutation'], 1);
   const extraTable = changeSource('app/src/auth/ql367OwnerIdentity.ts',
     source => `${source}\nclient.from('contacts')`);
   const badTable = assessQl171Baseline(extraTable);
@@ -108,6 +108,20 @@ test('QL-368 Auth password recovery and MFA changes stay restricted to the verif
     assert.equal(report.status, 'DRIFT');
     assert.ok(report.issues.some(issue => issue.includes('auth-owner-')));
   }
+});
+
+test('QL-369 only permits one exact owner Edge invoke and denies direct client writes',()=>{
+  const safe=assessQl171Baseline(baseline);
+  assert.equal(safe.status,'PASS',safe.issues.join('\n'));
+  assert.equal(safe.sinkCounts['supabase-mutation'],1);
+  const direct=changeSource('app/src/auth/ql369OwnerEnrollment.ts',source=>
+    `${source}\nclient.from('master_principals').update({active:true})`);
+  const violation=assessQl171Baseline(direct);
+  assert.equal(violation.status,'DRIFT');
+  assert.ok(violation.issues.some(issue=>issue.includes('supabase-mutation')));
+  const wrongFunction=changeSource('app/src/auth/ql369OwnerEnrollment.ts',source=>
+    source.replace("QL369_FUNCTION = 'ql369-owner-enrollment'","QL369_FUNCTION = 'unsafe-writer'"));
+  assert.equal(assessQl171Baseline(wrongFunction).status,'DRIFT');
 });
 
 test('new Supabase write APIs are not hidden inside an allowlisted read file', () => {

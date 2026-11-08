@@ -2,6 +2,7 @@ import { type FormEvent, useCallback, useEffect, useMemo, useRef, useState } fro
 import { getOwnerAuthClient, getOwnerPortalConfig } from '../supabase/ql367OwnerClient';
 import { verifyOriginalOwner, type OwnerIdentityGateway, type OwnerVerification } from './ql367OwnerIdentity';
 import { inspectOwnerMfa, isValidTotpCode, safeTotpQrSource, type OwnerMfaGateway, type OwnerMfaState } from './ql368OwnerMfa';
+import {activateDualOwnerFromFiles,attestOwnerMfa,QL369_SHA256,type OwnerCeremonyGateway} from './ql369OwnerEnrollment';
 import './ql367MasterOwner.css';
 
 type DisplayState = 'CHECKING' | 'SIGNED_OUT' | 'PENDING' | 'ENROLLED' | 'DENIED' | 'ERROR';
@@ -37,6 +38,11 @@ export function MasterOwnerSessionGate() {
   const [recoveryReturn, setRecoveryReturn] = useState(recoveryMarker);
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
+  const [enrollmentIntentSha, setEnrollmentIntentSha] = useState('');
+  const [ownerMfaAttestedUntil, setOwnerMfaAttestedUntil] = useState('');
+  const [signedPacketFile, setSignedPacketFile] = useState<File | null>(null);
+  const [sourceCandidateFile, setSourceCandidateFile] = useState<File | null>(null);
+  const [masterCandidateFile, setMasterCandidateFile] = useState<File | null>(null);
 
   const verify = useCallback(async () => {
     if (!client) return;
@@ -47,6 +53,7 @@ export function MasterOwnerSessionGate() {
       setMfa(null);
       setSetup(null);
       setMfaCode('');
+      setOwnerMfaAttestedUntil('');
       setVerification(outcome);
       setState(outcome.state);
       setMessage(outcome.message);
@@ -193,6 +200,11 @@ export function MasterOwnerSessionGate() {
     setMfa(null);
     setSetup(null);
     setMfaCode('');
+    setEnrollmentIntentSha('');
+    setOwnerMfaAttestedUntil('');
+    setSignedPacketFile(null);
+    setSourceCandidateFile(null);
+    setMasterCandidateFile(null);
     let error = true;
     try {
       const response = await client.auth.signOut();
@@ -212,13 +224,45 @@ export function MasterOwnerSessionGate() {
     setMessage(note);
   }
 
+  async function attestMfaForIntent(event:FormEvent<HTMLFormElement>){
+    event.preventDefault();
+    if(!client||busy||!identity||mfa?.kind!=='VERIFIED'||state!=='PENDING')return;
+    const intent=enrollmentIntentSha.trim().toLowerCase();
+    if(!QL369_SHA256.test(intent)){
+      setMessage('Enter the exact SHA-256 printed by Ree’s original-device enrollment intent.');
+      return;
+    }
+    setBusy(true);
+    const result=await attestOwnerMfa(client as unknown as OwnerCeremonyGateway,intent);
+    setBusy(false);
+    if(result.ok&&!result.activated){
+      setOwnerMfaAttestedUntil(result.expiresAt??'');
+      setMessage('This account’s MFA session was confirmed by the server. The other original owner must independently attest the same intent within 30 minutes.');
+    }else setMessage('The server did not confirm the MFA attestation. No owner membership changed.');
+  }
+
+  async function activateSignedEnrollment(event:FormEvent<HTMLFormElement>){
+    event.preventDefault();
+    if(!client||busy||identity?.ownerRole!=='source'||mfa?.kind!=='VERIFIED'||state!=='PENDING')return;
+    if(!window.confirm('Ree: send the QL-369 packet with TWO explicit original activation decisions and pinned public candidates to the private verification endpoint? This may activate the two owner memberships only, never any application connection.'))return;
+    setBusy(true);
+    const result=await activateDualOwnerFromFiles(client as unknown as OwnerCeremonyGateway,
+      signedPacketFile,sourceCandidateFile,masterCandidateFile);
+    setBusy(false);
+    setSignedPacketFile(null);setSourceCandidateFile(null);setMasterCandidateFile(null);
+    if(result.ok&&result.activated){
+      setMessage('Server confirmed both original signatures and current MFA sessions. Rechecking the two memberships…');
+      await verify(); // RLS self-read verifies the committed result; no client grants.
+    }else setMessage('The server did not activate the memberships. Check both fresh MFA attestations, the original signed packet, and its 24-hour expiry. All six applications remain on HOLD.');
+  }
+
   const identity = verification && 'identity' in verification ? verification.identity : null;
   const authenticatedOwner = Boolean(identity && (state === 'PENDING' || state === 'ENROLLED'));
   return (
     <main className="ql367-screen">
       <section className="ql367-card" aria-label="Rosevear Creations master owner sign-in">
         <div className="ql367-topline"><span>ROSEVEAR CREATIONS</span><a href="#/">← Public preview</a></div>
-        <p className="ql367-overline">Rosevear Comms Hub · QL-368</p>
+        <p className="ql367-overline">Rosevear Comms Hub · QL-369</p>
         <h1>Master Owner Portal</h1>
         <p>Personal authentication and two-owner enrollment readiness for Ree and Jack. Rosevear Creations is the organization, not a shared user account.</p>
 
@@ -313,6 +357,39 @@ export function MasterOwnerSessionGate() {
           </ol>
           <p className="ql368-help">MFA never signs for the other owner, activates membership or releases a source connection. Only the original-device, dual-signature approval process can satisfy those steps.</p>
         </section>}
+
+        {config.ready && authenticatedOwner && !recoveryReturn && state==='PENDING' && (
+          <section className="ql368-security" aria-label="QL-369 verified owner enrollment ceremony">
+            <h2>Verified owner enrollment ceremony</h2>
+            <p>Ree first creates the offline 24-hour enrollment intent on Ree’s original computer and shares its SHA-256 with Jack. Each owner signs in on their own computer, completes MFA, and submits the <strong>same</strong> intent hash here. This is not approval of any source connection.</p>
+            <form className="ql367-form" onSubmit={attestMfaForIntent}>
+              <label htmlFor="ql369-intent-sha">Original enrollment intent SHA-256</label>
+              <input id="ql369-intent-sha" type="text" spellCheck={false} autoComplete="off" maxLength={64}
+                pattern="[a-fA-F0-9]{64}" required value={enrollmentIntentSha}
+                onChange={e=>setEnrollmentIntentSha(e.target.value)} disabled={busy} />
+              <button disabled={busy||mfa?.kind!=='VERIFIED'} type="submit">Verify my current MFA session with the server</button>
+            </form>
+            {mfa?.kind!=='VERIFIED'&&<p role="status">An authenticator-verified AAL2 session is required before this button becomes available.</p>}
+            {ownerMfaAttestedUntil&&<p className="ql368-good" role="status">Server attestation recorded; expires {ownerMfaAttestedUntil}. A new intent or expired session requires fresh attestation.</p>}
+            {identity?.ownerRole==='source'&&<form className="ql367-form" onSubmit={activateSignedEnrollment}>
+              <h3>Final original-signature review — Ree only</h3>
+              <p>After both MFA attestations, the QL-368 evidence-only signatures, and TWO new explicit QL-369 original-device activation signatures, choose these THREE JSON files. Nothing is sent until we press the explicit activation button and confirm.</p>
+              <label htmlFor="ql369-signed">QL-369 signed activation packet (contains reviewed QL-368 evidence)</label>
+              <input id="ql369-signed" type="file" accept=".json,application/json" required
+                onChange={e=>setSignedPacketFile(e.target.files?.[0]??null)} disabled={busy} />
+              <label htmlFor="ql369-source-public">Ree’s original public candidate</label>
+              <input id="ql369-source-public" type="file" accept=".json,application/json" required
+                onChange={e=>setSourceCandidateFile(e.target.files?.[0]??null)} disabled={busy} />
+              <label htmlFor="ql369-master-public">Jack’s original public candidate</label>
+              <input id="ql369-master-public" type="file" accept=".json,application/json" required
+                onChange={e=>setMasterCandidateFile(e.target.files?.[0]??null)} disabled={busy} />
+              <button type="submit" disabled={busy||mfa?.kind!=='VERIFIED'||!signedPacketFile||!sourceCandidateFile||!masterCandidateFile}>
+                Review and activate TWO owner memberships once
+              </button>
+            </form>}
+            <p className="ql368-help">The server must recheck both genuine AAL2 sessions, both independently signed original keys, the exact Auth UUIDs, and the unused intent. Replayed, expired or incomplete evidence is denied. Every application connection stays DISCONNECTED / HOLD.</p>
+          </section>
+        )}
 
         {config.ready && message && state !== 'CHECKING' &&
           <p className="ql367-notice" role={state === 'ERROR' || state === 'DENIED' ? 'alert' : 'status'}>{message}</p>}

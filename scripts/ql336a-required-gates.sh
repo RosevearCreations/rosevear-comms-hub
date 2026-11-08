@@ -86,3 +86,5 @@ run_gate node --test ../runtimes/hub-relay/ql358-field-credential-reconciliation
 run_gate node --test ../runtimes/hub-relay/ql359-supervised-private-closeout.test.mjs ../runtimes/hub-relay/ql359-windows-supervised-test.test.mjs
 run_gate node --test ../runtimes/hub-relay/ql360-original-evidence-archive.test.mjs ../runtimes/hub-relay/ql360-windows-evidence-export.test.mjs ../runtimes/hub-relay/ql360-windows-private-storage.test.mjs
 run_gate node --test ../runtimes/client-portal/journey.test.mjs
+run_gate node --test ../supabase/functions/ql369-owner-enrollment/verify.test.mjs
+run_gate node --test ../runtimes/hub-relay/ql369-activation-decision.test.mjs
