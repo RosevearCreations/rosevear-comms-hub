@@ -235,3 +235,17 @@ test('six-app handoff contains all exact source IDs, repository names and handle
   assert.match(doc,/DISCONNECTED \/ HOLD/);
   assert.match(doc,/independent.*(?:issuer|custody)|issuer.*witness/i);
 });
+
+test('previous owner field validation is reused without inventing signed authorization or asking for reruns',()=>{
+  const doc=readFileSync(fileURLToPath(new URL('../../docs/handoffs/QL365D_PRIOR_FIELD_VALIDATION_RECONCILIATION.md',import.meta.url)),'utf8');
+  const handoff=readFileSync(fileURLToPath(new URL('../../docs/handoffs/QL365D_SIX_APP_COMMS_ATTACHMENT_VALIDATION_HANDOFF.md',import.meta.url)),'utf8');
+  for(const role of ['source','master']){
+    assert.ok(doc.includes(QL365A_PINS[role].keyId));
+    assert.ok(doc.includes(QL365A_PINS[role].spkiSha256));
+    assert.ok(doc.includes(QL365A_PINS[role].originalFileSha256));
+  }
+  assert.match(handoff,/Do not ask\s+either owner to repeat QL-359\/356/);
+  assert.match(doc,/private TEST receipt/);
+  assert.match(doc,/DISCONNECTED \/ HOLD/);
+  assert.match(doc,/do not ask.*to repeat|Do not tell Ree or Jack to rerun/i);
+});
