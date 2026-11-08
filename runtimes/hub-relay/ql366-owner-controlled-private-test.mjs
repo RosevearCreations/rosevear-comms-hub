@@ -303,17 +303,13 @@ export function createQl366OnePrivateTestGate({resolveOriginalOwner,
           receipt.requestSha256!==requestSha256||
           receipt.receiptSha256!==receiptSha256)
           throw Error('HOLD_QL366_GENUINE_SOURCE_SIGNATURE_AND_RECEIPT_REQUIRED');
-        const archived=await appendSignedReceipt({organizationId:QL366_ORGANIZATION,
+        // A valid source receipt is not a completed TEST until STOP has been
+        // independently read back. No "receiver_stopped" database record may
+        // be written before that independent proof exists.
+        result=hold('PRIVATE_TEST_SIGNED_RECEIPT_VERIFIED_STOP_PENDING',{
           sourceId:intent.sourceId,operationId:intent.operationId,
-          intentSha256:approval.intentSha256,requestSha256,receiptSha256,
-          ownerDecisionsSha256:sha(approvals)});
-        if(archived?.state!=='ORIGINAL_APPEND_ONLY_SIGNED_RECEIPT_SAVED'||
-          archived.operationId!==intent.operationId||
-          archived.receiptSha256!==receiptSha256||archived.immutable!==true)
-          throw Error('HOLD_QL366_ORIGINAL_SIGNED_RECEIPT_NOT_ARCHIVED');
-        result=hold('PRIVATE_TEST_SIGNED_RECEIPT_ARCHIVED_STOP_STILL_REQUIRED',{
-          sourceId:intent.sourceId,operationId:intent.operationId,
-          receiptSha256,intentSha256:approval.intentSha256});
+          receiptSha256,intentSha256:approval.intentSha256,
+          requestSha256,ownerDecisionsSha256:sha(approvals)});
       }catch(error){
         result=hold(error?.message?.startsWith('HOLD_QL366_')?error.message:
           'HOLD_QL366_PRIVATE_OPERATION_FAILED_NO_AUTO_RETRY',{attempted});
@@ -325,15 +321,35 @@ export function createQl366OnePrivateTestGate({resolveOriginalOwner,
               operationId:intent.operationId});
             if(stopped?.state!=='ORIGINAL_RECEIVER_STOP_INDEPENDENTLY_VERIFIED'||
               stopped.computer!=='DESKTOP-AE894KC'||stopped.listenerCount!==0||
+              stopped.receiverActivated!==false||stopped.connected!==false||
+              stopped.sourceId!==intent.sourceId||
+              stopped.operationId!==intent.operationId||
               !Number.isFinite(stopped.observedAt)||
               Math.abs(now()-stopped.observedAt)>30_000)
               result=hold('HOLD_QL366_RECEIVER_STOP_NOT_VERIFIED');
-            else if(result.state==='PRIVATE_TEST_SIGNED_RECEIPT_ARCHIVED_STOP_STILL_REQUIRED')
-              result=hold('ONE_SUPERVISED_PRIVATE_TEST_VERIFIED_SIX_APPS_STILL_HELD',{
+            else if(result.state==='PRIVATE_TEST_SIGNED_RECEIPT_VERIFIED_STOP_PENDING'){
+              let archived;
+              try{
+                archived=await appendSignedReceipt({
+                  organizationId:QL366_ORGANIZATION,
+                  sourceId:intent.sourceId,operationId:intent.operationId,
+                  intentSha256:result.intentSha256,
+                  requestSha256:result.requestSha256,
+                  receiptSha256:result.receiptSha256,
+                  ownerDecisionsSha256:result.ownerDecisionsSha256,
+                  receiverStopped:true,receiverStopSha256:sha(stopped)});
+              }catch{archived=null;}
+              if(archived?.state!=='ORIGINAL_APPEND_ONLY_SIGNED_RECEIPT_SAVED'||
+                archived.operationId!==intent.operationId||
+                archived.receiptSha256!==result.receiptSha256||
+                archived.immutable!==true||archived.receiverStopped!==true)
+                result=hold('HOLD_QL366_ORIGINAL_SIGNED_RECEIPT_NOT_ARCHIVED');
+              else result=hold('ONE_SUPERVISED_PRIVATE_TEST_VERIFIED_SIX_APPS_STILL_HELD',{
                 genuinePrivateTestVerified:true,sourceId:result.sourceId,
                 operationId:result.operationId,
                 receiptSha256:result.receiptSha256,
                 intentSha256:result.intentSha256,receiverStopVerified:true});
+            }
             else result={...result,receiverStopVerified:true};
           }catch{result=hold('HOLD_QL366_RECEIVER_STOP_READBACK_FAILED');}
         }

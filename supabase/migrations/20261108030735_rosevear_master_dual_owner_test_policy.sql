@@ -80,6 +80,8 @@ CREATE TABLE IF NOT EXISTS public.master_organization_private_test_receipts (
     CHECK (signed_owner_decisions_sha256 ~ '^[a-f0-9]{64}$'),
   signed_source_receipt_sha256 char(64) NOT NULL
     CHECK (signed_source_receipt_sha256 ~ '^[a-f0-9]{64}$'),
+  receiver_stop_sha256 char(64) NOT NULL
+    CHECK (receiver_stop_sha256 ~ '^[a-f0-9]{64}$'),
   result text NOT NULL CHECK (result = 'PRIVATE_TEST_VERIFIED_STILL_HELD'),
   connected boolean NOT NULL DEFAULT false CHECK (NOT connected),
   customer_operations boolean NOT NULL DEFAULT false CHECK (NOT customer_operations),

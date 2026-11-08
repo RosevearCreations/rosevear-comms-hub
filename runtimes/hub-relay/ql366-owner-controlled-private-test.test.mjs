@@ -112,4 +112,14 @@ test('additive master org migration seeds only public pins and six held shells',
   assert.match(sql,/PUBLIC_PIN_ONLY_NO_AUTH_SESSION/);
   assert.match(sql,/PENDING_VERIFIED_AUTH_USERS/);
   assert.match(sql,/DISCONNECTED \/ HOLD/);
+  assert.match(sql,/receiver_stop_sha256 char\(64\) NOT NULL/);
+});
+
+test('TEST receipt archival is gated behind independent receiver STOP evidence',()=>{
+  const source=readFileSync(new URL('./ql366-owner-controlled-private-test.mjs',import.meta.url),'utf8');
+  const stop=source.indexOf('const stopped=await verifyReceiverStopped(');
+  const archived=source.indexOf('archived=await appendSignedReceipt(');
+  assert.ok(stop>=0&&archived>stop);
+  assert.match(source,/stopped\.receiverActivated!==false\|\|stopped\.connected!==false/);
+  assert.match(source,/receiverStopped:true,receiverStopSha256:sha\(stopped\)/);
 });

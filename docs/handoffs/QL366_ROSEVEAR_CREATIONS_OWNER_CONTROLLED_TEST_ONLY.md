@@ -99,8 +99,9 @@ source at a time:
    both original-host key custody callbacks, the exact signed QL-363 contract,
    six still-HELD peers, original operator session and receiver OFF.
 4. The private adapter atomically claims the unique operation, attempts one
-   pinned-TLS GET, validates the source-signed health receipt, archives the
-   evidence and independently proves receiver STOP. Failed or expired
+   pinned-TLS GET, validates the source-signed health receipt, independently
+   proves receiver STOP, and **only then** archives the completed evidence.
+   Failed or expired
    operations are **never automatically retried**.
 5. Record the genuine result as `PRIVATE_TEST_VERIFIED_STILL_HELD`; no
    operational connection or source-app grant is activated automatically.
