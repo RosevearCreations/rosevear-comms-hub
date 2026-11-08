@@ -12,13 +12,16 @@ export const GAP_IDS = Object.freeze(Array.from({ length: 14 }, (_, i) => `G${St
 // These are the accepted QL-171 source fingerprints. Any movement or expansion
 // of a trust boundary requires a reviewed inventory update, not a silent pass.
 export const SOURCE_ANCHORS = Object.freeze([
-  { id: 'mounted-ui', path: 'app/src/main.tsx', needles: ['<AdminSessionGate>', '<OperatorShell />', '<SiteHelpSystem />'] },
+  { id: 'mounted-ui', path: 'app/src/main.tsx', needles: ['<AdminSessionGate>', '<OperatorShell />', '<SiteHelpSystem />', '<MasterOwnerSessionGate />'] },
   { id: 'unified-shell', path: 'app/src/operator/OperatorShell.tsx', needles: ['<App activeBrandId', '<DisabledInterfacePreview embedded', '<Ql093SafeReadPreview embedded', '<DisabledOperatorConsole embedded', 'DISABLED PREVIEW'] },
   { id: 'two-brands', path: 'app/src/data/brands.ts', needles: ["id: 'rosiedazzlers'", "id: 'devilndove'"] },
   { id: 'local-inbox', path: 'app/src/App.tsx', needles: ["'inbox'", "'contacts'", "'tasks'", "'intakes'", "'data'", 'createManualLead', 'exportHubDb', 'resetHubDb'] },
   { id: 'local-persistence', path: 'app/src/storage/localRepository.ts', needles: ['window.localStorage.getItem', 'window.localStorage.setItem', 'export function importHubDb', 'export function saveHubDb'] },
   { id: 'api-local-facade', path: 'app/src/api/hubApi.ts', needles: ['createLocalHubApi', 'updateConversationStatus', 'addInternalNote'] },
   { id: 'admin-auth-gate', path: 'app/src/auth/AdminSessionGate.tsx', needles: ['signInWithOtp', ".from('app_admins')"] },
+  { id: 'ql367-master-owner-gate', path: 'app/src/auth/MasterOwnerSessionGate.tsx', needles: ['signInWithPassword', 'verifyOriginalOwner', 'DISCONNECTED / HOLD'] },
+  { id: 'ql367-uuid-owner-lookup', path: 'app/src/auth/ql367OwnerIdentity.ts', needles: ['getUser()', ".from('master_principals')", ".from('master_organization_owner_memberships')"] },
+  { id: 'ql367-verified-owner-client', path: 'app/src/supabase/ql367OwnerClient.ts', needles: ['VITE_ENABLE_MASTER_OWNER_LOGIN', 'sb_publishable_', 'gxujcwpktaickcgzyvnu.supabase.co'] },
   { id: 'auth-flags', path: 'app/src/supabase/client.ts', needles: ['VITE_ENABLE_SUPABASE_CLIENT', 'VITE_ENABLE_HOSTED_DATABASE', 'VITE_SUPABASE_PUBLISHABLE_KEY'] },
   { id: 'synthetic-supabase-allowlist', path: 'app/src/integrations/supabaseReadOnlyClient.ts', needles: ['VITE_QL_ENABLE_SUPABASE_READS', 'expectedSupabaseProjectUrl', 'ql_public_synthetic_conversations', 'ql_public_system_status'] },
   { id: 'synthetic-view-rls', path: 'supabase/migrations/20261010205200_ql090_public_read_only_views.sql', needles: ['security_invoker = true', 'is_synthetic = true', 'is_live_enabled = false'] },
@@ -35,17 +38,21 @@ export const SOURCE_ANCHORS = Object.freeze([
 // being allowlisted here does NOT authorize personal-data use or communication.
 const SINK_RULES = Object.freeze([
   { id: 'browser-storage', pattern: /window\.localStorage\.(?:getItem|setItem|removeItem|clear)\s*\(/g, allowed: ['app/src/storage/localRepository.ts'] },
-  { id: 'create-supabase-client', pattern: /\bcreateClient(?:<[^>]*>)?\s*\(/g, allowed: ['app/src/supabase/client.ts', 'app/src/integrations/supabaseReadOnlyClient.ts'] },
+  { id: 'create-supabase-client', pattern: /\bcreateClient(?:<[^>]*>)?\s*\(/g, allowed: ['app/src/supabase/client.ts', 'app/src/integrations/supabaseReadOnlyClient.ts', 'app/src/supabase/ql367OwnerClient.ts'] },
   { id: 'supabase-query', pattern: /\.from\(\s*['"]([^'"]+)['"]\s*\)/g, allowedTables: {
     'app/src/auth/AdminSessionGate.tsx': ['app_admins'],
     'app/src/supabase/readModel.ts': ['brands', 'app_admins'],
     'app/src/integrations/supabaseReadOnlyClient.ts': ['ql_public_synthetic_conversations', 'ql_public_system_status'],
+    // QL-367: after getUser validates the JWT, the owner portal reads only
+    // the signed-in UUID's own principal and organization membership under RLS.
+    'app/src/auth/ql367OwnerIdentity.ts': ['master_principals', 'master_organization_owner_memberships'],
     // QL-331: reviewed SELECT-only Postgres-RLS metadata boundary; no customer data or writes.
     'app/src/operator/ql331MasterAccess.ts': ['master_principals', 'master_shell_grants', 'master_shell_registry', 'master_child_tenants']
   } },
   { id: 'supabase-mutation', pattern: /\.(?:insert|upsert|delete|update|rpc|invoke)\s*\(/g, allowed: [] },
   { id: 'raw-network', pattern: /\b(?:fetch\s*\(|new\s+WebSocket\s*\(|new\s+EventSource\s*\(|navigator\.sendBeacon\s*\()/g, allowed: [] },
-  { id: 'auth-magic-link', pattern: /\.auth\.signInWithOtp\s*\(/g, allowed: ['app/src/auth/AdminSessionGate.tsx'] }
+  { id: 'auth-magic-link', pattern: /\.auth\.signInWithOtp\s*\(/g, allowed: ['app/src/auth/AdminSessionGate.tsx'] },
+  { id: 'auth-owner-password', pattern: /\.auth\.signInWithPassword\s*\(/g, allowed: ['app/src/auth/MasterOwnerSessionGate.tsx'] }
 ]);
 
 async function walk(directory, root, output) {
