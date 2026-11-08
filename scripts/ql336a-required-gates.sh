@@ -94,4 +94,6 @@ run_gate node --test ../scripts/__tests__/ql372-supervised-accessible-resume.tes
 run_gate npm run test -- src/auth/__tests__/ql372OwnerResume.test.ts src/auth/__tests__/ql372OwnerWalkthrough.test.tsx
 run_gate node --test ../scripts/__tests__/ql373-safe-owner-readiness.test.mjs
 run_gate npm run test -- src/auth/__tests__/ql373OwnerReadiness.test.ts src/auth/__tests__/ql373OwnerReadinessSupport.test.tsx
+run_gate node --test ../scripts/__tests__/ql374-owner-entry-truth-review.test.mjs
+run_gate npm run test -- src/auth/__tests__/ql374OwnerEntry.test.ts src/auth/__tests__/ql374MasterOperatorEntry.test.tsx
 run_gate node --test ../runtimes/hub-relay/ql369-activation-decision.test.mjs
