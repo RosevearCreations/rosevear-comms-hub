@@ -61,7 +61,7 @@ export function OwnerProgressDashboard({
           <p className="ql370-eyebrow">QL-370 · OWNER-ONLY READBACK</p>
           <h2>Our enrollment progress</h2>
         </div>
-        <button type="button" className="ql368-link-button"
+        <button id="ql370-refresh-status" type="button" className="ql368-link-button"
           disabled={!mfaVerified||!gateway||loading||hasIncompleteDigest}
           onClick={()=>setRefreshClick(x=>x+1)}>
           {loading?'Checking…':'Refresh server status'}
