@@ -90,4 +90,6 @@ run_gate node --test ../supabase/functions/ql369-owner-enrollment/verify.test.mj
 run_gate node --test ../supabase/functions/ql369-owner-enrollment/ql370-progress.test.mjs
 run_gate node --test ../scripts/__tests__/ql371-original-owner-guided-handoff.test.mjs
 run_gate npm run test -- src/auth/__tests__/ql371OwnerCeremony.test.ts src/auth/__tests__/ql371OwnerCeremonyGuide.test.tsx
+run_gate node --test ../scripts/__tests__/ql372-supervised-accessible-resume.test.mjs
+run_gate npm run test -- src/auth/__tests__/ql372OwnerResume.test.ts src/auth/__tests__/ql372OwnerWalkthrough.test.tsx
 run_gate node --test ../runtimes/hub-relay/ql369-activation-decision.test.mjs

@@ -74,6 +74,22 @@
 .ql371-handoff button { margin-top: 10px; min-height: 44px; }
 .ql371-handoff a { color: #e6caff; }
 .ql371-handoff textarea:focus-visible, .ql371-handoff a:focus-visible { outline: 3px solid #cab0ff; outline-offset: 2px; }
+.ql372-walkthrough { margin: 20px 0; padding: 18px; border: 1px solid #9c83c2; border-radius: 14px; background: #151b2e; }
+.ql372-walkthrough h3 { margin: 2px 0 10px; }
+.ql372-live { padding: 10px 12px; border-left: 4px solid #dbbd7e; background: #29253c; color: #fff1d1; font-size: 13px; }
+.ql372-current { padding: 17px; margin-top: 13px; border-radius: 12px; border: 1px solid #686183; background: #0f1728; overflow-wrap: anywhere; }
+.ql372-counter { margin: 0 0 6px !important; color: #e9d39b; font-size: 12px; letter-spacing: .07em; font-weight: 800; text-transform: uppercase; }
+.ql372-current h4 { font-size: 19px; line-height: 1.4; margin: 0 0 12px; }
+.ql372-current h4:focus { outline: 3px solid #d8b56f; outline-offset: 5px; }
+.ql372-current p { line-height: 1.55; }
+.ql372-status { padding: 9px 12px; border-left: 3px solid #85cab7; background: #1e2c38; }
+.ql372-resume { padding: 12px; border: 1px solid #7d8568; border-radius: 10px; background: #272d2a; }
+.ql372-resume button { min-height: 44px; }
+.ql372-navigation { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+.ql372-navigation button { min-height: 44px; white-space: normal; text-align: center; flex: 1 1 150px; }
+.ql372-walkthrough .ql371-boundary { margin: 14px 0 0; }
+@media (forced-colors: active) { .ql372-current h4:focus { outline: 3px solid Highlight; } .ql372-current, .ql372-walkthrough { border-color: CanvasText; } }
 @media (max-width: 540px) { .ql368-security { padding: 14px; } .ql367-card { padding: 24px 20px; } }
 @media (max-width: 480px) { .ql370-grid { grid-template-columns: 1fr; } .ql370-audit dl div { display: block; } .ql370-audit dd { text-align: left; max-width: 100%; margin-top: 3px; } }
 @media (max-width: 480px) { .ql371-step { padding: 12px; } .ql371-step p { margin-left: 0; } .ql371-progress-caption { width: 100%; } }
+@media (max-width: 480px) { .ql372-walkthrough { padding: 13px; } .ql372-current { padding: 12px; } .ql372-navigation button { flex-basis: 100%; } }

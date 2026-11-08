@@ -2,6 +2,7 @@ import {useEffect,useMemo,useState} from 'react';
 import type {OwnerProgress} from './ql370OwnerProgress';
 import {buildOwnerCeremonySteps,SAFE_OWNER_HANDOFF,type CeremonyStepStatus}
   from './ql371OwnerCeremony';
+import {OwnerCeremonyWalkthrough} from './OwnerCeremonyWalkthrough';
 
 type Props={
   progress:OwnerProgress|null;
@@ -74,6 +75,8 @@ export function OwnerCeremonyGuide({progress,mfaVerified,intentSupplied,ownerRol
         <p>{step.details}</p>
       </li>)}
     </ol>
+    <OwnerCeremonyWalkthrough key={ownerRole} steps={guide.steps} progress={progress}
+      mfaVerified={mfaVerified} ownerRole={ownerRole} nowMs={nowMs}/>
     <div className="ql371-boundary" role="note">
       <strong>All six applications remain DISCONNECTED / HOLD.</strong>
       A completed checklist or master-owner membership does not approve private TEST, source access, customer operations or a connection.
