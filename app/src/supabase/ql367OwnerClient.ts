@@ -26,7 +26,11 @@ export function getOwnerAuthClient(): SupabaseClient | null {
         storageKey: 'rosevear-comms-owner-session-v1',
         persistSession: true,
         autoRefreshToken: true,
-        detectSessionInUrl: false
+        // QL-368 recovery links return to the same first-party owner route.
+        // PKCE exchanges a short-lived one-use code, not a password or bearer
+        // token manually passed to our UI.
+        detectSessionInUrl: true,
+        flowType: 'pkce'
       }
     });
   }

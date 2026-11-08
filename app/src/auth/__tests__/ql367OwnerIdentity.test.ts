@@ -11,6 +11,8 @@ const receipt = 'a'.repeat(64);
 type Scenario = {
   user?: { id: string; email?: string; email_confirmed_at?: string | null } | null;
   authError?: boolean;
+  sessionError?: boolean;
+  noSession?: boolean;
   principal?: Record<string, unknown> | null;
   member?: Record<string, unknown> | null;
   errorTable?: string;
@@ -29,7 +31,11 @@ function fixture(options: Scenario = {}) {
       signed_enrollment_receipt_sha256: null }
     : options.member;
   const gateway: OwnerIdentityGateway = {
-    auth: { getUser: async () => {
+    auth: { getSession: async () => {
+      calls.push('getSession');
+      return { data: { session: options.noSession ? null : { access_token: 'fixture-token' } },
+        error: options.sessionError ? { message: 'storage error' } : null };
+    }, getUser: async () => {
       calls.push('getUser');
       return { data: { user: user ?? null }, error: options.authError ? { message: 'bad token' } : null };
     } },
@@ -62,8 +68,17 @@ describe('QL-367 authenticated original-owner portal', () => {
       const response = await verifyOriginalOwner(gateway);
       expect(response.state).not.toBe('PENDING');
       expect(response.state).not.toBe('ENROLLED');
-      expect(calls).toEqual(['getUser']);
+      expect(calls).toEqual(['getSession','getUser']);
     }
+  });
+
+  it('QL-368 fixes the first-visit screenshot: no browser session is a normal sign-in, not an error', async () => {
+    const { gateway, calls } = fixture({ noSession: true });
+    const result = await verifyOriginalOwner(gateway);
+    expect(result.state).toBe('SIGNED_OUT');
+    expect(calls).toEqual(['getSession']);
+    const failedSession = await verifyOriginalOwner(fixture({ sessionError: true }).gateway);
+    expect(failedSession.state).toBe('ERROR');
   });
 
   it('rejects an authenticated but unrelated identity; no email can bypass UUID binding', async () => {
@@ -117,7 +132,7 @@ describe('QL-367 authenticated original-owner portal', () => {
     const result = await verifyOriginalOwner(gateway);
     expect(result.state).toBe('ENROLLED');
     expect(result.identity?.ownerRole).toBe('master');
-    expect(calls).toHaveLength(5);
+    expect(calls).toHaveLength(6);
   });
 
   it('fails closed on either RLS query error', async () => {

@@ -143,6 +143,8 @@ test('QL-336A retains all 43 existing application checks in their original order
 });
 
 test('main and PR application CI retain required gate names and fail-closed dependency', () => {
+  assert.match(appCi, /node --test runtimes\/hub-relay\/ql368-dual-owner-enrollment\.test\.mjs/);
+  assert.match(appCi, /node runtimes\/hub-relay\/ql368-owner-enrollment-cli\.mjs --help/);
   assert.match(appCi, /name: App scaffold CI/);
   assert.match(appCi, /on:\s*\n\s*pull_request:\s*\n\s*push:\s*\n\s*branches: \[main\]/);
   assert.match(appCi, /\n\s*app-build:\s*\n/);

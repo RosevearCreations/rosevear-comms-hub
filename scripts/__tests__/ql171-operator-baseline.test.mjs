@@ -86,6 +86,8 @@ test('QL-367 adds only reviewed authenticated owner self-reads and one publishab
   const safe = assessQl171Baseline(baseline);
   assert.equal(safe.status, 'PASS', safe.issues.join('\n'));
   assert.equal(safe.sinkCounts['auth-owner-password'], 1);
+  assert.equal(safe.sinkCounts['auth-owner-recovery'], 2);
+  assert.equal(safe.sinkCounts['auth-owner-mfa-change'], 2);
   assert.equal(safe.sinkCounts['supabase-mutation'], 0);
   const extraTable = changeSource('app/src/auth/ql367OwnerIdentity.ts',
     source => `${source}\nclient.from('contacts')`);
@@ -96,6 +98,16 @@ test('QL-367 adds only reviewed authenticated owner self-reads and one publishab
   const badLogin = assessQl171Baseline(extraLogin);
   assert.equal(badLogin.status, 'DRIFT');
   assert.ok(badLogin.issues.some(issue => issue.includes('auth-owner-password')));
+});
+
+test('QL-368 Auth password recovery and MFA changes stay restricted to the verified owner portal', () => {
+  const badRecovery = changeSource('app/src/App.tsx', source => `${source}\nsupabase.auth.resetPasswordForEmail('x@example.com')`);
+  const badMfa = changeSource('app/src/operator/OperatorShell.tsx', source => `${source}\nsupabase.auth.mfa.enroll({ factorType: 'totp' })`);
+  for (const snapshot of [badRecovery, badMfa]) {
+    const report = assessQl171Baseline(snapshot);
+    assert.equal(report.status, 'DRIFT');
+    assert.ok(report.issues.some(issue => issue.includes('auth-owner-')));
+  }
 });
 
 test('new Supabase write APIs are not hidden inside an allowlisted read file', () => {
