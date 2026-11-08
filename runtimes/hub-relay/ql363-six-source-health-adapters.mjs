@@ -187,7 +187,11 @@ export function createQl363SourceSignedReadOnlyAdapter({record:sourceRecord,
           fail('ORIGINAL_ONE_GET_AUTHORIZATION_REQUIRED');
         const privateProof=await assertOriginalPrivateExecution({
           sourceId:id,operationId:request.operationId,requestSha256});
-        if(privateProof?.state!=='QL362_ORIGINAL_REE_PRIVATE_APPROVED_SINGLE_GET'||
+        // QL-366 is a separately owner-approved TEST-only alternative to the
+        // former external-reviewer gate. Neither proof is supplied by HTTP.
+        if(!['QL362_ORIGINAL_REE_PRIVATE_APPROVED_SINGLE_GET',
+          'QL366_ORIGINAL_REE_DUAL_OWNER_APPROVED_SINGLE_GET']
+          .includes(privateProof?.state)||
           privateProof.originalComputer!=='DESKTOP-AE894KC'||
           privateProof.receiverStopped!==true||
           !sameSha(privateProof.requestSha256,requestSha256))
