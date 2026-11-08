@@ -1,0 +1,12 @@
+.ql374-public-truth{background:#14243b;color:#eff4ff;border:1px solid #6981a7;border-radius:16px;padding:1.2rem;margin:1.2rem 0;line-height:1.55}
+.ql374-public-truth h3{font-size:1.3rem;margin:.25rem 0 .7rem}.ql374-public-truth h4{margin:.3rem 0 .6rem;color:#ffdf9e}
+.ql374-public-truth-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1rem 0}
+.ql374-public-truth-grid>section{border:1px solid #7180a1;background:#1a2b42;border-radius:12px;padding:1rem}
+.ql374-public-truth li{margin:.6rem 0}.ql374-public-truth li small{display:block;color:#d9e2f2;margin:.25rem 0}
+.ql374-truth-footnote{border-left:4px solid #dfbb73;padding:.65rem 1rem;background:#27354d}
+.ql374-public-truth a{color:#ffe3a0}.ql374-public-truth a:focus-visible{outline:3px solid #ffe3a0;outline-offset:2px}
+.ql374-historical{margin:1rem 0;border:1px solid #51627e;border-radius:12px;padding:.6rem 1rem;color:#dde5f3}
+.ql374-historical summary{cursor:pointer;font-weight:700;min-height:44px;display:list-item;align-content:center}
+.ql374-historical summary:focus-visible{outline:3px solid #efce89}
+.ql374-historical-note{font-size:.9rem;color:#f2d89a}
+@media(max-width:750px){.ql374-public-truth-grid{grid-template-columns:1fr}}

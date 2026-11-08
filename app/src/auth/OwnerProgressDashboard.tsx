@@ -12,6 +12,7 @@ type Props={
   intentSha256:string;
   refreshSequence:number;
   onClearLocal:()=>void;
+  onProtectedReadback?:(progress:OwnerProgress|null)=>void;
 };
 const statusText=(status:ProgressAttestationState|undefined):string=>({
   NOT_RECORDED:'No matching attestation',
@@ -25,7 +26,7 @@ function time(value:string|null|undefined){
 }
 
 export function OwnerProgressDashboard({
-  gateway,ownerRole,mfaVerified,intentSha256,refreshSequence,onClearLocal
+  gateway,ownerRole,mfaVerified,intentSha256,refreshSequence,onClearLocal,onProtectedReadback
 }:Props){
   const [snapshot,setSnapshot]=useState<OwnerProgress|null>(null);
   const [loading,setLoading]=useState(false);
@@ -39,6 +40,7 @@ export function OwnerProgressDashboard({
   useEffect(()=>{
     if(!gateway||!mfaVerified||hasIncompleteDigest){
       setSnapshot(null);setLoading(false);setFailed(false);
+      onProtectedReadback?.(null);
       return;
     }
     let cancelled=false;
@@ -46,10 +48,11 @@ export function OwnerProgressDashboard({
     void readOwnerProgress(gateway,ownerRole,validDigest?digest:null).then(result=>{
       if(cancelled)return;
       setSnapshot(result.progress);
+      onProtectedReadback?.(result.ok?result.progress:null);
       setFailed(!result.ok);setLoading(false);
     });
     return ()=>{cancelled=true;};
-  },[gateway,ownerRole,mfaVerified,hasIncompleteDigest,validDigest,digest,refreshSequence,refreshClick]);
+  },[gateway,ownerRole,mfaVerified,hasIncompleteDigest,validDigest,digest,refreshSequence,refreshClick,onProtectedReadback]);
 
   const guidance=ownerProgressGuidance(snapshot,validDigest);
   const holds=snapshot?.connectionsState==='DISCONNECTED / HOLD'&&
