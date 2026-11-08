@@ -163,6 +163,8 @@ jobs:
         run: node --test supabase/functions/ql369-owner-enrollment/verify.test.mjs
       - name: Verify QL-370 protected read-only owner progress and negative access cases
         run: node --test supabase/functions/ql369-owner-enrollment/ql370-progress.test.mjs
+      - name: Verify QL-371 accessibility, expiry warning and non-authorizing cross-device handoff
+        run: node --test scripts/__tests__/ql371-original-owner-guided-handoff.test.mjs
       - name: Verify QL-369 original-only activation decisions and no unattended signing
         run: node --test runtimes/hub-relay/ql369-activation-decision.test.mjs
       - name: Verify QL-369 Windows CI does not possess original activation authority
