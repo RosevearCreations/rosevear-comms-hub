@@ -167,6 +167,8 @@ jobs:
         run: node --test scripts/__tests__/ql371-original-owner-guided-handoff.test.mjs
       - name: Verify QL-372 read-only supervised walkthrough, accessible focus and safe resume
         run: node --test scripts/__tests__/ql372-supervised-accessible-resume.test.mjs
+      - name: Verify QL-373 safe owner help, negative access and independent device observations
+        run: node --test scripts/__tests__/ql373-safe-owner-readiness.test.mjs
       - name: Verify QL-369 original-only activation decisions and no unattended signing
         run: node --test runtimes/hub-relay/ql369-activation-decision.test.mjs
       - name: Verify QL-369 Windows CI does not possess original activation authority

@@ -88,8 +88,31 @@
 .ql372-navigation { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
 .ql372-navigation button { min-height: 44px; white-space: normal; text-align: center; flex: 1 1 150px; }
 .ql372-walkthrough .ql371-boundary { margin: 14px 0 0; }
+.ql373-support { margin: 20px 0; padding: 18px; border: 1px solid #8c7fb0; border-radius: 14px; background: #151b2c; min-width: 0; overflow-wrap: anywhere; }
+.ql373-support h3 { margin: 3px 0 12px; font-size: 19px; }
+.ql373-support h4 { margin: 12px 0; font-size: 15px; }
+.ql373-diagnosis { border: 1px solid #776b96; border-radius: 12px; background: #28283d; padding: 13px; }
+.ql373-diagnosis.ql373-stop { border: 2px solid #ffc277; background: #493033; }
+.ql373-diagnosis.ql373-verified { border-color: #7ed5b0; background: #1a302c; }
+.ql373-support a { color: #e8cfff; text-underline-offset: 3px; }
+.ql373-resources { margin-top: 15px; }
+.ql373-resources ul { padding-left: 20px; line-height: 1.6; }
+.ql373-resources li { margin: 7px 0; }
+.ql373-acceptance { border-top: 1px solid #615978; padding-top: 17px; margin-top: 18px; }
+.ql373-acceptance summary { cursor: pointer; font-weight: 800; color: #e9d3ff; }
+.ql373-fieldset { border: 1px solid #786b93; border-radius: 12px; padding: 12px; min-width: 0; }
+.ql373-fieldset legend { font-weight: 800; padding: 0 5px; }
+.ql373-observation { display: grid; gap: 7px; margin: 12px 0; }
+.ql373-observation label, .ql373-note-label { display: block; font-weight: 700; font-size: 14px; }
+.ql373-observation select { width: 100%; max-width: 100%; min-height: 44px; padding: 10px; border: 1px solid #9687b4; border-radius: 8px; color: #fff; background: #0d1627; font: inherit; }
+.ql373-acceptance textarea { display: block; box-sizing: border-box; width: 100%; min-width: 0; padding: 12px; margin-top: 7px; background: #0d1627; color: #f2eafa; border: 1px solid #9687b4; border-radius: 10px; resize: vertical; font: 13px/1.6 ui-monospace, monospace; }
+.ql373-note-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin: 13px 0; }
+.ql373-note-buttons button { min-height: 44px; flex: 1 1 160px; white-space: normal; }
+.ql373-support a:focus-visible, .ql373-support summary:focus-visible, .ql373-support select:focus-visible, .ql373-support textarea:focus-visible { outline: 3px solid #cab0ff; outline-offset: 3px; }
 @media (forced-colors: active) { .ql372-current h4:focus { outline: 3px solid Highlight; } .ql372-current, .ql372-walkthrough { border-color: CanvasText; } }
+@media (forced-colors: active) { .ql373-support, .ql373-diagnosis, .ql373-fieldset, .ql373-observation select { border-color: CanvasText; } }
 @media (max-width: 540px) { .ql368-security { padding: 14px; } .ql367-card { padding: 24px 20px; } }
 @media (max-width: 480px) { .ql370-grid { grid-template-columns: 1fr; } .ql370-audit dl div { display: block; } .ql370-audit dd { text-align: left; max-width: 100%; margin-top: 3px; } }
 @media (max-width: 480px) { .ql371-step { padding: 12px; } .ql371-step p { margin-left: 0; } .ql371-progress-caption { width: 100%; } }
 @media (max-width: 480px) { .ql372-walkthrough { padding: 13px; } .ql372-current { padding: 12px; } .ql372-navigation button { flex-basis: 100%; } }
+@media (max-width: 480px) { .ql373-support { padding: 12px; } .ql373-note-buttons button { flex-basis: 100%; } }
