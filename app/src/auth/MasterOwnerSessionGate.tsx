@@ -4,6 +4,7 @@ import { verifyOriginalOwner, type OwnerIdentityGateway, type OwnerVerification 
 import { inspectOwnerMfa, isValidTotpCode, safeTotpQrSource, type OwnerMfaGateway, type OwnerMfaState } from './ql368OwnerMfa';
 import {activateDualOwnerFromFiles,attestOwnerMfa,QL369_SHA256,type OwnerCeremonyGateway} from './ql369OwnerEnrollment';
 import {OwnerProgressDashboard} from './OwnerProgressDashboard';
+import {clearAllOwnerHelpPositions} from './ql372OwnerResume';
 import './ql367MasterOwner.css';
 
 type DisplayState = 'CHECKING' | 'SIGNED_OUT' | 'PENDING' | 'ENROLLED' | 'DENIED' | 'ERROR';
@@ -197,6 +198,9 @@ export function MasterOwnerSessionGate() {
 
   async function signOut(note = 'Signed out.') {
     if (!client) return;
+    // QL-372: the only resumable data is an inert help-page position.
+    // Clear both roles on sign-out; never preserve Auth or ceremony evidence.
+    try {clearAllOwnerHelpPositions(window.sessionStorage);} catch { /* Storage may be disabled. */ }
     ++requestId.current;
     setState('CHECKING');
     setVerification(null);
@@ -270,7 +274,7 @@ export function MasterOwnerSessionGate() {
     <main className="ql367-screen">
       <section className="ql367-card" aria-label="Rosevear Creations master owner sign-in">
         <div className="ql367-topline"><span>ROSEVEAR CREATIONS</span><a href="#/">← Public preview</a></div>
-        <p className="ql367-overline">Rosevear Comms Hub · QL-371</p>
+        <p className="ql367-overline">Rosevear Comms Hub · QL-372</p>
         <h1>Master Owner Portal</h1>
         <p>Personal authentication and two-owner enrollment readiness for Ree and Jack. Rosevear Creations is the organization, not a shared user account.</p>
 
@@ -368,12 +372,14 @@ export function MasterOwnerSessionGate() {
 
         {config.ready && authenticatedOwner && identity && !recoveryReturn && (
           <OwnerProgressDashboard
+            key={ceremonyReset}
             gateway={client as unknown as OwnerCeremonyGateway}
             ownerRole={identity.ownerRole}
             mfaVerified={mfa?.kind==='VERIFIED'}
             intentSha256={enrollmentIntentSha}
             refreshSequence={progressRefresh}
             onClearLocal={()=>{
+              try {clearAllOwnerHelpPositions(window.sessionStorage);} catch { /* Storage may be disabled. */ }
               setEnrollmentIntentSha('');
               setOwnerMfaAttestedUntil('');
               setSignedPacketFile(null);

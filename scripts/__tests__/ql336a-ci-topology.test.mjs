@@ -51,6 +51,8 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql369-owner-enrollment/ql370-progress.test.mjs')
       && !line.includes('ql371-original-owner-guided-handoff.test.mjs')
       && !line.includes('ql371OwnerCeremony.test.ts')
+      && !line.includes('ql372-supervised-accessible-resume.test.mjs')
+      && !line.includes('ql372OwnerResume.test.ts')
       && !line.includes('hub-relay/ql369-activation-decision.test.mjs')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
@@ -154,6 +156,8 @@ test('main and PR application CI retain required gate names and fail-closed depe
   assert.match(appCi, /node --test scripts\/__tests__\/ql371-original-owner-guided-handoff\.test\.mjs/);
   assert.match(gates, /run_gate node --test \.\.\/scripts\/__tests__\/ql371-original-owner-guided-handoff\.test\.mjs/);
   assert.match(gates, /run_gate npm run test -- src\/auth\/__tests__\/ql371OwnerCeremony\.test\.ts src\/auth\/__tests__\/ql371OwnerCeremonyGuide\.test\.tsx/);
+  assert.match(gates, /run_gate node --test \.\.\/scripts\/__tests__\/ql372-supervised-accessible-resume\.test\.mjs/);
+  assert.match(gates, /run_gate npm run test -- src\/auth\/__tests__\/ql372OwnerResume\.test\.ts src\/auth\/__tests__\/ql372OwnerWalkthrough\.test\.tsx/);
   assert.match(gates, /run_gate node --test \.\.\/supabase\/functions\/ql369-owner-enrollment\/verify\.test\.mjs/);
   assert.match(appCi, /node --test runtimes\/hub-relay\/ql369-activation-decision\.test\.mjs/);
   assert.match(appCi, /node runtimes\/hub-relay\/ql369-owner-activation-cli\.mjs --help/);
