@@ -69,6 +69,19 @@ Deno.serve(async (request:Request)=>{
     const raw=await request.text();
     if(raw.length>100000)return response(413,'DENY_QL369_OVERSIZED_REQUEST',{},origin);
     const body=JSON.parse(raw);
+    // QL-370: AAL2 verified read-only status. The server, not the browser,
+    // resolves the original owner and reads private attestation/audit state.
+    // No recovery, signing, grant or membership mutation is available here.
+    if(body?.action==='status'&&
+      (exact(body,['action'])||exact(body,['action','intentSha256']))){
+      const intentSha256=body.intentSha256??null;
+      if(intentSha256!==null&&(typeof intentSha256!=='string'||
+        !SHA.test(intentSha256)||intentSha256==='0'.repeat(64)))
+        return response(400,'DENY_QL370_VALID_INTENT_HASH_REQUIRED',{},origin);
+      const result=await invokePrivateRpc(url,serviceKey,'ql370_get_original_owner_progress',{
+        p_user_id:user.id,p_session_id:claims.session_id,p_intent_sha256:intentSha256});
+      return response(200,result.state,result,origin);
+    }
     if(exact(body,['action','intentSha256'])&&body.action==='attest'){
       if(!SHA.test(body.intentSha256)||body.intentSha256==='0'.repeat(64))
         return response(400,'DENY_QL369_INTENT_SHA256_REQUIRED',{},origin);

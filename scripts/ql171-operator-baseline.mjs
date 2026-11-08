@@ -23,6 +23,8 @@ export const SOURCE_ANCHORS = Object.freeze([
   { id: 'ql368-owner-mfa-recovery', path: 'app/src/auth/MasterOwnerSessionGate.tsx', needles: ['resetPasswordForEmail', 'updateUser({ password:', 'mfa.enroll', 'mfa.challengeAndVerify', 'Pending original-owner approval'] },
   { id: 'ql368-mfa-readiness', path: 'app/src/auth/ql368OwnerMfa.ts', needles: ['listFactors()', 'getAuthenticatorAssuranceLevel()', "level.currentLevel !== 'aal2'", "status === 'verified'"] },
   { id: 'ql369-owner-ceremony-boundary', path: 'app/src/auth/ql369OwnerEnrollment.ts', needles: ["QL369_FUNCTION = 'ql369-owner-enrollment'", 'functions.invoke(QL369_FUNCTION', "action:'attest'", "action:'activate'"] },
+  { id: 'ql370-redacted-progress-gateway', path: 'app/src/auth/ql369OwnerEnrollment.ts', needles: ['readOwnerProgress', "action:'status'", 'parseOwnerProgress'] },
+  { id: 'ql370-owner-progress-dashboard', path: 'app/src/auth/OwnerProgressDashboard.tsx', needles: ['readOwnerProgress', 'Our enrollment progress', 'DISCONNECTED / HOLD', 'Clear this browser'] },
   { id: 'ql367-uuid-owner-lookup', path: 'app/src/auth/ql367OwnerIdentity.ts', needles: ['getUser()', ".from('master_principals')", ".from('master_organization_owner_memberships')"] },
   { id: 'ql367-verified-owner-client', path: 'app/src/supabase/ql367OwnerClient.ts', needles: ['VITE_ENABLE_MASTER_OWNER_LOGIN', 'sb_publishable_', 'gxujcwpktaickcgzyvnu.supabase.co'] },
   { id: 'auth-flags', path: 'app/src/supabase/client.ts', needles: ['VITE_ENABLE_SUPABASE_CLIENT', 'VITE_ENABLE_HOSTED_DATABASE', 'VITE_SUPABASE_PUBLISHABLE_KEY'] },
