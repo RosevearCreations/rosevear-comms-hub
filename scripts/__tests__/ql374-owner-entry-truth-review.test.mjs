@@ -29,7 +29,7 @@ test('personal entry has focus, announcement, no first-use bypass and negative p
   assert.match(policy,/mayActivateSource:false/);
   assert.match(policy,/heldApplicationShells===6/);
   assert.match(policy,/sessionAal2Verified/);
-  assert.match(policy,/Math\.abs\(nowMs-snapshotAt\)<=120000/);
+  assert.match(policy,/nowMs-snapshotAt<=120000&&snapshotAt-nowMs<=10000/);
 });
 test('dated old preflights are archived, but original signatures and HOLD requirements survive',()=>{
   assert.match(command,/\<Ql374TruthReconciliation\//);
