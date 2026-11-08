@@ -3,7 +3,7 @@
 .ql374-heading p{line-height:1.55}
 .ql374-badge{display:inline-block;border-radius:999px;padding:.5rem .8rem;background:#303051;color:#f4ddaa;font-weight:700}
 .ql374-badge.ql374-stop,.ql374-truth.ql374-stop{background:#48243b;color:#ffe8e8;border-color:#e9a7ad}
-.ql374-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;margin:1.3rem 0}
+.ql374-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.6rem;margin:1.3rem 0}
 .ql374-nav button{border:1px solid #666180;border-radius:12px;background:#24243d;color:#f5f1ff;padding:.85rem;text-align:left;min-height:60px;cursor:pointer}
 .ql374-nav button strong,.ql374-nav button small{display:block}.ql374-nav button small{margin-top:.3rem;line-height:1.35;color:#c5c0db}
 .ql374-nav button.ql374-selected{border:2px solid #f0c77d;background:#393154}

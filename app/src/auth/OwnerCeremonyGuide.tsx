@@ -47,7 +47,7 @@ export function OwnerCeremonyGuide({progress,mfaVerified,intentSupplied,ownerRol
     }
   }
 
-  return <section className="ql371-guide" aria-label="QL-371 guided original-owner enrollment ceremony">
+  return <section id="ql371-owner-ceremony" className="ql371-guide" aria-label="QL-371 guided original-owner enrollment ceremony">
     <div className="ql371-topline">
       <div>
         <p className="ql370-eyebrow">QL-371 · GUIDED ORIGINAL-OWNER HANDOFF</p>
