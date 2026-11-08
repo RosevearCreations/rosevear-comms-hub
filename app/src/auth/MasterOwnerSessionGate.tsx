@@ -5,6 +5,8 @@ import { inspectOwnerMfa, isValidTotpCode, safeTotpQrSource, type OwnerMfaGatewa
 import {activateDualOwnerFromFiles,attestOwnerMfa,QL369_SHA256,type OwnerCeremonyGateway} from './ql369OwnerEnrollment';
 import {OwnerProgressDashboard} from './OwnerProgressDashboard';
 import {clearAllOwnerHelpPositions} from './ql372OwnerResume';
+import {MasterOperatorEntry} from './MasterOperatorEntry';
+import type {OwnerProgress} from './ql370OwnerProgress';
 import './ql367MasterOwner.css';
 
 type DisplayState = 'CHECKING' | 'SIGNED_OUT' | 'PENDING' | 'ENROLLED' | 'DENIED' | 'ERROR';
@@ -47,6 +49,7 @@ export function MasterOwnerSessionGate() {
   const [masterCandidateFile, setMasterCandidateFile] = useState<File | null>(null);
   const [progressRefresh, setProgressRefresh] = useState(0);
   const [ceremonyReset, setCeremonyReset] = useState(0);
+  const [operatorReadback,setOperatorReadback]=useState<OwnerProgress|null>(null);
 
   const verify = useCallback(async () => {
     if (!client) return;
@@ -54,6 +57,7 @@ export function MasterOwnerSessionGate() {
     const outcome = await verifyOriginalOwner(client as unknown as OwnerIdentityGateway);
     if (request !== requestId.current) return;
     if (outcome.state !== 'PENDING' && outcome.state !== 'ENROLLED') {
+      setOperatorReadback(null);
       setMfa(null);
       setSetup(null);
       setMfaCode('');
@@ -77,6 +81,11 @@ export function MasterOwnerSessionGate() {
     void verify();
     const { data } = client.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY') setRecoveryReturn(true);
+      // QL-374: lock any previously shown personal shell immediately when
+      // Supabase changes sessions. Reopen only after fresh RLS and AAL2 checks.
+      setState('CHECKING');
+      setMfa(null);
+      setOperatorReadback(null);
       // Defer all other Auth calls outside Supabase's change callback.
       queueMicrotask(() => { void verify(); });
     });
@@ -213,6 +222,7 @@ export function MasterOwnerSessionGate() {
     setSourceCandidateFile(null);
     setMasterCandidateFile(null);
     setProgressRefresh(0);
+    setOperatorReadback(null);
     setCeremonyReset(x=>x+1);
     let error = true;
     try {
@@ -274,7 +284,7 @@ export function MasterOwnerSessionGate() {
     <main className="ql367-screen">
       <section className="ql367-card" aria-label="Rosevear Creations master owner sign-in">
         <div className="ql367-topline"><span>ROSEVEAR CREATIONS</span><a href="#/">← Public preview</a></div>
-        <p className="ql367-overline">Rosevear Comms Hub · QL-373</p>
+        <p className="ql367-overline">Rosevear Comms Hub · QL-374</p>
         <h1>Master Owner Portal</h1>
         <p>Personal authentication and two-owner enrollment readiness for Ree and Jack. Rosevear Creations is the organization, not a shared user account.</p>
 
@@ -319,6 +329,11 @@ export function MasterOwnerSessionGate() {
             <p><strong>Enrollment:</strong> {state === 'ENROLLED' ? 'Verified owner record' : 'Pending original-owner approval'}</p>
             <p>All six application connections remain <strong>DISCONNECTED / HOLD</strong>. No customer data or source operations have been enabled.</p>
           </section>
+        )}
+
+        {config.ready && authenticatedOwner && identity && mfa?.kind==='VERIFIED' && !recoveryReturn && (
+          <MasterOperatorEntry key={`${identity.ownerRole}-${ceremonyReset}`} ownerRole={identity.ownerRole}
+            enrolled={state==='ENROLLED'} aal2={true} progress={operatorReadback}/>
         )}
 
         {config.ready && authenticatedOwner && recoveryReturn && (
@@ -378,6 +393,7 @@ export function MasterOwnerSessionGate() {
             mfaVerified={mfa?.kind==='VERIFIED'}
             intentSha256={enrollmentIntentSha}
             refreshSequence={progressRefresh}
+            onProtectedReadback={setOperatorReadback}
             onClearLocal={()=>{
               try {clearAllOwnerHelpPositions(window.sessionStorage);} catch { /* Storage may be disabled. */ }
               setEnrollmentIntentSha('');
@@ -399,7 +415,7 @@ export function MasterOwnerSessionGate() {
               <label htmlFor="ql369-intent-sha">Original enrollment intent SHA-256</label>
               <input id="ql369-intent-sha" type="text" spellCheck={false} autoComplete="off" maxLength={64}
                 pattern="[a-fA-F0-9]{64}" required value={enrollmentIntentSha}
-                onChange={e=>setEnrollmentIntentSha(e.target.value)} disabled={busy} />
+                onChange={e=>{setOperatorReadback(null);setEnrollmentIntentSha(e.target.value);}} disabled={busy} />
               <button disabled={busy||mfa?.kind!=='VERIFIED'} type="submit">Verify my current MFA session with the server</button>
             </form>
             {mfa?.kind!=='VERIFIED'&&<p role="status">An authenticator-verified AAL2 session is required before this button becomes available.</p>}

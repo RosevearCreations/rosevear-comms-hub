@@ -1,0 +1,22 @@
+.ql374-entry{margin:1.5rem 0;padding:1.35rem;border:1px solid #695b8b;border-radius:18px;background:#191a30;color:#f2efff}
+.ql374-heading h2{margin:.3rem 0 .6rem;font-size:clamp(1.55rem,3vw,2rem)}
+.ql374-heading p{line-height:1.55}
+.ql374-badge{display:inline-block;border-radius:999px;padding:.5rem .8rem;background:#303051;color:#f4ddaa;font-weight:700}
+.ql374-badge.ql374-stop,.ql374-truth.ql374-stop{background:#48243b;color:#ffe8e8;border-color:#e9a7ad}
+.ql374-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;margin:1.3rem 0}
+.ql374-nav button{border:1px solid #666180;border-radius:12px;background:#24243d;color:#f5f1ff;padding:.85rem;text-align:left;min-height:60px;cursor:pointer}
+.ql374-nav button strong,.ql374-nav button small{display:block}.ql374-nav button small{margin-top:.3rem;line-height:1.35;color:#c5c0db}
+.ql374-nav button.ql374-selected{border:2px solid #f0c77d;background:#393154}
+.ql374-panel{border:1px solid #5b5377;border-radius:12px;padding:1rem;background:#151829}
+.ql374-panel h3{font-size:1.35rem}.ql374-panel h3:focus{outline:3px solid #f7ce8b;outline-offset:5px}
+.ql374-panel h4{margin-top:1.2rem}.ql374-panel li{margin:.55rem 0;line-height:1.5}
+.ql374-announcement{font-size:.9rem;color:#d5cbea}.ql374-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem;margin:1rem 0}
+.ql374-cards article{padding:.8rem;border:1px solid #625b7d;border-radius:10px;background:#25243e;min-width:0}
+.ql374-cards span,.ql374-cards strong,.ql374-cards small{display:block}.ql374-cards strong{font-size:1.2rem;margin:.4rem 0}.ql374-cards small{line-height:1.4;color:#d1cde0}
+.ql374-actions{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}.ql374-actions button{background:#e6c481;color:#191322;padding:.7rem 1rem;border-radius:10px;border:0;font-weight:700;min-height:44px;cursor:pointer}
+.ql374-entry a{color:#f5d795;text-decoration:underline;text-underline-offset:3px}
+.ql374-nav button:focus-visible,.ql374-actions button:focus-visible,.ql374-entry a:focus-visible{outline:3px solid #f7ce8b;outline-offset:3px}
+.ql374-truth{padding:.85rem;border:1px solid #69617f;background:#28263f;border-radius:10px}.ql374-truth p{line-height:1.5}
+.ql374-guide{padding-left:1.4rem}.ql374-boundary{border-left:4px solid #e7be79;padding:.8rem 1rem;background:#29243b;line-height:1.5}
+@media(max-width:680px){.ql374-entry{padding:1rem}.ql374-nav{grid-template-columns:1fr}.ql374-cards{grid-template-columns:1fr}}
+@media(forced-colors:active){.ql374-nav button.ql374-selected,.ql374-cards article,.ql374-truth{border:2px solid CanvasText}}

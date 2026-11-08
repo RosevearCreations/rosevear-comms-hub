@@ -25,6 +25,7 @@ import { Ql333DiscoveryControl } from './Ql333DiscoveryControl';
 import { Ql334ProcedureCenter } from './Ql334ProcedureCenter';
 import { Ql335ShellReadiness } from './Ql335ShellReadiness';
 import { Ql336ChildShellReadiness } from './Ql336ChildShellReadiness';
+import { Ql374TruthReconciliation } from './Ql374TruthReconciliation';
 import type { MockQueueState } from './ql194WorkQueue';
 import { Ql302StatisticsTrend } from './Ql302StatisticsTrend';
 import { Ql303CapabilityReadiness } from './Ql303CapabilityReadiness';
@@ -83,7 +84,7 @@ const categories: readonly { id: QueueCategory; label: string; tone: string }[] 
 
 const readiness = [
   { label: 'Source registry', value: 6, max: 6, note: 'Known GitHub source mappings' },
-  { label: 'Original Proof-B accepted', value: 0, max: 6, note: 'Six immutable 404 observations' },
+  { label: 'Original Proof-B accepted', value: 0, max: 6, note: 'Historical 404s are not live acceptance' },
   { label: 'Independent authorizations', value: 0, max: 6, note: 'No genuine signer / witness receipts' },
   { label: 'Authorized gateway GET trials', value: 0, max: 6, note: 'No live or nonproduction request sent' }
 ] as const;
@@ -109,7 +110,7 @@ const metricCopy: Record<Ql271CommandMode, readonly { label: string; value: stri
   ],
   system_status: [
     { label: 'Systems registered', value: '6 / 6', max: 6, current: 6, note: 'Source mapping verified', tone: 'violet' },
-    { label: 'Original source files', value: '0 / 6', max: 6, current: 0, note: 'All observed HTTP 404', tone: 'cyan' },
+    { label: 'Original proof at earlier snapshot', value: '0 / 6', max: 6, current: 0, note: 'Historical HTTP 404 evidence; verify current sources separately', tone: 'cyan' },
     { label: 'Connected tenants', value: '0', max: 6, current: 0, note: 'Nonproduction isolation unverified', tone: 'green' },
     { label: 'Release holds', value: '12', max: 12, current: 12, note: 'Safety gate enforced', tone: 'gold' }
   ]
@@ -151,6 +152,7 @@ export function Ql271CommandSurfaces({ mode, organizationId, queue, onNavigate, 
       </button>)}
     </nav>
     {mode === 'it_command' && <p className="ql334-shortcut"><a href="#ql334-title">Open six-app connection centre · QL-334</a> — public source links and private trust status</p>}
+    {(mode==='it_command'||mode==='system_status')&&<Ql374TruthReconciliation/>}
 
     <Ql319AdminPreferences mode={mode} preferences={preferences} saved={saved} storageAvailable={storageAvailable}
       onNavigate={onNavigate} onChange={updatePreferences}
@@ -175,22 +177,26 @@ export function Ql271CommandSurfaces({ mode, organizationId, queue, onNavigate, 
     {mode === 'it_command' && <Ql326ConnectionConfiguration />}
     {mode === 'it_command' && <Ql327ContractCompatibility />}
     {mode === 'it_command' && <Ql328DryRunOrchestrator />}
-    {mode === 'it_command' && <Ql329MasterShellTruth />}
+    {mode === 'it_command' && <details className="ql374-historical"><summary>Archived · QL-329 original planned-shell architecture (not a current prerequisite)</summary>
+      <p className="ql374-historical-note">Original November 3 snapshot only. The QL-367 authenticated owner portal supersedes the old no-session assumption.</p><Ql329MasterShellTruth />
+    </details>}
     <Ql330OwnerCloseout mode={mode} />
-    <Ql331MasterControl mode={mode} />
+    {(mode==='it_command'||mode==='system_status'||mode==='management')&&<details className="ql374-historical"><summary>Archived · QL-331 original zero-Auth-user preflight (not a current prerequisite)</summary>
+      <p className="ql374-historical-note">The old zero-user count is a historical fixture, not a live Supabase count. Membership approvals and RLS controls remain mandatory.</p><Ql331MasterControl mode={mode}/>
+    </details>}
     <Ql332CustodyControl mode={mode} />
     <Ql333DiscoveryControl />
     {mode === 'it_command' && <Ql334ProcedureCenter />}
     {mode === 'it_command' && <Ql335ShellReadiness />}
     {mode === 'it_command' && <Ql336ChildShellReadiness />}
     {(mode === 'it_command' || mode === 'system_status') && <Ql303CapabilityReadiness />}
-    {(mode === 'it_command' || mode === 'system_status') && <Ql307ProofEvidence />}
+    {(mode === 'it_command' || mode === 'system_status') && <details className="ql374-historical"><summary>Archived · QL-307 early original-proof HTTP response snapshot</summary><p className="ql374-historical-note">These immutable responses do not describe the current software or replace original-source acceptance.</p><Ql307ProofEvidence /></details>}
     {(mode === 'it_command' || mode === 'system_status') && <Ql308TenantContracts />}
-    {(mode === 'it_command' || mode === 'system_status') && <Ql309PilotPreflight />}
+    {(mode === 'it_command' || mode === 'system_status') && <details className="ql374-historical"><summary>Archived · QL-309 historical pilot NO-GO snapshot</summary><p className="ql374-historical-note">Superseded as a software-entry prerequisite. The independent signer, witness and source approval gates remain on HOLD.</p><Ql309PilotPreflight /></details>}
     {mode === 'management' && <Ql304OperatorAcceptance organizationId={organizationId} onSelectOrganization={onSelectOrganization} onNavigate={onNavigate} />}
     {mode === 'management' && <Ql305FeedbackTriage organizationId={organizationId} onSelectOrganization={onSelectOrganization} onNavigate={onNavigate} />}
     {mode === 'management' && <Ql306HandoffQuality organizationId={organizationId} onSelectOrganization={onSelectOrganization} onNavigate={onNavigate} />}
-    {(mode === 'management' || mode === 'system_status') && <Ql310BatchReconciliation />}
+    {(mode === 'management' || mode === 'system_status') && <details className="ql374-historical"><summary>Archived · QL-310 historical source batch reconciliation</summary><Ql310BatchReconciliation /></details>}
 
     {mode === 'analytics' && <Ql302StatisticsTrend key={`trend-${organizationId}`} organizationId={organizationId} />}
 
@@ -246,11 +252,11 @@ export function Ql271CommandSurfaces({ mode, organizationId, queue, onNavigate, 
         <div className="ql271-source-list">{QL270_SOURCES.map(source=><div className="ql271-source-row" key={source.id}>
           <span className={`ql271-source-glyph tone-${source.tone}`} aria-hidden="true">{source.icon}</span>
           <div><strong>{source.label}</strong><small>{source.kind} · {source.benefit}</small></div>
-          <span className="ql271-status-pill">Proof 404 · HOLD</span>
+          <span className="ql271-status-pill">Historical 404 · still HOLD</span>
         </div>)}</div>
       </section>
       <section className="ql271-panel" aria-labelledby="ql271-it-gates"><div className="ql271-panel-header"><div><p className="ql271-eyebrow">Independent verification</p><h4 id="ql271-it-gates">Connection release checklist</h4></div></div>
-        <ol className="ql271-steps"><li><strong>Original Proof-B</strong><small>Six source files absent</small></li><li><strong>Role &amp; signer pin</strong><small>Independent custody evidence not accepted</small></li><li><strong>Isolated TEST tenant</strong><small>No reviewed role-specific tenant receipt</small></li><li><strong>Owner-authorized GET</strong><small>Trial remains blocked</small></li></ol>
+        <ol className="ql271-steps"><li><strong>Current source evidence</strong><small>Historical absence alone is no longer a software login gate</small></li><li><strong>Role &amp; signer pin</strong><small>Independent custody evidence still required</small></li><li><strong>Isolated TEST tenant</strong><small>No reviewed role-specific tenant receipt</small></li><li><strong>Owner-authorized GET</strong><small>Trial remains blocked</small></li></ol>
         <button className="ql271-panel-action" type="button" onClick={()=>onNavigate('connections')}>Open preflight inspector <span>›</span></button>
       </section>
     </div>}
