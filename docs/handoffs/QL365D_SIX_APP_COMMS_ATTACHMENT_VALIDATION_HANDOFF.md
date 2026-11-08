@@ -8,6 +8,16 @@
 
 **Status:** IMPLEMENT/VERIFY SOFTWARE ONLY. **Do not mark CONNECTED or activate a private receiver.**
 
+**Owner-approved QL-366 policy update:** [Rosevear Creations master organization
+and two-original-owner TEST-only authorization](QL366_ROSEVEAR_CREATIONS_OWNER_CONTROLLED_TEST_ONLY.md)
+is now the proposed route for a supervised private health TEST. Ree and Jack
+are the only human master administrators. The old external-reviewer route is
+not retroactively satisfied and still applies to evidence created under its
+legacy policy. The new policy also does **not** waive genuine independent
+*source-application* signer, TLS/contract, one-use claim, receipt or STOP proof.
+No source should create a shared-password `Rosevear Creations` login; it is
+the parent organization, while YW and iCamp remain platform shells.
+
 **Prior validation already completed:** See the
 [QL-365D original field evidence reconciliation](QL365D_PRIOR_FIELD_VALIDATION_RECONCILIATION.md).
 Ree's and Jack's original host roles, public-key fingerprints and file hashes
