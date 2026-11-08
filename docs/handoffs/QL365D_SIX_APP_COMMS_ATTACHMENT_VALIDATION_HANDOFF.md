@@ -5,7 +5,16 @@
 **Audience:** The development/operator agent for each of the six source applications.
 
 **Comms repository:** `RosevearCreations/rosevear-comms-hub`
+
 **Status:** IMPLEMENT/VERIFY SOFTWARE ONLY. **Do not mark CONNECTED or activate a private receiver.**
+
+**Prior validation already completed:** See the
+[QL-365D original field evidence reconciliation](QL365D_PRIOR_FIELD_VALIDATION_RECONCILIATION.md).
+Ree's and Jack's original host roles, public-key fingerprints and file hashes
+were already checked and hard-pinned in the Comms repository. **Do not ask
+either owner to repeat QL-359/356 PowerShell status checks or the six apps'
+synthetic validation.** The unmet requirement is independently verified
+signed authorization—not another status-script round.
 
 > **Instruction to the receiving app:** Use the row for your repository and complete
 > the checklist below. Return an evidence report with exact commits, signature
@@ -108,8 +117,10 @@ the **code-level** checklist and returned its signed source evidence.
    `verifyQl364DistributedSourceHandlers` and
    `verifyQl363SourceHealthContract`. **Public GitHub readback alone is not
    original issuer/source signer custody.**
-2. The original Ree and Jack computers complete the QL-365A/B/C first-time
-   owner and external reviewer evidence process. On Ree's original Windows
+2. **Reuse the existing original public-key pins and prior field observations.**
+   Do not rerun them merely to complete this software handoff. Once genuinely
+   new independent issuer/reviewer evidence is present, the original owners
+   can complete the *separate* authorized QL-365A/B/C signing ceremony. On Ree's original Windows
    server (`DESKTOP-AE894KC`, account `ree`) and Jack's independently
    controlled computer (`TEMPLAR`, account `jfros`), verify the same public
    digest and sign **one named source** under QL-365D within the 90-second
