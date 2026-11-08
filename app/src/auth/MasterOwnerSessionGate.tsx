@@ -3,6 +3,7 @@ import { getOwnerAuthClient, getOwnerPortalConfig } from '../supabase/ql367Owner
 import { verifyOriginalOwner, type OwnerIdentityGateway, type OwnerVerification } from './ql367OwnerIdentity';
 import { inspectOwnerMfa, isValidTotpCode, safeTotpQrSource, type OwnerMfaGateway, type OwnerMfaState } from './ql368OwnerMfa';
 import {activateDualOwnerFromFiles,attestOwnerMfa,QL369_SHA256,type OwnerCeremonyGateway} from './ql369OwnerEnrollment';
+import {OwnerProgressDashboard} from './OwnerProgressDashboard';
 import './ql367MasterOwner.css';
 
 type DisplayState = 'CHECKING' | 'SIGNED_OUT' | 'PENDING' | 'ENROLLED' | 'DENIED' | 'ERROR';
@@ -43,6 +44,8 @@ export function MasterOwnerSessionGate() {
   const [signedPacketFile, setSignedPacketFile] = useState<File | null>(null);
   const [sourceCandidateFile, setSourceCandidateFile] = useState<File | null>(null);
   const [masterCandidateFile, setMasterCandidateFile] = useState<File | null>(null);
+  const [progressRefresh, setProgressRefresh] = useState(0);
+  const [ceremonyReset, setCeremonyReset] = useState(0);
 
   const verify = useCallback(async () => {
     if (!client) return;
@@ -205,6 +208,8 @@ export function MasterOwnerSessionGate() {
     setSignedPacketFile(null);
     setSourceCandidateFile(null);
     setMasterCandidateFile(null);
+    setProgressRefresh(0);
+    setCeremonyReset(x=>x+1);
     let error = true;
     try {
       const response = await client.auth.signOut();
@@ -239,6 +244,7 @@ export function MasterOwnerSessionGate() {
       setOwnerMfaAttestedUntil(result.expiresAt??'');
       setMessage('This account’s MFA session was confirmed by the server. The other original owner must independently attest the same intent within 30 minutes.');
     }else setMessage('The server did not confirm the MFA attestation. No owner membership changed.');
+    setProgressRefresh(x=>x+1);
   }
 
   async function activateSignedEnrollment(event:FormEvent<HTMLFormElement>){
@@ -250,6 +256,8 @@ export function MasterOwnerSessionGate() {
       signedPacketFile,sourceCandidateFile,masterCandidateFile);
     setBusy(false);
     setSignedPacketFile(null);setSourceCandidateFile(null);setMasterCandidateFile(null);
+    setCeremonyReset(x=>x+1);
+    setProgressRefresh(x=>x+1);
     if(result.ok&&result.activated){
       setMessage('Server confirmed both original signatures and current MFA sessions. Rechecking the two memberships…');
       await verify(); // RLS self-read verifies the committed result; no client grants.
@@ -262,7 +270,7 @@ export function MasterOwnerSessionGate() {
     <main className="ql367-screen">
       <section className="ql367-card" aria-label="Rosevear Creations master owner sign-in">
         <div className="ql367-topline"><span>ROSEVEAR CREATIONS</span><a href="#/">← Public preview</a></div>
-        <p className="ql367-overline">Rosevear Comms Hub · QL-369</p>
+        <p className="ql367-overline">Rosevear Comms Hub · QL-370</p>
         <h1>Master Owner Portal</h1>
         <p>Personal authentication and two-owner enrollment readiness for Ree and Jack. Rosevear Creations is the organization, not a shared user account.</p>
 
@@ -358,6 +366,25 @@ export function MasterOwnerSessionGate() {
           <p className="ql368-help">MFA never signs for the other owner, activates membership or releases a source connection. Only the original-device, dual-signature approval process can satisfy those steps.</p>
         </section>}
 
+        {config.ready && authenticatedOwner && identity && !recoveryReturn && (
+          <OwnerProgressDashboard
+            gateway={client as unknown as OwnerCeremonyGateway}
+            ownerRole={identity.ownerRole}
+            mfaVerified={mfa?.kind==='VERIFIED'}
+            intentSha256={enrollmentIntentSha}
+            refreshSequence={progressRefresh}
+            onClearLocal={()=>{
+              setEnrollmentIntentSha('');
+              setOwnerMfaAttestedUntil('');
+              setSignedPacketFile(null);
+              setSourceCandidateFile(null);
+              setMasterCandidateFile(null);
+              setCeremonyReset(x=>x+1);
+              setMessage('Only this browser’s ceremony inputs were cleared. The server did not revoke any enrollment evidence or activate membership.');
+            }}
+          />
+        )}
+
         {config.ready && authenticatedOwner && !recoveryReturn && state==='PENDING' && (
           <section className="ql368-security" aria-label="QL-369 verified owner enrollment ceremony">
             <h2>Verified owner enrollment ceremony</h2>
@@ -371,7 +398,7 @@ export function MasterOwnerSessionGate() {
             </form>
             {mfa?.kind!=='VERIFIED'&&<p role="status">An authenticator-verified AAL2 session is required before this button becomes available.</p>}
             {ownerMfaAttestedUntil&&<p className="ql368-good" role="status">Server attestation recorded; expires {ownerMfaAttestedUntil}. A new intent or expired session requires fresh attestation.</p>}
-            {identity?.ownerRole==='source'&&<form className="ql367-form" onSubmit={activateSignedEnrollment}>
+            {identity?.ownerRole==='source'&&<form key={ceremonyReset} className="ql367-form" onSubmit={activateSignedEnrollment}>
               <h3>Final original-signature review — Ree only</h3>
               <p>After both MFA attestations, the QL-368 evidence-only signatures, and TWO new explicit QL-369 original-device activation signatures, choose these THREE JSON files. Nothing is sent until we press the explicit activation button and confirm.</p>
               <label htmlFor="ql369-signed">QL-369 signed activation packet (contains reviewed QL-368 evidence)</label>
