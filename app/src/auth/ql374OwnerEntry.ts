@@ -1,9 +1,10 @@
 import type {OwnerProgress} from './ql370OwnerProgress';
 
 export type OwnerEntryRole='source'|'master';
-export type OwnerEntrySection='home'|'it'|'start';
+export type OwnerEntrySection='home'|'sources'|'it'|'start';
 export const OWNER_ENTRY_SECTIONS=[
   {id:'home',label:'My overview',description:'Personal session and safe first steps'},
+  {id:'sources',label:'Six application shells',description:'Read-only identity and connection status'},
   {id:'it',label:'I.T. and security',description:'Protected six-app HOLD and enrollment readback'},
   {id:'start',label:'Getting started',description:'Guided navigation and safe help'}
 ] as const;
