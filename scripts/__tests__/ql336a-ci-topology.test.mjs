@@ -65,6 +65,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql377OwnerIncidentHistory.test.ts')
       && !line.includes('ql378-owner-incident-triage.test.mjs')
       && !line.includes('ql378OwnerIncidentTriage.test.ts')
+      && !line.includes('ql379-owner-review-presets.test.mjs')
       && !line.includes('hub-relay/ql369-activation-decision.test.mjs')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
@@ -73,6 +74,7 @@ test('QL-336A retains all 43 existing application checks in their original order
   const fingerprint = createHash('sha256').update(commands.join('\n') + '\n').digest('hex');
   assert.equal(commands.length, 43);
   assert.equal(fingerprint, 'a8eca667fae03b9078cef1c701c09f41a49d1e1dea5a758efcaf4106bfd496ec');
+  assert.match(gates, /run_gate node --test \.\.\/scripts\/__tests__\/ql379-owner-review-presets\.test\.mjs/);
   assert.match(gates, /set -euo pipefail/);
   assert.match(gates, /"\$@"/);
   assert.match(appCi, /npm ci --no-audit --no-fund/);
