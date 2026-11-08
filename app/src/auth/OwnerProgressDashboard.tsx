@@ -3,6 +3,7 @@ import {QL369_SHA256,readOwnerProgress,type OwnerCeremonyGateway}
   from './ql369OwnerEnrollment';
 import {ownerProgressGuidance,type OwnerProgress,type ProgressAttestationState}
   from './ql370OwnerProgress';
+import {OwnerCeremonyGuide} from './OwnerCeremonyGuide';
 
 type Props={
   gateway:OwnerCeremonyGateway|null;
@@ -14,7 +15,7 @@ type Props={
 };
 const statusText=(status:ProgressAttestationState|undefined):string=>({
   NOT_RECORDED:'No matching attestation',
-  CURRENT:'Verified and current',
+  CURRENT:'Current at last server check',
   EXPIRED:'Expired — renew required',
   REVOKED_OR_STALE:'Session or factor no longer valid'
 }[status??'NOT_RECORDED']);
@@ -115,6 +116,8 @@ export function OwnerProgressDashboard({
           <p className="ql368-help">This is a limited original-owner activation audit, not a full log of failed sign-ins. It never reveals passwords, authenticator codes, keys, tokens, peer emails, factor IDs, signatures or receipt digests.</p>
         </div>
       </>}
+      <OwnerCeremonyGuide progress={loading||failed?null:snapshot}
+        mfaVerified={mfaVerified} ownerRole={ownerRole} intentSupplied={validDigest}/>
       <div className="ql370-recovery">
         <h3>{mfaVerified?guidance.heading:'Finish MFA before reviewing progress'}</h3>
         <p>{mfaVerified?guidance.message:

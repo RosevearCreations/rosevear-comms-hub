@@ -88,4 +88,6 @@ run_gate node --test ../runtimes/hub-relay/ql360-original-evidence-archive.test.
 run_gate node --test ../runtimes/client-portal/journey.test.mjs
 run_gate node --test ../supabase/functions/ql369-owner-enrollment/verify.test.mjs
 run_gate node --test ../supabase/functions/ql369-owner-enrollment/ql370-progress.test.mjs
+run_gate node --test ../scripts/__tests__/ql371-original-owner-guided-handoff.test.mjs
+run_gate npm run test -- src/auth/__tests__/ql371OwnerCeremony.test.ts src/auth/__tests__/ql371OwnerCeremonyGuide.test.tsx
 run_gate node --test ../runtimes/hub-relay/ql369-activation-decision.test.mjs
