@@ -1,0 +1,16 @@
+.ql376-review{margin:1.3rem 0;padding:1rem;border:1px solid #74698e;border-radius:12px;background:#22233b;color:#f8f4ff}
+.ql376-review h4{margin:.15rem 0 .6rem}.ql376-review p{line-height:1.5}
+.ql376-freshness{display:flex;flex-wrap:wrap;gap:.45rem .9rem;align-items:center;padding:.75rem;border-radius:10px;background:#2d2c46}
+.ql376-freshness strong{padding:.25rem .5rem;border-radius:6px;background:#494055}.ql376-freshness small{flex-basis:100%;color:#d9d4ea}
+.ql376-freshness .ql376-stale,.ql376-freshness .ql376-future{background:#633248;color:#ffe7e7}
+.ql376-freshness .ql376-expiring,.ql376-freshness .ql376-unknown{background:#554d2e;color:#fff0bc}
+.ql376-filter{display:flex;align-items:center;flex-wrap:wrap;gap:.6rem;margin:1rem 0}.ql376-filter label{font-weight:700}
+.ql376-filter select{min-height:44px;border-radius:8px;border:1px solid #ada0c2;padding:.55rem;background:#161b32;color:#fff}
+.ql376-filter span{font-size:.88rem;color:#dfdaec}.ql376-layout{display:grid;grid-template-columns:minmax(175px,1fr) minmax(0,1.4fr);gap:.7rem}
+.ql376-alerts{display:grid;gap:.45rem;align-content:start}.ql376-alert{display:block;min-height:56px;padding:.7rem;border:1px solid #736a89;border-radius:8px;background:#2c2b48;color:#fff;text-align:left;cursor:pointer}
+.ql376-alert strong,.ql376-alert small{display:block;overflow-wrap:anywhere}.ql376-alert small{margin-top:.25rem;color:#d8d2e6;text-transform:capitalize}
+.ql376-alert.ql376-selected{border:2px solid #f1cd88;background:#39334d}.ql376-detail{padding:.75rem;border:1px solid #69617c;border-radius:8px;background:#1b1e34}
+.ql376-detail h5{font-size:1.1rem;margin:.2rem 0}.ql376-footer{margin-bottom:0}
+.ql376-alert:focus-visible,.ql376-filter select:focus-visible,.ql376-detail h5:focus{outline:3px solid #f6ce87;outline-offset:3px}
+@media(max-width:680px){.ql376-layout{grid-template-columns:1fr}.ql376-filter{align-items:stretch;flex-direction:column}}
+@media(forced-colors:active){.ql376-alert.ql376-selected,.ql376-detail{border:2px solid CanvasText}}
