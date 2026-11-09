@@ -10,6 +10,7 @@ type Filter='all'|'showing'|'ended';
 type Severity='all'|'action'|'warning'|'information';
 type ReviewSnapshot={filter:Filter;severity:Severity;search:string;groupRepeats:boolean};
 type SavedReview=ReviewSnapshot&{id:number;bookmarks:number[];reviewed:number[];bookmarkedOnly:boolean};
+type LocalHandoff={id:number;atMs:number;reviewed:number;total:number;outstanding:number;bookmarked:number};
 export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   history:HistoryState;nowMs:number;authenticated:boolean;
 }){
@@ -24,6 +25,8 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   const [reviewedSequences,setReviewedSequences]=useState<number[]>([]);
   const [savedReviews,setSavedReviews]=useState<SavedReview[]>([]);
   const [closedReview,setClosedReview]=useState<{reviewed:number;total:number;bookmarked:number}|null>(null);
+  const [handoffHistory,setHandoffHistory]=useState<LocalHandoff[]>([]);
+  const nextHandoffId=useRef(1);
   const nextSaveId=useRef(1);
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const observationList=useRef<HTMLDivElement>(null);
@@ -33,6 +36,7 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
     setBookmarks([]);setBookmarkedOnly(false);setPreviousReview(null);
     setReviewedSequences([]);setSavedReviews([]);nextSaveId.current=1;
     setClosedReview(null);
+    setHandoffHistory([]);nextHandoffId.current=1;
     navigated.current=false;
   },[history.role,authenticated]);
   const entries=authenticated?history.observations:[];
@@ -44,6 +48,8 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   const chosenSequences=chosen?.occurrences.map(entry=>entry.sequence)??[];
   const chosenBookmarked=chosenSequences.some(sequence=>activeBookmarks.includes(sequence));
   const unreviewed=visible.filter(group=>group.occurrences.some(entry=>!activeReviewed.includes(entry.sequence)));
+  const outstanding=entries.filter(entry=>!activeReviewed.includes(entry.sequence)).length;
+  const filteredOutstanding=visible.reduce((sum,group)=>sum+group.occurrences.filter(entry=>!activeReviewed.includes(entry.sequence)).length,0);
   const markReviewed=(sequences:number[])=>setReviewedSequences(current=>
     [...current.filter(sequence=>entries.some(entry=>entry.sequence===sequence)),...sequences.filter(sequence=>!current.includes(sequence))].slice(-40));
   const saveReview=()=>{
@@ -60,6 +66,9 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
     markReviewed(next.occurrences.map(entry=>entry.sequence));
   };
   const closeReview=()=>{
+    if(!authenticated)return;
+    setHandoffHistory(current=>[...current,{id:nextHandoffId.current++,atMs:nowMs,
+      reviewed:activeReviewed.length,total:entries.length,outstanding,bookmarked:activeBookmarks.length}].slice(-5));
     setClosedReview({reviewed:activeReviewed.length,total:entries.length,bookmarked:activeBookmarks.length});
     setSavedReviews([]);setBookmarks([]);setReviewedSequences([]);
     setSelected(null);setPreviousReview(null);setSearch('');setFilter('all');setSeverity('all');
@@ -113,6 +122,14 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   return <section className="ql377-history" aria-labelledby="ql377-history-title">
     <h4 id="ql377-history-title">Owner incident observation history</h4>
     <p>This is a bounded history of alerts <em>seen in this open owner shell</em>, not server incident history or source audit evidence. It is kept in memory only, and clears when our MFA session ends or the owner changes.</p>
+    <section className="ql384-history" aria-labelledby="ql384-history-title">
+      <h5 id="ql384-history-title">Local review handoff history</h5>
+      <p>Only counts from up to five closeouts in this authenticated owner session are retained. They do not survive a sign-out, owner change, reload or another device. No cross-session evidence, incident audit record or independently verified resolution is created.</p>
+      {handoffHistory.length===0?<p>No local handoffs recorded in this session.</p>:<ol>{handoffHistory.map(item=><li key={item.id}>
+        Handoff {item.id}: {item.reviewed} of {item.total} episodes opened; {item.outstanding} not opened; {item.bookmarked} bookmarks at closeout. Captured {new Date(item.atMs).toLocaleString()} (local review only).
+      </li>)}</ol>}
+      {handoffHistory.length>0&&<button type="button" onClick={()=>setHandoffHistory([])}>Clear local handoff history</button>}
+    </section>
     {closedReview?<section className="ql383-closeout" aria-label="Closed local review summary" role="status">
       <h5>Local review closed</h5>
       <p>{closedReview.reviewed} of {closedReview.total} observed episodes were opened; {closedReview.bookmarked} were bookmarked before closeout. In-memory review marks, bookmarks and saved views were cleared. This does not close, resolve, approve or notify any source incident.</p>
@@ -164,6 +181,7 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
       <h5 id="ql382-handoff-title">Session review progress and handoff summary</h5>
       <progress max={Math.max(entries.length,1)} value={activeReviewed.length} aria-label="Observed alert episodes opened for review"/>
       <p role="status">{activeReviewed.length} of {entries.length} observed alert episodes opened for review ({entries.length?Math.round(activeReviewed.length/entries.length*100):0}%). {activeBookmarks.length} bookmarked observations. Progress means viewed here, not independently verified or resolved.</p>
+      <p className="ql384-outstanding" role="status">Outstanding review work: {outstanding} of {entries.length} observed episodes not opened in this local review; {filteredOutstanding} are in the current filtered results. Changing filters does not discard prior review marks. These counts are not unresolved incident totals.</p>
       <p>Read-only handoff note: {visible.length} filtered groups; {showing} still displayed; {needingEvidence} needing evidence verification. No messages sent, approvals granted, or incident status changed. This summary exists only in the authenticated owner session.</p>
       <div className="ql383-actions" role="group" aria-label="Review progress and local closeout">
         <button type="button" disabled={unreviewed.length===0} onClick={nextUnreviewed}>Open next unreviewed alert ({unreviewed.length} groups)</button>
