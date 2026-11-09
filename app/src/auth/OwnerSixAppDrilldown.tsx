@@ -14,6 +14,8 @@ import {QL396_DEFAULT_FILTERS,QL396_DEMO_NOW,QL396_DEMO_REQUESTS,
   filterOperatorRecheckQueue,reviewOperatorRecheckQueue,type QL396QueueFilters} from './ql396OperatorRecheckQueue';
 import {QL397_DEFAULT_FILTERS,QL397_DEMO_OBSERVATIONS,
   filterOperatorRecheckOutcomes,reviewOperatorRecheckOutcomes,type QL397Filters} from './ql397RecheckOutcomeHistory';
+import {QL398_DEFAULT_FILTERS,QL398_DEMO_AUDIT,filterOperatorClosureReadiness,
+  reviewOperatorClosureReadiness,type QL398Filters} from './ql398ClosureReadinessAudit';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -28,6 +30,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const [comparisonWindow,setComparisonWindow]=useState<'FIRST_SECOND'|'SECOND_THIRD'|'FIRST_THIRD'>('FIRST_SECOND');
   const [recheckFilters,setRecheckFilters]=useState<QL396QueueFilters>(QL396_DEFAULT_FILTERS);
   const [outcomeFilters,setOutcomeFilters]=useState<QL397Filters>(QL397_DEFAULT_FILTERS);
+  const [closureFilters,setClosureFilters]=useState<QL398Filters>(QL398_DEFAULT_FILTERS);
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const navigated=useRef(false);
   const shell=QL375_SHELLS.find(item=>item.id===selected)!;
@@ -53,6 +56,9 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const recheckOutcomes=reviewOperatorRecheckOutcomes(QL392_ILLUSTRATIVE_PREVIEW,
     QL396_DEMO_REQUESTS,QL397_DEMO_OBSERVATIONS,QL396_DEMO_NOW);
   const visibleOutcomes=filterOperatorRecheckOutcomes(recheckOutcomes,outcomeFilters);
+  const closureReview=reviewOperatorClosureReadiness(QL392_ILLUSTRATIVE_PREVIEW,
+    QL396_DEMO_REQUESTS,QL397_DEMO_OBSERVATIONS,QL398_DEMO_AUDIT,QL396_DEMO_NOW);
+  const visibleClosureCases=filterOperatorClosureReadiness(closureReview,closureFilters);
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -306,6 +312,49 @@ export function OwnerSixAppDrilldown({truth}:Props){
       </details>
       <p><strong>HOLD:</strong> History entries and reviewer scope labels are not authenticated actions or assignments. Closure, communications, source proof acceptance, signing keys, private receiver activation, consent and persistence remain disabled until independently authorized outside this preview.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL397_OPERATOR_RECHECK_OUTCOME_HISTORY_CLOSURE.md" target="_blank" rel="noopener noreferrer">View QL-397 outcome history, owner review and closure handoff</a>
+    </section>
+    <section className="ql398-closure-readiness" aria-labelledby="ql398-closure-title">
+      <h4 id="ql398-closure-title">Operator closure readiness, independent evidence and HOLD resolution audit · offline preview</h4>
+      <p><strong>{closureReview.state} — HOLD is mandatory.</strong> This source-level closure review is illustrative and in-memory only. Neither a reviewer label nor a simulated all-clear is original signed owner consent, independent witness evidence or permission to resolve an incident.</p>
+      <div className="ql398-closure-controls" aria-label="Read-only illustrative closure filters">
+        <label htmlFor="ql398-source-filter">Source shell
+          <select id="ql398-source-filter" value={closureFilters.sourceId}
+            onChange={event=>setClosureFilters(previous=>({...previous,sourceId:event.target.value}))}>
+            <option value="ALL">All illustrated shells</option>
+            {QL375_SHELLS.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}
+          </select>
+        </label>
+        <label htmlFor="ql398-hold-filter">Illustrative HOLD category
+          <select id="ql398-hold-filter" value={closureFilters.scenarioState}
+            onChange={event=>setClosureFilters(previous=>({...previous,scenarioState:event.target.value as QL398Filters['scenarioState']}))}>
+            <option value="ALL">All HOLD categories</option>
+            <option value="HOLD_CONFLICT_RECHECK">Synthetic conflict requires recheck</option>
+            <option value="HOLD_ORIGINAL_EVIDENCE">Original evidence missing</option>
+          </select>
+        </label>
+      </div>
+      <p role="status" aria-live="polite">Showing {visibleClosureCases.length} of {closureReview.totalCases} illustrative closure cases; {closureReview.conflictCases} with scenario conflicts, {closureReview.auditedAttempts} synthetic review/audit notes, {closureReview.eligibleClosures} eligible closures. Every original proof axis requires an independent check.</p>
+      <div className="ql398-table-scroll"><table><caption>Unresolved source-scoped closure checks and synthetic HOLD resolution audit</caption>
+        <thead><tr><th scope="col">Shell / correlation</th><th scope="col">Independent original evidence</th><th scope="col">Owner review and HOLD status</th><th scope="col">Closure guidance</th><th scope="col">Chronological audit</th></tr></thead>
+        <tbody>{visibleClosureCases.map(item=><tr key={`${item.sourceId}/${item.correlationId}`}>
+          <th scope="row"><code>{item.sourceId}</code> / <code>{item.correlationId}</code></th>
+          <td><strong>{item.missingIndependentChecks} / 5 not verified</strong>
+            <details><summary>Review five independent original evidence checks</summary>
+              <ol>{item.checklist.map(check=><li key={check.gate}>
+                <strong>{check.gate}</strong> · {check.custodian}: {check.requirement}. Scenario: {check.scenarioEvidence}; original: {check.originalEvidence}; independent reviewer: {check.independentReviewer}; satisfied: no.
+              </li>)}</ol>
+            </details>
+          </td>
+          <td><strong>{item.closureState}</strong> · {item.scenarioState}<p>Source owner: {item.sourceOwnerReview}; master owner: {item.masterOwnerReview}; reviewer separation: {item.reviewerSeparation}. Closure eligible: no.</p></td>
+          <td>{item.guidance}</td>
+          <td><details><summary>{item.audit.length} scenario review/audit note(s)</summary>
+            {item.audit.length?<ol>{item.audit.map(note=><li key={note.auditId}>
+              <time dateTime={note.observedAt}>{note.observedAt}</time> · {note.auditId} · {note.gate} · {note.intent} / {note.claimBasis} · <strong>{note.disposition}</strong>: {note.reason}
+            </li>)}</ol>:<p>No simulated review attempt. Original evidence remains NOT_VERIFIED.</p>}
+          </details></td>
+        </tr>)}{visibleClosureCases.length===0&&<tr><td colSpan={5}>No illustrative closure case matches. This filter does not change real HOLD or original evidence state.</td></tr>}</tbody></table></div>
+      <p><strong>HOLD:</strong> No closure decision, source/master owner approval, private receiver action, message, key, consent grant or audit persistence is performed. Evidence must be collected and independently verified in the original protected workflows, with tenant and source identity isolation.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL398_OPERATOR_CLOSURE_READINESS_INDEPENDENT_EVIDENCE_HOLD_AUDIT.md" target="_blank" rel="noopener noreferrer">View QL-398 closure readiness, evidence checklist and HOLD audit handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
