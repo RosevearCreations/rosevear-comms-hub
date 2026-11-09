@@ -37,7 +37,7 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(host.querySelector('#ql375-detail-title')).toBe(document.activeElement);
     expect(cards[4].getAttribute('aria-pressed')).toBe('true');
     expect(host.querySelectorAll('form,input,textarea')).toHaveLength(0);
-    expect(host.querySelectorAll('select')).toHaveLength(3); // QL-392 filters, not authorization controls
+    expect(host.querySelectorAll('select')).toHaveLength(4); // QL-392/393 filters, not authorization controls
   });
   it('does not claim a live per-shell status when protected readback is absent',async()=>{
     await show(null);
@@ -105,5 +105,24 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(review.querySelector('[role="status"]')?.textContent).toContain('Showing 0 of 4');
     expect(review.textContent).toContain('No synthetic examples match these filters');
     expect(review.querySelectorAll('table')[1].querySelectorAll('tbody tr')).toHaveLength(6);
+  });
+  it('shows QL-393 non-sending source-scoped draft and five distinct HOLD gates',async()=>{
+    await show();
+    const followups=host.querySelector('.ql393-followups')!;
+    expect(followups.textContent).toContain('HOLD');
+    expect(followups.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(followups.textContent).toContain('CONFLICT_REVIEW');
+    expect(followups.textContent).toContain('devilndove');
+    expect(followups.querySelectorAll('details li')).toHaveLength(5);
+    expect(followups.querySelectorAll('button,input,form,textarea')).toHaveLength(0);
+    expect(followups.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+    const select=followups.querySelector<HTMLSelectElement>('#ql393-correlation-choice')!;
+    await act(async()=>{select.value='correlation-ql392-integration';select.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(followups.textContent).toContain('EVIDENCE_RECHECK');
+    expect(followups.textContent).toContain('icamp');
+    expect(followups.querySelectorAll('tbody tr')).toHaveLength(1);
+    await act(async()=>{select.value='correlation-ql392-service';select.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(followups.textContent).toContain('No source-scoped synthetic concern requires a draft');
+    expect(followups.querySelectorAll('tbody tr')).toHaveLength(1);
   });
 });
