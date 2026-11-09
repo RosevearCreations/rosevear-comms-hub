@@ -37,7 +37,7 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(host.querySelector('#ql375-detail-title')).toBe(document.activeElement);
     expect(cards[4].getAttribute('aria-pressed')).toBe('true');
     expect(host.querySelectorAll('form,input,textarea')).toHaveLength(0);
-    expect(host.querySelectorAll('select')).toHaveLength(9); // QL-392/393/395/396/397 preview filters only
+    expect(host.querySelectorAll('select')).toHaveLength(11); // QL-392/393/395/396/397/398 preview filters only
   });
   it('does not claim a live per-shell status when protected readback is absent',async()=>{
     await show(null);
@@ -212,5 +212,30 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     await act(async()=>{review.value='SCENARIO_REVIEW_NOTE_ONLY';
       review.dispatchEvent(new Event('change',{bubbles:true}));});
     expect(history.querySelectorAll('tbody tr')).toHaveLength(1);
+  });
+  it('shows QL-398 five-axis independent closure checklists and preserves HOLD through attempted approval',async()=>{
+    await show();
+    const closure=host.querySelector('.ql398-closure-readiness')!;
+    expect(closure.textContent).toContain('INERT_PREVIEW');
+    expect(closure.textContent).toContain('HOLD is mandatory');
+    expect(closure.querySelectorAll('tbody tr')).toHaveLength(3);
+    expect(closure.querySelectorAll('tbody tr td details ol li')).toHaveLength(19); // 15 independent checks + four audit entries
+    expect(closure.textContent).toContain('CLAIMED_SCENARIO_COMPLETE');
+    expect(closure.textContent).toContain('HOLD_PRESERVED');
+    expect(closure.textContent).toContain('NOT_VERIFIED');
+    expect(closure.textContent).toContain('NOT_ATTESTED');
+    expect(closure.querySelector('[role="status"]')?.textContent).toContain('0 eligible closures');
+    expect(closure.querySelectorAll('button,input,form,textarea')).toHaveLength(0);
+    expect(closure.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+    const source=closure.querySelector<HTMLSelectElement>('#ql398-source-filter')!;
+    const hold=closure.querySelector<HTMLSelectElement>('#ql398-hold-filter')!;
+    await act(async()=>{source.value='icamp';source.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(closure.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(closure.textContent).toContain('audit-ql398-0003');
+    await act(async()=>{hold.value='HOLD_ORIGINAL_EVIDENCE';hold.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(closure.textContent).toContain('No illustrative closure case matches');
+    await act(async()=>{source.value='rosevear-ai-hub';source.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(closure.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(closure.querySelector('[role="status"]')?.textContent).toContain('Showing 1 of 3');
   });
 });
