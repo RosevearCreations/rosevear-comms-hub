@@ -185,6 +185,8 @@ jobs:
         run: node --test scripts/__tests__/ql380-owner-keyboard-review.test.mjs
       - name: Verify QL-381 bookmarks and filter continuity remain session-only
         run: node --test scripts/__tests__/ql381-owner-bookmarks.test.mjs
+      - name: Verify QL-382 saved views and progress remain session-only and non-authorizing
+        run: node --test scripts/__tests__/ql382-owner-saved-sessions.test.mjs
       - name: Verify QL-369 original-only activation decisions and no unattended signing
         run: node --test runtimes/hub-relay/ql369-activation-decision.test.mjs
       - name: Verify QL-369 Windows CI does not possess original activation authority
