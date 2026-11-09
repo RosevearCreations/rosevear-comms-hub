@@ -68,6 +68,8 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql379-owner-review-presets.test.mjs')
       && !line.includes('ql380-owner-keyboard-review.test.mjs')
       && !line.includes('ql380OwnerKeyboardReview.test.tsx')
+      && !line.includes('ql381-owner-bookmarks.test.mjs')
+      && !line.includes('ql381OwnerBookmarks.test.tsx')
       && !line.includes('hub-relay/ql369-activation-decision.test.mjs')
       && !line.includes('client-portal/journey.test.mjs'))
     .map((line) => line.slice('run_gate '.length));
