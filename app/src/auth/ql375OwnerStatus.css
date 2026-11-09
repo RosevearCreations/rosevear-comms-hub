@@ -7,3 +7,4 @@
 .ql375-help{padding:.75rem;border-top:1px solid #665e79}.ql375-help ul{padding-left:1.5rem}.ql375-help li small{display:block;color:#d1cce3}
 @media(max-width:700px){.ql375-source-grid{grid-template-columns:1fr}.ql375-source-detail dl div{grid-template-columns:1fr;gap:0}}
 @media(forced-colors:active){.ql375-source-card.ql375-active,.ql375-status{border:2px solid CanvasText}}
+.ql386-registry{margin:.75rem 0;padding:.8rem;border:1px solid #847995;border-radius:10px;background:#20263c;color:#f5f3ff}.ql386-registry h4{margin:.1rem 0 .5rem}.ql386-registry p{line-height:1.5}
