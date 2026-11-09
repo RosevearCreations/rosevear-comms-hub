@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/api/contracts/ql388-cross-app-intake-v1.schema.json",
+  "title": "QL-388 Rosevear Comms Hub Cross-Application Intake Design Contract V1",
+  "description": "A structural contract only. Validation does not authorize sending, receiving, enrollment, or tenant access.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contractVersion", "messageId", "correlationId", "idempotencyKey", "sourceId", "destinationId", "tenantScope", "kind", "category", "severity", "eventCode", "occurredAt", "evidenceRefs"],
+  "properties": {
+    "contractVersion": {"const": "rosevear.comms.intake.v1"},
+    "messageId": {"$ref": "#/$defs/opaqueId"},
+    "correlationId": {"$ref": "#/$defs/opaqueId"},
+    "idempotencyKey": {"$ref": "#/$defs/opaqueId"},
+    "sourceId": {"enum": ["yw", "icamp", "rosiedazzlers", "devilndove", "ai-data-platform", "rosevear-ai-hub"]},
+    "destinationId": {"const": "rosevear-comms-hub"},
+    "tenantScope": {"const": "shell"},
+    "kind": {"enum": ["notification", "incident"]},
+    "category": {"enum": ["integration", "security", "operations", "service"]},
+    "severity": {"enum": ["info", "warning", "critical"]},
+    "eventCode": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$"},
+    "occurredAt": {"type": "string", "format": "date-time", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,3})?Z$"},
+    "evidenceRefs": {"type": "array", "maxItems": 5, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,31}:[A-Za-z0-9_-]{8,100}$"}}
+  },
+  "$defs": {
+    "opaqueId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$"}
+  }
+}
