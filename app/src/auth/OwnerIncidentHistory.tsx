@@ -1,4 +1,5 @@
 import {useEffect,useRef,useState} from 'react';
+import type {KeyboardEvent} from 'react';
 import type {OwnerIncidentHistory as HistoryState} from './ql377OwnerIncidentHistory';
 import {incidentAgeLabel,ownerIncidentResolutionGuidance} from './ql377OwnerIncidentHistory';
 import {OWNER_EVIDENCE_LABELS,ownerIncidentTriage} from './ql378OwnerIncidentTriage';
@@ -16,6 +17,7 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   const [groupRepeats,setGroupRepeats]=useState(true);
   const [selected,setSelected]=useState<string|null>(null);
   const detailHeading=useRef<HTMLHeadingElement>(null);
+  const observationList=useRef<HTMLDivElement>(null);
   const navigated=useRef(false);
   useEffect(()=>{
     setSearch('');setSelected(null);setFilter('all');setSeverity('all');setGroupRepeats(true);
@@ -25,6 +27,21 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   const visible=ownerIncidentTriage(entries,{nowMs,search,status:filter,severity,groupRepeats});
   const chosen=visible.find(group=>group.id===selected)??visible[0];
   const represented=visible.reduce((sum,group)=>sum+group.occurrences.length,0);
+  const showing=visible.filter(group=>group.stillDisplayed).length;
+  const action=visible.filter(group=>group.stillDisplayed&&group.latest.severity==='action').length;
+  const needingEvidence=visible.filter(group=>group.priority==='verify-evidence').length;
+  const navigateItems=(event:KeyboardEvent<HTMLDivElement>)=>{
+    if(!['ArrowDown','ArrowUp','Home','End'].includes(event.key)||visible.length===0)return;
+    if(!(event.target instanceof HTMLButtonElement)||!event.target.classList.contains('ql377-item'))return;
+    event.preventDefault();
+    const buttons=[...(observationList.current?.querySelectorAll<HTMLButtonElement>('.ql377-item')??[])];
+    const current=buttons.indexOf(event.target);
+    const next=event.key==='Home'?0:event.key==='End'?buttons.length-1:
+      (current+(event.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length;
+    navigated.current=false;
+    setSelected(visible[next].id);
+    buttons[next]?.focus();
+  };
   const applyPreset=(preset:OwnerReviewPreset)=>{
     const next=ownerReviewPreset(preset);
     navigated.current=false;
@@ -66,13 +83,16 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
       </label>
       <span role="status" aria-live="polite">{represented} of {entries.length} session observations · {visible.length} triage {visible.length===1?'item':'items'}</span>
     </div>
+    <p className="ql380-summary" aria-label="Filtered session review summary">Review summary: {showing} still displayed, {action} action-level still displayed, {needingEvidence} needing evidence verification, {visible.length-showing} no longer displayed. These are grouped session observations, not independent incident resolutions or six source confirmations.</p>
+    <p id="ql380-keyboard-help">On an alert, use Up/Down arrows or Home/End to move between results. Press Enter to move focus to the selected detail.</p>
     <div className="ql377-layout">
-      <div className="ql377-observations" aria-label="Session alert observations">
+      <div className="ql377-observations" ref={observationList} onKeyDown={navigateItems} aria-label="Session alert observations" aria-describedby="ql380-keyboard-help">
         {visible.length===0?<p>No observations match this view. This does not certify source health or incident resolution.</p>:
           visible.map(group=><button type="button" key={group.id}
             className={chosen?.id===group.id?'ql377-item ql377-selected':'ql377-item'}
             aria-pressed={chosen?.id===group.id} aria-controls="ql377-detail"
-            onClick={()=>{navigated.current=true;setSelected(group.id);}}>
+            aria-label={`${group.latest.title}; ${group.latest.severity}; ${group.stillDisplayed?'still displayed':'no longer displayed'}`}
+            onClick={()=>{navigated.current=true;setSelected(group.id);if(chosen?.id===group.id)detailHeading.current?.focus();}}>
             <strong>{group.latest.title}</strong>
             <small>{group.latest.category} · {group.latest.severity} · {group.priority.replace('-', ' ')} · {group.stillDisplayed?'Still displayed':'No longer displayed'}</small>
             {group.occurrences.length>1&&<small>{group.occurrences.length} distinct session observations, grouped for review</small>}
