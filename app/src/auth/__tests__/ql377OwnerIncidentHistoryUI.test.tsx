@@ -37,10 +37,11 @@ describe('QL-377 accessible history with safe guidance',()=>{
     expect(document.activeElement).toBe(host.querySelector('#ql377-detail-title'));
     expect(buttons[0].getAttribute('aria-pressed')).toBe('true');
     expect(host.querySelector('a')?.getAttribute('href')).toBe('#ql370-refresh-status');
-    // QL-378 adds a local-only search box and grouping checkbox; no form or
-    // network-capable submission is introduced.
+    // QL-381 adds one session-only bookmark filter checkbox to the existing
+    // QL-378 search/group controls; no network-capable form is introduced.
     expect(host.querySelectorAll('form,textarea')).toHaveLength(0);
-    expect(Array.from(host.querySelectorAll('input')).map(node=>node.type)).toEqual(['search','checkbox']);
+    expect(Array.from(host.querySelectorAll('input')).map(node=>node.type)).toEqual(['checkbox','search','checkbox']);
+    expect(host.querySelector('#ql381-bookmarked-only')).toBeTruthy();
   });
   it('does not reveal prior observations when the personal MFA session is absent',async()=>{
     await render(false);
