@@ -26,6 +26,7 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   const [savedReviews,setSavedReviews]=useState<SavedReview[]>([]);
   const [closedReview,setClosedReview]=useState<{reviewed:number;total:number;bookmarked:number}|null>(null);
   const [handoffHistory,setHandoffHistory]=useState<LocalHandoff[]>([]);
+  const [showExportPreview,setShowExportPreview]=useState(false);
   const nextHandoffId=useRef(1);
   const nextSaveId=useRef(1);
   const detailHeading=useRef<HTMLHeadingElement>(null);
@@ -37,6 +38,7 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
     setReviewedSequences([]);setSavedReviews([]);nextSaveId.current=1;
     setClosedReview(null);
     setHandoffHistory([]);nextHandoffId.current=1;
+    setShowExportPreview(false);
     navigated.current=false;
   },[history.role,authenticated]);
   const entries=authenticated?history.observations:[];
@@ -50,6 +52,17 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   const unreviewed=visible.filter(group=>group.occurrences.some(entry=>!activeReviewed.includes(entry.sequence)));
   const outstanding=entries.filter(entry=>!activeReviewed.includes(entry.sequence)).length;
   const filteredOutstanding=visible.reduce((sum,group)=>sum+group.occurrences.filter(entry=>!activeReviewed.includes(entry.sequence)).length,0);
+  const priorityOrder=['verify-evidence','action','review','monitor','historical'];
+  const prioritizedOutstanding=[...unreviewed].sort((a,b)=>priorityOrder.indexOf(a.priority)-priorityOrder.indexOf(b.priority));
+  const previewText=[
+    'LOCAL OWNER REVIEW — READ-ONLY PREVIEW',
+    `Observed episodes: ${entries.length}; opened: ${activeReviewed.length}; not opened: ${outstanding}`,
+    `Filtered groups: ${visible.length}; filtered unreviewed episodes: ${filteredOutstanding}`,
+    `Bookmarked episodes: ${activeBookmarks.length}; prior local closeouts: ${handoffHistory.length}`,
+    `Highest outstanding review priority: ${prioritizedOutstanding[0]?.priority.replace('-', ' ')??'none in filtered view'}`,
+    'Scope: authenticated in-memory owner session only.',
+    'NOT a source incident audit, independent resolution, provider message, approval or cross-session record.'
+  ].join('\n');
   const markReviewed=(sequences:number[])=>setReviewedSequences(current=>
     [...current.filter(sequence=>entries.some(entry=>entry.sequence===sequence)),...sequences.filter(sequence=>!current.includes(sequence))].slice(-40));
   const saveReview=()=>{
@@ -65,6 +78,11 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
     setSelected(next.id);
     markReviewed(next.occurrences.map(entry=>entry.sequence));
   };
+  const focusPriority=()=>{
+    const next=prioritizedOutstanding[0];if(!next)return;
+    navigated.current=true;setSelected(next.id);
+    markReviewed(next.occurrences.map(entry=>entry.sequence));
+  };
   const closeReview=()=>{
     if(!authenticated)return;
     setHandoffHistory(current=>[...current,{id:nextHandoffId.current++,atMs:nowMs,
@@ -73,6 +91,7 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
     setSavedReviews([]);setBookmarks([]);setReviewedSequences([]);
     setSelected(null);setPreviousReview(null);setSearch('');setFilter('all');setSeverity('all');
     setGroupRepeats(true);setBookmarkedOnly(false);navigated.current=false;
+    setShowExportPreview(false);
   };
   const loadReview=(saved:SavedReview)=>{
     if(!authenticated)return;
@@ -185,8 +204,15 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
       <p>Read-only handoff note: {visible.length} filtered groups; {showing} still displayed; {needingEvidence} needing evidence verification. No messages sent, approvals granted, or incident status changed. This summary exists only in the authenticated owner session.</p>
       <div className="ql383-actions" role="group" aria-label="Review progress and local closeout">
         <button type="button" disabled={unreviewed.length===0} onClick={nextUnreviewed}>Open next unreviewed alert ({unreviewed.length} groups)</button>
+        <button type="button" disabled={prioritizedOutstanding.length===0} onClick={focusPriority}>Open highest-priority unreviewed alert</button>
+        <button type="button" aria-expanded={showExportPreview} aria-controls="ql385-preview" onClick={()=>setShowExportPreview(value=>!value)}>{showExportPreview?'Hide handoff export preview':'Preview handoff export'}</button>
         <button type="button" onClick={closeReview}>Close local review and clear session notes</button>
       </div>
+      {showExportPreview&&<section id="ql385-preview" className="ql385-preview" aria-label="Safe handoff export preview">
+        <h6>Read-only handoff export preview</h6>
+        <pre>{previewText}</pre>
+        <p>No file is downloaded or transmitted. No incident text, identities, secrets or source evidence are included. The preview disappears on closeout, owner change or sign-out.</p>
+      </section>}
       <p>{unreviewed.length===0?'No unreviewed groups in this filtered view. Other filters may contain unreviewed observations.':`${unreviewed.length} filtered groups include episodes not yet opened.`} Review progress stays in this owner session when filters change; it is not evidence of resolution.</p>
     </section>
     <p id="ql380-keyboard-help">On an alert, use Up/Down arrows or Home/End to move between results. Press Enter to move focus to the selected detail.</p>
