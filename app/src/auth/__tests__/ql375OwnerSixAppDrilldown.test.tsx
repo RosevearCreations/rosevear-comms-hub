@@ -36,7 +36,8 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(host.querySelector('#ql375-detail-title')?.textContent).toContain('AI Data Platform');
     expect(host.querySelector('#ql375-detail-title')).toBe(document.activeElement);
     expect(cards[4].getAttribute('aria-pressed')).toBe('true');
-    expect(host.querySelectorAll('form,input,textarea,select')).toHaveLength(0);
+    expect(host.querySelectorAll('form,input,textarea')).toHaveLength(0);
+    expect(host.querySelectorAll('select')).toHaveLength(3); // QL-392 filters, not authorization controls
   });
   it('does not claim a live per-shell status when protected readback is absent',async()=>{
     await show(null);
@@ -83,5 +84,26 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(correlation?.textContent).toContain('STALE');
     expect(correlation?.querySelectorAll('button,form,input,textarea,select')).toHaveLength(0);
     expect(correlation?.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+  it('provides accessible QL-392 read-only source, freshness and priority filters with six-source impact',async()=>{
+    await show();
+    const review=host.querySelector('.ql392-operator-review')!;
+    expect(review.textContent).toContain('INERT_PREVIEW');
+    expect(review.textContent).toContain('HOLD');
+    expect(review.querySelectorAll('.ql392-review-controls select')).toHaveLength(3);
+    expect(review.querySelectorAll('table')).toHaveLength(2);
+    expect(review.querySelectorAll('table')[0].querySelectorAll('tbody tr')).toHaveLength(4);
+    expect(review.querySelectorAll('table')[1].querySelectorAll('tbody tr')).toHaveLength(6);
+    expect(review.querySelectorAll('button,input,form,textarea')).toHaveLength(0);
+    expect(review.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+    const source=review.querySelector<HTMLSelectElement>('#ql392-source-filter')!;
+    await act(async()=>{source.value='icamp';source.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(review.querySelectorAll('table')[0].querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(review.querySelector('[role="status"]')?.textContent).toContain('Showing 1 of 4');
+    const priority=review.querySelector<HTMLSelectElement>('#ql392-priority-filter')!;
+    await act(async()=>{priority.value='REVIEW_NOW';priority.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(review.querySelector('[role="status"]')?.textContent).toContain('Showing 0 of 4');
+    expect(review.textContent).toContain('No synthetic examples match these filters');
+    expect(review.querySelectorAll('table')[1].querySelectorAll('tbody tr')).toHaveLength(6);
   });
 });

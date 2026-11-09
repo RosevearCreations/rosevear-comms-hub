@@ -6,6 +6,7 @@ import {QL388_CONTRACT_VERSION,QL388_EVENT_KINDS,QL388_EXAMPLE_EVENT,reviewCross
 import {QL389_PREVIEW_STAGES} from './ql389SignedIntakePreview';
 import {QL390_ILLUSTRATIVE_ROWS} from './ql390IncidentSimulationLedger';
 import {QL391_ILLUSTRATIVE_TIMELINE} from './ql391IncidentCorrelationPreview';
+import {QL392_DEFAULT_FILTERS,QL392_ILLUSTRATIVE_PREVIEW,reviewOperatorIncidents,type QL392Filters} from './ql392OperatorIncidentReview';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -15,6 +16,7 @@ type Props={truth:ReturnType<typeof ownerEntryTruth>};
  * aggregate protected owner readback and an immutable public identity map. */
 export function OwnerSixAppDrilldown({truth}:Props){
   const [selected,setSelected]=useState<(typeof QL375_SHELLS)[number]['id']>('yw');
+  const [incidentFilters,setIncidentFilters]=useState<QL392Filters>(QL392_DEFAULT_FILTERS);
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const navigated=useRef(false);
   const shell=QL375_SHELLS.find(item=>item.id===selected)!;
@@ -24,6 +26,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const routingExample=reviewRoutingDraft({sources:['yw','icamp'],targets:['ai-data-platform'],
     shape:'many-to-one',purpose:'monitoring',tenantScope:'shell',sourceApproved:false,targetApproved:false});
   const intakeExample=reviewCrossAppIntake(QL388_EXAMPLE_EVENT);
+  const operatorReview=reviewOperatorIncidents(QL392_ILLUSTRATIVE_PREVIEW,incidentFilters);
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -77,6 +80,54 @@ export function OwnerSixAppDrilldown({truth}:Props){
       <p>Evidence-age labels are <strong>simulated observations</strong> matched by source and correlation ID; the event timestamp alone never establishes evidence freshness. Missing, stale, invalid or conflicting observations remain visible as review concerns. Unverified and HELD event claims are excluded and redacted.</p>
       <p><strong>HOLD:</strong> Original source authority, persisted incident records, tenant access, alerts, acknowledgement and notification delivery are not enabled by this preview.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL391_CROSS_APP_INCIDENT_CORRELATION_TIMELINE.md" target="_blank" rel="noopener noreferrer">View QL-391 correlation, timeline and evidence freshness handoff</a>
+    </section>
+    <section className="ql392-operator-review" aria-labelledby="ql392-operator-review-title">
+      <h4 id="ql392-operator-review-title">Operator incident review filters and source impact · synthetic preview</h4>
+      <p><strong>INERT_PREVIEW:</strong> These are fixed example correlation groups, not received messages, live incidents or customer records. Priority labels are suggestions from synthetic evidence, never actual operator assignments, acknowledgements or permissions.</p>
+      <div className="ql392-review-controls" aria-label="Synthetic operator review filters">
+        <label htmlFor="ql392-source-filter">Source application
+          <select id="ql392-source-filter" value={incidentFilters.sourceId}
+            onChange={event=>setIncidentFilters(previous=>({...previous,sourceId:event.target.value}))}>
+            <option value="ALL">All six shells</option>
+            {QL375_SHELLS.map(item=><option value={item.id} key={item.id}>{item.name}</option>)}
+          </select>
+        </label>
+        <label htmlFor="ql392-freshness-filter">Evidence review
+          <select id="ql392-freshness-filter" value={incidentFilters.freshness}
+            onChange={event=>setIncidentFilters(previous=>({...previous,freshness:event.target.value as QL392Filters['freshness']}))}>
+            <option value="ALL">Any freshness</option><option value="ATTENTION">Needs evidence review</option>
+            <option value="CURRENT">Current simulation only</option>
+          </select>
+        </label>
+        <label htmlFor="ql392-priority-filter">Follow-up priority
+          <select id="ql392-priority-filter" value={incidentFilters.priority}
+            onChange={event=>setIncidentFilters(previous=>({...previous,priority:event.target.value as QL392Filters['priority']}))}>
+            <option value="ALL">All priorities</option><option value="REVIEW_NOW">Review now</option>
+            <option value="VERIFY_EVIDENCE">Verify evidence</option><option value="MONITOR_ONLY">Monitor only</option>
+          </select>
+        </label>
+      </div>
+      <p role="status" aria-live="polite">Showing {operatorReview.groups.length} of {operatorReview.totalGroups} illustrative correlation groups; {operatorReview.attentionGroups} have simulated follow-up concerns. {operatorReview.heldUnverified} unverified synthetic claim remains excluded.</p>
+      <div className="ql392-table-scroll">
+        <table><caption>Filtered synthetic operator review, highest priority first</caption><thead><tr>
+          <th scope="col">Correlation ID</th><th scope="col">Shell sources</th><th scope="col">Evidence</th>
+          <th scope="col">Follow-up priority</th><th scope="col">Suggested review</th>
+        </tr></thead><tbody>{operatorReview.groups.map(group=><tr key={group.correlationId}>
+          <th scope="row"><code>{group.correlationId}</code></th><td>{group.sourceIds.join(' / ')}</td>
+          <td>{group.freshness}</td><td><strong>{group.priority}</strong></td><td>{group.guidance}</td>
+        </tr>)}{operatorReview.groups.length===0&&<tr><td colSpan={5}>No synthetic examples match these filters. No live source status is implied.</td></tr>}</tbody></table>
+      </div>
+      <div className="ql392-table-scroll">
+        <table><caption>Six-source impact across all illustrative groups, before filters</caption><thead><tr>
+          <th scope="col">Registered shell</th><th scope="col">Groups</th><th scope="col">Timeline entries</th>
+          <th scope="col">Groups needing review</th><th scope="col">Highest suggested priority</th>
+        </tr></thead><tbody>{operatorReview.impact.map(source=><tr key={source.sourceId}>
+          <th scope="row">{source.name}</th><td>{source.correlatedGroups}</td><td>{source.timelineEntries}</td>
+          <td>{source.attentionGroups}</td><td>{source.highestPriority}</td>
+        </tr>)}</tbody></table>
+      </div>
+      <p><strong>HOLD:</strong> The filter cannot grant cross-app routes, view tenant records, send notifications or open an incident. Zero examples for a source does not mean that source has zero actual incidents.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL392_OPERATOR_INCIDENT_FILTERS_IMPACT_PRIORITIES.md" target="_blank" rel="noopener noreferrer">View QL-392 operator review and priority handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
