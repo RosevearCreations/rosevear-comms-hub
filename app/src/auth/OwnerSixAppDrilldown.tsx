@@ -7,6 +7,7 @@ import {QL389_PREVIEW_STAGES} from './ql389SignedIntakePreview';
 import {QL390_ILLUSTRATIVE_ROWS} from './ql390IncidentSimulationLedger';
 import {QL391_ILLUSTRATIVE_TIMELINE} from './ql391IncidentCorrelationPreview';
 import {QL392_DEFAULT_FILTERS,QL392_ILLUSTRATIVE_PREVIEW,reviewOperatorIncidents,type QL392Filters} from './ql392OperatorIncidentReview';
+import {QL393_DEFAULT_SCENARIO,previewOperatorFollowUps} from './ql393OperatorFollowUpDrafts';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -17,6 +18,7 @@ type Props={truth:ReturnType<typeof ownerEntryTruth>};
 export function OwnerSixAppDrilldown({truth}:Props){
   const [selected,setSelected]=useState<(typeof QL375_SHELLS)[number]['id']>('yw');
   const [incidentFilters,setIncidentFilters]=useState<QL392Filters>(QL392_DEFAULT_FILTERS);
+  const [followUpCorrelation,setFollowUpCorrelation]=useState('correlation-ql392-workshop');
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const navigated=useRef(false);
   const shell=QL375_SHELLS.find(item=>item.id===selected)!;
@@ -27,6 +29,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
     shape:'many-to-one',purpose:'monitoring',tenantScope:'shell',sourceApproved:false,targetApproved:false});
   const intakeExample=reviewCrossAppIntake(QL388_EXAMPLE_EVENT);
   const operatorReview=reviewOperatorIncidents(QL392_ILLUSTRATIVE_PREVIEW,incidentFilters);
+  const followUpReview=previewOperatorFollowUps(QL392_ILLUSTRATIVE_PREVIEW,followUpCorrelation,QL393_DEFAULT_SCENARIO);
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -128,6 +131,27 @@ export function OwnerSixAppDrilldown({truth}:Props){
       </div>
       <p><strong>HOLD:</strong> The filter cannot grant cross-app routes, view tenant records, send notifications or open an incident. Zero examples for a source does not mean that source has zero actual incidents.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL392_OPERATOR_INCIDENT_FILTERS_IMPACT_PRIORITIES.md" target="_blank" rel="noopener noreferrer">View QL-392 operator review and priority handoff</a>
+    </section>
+    <section className="ql393-followups" aria-labelledby="ql393-followups-title">
+      <h4 id="ql393-followups-title">Operator follow-up drafts and source owner gates · offline preview</h4>
+      <p><strong>HOLD — original approval is absent.</strong> Drafts are generated from fixed synthetic source evidence states. They are not emails, live evidence requests, incident tasks or communications to customers. This screen cannot sign, approve, send or persist them.</p>
+      <label htmlFor="ql393-correlation-choice">Synthetic correlation to review
+        <select id="ql393-correlation-choice" value={followUpCorrelation} onChange={event=>setFollowUpCorrelation(event.target.value)}>
+          {operatorReview.totalGroups>0&&QL392_ILLUSTRATIVE_PREVIEW.groups.map(group=><option key={group.correlationId} value={group.correlationId}>{group.correlationId}</option>)}
+        </select>
+      </label>
+      <p role="status" aria-live="polite">{followUpReview.drafts.length} source-scoped, non-sending draft(s) for <code>{followUpCorrelation}</code>. {followUpReview.reason}.</p>
+      <div className="ql393-table-scroll"><table><caption>Source-scoped follow-up drafts with separate original-owner approval gates</caption><thead><tr>
+        <th scope="col">Affected shell source</th><th scope="col">Proposed draft</th><th scope="col">Reason</th>
+        <th scope="col">Approval state</th><th scope="col">Gate details</th>
+      </tr></thead><tbody>{followUpReview.drafts.map(draft=><tr key={`${draft.sourceId}-${draft.kind}`}>
+        <th scope="row"><code>{draft.sourceId}</code></th><td>{draft.kind}</td><td>{draft.summary}</td>
+        <td><strong>{draft.gateState}</strong></td><td><details><summary>View five simulated gates</summary>
+          <ul>{draft.gates.map(gate=><li key={gate.name}><strong>{gate.name}: {gate.state}</strong> — {gate.detail}</li>)}</ul>
+        </details></td>
+      </tr>)}{followUpReview.drafts.length===0&&<tr><td colSpan={5}>No source-scoped synthetic concern requires a draft. No live incident status is implied.</td></tr>}</tbody></table></div>
+      <p>Each simulated source-owner decision, signing pin and consent must match its own source and correlation; the separate master-owner decision must match the correlation. Even five simulated passes are <strong>not permission to send</strong>. Original witness, receiver, replay and retention evidence remain required.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL393_OPERATOR_FOLLOWUP_OWNER_GATES.md" target="_blank" rel="noopener noreferrer">View QL-393 operator draft and owner gate handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
