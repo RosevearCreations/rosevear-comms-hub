@@ -16,6 +16,8 @@ import {QL397_DEFAULT_FILTERS,QL397_DEMO_OBSERVATIONS,
   filterOperatorRecheckOutcomes,reviewOperatorRecheckOutcomes,type QL397Filters} from './ql397RecheckOutcomeHistory';
 import {QL398_DEFAULT_FILTERS,QL398_DEMO_AUDIT,filterOperatorClosureReadiness,
   reviewOperatorClosureReadiness,type QL398Filters} from './ql398ClosureReadinessAudit';
+import {QL399_DEFAULT_FILTERS,QL399_DEMO_EXCEPTIONS,filterOriginalEvidenceHandoffs,
+  reviewOriginalEvidenceHandoff,type QL399Filters} from './ql399EvidenceHandoffReadiness';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -31,6 +33,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const [recheckFilters,setRecheckFilters]=useState<QL396QueueFilters>(QL396_DEFAULT_FILTERS);
   const [outcomeFilters,setOutcomeFilters]=useState<QL397Filters>(QL397_DEFAULT_FILTERS);
   const [closureFilters,setClosureFilters]=useState<QL398Filters>(QL398_DEFAULT_FILTERS);
+  const [handoffFilters,setHandoffFilters]=useState<QL399Filters>(QL399_DEFAULT_FILTERS);
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const navigated=useRef(false);
   const shell=QL375_SHELLS.find(item=>item.id===selected)!;
@@ -59,6 +62,10 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const closureReview=reviewOperatorClosureReadiness(QL392_ILLUSTRATIVE_PREVIEW,
     QL396_DEMO_REQUESTS,QL397_DEMO_OBSERVATIONS,QL398_DEMO_AUDIT,QL396_DEMO_NOW);
   const visibleClosureCases=filterOperatorClosureReadiness(closureReview,closureFilters);
+  const handoffReview=reviewOriginalEvidenceHandoff(QL392_ILLUSTRATIVE_PREVIEW,
+    QL396_DEMO_REQUESTS,QL397_DEMO_OBSERVATIONS,QL398_DEMO_AUDIT,
+    QL399_DEMO_EXCEPTIONS,QL396_DEMO_NOW);
+  const visibleHandoffCases=filterOriginalEvidenceHandoffs(handoffReview,handoffFilters);
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -355,6 +362,51 @@ export function OwnerSixAppDrilldown({truth}:Props){
         </tr>)}{visibleClosureCases.length===0&&<tr><td colSpan={5}>No illustrative closure case matches. This filter does not change real HOLD or original evidence state.</td></tr>}</tbody></table></div>
       <p><strong>HOLD:</strong> No closure decision, source/master owner approval, private receiver action, message, key, consent grant or audit persistence is performed. Evidence must be collected and independently verified in the original protected workflows, with tenant and source identity isolation.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL398_OPERATOR_CLOSURE_READINESS_INDEPENDENT_EVIDENCE_HOLD_AUDIT.md" target="_blank" rel="noopener noreferrer">View QL-398 closure readiness, evidence checklist and HOLD audit handoff</a>
+    </section>
+    <section className="ql399-evidence-handoff" aria-labelledby="ql399-handoff-title">
+      <h4 id="ql399-handoff-title">Original evidence handoff readiness, independent reviewer exceptions and closure decision trace · offline preview</h4>
+      <p><strong>{handoffReview.state} — original handoff BLOCKED; closure HOLD.</strong> These are source-scoped requirements and fictional exception notes, not original receipts, authenticated reviewers, signed decisions, live requests or durable audit records.</p>
+      <div className="ql399-handoff-controls" aria-label="Illustrative handoff and exception filters">
+        <label htmlFor="ql399-source-filter">Source shell
+          <select id="ql399-source-filter" value={handoffFilters.sourceId}
+            onChange={event=>setHandoffFilters(previous=>({...previous,sourceId:event.target.value}))}>
+            <option value="ALL">All illustrated shells</option>
+            {QL375_SHELLS.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}
+          </select>
+        </label>
+        <label htmlFor="ql399-exception-filter">Illustrative reviewer exception priority
+          <select id="ql399-exception-filter" value={handoffFilters.exceptionPriority}
+            onChange={event=>setHandoffFilters(previous=>({...previous,exceptionPriority:event.target.value as QL399Filters['exceptionPriority']}))}>
+            <option value="ALL">All source cases</option>
+            <option value="REVIEW_CONFLICT">Independent conflict recheck</option>
+            <option value="COLLECT_ORIGINAL">Collect original evidence</option>
+          </select>
+        </label>
+      </div>
+      <p role="status" aria-live="polite">Showing {visibleHandoffCases.length} of {handoffReview.totalCases} source handoff cases; {handoffReview.openExceptions} open illustrative reviewer exceptions, {handoffReview.tracedDecisions} trace events, {handoffReview.readyHandoffs} ready handoffs and {handoffReview.eligibleClosures} authorized closures.</p>
+      <div className="ql399-table-scroll"><table><caption>Original handoff requirements, outstanding reviewer exceptions and immutable HOLD trace</caption>
+        <thead><tr><th scope="col">Source and correlation</th><th scope="col">Original handoff checklist</th><th scope="col">Independent reviewer exception queue</th><th scope="col">Decision trace</th><th scope="col">Closure and next action</th></tr></thead>
+        <tbody>{visibleHandoffCases.map(item=><tr key={`${item.sourceId}/${item.correlationId}`}>
+          <th scope="row"><code>{item.sourceId}</code> / <code>{item.correlationId}</code></th>
+          <td><strong>{item.originalRequirementsOutstanding} original receipts outstanding</strong>
+            <details><summary>View five per-gate handoff requirements</summary><ol>{item.handoff.map(check=><li key={check.gate}>
+              <strong>{check.gate}</strong> · {check.custodian}: {check.requiredOriginalArtifact}. Artifact: {check.originalArtifact}; independent reviewer: {check.independentReviewer}; witness separation: {check.witnessSeparation}; ready: no.
+            </li>)}</ol></details></td>
+          <td><details><summary>{item.exceptions.length} unresolved synthetic reviewer exception(s)</summary>
+            {item.exceptions.length?<ol>{item.exceptions.map(entry=><li key={entry.exceptionId}>
+              <time dateTime={entry.observedAt}>{entry.observedAt}</time> · {entry.exceptionId} · {entry.gate} / {entry.reviewerScope} · <strong>{entry.code}</strong> / {entry.priority} · {entry.state}. {entry.guidance}
+            </li>)}</ol>:<p>No simulated exception; this does not verify any original receipt.</p>}
+          </details></td>
+          <td><details><summary>{item.decisionTrace.length} linked HOLD trace event(s)</summary>
+            {item.decisionTrace.length?<ol>{item.decisionTrace.map(event=><li key={event.traceId}>
+              <time dateTime={event.observedAt}>{event.observedAt}</time> · {event.kind} / {event.originId} · {event.gate} · <strong>{event.disposition}</strong>: {event.reason}
+            </li>)}</ol>:<p>No synthetic trace. Real owner decisions remain unverified.</p>}
+          </details></td>
+          <td><strong>{item.handoffState} / {item.closureState}</strong>
+            <p>Source owner: {item.sourceOwnerDecision}; master owner: {item.masterOwnerDecision}; independent review: {item.independentReview}.</p>{item.guidance}</td>
+        </tr>)}{visibleHandoffCases.length===0&&<tr><td colSpan={5}>No illustrative handoff matches these filters. All real original evidence and closure authorization remain unverified.</td></tr>}</tbody></table></div>
+      <p><strong>HOLD:</strong> No document is uploaded, exception assigned, owner decision signed, source connected, message sent or incident closed. Original source and master-owner approvals, witness separation, pin custody, receiver proof, replay controls and scoped consent require independent verification outside this preview.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL399_ORIGINAL_EVIDENCE_HANDOFF_EXCEPTION_QUEUE_DECISION_TRACE.md" target="_blank" rel="noopener noreferrer">View QL-399 original evidence handoff and independent reviewer exception guidance</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
