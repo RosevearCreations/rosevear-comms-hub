@@ -72,4 +72,16 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(ledger?.querySelectorAll('button,input,form')).toHaveLength(0);
     expect(ledger?.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
   });
+  it('shows QL-391 synthetic cross-source chronology and evidence age without allowing action',async()=>{
+    await show();
+    const correlation=host.querySelector('.ql391-correlation');
+    expect(correlation?.textContent).toContain('INERT_PREVIEW');
+    expect(correlation?.textContent).toContain('HOLD');
+    expect(correlation?.querySelectorAll('tbody tr')).toHaveLength(2);
+    expect(correlation?.textContent).toContain('Yard Workers');
+    expect(correlation?.textContent).toContain('iCamp');
+    expect(correlation?.textContent).toContain('STALE');
+    expect(correlation?.querySelectorAll('button,form,input,textarea,select')).toHaveLength(0);
+    expect(correlation?.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+  });
 });
