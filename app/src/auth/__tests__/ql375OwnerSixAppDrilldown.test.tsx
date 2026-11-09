@@ -37,7 +37,7 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(host.querySelector('#ql375-detail-title')).toBe(document.activeElement);
     expect(cards[4].getAttribute('aria-pressed')).toBe('true');
     expect(host.querySelectorAll('form,input,textarea')).toHaveLength(0);
-    expect(host.querySelectorAll('select')).toHaveLength(5); // QL-392/393/395 preview filters only, not authorization
+    expect(host.querySelectorAll('select')).toHaveLength(7); // QL-392/393/395/396 preview filters only
   });
   it('does not claim a live per-shell status when protected readback is absent',async()=>{
     await show(null);
@@ -160,5 +160,30 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     await act(async()=>{selector.value='FIRST_THIRD';selector.dispatchEvent(new Event('change',{bubbles:true}));});
     expect(comparison.querySelectorAll('table')[1].querySelectorAll('tbody tr')).toHaveLength(5);
     expect(comparison.textContent).toContain('PROVENANCE_CHANGED');
+  });
+  it('shows QL-396 source-scoped synthetic recheck queue, age bands and inert escalation filters',async()=>{
+    await show();
+    const queue=host.querySelector('.ql396-recheck-queue')!;
+    expect(queue.textContent).toContain('INERT_PREVIEW');
+    expect(queue.textContent).toContain('first synthetic observation');
+    expect(queue.querySelectorAll('tbody tr')).toHaveLength(15);
+    expect(queue.textContent).toContain('Devil n Dove');
+    expect(queue.textContent).toContain('MASTER_OWNER');
+    expect(queue.textContent).toContain('NOT_VERIFIED');
+    expect(queue.textContent).toContain('OVERDUE');
+    expect(queue.textContent).toContain('AGING');
+    expect(queue.textContent).toContain('NEW');
+    expect(queue.querySelectorAll('button,input,form,textarea')).toHaveLength(0);
+    expect(queue.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+    const source=queue.querySelector<HTMLSelectElement>('#ql396-source-filter')!;
+    const age=queue.querySelector<HTMLSelectElement>('#ql396-age-filter')!;
+    await act(async()=>{source.value='icamp';source.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(queue.querySelectorAll('tbody tr')).toHaveLength(5);
+    await act(async()=>{age.value='OVERDUE';age.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(queue.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(queue.textContent).toContain('No illustrative recheck matches');
+    await act(async()=>{age.value='AGING';age.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(queue.querySelectorAll('tbody tr')).toHaveLength(5);
+    expect(queue.querySelector('[role="status"]')?.textContent).toContain('Showing 5 of 15');
   });
 });
