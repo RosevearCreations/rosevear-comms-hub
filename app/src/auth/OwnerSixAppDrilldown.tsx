@@ -4,6 +4,7 @@ import {MASTER_SHELL_REGISTRY,reconcileSourceIdentities} from './ql386MasterShel
 import {MASTER_ROUTING_PATTERNS,reviewRoutingDraft} from './ql387MasterShellRouting';
 import {QL388_CONTRACT_VERSION,QL388_EVENT_KINDS,QL388_EXAMPLE_EVENT,reviewCrossAppIntake} from './ql388CrossAppIntake';
 import {QL389_PREVIEW_STAGES} from './ql389SignedIntakePreview';
+import {QL390_ILLUSTRATIVE_ROWS} from './ql390IncidentSimulationLedger';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -52,6 +53,17 @@ export function OwnerSixAppDrilldown({truth}:Props){
       <ol>{QL389_PREVIEW_STAGES.map(check=><li key={check.stage}><strong>{check.stage}:</strong> {check.label}</li>)}</ol>
       <p>A synthetic scenario that passes every check is still <strong>PREVIEW_ONLY</strong>; no event is sent, accepted or stored. Separate source and master owner approval remains mandatory.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL389_SIGNED_INCIDENT_INTAKE_GATE_PREVIEW.md" target="_blank" rel="noopener noreferrer">View QL-389 signed intake and replay handoff</a>
+    </section>
+    <section className="ql390-simulation" aria-labelledby="ql390-simulation-title">
+      <h4 id="ql390-simulation-title">Operator incident intake simulation ledger · illustrative only</h4>
+      <p><strong>INERT_PREVIEW:</strong> These example rows are not actual alerts, signed receipts, connections or stored incidents. Each source has an independent deduplication scope, and rejected source claims are redacted.</p>
+      <table><caption>Illustrative intake outcomes — no receiver data</caption><thead><tr>
+        <th scope="col">Source</th><th scope="col">Preview result</th><th scope="col">Operator explanation</th>
+      </tr></thead><tbody>{QL390_ILLUSTRATIVE_ROWS.map((row,index)=><tr key={index}>
+        <th scope="row">{row.source}</th><td>{row.state}</td><td>{row.explanation}</td>
+      </tr>)}</tbody></table>
+      <p>Signed scenario replay checks and all operator actions remain on HOLD. The actual ledger would require a server-authorized receiver, atomic replay reservations, consent and retention policy.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL390_CROSS_APP_INTAKE_SIMULATION_LEDGER.md" target="_blank" rel="noopener noreferrer">View QL-390 simulation and operator evidence handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
