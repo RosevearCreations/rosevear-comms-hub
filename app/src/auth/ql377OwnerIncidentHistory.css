@@ -15,6 +15,8 @@
 .ql377-detail{padding:.75rem;background:#161d30;border:1px solid #746e84;border-radius:8px;overflow-wrap:anywhere}
 .ql377-detail h5{font-size:1.1rem;margin:.2rem 0}.ql377-boundary{font-size:.91rem}
 .ql378-episodes{border-top:1px solid #615d73;padding-top:.6rem;margin-top:.7rem}.ql378-episodes li{margin:.35rem 0}
+.ql383-actions{display:flex;flex-wrap:wrap;gap:.6rem;margin:.6rem 0}.ql383-actions button,.ql383-closeout button{min-height:44px;border:1px solid #ada0c2;border-radius:8px;padding:.5rem .8rem;color:#fff;background:#343752;cursor:pointer}.ql383-actions button:disabled{opacity:.55;cursor:not-allowed}.ql383-closeout{border:1px solid #ada0c2;border-radius:8px;padding:1rem;background:#161d30}.ql383-closeout h5{margin:0}
+.ql383-actions button:focus-visible,.ql383-closeout button:focus-visible{outline:3px solid #f6ce87;outline-offset:3px}
 .ql377-item:focus-visible,.ql377-controls select:focus-visible,.ql377-controls input:focus-visible,.ql377-controls button:focus-visible,.ql377-detail h5:focus{outline:3px solid #f6ce87;outline-offset:3px}
 @media(max-width:680px){.ql377-layout{grid-template-columns:1fr}.ql377-controls{align-items:stretch;flex-direction:column}}
 @media(forced-colors:active){.ql377-item.ql377-selected,.ql377-detail{border:2px solid CanvasText}}
