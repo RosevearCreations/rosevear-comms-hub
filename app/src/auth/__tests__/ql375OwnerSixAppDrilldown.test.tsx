@@ -53,4 +53,13 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(links[2].getAttribute('rel')).toBe('noopener noreferrer');
     expect(links[2].getAttribute('target')).toBe('_blank');
   });
+  it('shows QL-389 signature/replay gates as read-only HOLD instructions, not a live intake',async()=>{
+    await show();
+    const gate=host.querySelector('.ql389-intake-gate');
+    expect(gate?.textContent).toContain('HOLD');
+    expect(gate?.textContent).toContain('PREVIEW_ONLY');
+    expect(gate?.querySelectorAll('ol li')).toHaveLength(6);
+    expect(gate?.querySelectorAll('button,input,form')).toHaveLength(0);
+    expect(gate?.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+  });
 });

@@ -3,6 +3,7 @@ import {QL375_HELP_LINKS,QL375_SHELLS,ownerShellStatus} from './ql375OwnerStatus
 import {MASTER_SHELL_REGISTRY,reconcileSourceIdentities} from './ql386MasterShellRegistry';
 import {MASTER_ROUTING_PATTERNS,reviewRoutingDraft} from './ql387MasterShellRouting';
 import {QL388_CONTRACT_VERSION,QL388_EVENT_KINDS,QL388_EXAMPLE_EVENT,reviewCrossAppIntake} from './ql388CrossAppIntake';
+import {QL389_PREVIEW_STAGES} from './ql389SignedIntakePreview';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -30,13 +31,6 @@ export function OwnerSixAppDrilldown({truth}:Props){
       <p>Identity registry: {MASTER_SHELL_REGISTRY.length} approved shell-level sources. Independent source identity claims received here: 0. All {identityClaims.filter(item=>item.state==='MISSING').length} are awaiting claim reconciliation; no connection or enrollment is inferred from this catalogue.</p>
       <p>Source IDs, repositories and health handlers are the approved software contract; tenant businesses are not additional source identities. AI Data Platform owns module completion evidence, while Comms Hub owns authorized communications and incident routing.</p>
     </section>
-    <section className="ql388-intake" aria-labelledby="ql388-intake-title">
-      <h4 id="ql388-intake-title">Cross-application notification and incident intake · contract only</h4>
-      <p>V1 envelope: <code>{QL388_CONTRACT_VERSION}</code>. Kinds: {QL388_EVENT_KINDS.join(' / ')}. The envelope accepts shell-level machine event codes, correlation and idempotency IDs, and opaque evidence references—no customer text or tenant records.</p>
-      <p role="status">Example contract review: <strong>{intakeExample.state}</strong> — {intakeExample.reason}.</p>
-      <p>Sender authentication, owner approval, replay protection, receiver enrollment and actual incident creation remain separate. Module completion and health metrics belong to AI Data Platform.</p>
-      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL388_CROSS_APP_NOTIFICATION_INCIDENT_INTAKE_CONTRACT.md" target="_blank" rel="noopener noreferrer">View the shared QL-388 contract and application handoff</a>
-    </section>
     <section className="ql387-routing" aria-labelledby="ql387-routing-title">
       <h4 id="ql387-routing-title">Master Shell application routing map · design only</h4>
       <p>Four supported relationship patterns are documented below. They are <strong>not active routes</strong>. Every source, destination, purpose, tenant and owner permission must be independently authorized before any actual transport.</p>
@@ -44,6 +38,20 @@ export function OwnerSixAppDrilldown({truth}:Props){
         <tbody>{MASTER_ROUTING_PATTERNS.map(pattern=><tr key={pattern.shape}><th scope="row">{pattern.shape}</th><td>{pattern.label}</td><td>{pattern.example}</td></tr>)}</tbody></table>
       <p role="status">Example many-to-one monitoring proposal: <strong>{routingExample.state}</strong> — {routingExample.reason}.</p>
       <p>AI Data Platform owns module completion and health evidence; Comms Hub owns communications and operator incidents. Sample tenants, customer records and cross-business data cannot be routed by shell identity alone.</p>
+    </section>
+    <section className="ql388-intake" aria-labelledby="ql388-intake-title">
+      <h4 id="ql388-intake-title">Cross-application notification and incident intake · contract only</h4>
+      <p>V1 envelope: <code>{QL388_CONTRACT_VERSION}</code>. Kinds: {QL388_EVENT_KINDS.join(' / ')}. The envelope accepts shell-level machine event codes, correlation and idempotency IDs, and opaque evidence references—no customer text or tenant records.</p>
+      <p role="status">Example contract review: <strong>{intakeExample.state}</strong> — {intakeExample.reason}.</p>
+      <p>Sender authentication, owner approval, replay protection, receiver enrollment and actual incident creation remain separate. Module completion and health metrics belong to AI Data Platform.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL388_CROSS_APP_NOTIFICATION_INCIDENT_INTAKE_CONTRACT.md" target="_blank" rel="noopener noreferrer">View the shared QL-388 contract and application handoff</a>
+    </section>
+    <section className="ql389-intake-gate" aria-labelledby="ql389-intake-gate-title">
+      <h4 id="ql389-intake-gate-title">Source-signed incident intake security gates · offline preview</h4>
+      <p><strong>HOLD — no original source signature, independently approved key pin, trusted receiver or persistent replay evidence is available to this screen.</strong> The six checks below describe future intake prerequisites, not active permissions.</p>
+      <ol>{QL389_PREVIEW_STAGES.map(check=><li key={check.stage}><strong>{check.stage}:</strong> {check.label}</li>)}</ol>
+      <p>A synthetic scenario that passes every check is still <strong>PREVIEW_ONLY</strong>; no event is sent, accepted or stored. Separate source and master owner approval remains mandatory.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL389_SIGNED_INCIDENT_INTAKE_GATE_PREVIEW.md" target="_blank" rel="noopener noreferrer">View QL-389 signed intake and replay handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
