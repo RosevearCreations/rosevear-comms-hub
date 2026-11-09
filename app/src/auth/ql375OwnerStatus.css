@@ -8,3 +8,4 @@
 @media(max-width:700px){.ql375-source-grid{grid-template-columns:1fr}.ql375-source-detail dl div{grid-template-columns:1fr;gap:0}}
 @media(forced-colors:active){.ql375-source-card.ql375-active,.ql375-status{border:2px solid CanvasText}}
 .ql386-registry{margin:.75rem 0;padding:.8rem;border:1px solid #847995;border-radius:10px;background:#20263c;color:#f5f3ff}.ql386-registry h4{margin:.1rem 0 .5rem}.ql386-registry p{line-height:1.5}
+.ql387-routing{margin:.75rem 0;padding:.8rem;border:1px solid #847995;border-radius:10px;background:#20263c;color:#f5f3ff}.ql387-routing h4{margin:.1rem 0 .5rem}.ql387-routing table{width:100%;border-collapse:collapse}.ql387-routing caption{text-align:left;margin:.4rem 0}.ql387-routing th,.ql387-routing td{padding:.55rem;border:1px solid #847995;text-align:left;vertical-align:top;overflow-wrap:anywhere}.ql387-routing p{line-height:1.5}@media(max-width:680px){.ql387-routing{overflow-x:auto}.ql387-routing table{min-width:480px}}
