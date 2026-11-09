@@ -37,7 +37,7 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(host.querySelector('#ql375-detail-title')).toBe(document.activeElement);
     expect(cards[4].getAttribute('aria-pressed')).toBe('true');
     expect(host.querySelectorAll('form,input,textarea')).toHaveLength(0);
-    expect(host.querySelectorAll('select')).toHaveLength(11); // QL-392/393/395/396/397/398 preview filters only
+    expect(host.querySelectorAll('select')).toHaveLength(13); // QL-392/393/395/396/397/398/399 preview filters only
   });
   it('does not claim a live per-shell status when protected readback is absent',async()=>{
     await show(null);
@@ -237,5 +237,30 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     await act(async()=>{source.value='rosevear-ai-hub';source.dispatchEvent(new Event('change',{bubbles:true}));});
     expect(closure.querySelectorAll('tbody tr')).toHaveLength(1);
     expect(closure.querySelector('[role="status"]')?.textContent).toContain('Showing 1 of 3');
+  });
+  it('shows QL-399 original handoff requirements, reviewer exceptions and source-linked HOLD history',async()=>{
+    await show();
+    const handoff=host.querySelector('.ql399-evidence-handoff')!;
+    expect(handoff.textContent).toContain('INERT_PREVIEW');
+    expect(handoff.textContent).toContain('original handoff BLOCKED; closure HOLD');
+    expect(handoff.querySelectorAll('tbody tr')).toHaveLength(3);
+    expect(handoff.querySelectorAll('tbody tr td details ol li')).toHaveLength(27); // 15 gates + four exceptions + eight trace entries
+    expect(handoff.textContent).toContain('SCENARIO_CLAIM_CONFLICT');
+    expect(handoff.textContent).toContain('HOLD_PRESERVED');
+    expect(handoff.textContent).toContain('NOT_PRESENT');
+    expect(handoff.textContent).toContain('NOT_ATTESTED');
+    expect(handoff.querySelector('[role="status"]')?.textContent).toContain('0 authorized closures');
+    expect(handoff.querySelectorAll('button,input,form,textarea')).toHaveLength(0);
+    expect(handoff.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+    const source=handoff.querySelector<HTMLSelectElement>('#ql399-source-filter')!;
+    const priority=handoff.querySelector<HTMLSelectElement>('#ql399-exception-filter')!;
+    await act(async()=>{priority.value='REVIEW_CONFLICT';priority.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(handoff.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(handoff.textContent).toContain('devilndove');
+    await act(async()=>{source.value='icamp';source.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(handoff.textContent).toContain('No illustrative handoff matches');
+    await act(async()=>{priority.value='COLLECT_ORIGINAL';priority.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(handoff.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(handoff.textContent).toContain('exception-ql399-0003');
   });
 });
