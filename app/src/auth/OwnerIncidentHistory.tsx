@@ -23,6 +23,7 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   const [previousReview,setPreviousReview]=useState<ReviewSnapshot|null>(null);
   const [reviewedSequences,setReviewedSequences]=useState<number[]>([]);
   const [savedReviews,setSavedReviews]=useState<SavedReview[]>([]);
+  const [closedReview,setClosedReview]=useState<{reviewed:number;total:number;bookmarked:number}|null>(null);
   const nextSaveId=useRef(1);
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const observationList=useRef<HTMLDivElement>(null);
@@ -31,6 +32,7 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
     setSearch('');setSelected(null);setFilter('all');setSeverity('all');setGroupRepeats(true);
     setBookmarks([]);setBookmarkedOnly(false);setPreviousReview(null);
     setReviewedSequences([]);setSavedReviews([]);nextSaveId.current=1;
+    setClosedReview(null);
     navigated.current=false;
   },[history.role,authenticated]);
   const entries=authenticated?history.observations:[];
@@ -41,6 +43,7 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   const chosen=visible.find(group=>group.id===selected)??visible[0];
   const chosenSequences=chosen?.occurrences.map(entry=>entry.sequence)??[];
   const chosenBookmarked=chosenSequences.some(sequence=>activeBookmarks.includes(sequence));
+  const unreviewed=visible.filter(group=>group.occurrences.some(entry=>!activeReviewed.includes(entry.sequence)));
   const markReviewed=(sequences:number[])=>setReviewedSequences(current=>
     [...current.filter(sequence=>entries.some(entry=>entry.sequence===sequence)),...sequences.filter(sequence=>!current.includes(sequence))].slice(-40));
   const saveReview=()=>{
@@ -48,6 +51,19 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
     const snapshot:SavedReview={id:nextSaveId.current++,filter,severity,search,groupRepeats,
       bookmarks:activeBookmarks,reviewed:activeReviewed,bookmarkedOnly};
     setSavedReviews(current=>[...current,snapshot].slice(-5));
+  };
+  const nextUnreviewed=()=>{
+    const next=unreviewed.find(group=>group.id!==chosen?.id)??unreviewed[0];
+    if(!next)return;
+    navigated.current=true;
+    setSelected(next.id);
+    markReviewed(next.occurrences.map(entry=>entry.sequence));
+  };
+  const closeReview=()=>{
+    setClosedReview({reviewed:activeReviewed.length,total:entries.length,bookmarked:activeBookmarks.length});
+    setSavedReviews([]);setBookmarks([]);setReviewedSequences([]);
+    setSelected(null);setPreviousReview(null);setSearch('');setFilter('all');setSeverity('all');
+    setGroupRepeats(true);setBookmarkedOnly(false);navigated.current=false;
   };
   const loadReview=(saved:SavedReview)=>{
     if(!authenticated)return;
@@ -97,6 +113,11 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   return <section className="ql377-history" aria-labelledby="ql377-history-title">
     <h4 id="ql377-history-title">Owner incident observation history</h4>
     <p>This is a bounded history of alerts <em>seen in this open owner shell</em>, not server incident history or source audit evidence. It is kept in memory only, and clears when our MFA session ends or the owner changes.</p>
+    {closedReview?<section className="ql383-closeout" aria-label="Closed local review summary" role="status">
+      <h5>Local review closed</h5>
+      <p>{closedReview.reviewed} of {closedReview.total} observed episodes were opened; {closedReview.bookmarked} were bookmarked before closeout. In-memory review marks, bookmarks and saved views were cleared. This does not close, resolve, approve or notify any source incident.</p>
+      <button type="button" onClick={()=>setClosedReview(null)}>Start a new local review</button>
+    </section>:<>
     <div className="ql377-controls">
       <div role="group" aria-label="Session review shortcuts" className="ql379-presets">
         <span>Review shortcuts (this session only):</span>
@@ -144,6 +165,11 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
       <progress max={Math.max(entries.length,1)} value={activeReviewed.length} aria-label="Observed alert episodes opened for review"/>
       <p role="status">{activeReviewed.length} of {entries.length} observed alert episodes opened for review ({entries.length?Math.round(activeReviewed.length/entries.length*100):0}%). {activeBookmarks.length} bookmarked observations. Progress means viewed here, not independently verified or resolved.</p>
       <p>Read-only handoff note: {visible.length} filtered groups; {showing} still displayed; {needingEvidence} needing evidence verification. No messages sent, approvals granted, or incident status changed. This summary exists only in the authenticated owner session.</p>
+      <div className="ql383-actions" role="group" aria-label="Review progress and local closeout">
+        <button type="button" disabled={unreviewed.length===0} onClick={nextUnreviewed}>Open next unreviewed alert ({unreviewed.length} groups)</button>
+        <button type="button" onClick={closeReview}>Close local review and clear session notes</button>
+      </div>
+      <p>{unreviewed.length===0?'No unreviewed groups in this filtered view. Other filters may contain unreviewed observations.':`${unreviewed.length} filtered groups include episodes not yet opened.`} Review progress stays in this owner session when filters change; it is not evidence of resolution.</p>
     </section>
     <p id="ql380-keyboard-help">On an alert, use Up/Down arrows or Home/End to move between results. Press Enter to move focus to the selected detail.</p>
     <div className="ql377-layout">
@@ -183,5 +209,6 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
       </section>
     </div>
     <p className="ql377-boundary">Search, priority and grouping affect this browser view only. A recent aggregate is not six live source confirmations; “no longer displayed” never means independently resolved. <a href="#ql370-refresh-status">Open protected status refresh</a>.</p>
+    </>}
   </section>;
 }
