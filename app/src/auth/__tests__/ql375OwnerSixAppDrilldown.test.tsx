@@ -62,4 +62,14 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(gate?.querySelectorAll('button,input,form')).toHaveLength(0);
     expect(gate?.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
   });
+  it('shows QL-390 illustrative operator evidence without live records or controls',async()=>{
+    await show();
+    const ledger=host.querySelector('.ql390-simulation');
+    expect(ledger?.textContent).toContain('INERT_PREVIEW');
+    expect(ledger?.querySelectorAll('tbody tr')).toHaveLength(4);
+    expect(ledger?.textContent).toContain('PREVIEW_CONFLICT');
+    expect(ledger?.textContent).toContain('Unverified');
+    expect(ledger?.querySelectorAll('button,input,form')).toHaveLength(0);
+    expect(ledger?.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+  });
 });
