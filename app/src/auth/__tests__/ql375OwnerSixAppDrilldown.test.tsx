@@ -37,7 +37,7 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(host.querySelector('#ql375-detail-title')).toBe(document.activeElement);
     expect(cards[4].getAttribute('aria-pressed')).toBe('true');
     expect(host.querySelectorAll('form,input,textarea')).toHaveLength(0);
-    expect(host.querySelectorAll('select')).toHaveLength(4); // QL-392/393 filters, not authorization controls
+    expect(host.querySelectorAll('select')).toHaveLength(5); // QL-392/393/395 preview filters only, not authorization
   });
   it('does not claim a live per-shell status when protected readback is absent',async()=>{
     await show(null);
@@ -139,5 +139,26 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(history.textContent).toContain('SCENARIO_REFERENCE_ONLY');
     expect(history.querySelectorAll('button,input,form,textarea,select')).toHaveLength(0);
     expect(history.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+  it('compares QL-395 simulated evidence windows and retains separate owner HOLD continuity',async()=>{
+    await show();
+    const comparison=host.querySelector('.ql395-evidence-comparison')!;
+    expect(comparison.textContent).toContain('INERT_PREVIEW');
+    expect(comparison.textContent).toContain('original authorization remains HOLD');
+    expect(comparison.querySelectorAll('table')).toHaveLength(3);
+    expect(comparison.querySelectorAll('table')[0].querySelectorAll('tbody tr')).toHaveLength(5);
+    expect(comparison.querySelectorAll('table')[1].querySelectorAll('tbody tr')).toHaveLength(3);
+    expect(comparison.querySelectorAll('table')[2].querySelectorAll('tbody tr')).toHaveLength(2);
+    expect(comparison.textContent).toContain('PIN_REFERENCE_DRIFT');
+    expect(comparison.textContent).toContain('NOT_VERIFIED');
+    expect(comparison.querySelectorAll('button,input,form,textarea')).toHaveLength(0);
+    expect(comparison.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+    const selector=comparison.querySelector<HTMLSelectElement>('#ql395-compare-window')!;
+    await act(async()=>{selector.value='SECOND_THIRD';selector.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(comparison.textContent).toContain('REVERTED_TO_HOLD');
+    expect(comparison.querySelectorAll('table')[1].querySelectorAll('tbody tr')).toHaveLength(2);
+    await act(async()=>{selector.value='FIRST_THIRD';selector.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(comparison.querySelectorAll('table')[1].querySelectorAll('tbody tr')).toHaveLength(5);
+    expect(comparison.textContent).toContain('PROVENANCE_CHANGED');
   });
 });

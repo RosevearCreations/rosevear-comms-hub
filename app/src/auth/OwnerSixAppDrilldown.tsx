@@ -9,6 +9,7 @@ import {QL391_ILLUSTRATIVE_TIMELINE} from './ql391IncidentCorrelationPreview';
 import {QL392_DEFAULT_FILTERS,QL392_ILLUSTRATIVE_PREVIEW,reviewOperatorIncidents,type QL392Filters} from './ql392OperatorIncidentReview';
 import {QL393_DEFAULT_SCENARIO,previewOperatorFollowUps} from './ql393OperatorFollowUpDrafts';
 import {QL394_DEMO_HISTORY,QL394_DEMO_NOW,reviewDraftDecisionHistory} from './ql394DraftDecisionHistory';
+import {compareOperatorEvidenceReviews} from './ql395EvidenceReviewComparison';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -20,6 +21,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const [selected,setSelected]=useState<(typeof QL375_SHELLS)[number]['id']>('yw');
   const [incidentFilters,setIncidentFilters]=useState<QL392Filters>(QL392_DEFAULT_FILTERS);
   const [followUpCorrelation,setFollowUpCorrelation]=useState('correlation-ql392-workshop');
+  const [comparisonWindow,setComparisonWindow]=useState<'FIRST_SECOND'|'SECOND_THIRD'|'FIRST_THIRD'>('FIRST_SECOND');
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const navigated=useRef(false);
   const shell=QL375_SHELLS.find(item=>item.id===selected)!;
@@ -33,6 +35,12 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const followUpReview=previewOperatorFollowUps(QL392_ILLUSTRATIVE_PREVIEW,followUpCorrelation,QL393_DEFAULT_SCENARIO);
   const decisionHistory=reviewDraftDecisionHistory(QL392_ILLUSTRATIVE_PREVIEW,
     'correlation-ql392-workshop',QL394_DEMO_HISTORY,QL394_DEMO_NOW);
+  const [comparisonFrom,comparisonTo]=comparisonWindow==='SECOND_THIRD'?
+    ['snapshot-ql394-0002','snapshot-ql394-0003']:
+    comparisonWindow==='FIRST_THIRD'?['snapshot-ql394-0001','snapshot-ql394-0003']:
+      ['snapshot-ql394-0001','snapshot-ql394-0002'];
+  const evidenceComparison=compareOperatorEvidenceReviews(QL392_ILLUSTRATIVE_PREVIEW,
+    'correlation-ql392-workshop',QL394_DEMO_HISTORY,comparisonFrom,comparisonTo,QL394_DEMO_NOW);
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -176,6 +184,41 @@ export function OwnerSixAppDrilldown({truth}:Props){
         </tr>)}{decisionHistory.alerts.length===0&&<tr><td colSpan={4}>No drift in these synthetic observations; this is not evidence of a healthy live authorization state.</td></tr>}</tbody></table></div>
       <p>Cross-source evidence reference reuse is also detected when different registered shell IDs claim the same reference. Missing, conflicting, invalid and stale claims cannot turn a simulated approval into a grant. Original source and master owners, server receiver, signing-pin custody, replay controls and consent must be verified independently before any action.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL394_OPERATOR_DRAFT_DECISION_HISTORY_PROVENANCE.md" target="_blank" rel="noopener noreferrer">View QL-394 decision history and authorization drift handoff</a>
+    </section>
+    <section className="ql395-evidence-comparison" aria-labelledby="ql395-compare-title">
+      <h4 id="ql395-compare-title">Operator evidence review comparison, drift resolution guidance and owner decision continuity · offline preview</h4>
+      <p><strong>{evidenceComparison.state} — every original authorization remains HOLD.</strong> Compare fixed simulated workshop observations for the same registered shell and opaque correlation. This view cannot accept an owner decision, validate a claimed signing reference or send a source recheck.</p>
+      <label htmlFor="ql395-compare-window">Synthetic observation comparison
+        <select id="ql395-compare-window" value={comparisonWindow}
+          onChange={event=>setComparisonWindow(event.target.value as typeof comparisonWindow)}>
+          <option value="FIRST_SECOND">09:00 → 09:03 — simulated grant and reference drift</option>
+          <option value="SECOND_THIRD">09:03 → 09:06 — simulated gate reversals</option>
+          <option value="FIRST_THIRD">09:00 → 09:06 — full history, including intermediate alerts</option>
+        </select>
+      </label>
+      <p role="status" aria-live="polite">{evidenceComparison.changedGates} changed synthetic gate(s), {evidenceComparison.resolutions.length} open review guidance item(s), {evidenceComparison.ownerContinuity.length} original-owner continuity check(s). No approved or persisted decision exists.</p>
+      <div className="ql395-table-scroll"><table><caption>Source-scoped gate comparison; observed references are not proof</caption>
+        <thead><tr><th scope="col">Source / gate</th><th scope="col">Earlier scenario</th><th scope="col">Later scenario</th><th scope="col">Evidence provenance</th><th scope="col">Change</th><th scope="col">Authorization</th></tr></thead>
+        <tbody>{evidenceComparison.comparisons.map(entry=><tr key={`${entry.sourceId}-${entry.gate}`}>
+          <th scope="row"><code>{entry.sourceId}</code> / {entry.gate}</th>
+          <td>{entry.beforeDecision}</td><td>{entry.afterDecision}</td>
+          <td>{entry.beforeProvenance} → {entry.afterProvenance}</td><td><strong>{entry.kind}</strong></td>
+          <td>{entry.authorization}</td>
+        </tr>)}{evidenceComparison.comparisons.length===0&&<tr><td colSpan={6}>No safe comparison. Original authorization remains on HOLD.</td></tr>}</tbody></table></div>
+      <div className="ql395-table-scroll"><table><caption>Open synthetic drift reviews — independent original evidence required</caption>
+        <thead><tr><th scope="col">Source and gate</th><th scope="col">Drift type</th><th scope="col">Resolution guidance</th><th scope="col">Owner status</th></tr></thead>
+        <tbody>{evidenceComparison.resolutions.map((item,index)=><tr key={`${item.code}-${item.sourceId}-${index}`}>
+          <th scope="row">{item.sourceId} / {item.gate}</th><td>{item.code}</td>
+          <td>{item.requiredReview}</td><td><strong>{item.ownerState}</strong> / {item.resolution}</td>
+        </tr>)}{evidenceComparison.resolutions.length===0&&<tr><td colSpan={4}>No new scenario drift in this window; original owner evidence is still unverified.</td></tr>}</tbody></table></div>
+      <div className="ql395-table-scroll"><table><caption>Separate source-owner and master-owner decision continuity — simulated states only</caption>
+        <thead><tr><th scope="col">Shell owner gate</th><th scope="col">Earlier</th><th scope="col">Later</th><th scope="col">Original evidence</th><th scope="col">Continuity</th></tr></thead>
+        <tbody>{evidenceComparison.ownerContinuity.map(item=><tr key={`${item.sourceId}-${item.ownerGate}`}>
+          <th scope="row">{item.sourceId} / {item.ownerGate}</th><td>{item.priorScenarioDecision}</td>
+          <td>{item.latestScenarioDecision}</td><td>{item.originalOwnerEvidence}</td><td><strong>{item.continuity}</strong></td>
+        </tr>)}{evidenceComparison.ownerContinuity.length===0&&<tr><td colSpan={5}>No validated synthetic continuity; remain on HOLD.</td></tr>}</tbody></table></div>
+      <p>The original source owner, separate master owner, signer custody, private receiver, replay protection and scoped consent require independent evidence. A comparison—or even a simulated passing gate—never renews, transfers or authorizes an approval.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL395_OPERATOR_EVIDENCE_COMPARISON_OWNER_CONTINUITY.md" target="_blank" rel="noopener noreferrer">View QL-395 comparison and decision continuity handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
