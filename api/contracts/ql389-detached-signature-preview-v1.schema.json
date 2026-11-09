@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/api/contracts/ql389-detached-signature-preview-v1.schema.json",
+  "title": "QL-389 Detached Source Signature Preview V1",
+  "description": "Signature metadata for offline review only; this schema grants no receiver trust, enrollment, or transport authorization.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["algorithm", "keyId", "signatureBase64Url"],
+  "properties": {
+    "algorithm": {"const": "Ed25519"},
+    "keyId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{7,63}$"},
+    "signatureBase64Url": {"type": "string", "pattern": "^[A-Za-z0-9_-]{86}$"}
+  }
+}
