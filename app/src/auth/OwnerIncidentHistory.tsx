@@ -8,6 +8,7 @@ import './ql377OwnerIncidentHistory.css';
 
 type Filter='all'|'showing'|'ended';
 type Severity='all'|'action'|'warning'|'information';
+type ReviewSnapshot={filter:Filter;severity:Severity;search:string;groupRepeats:boolean};
 export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   history:HistoryState;nowMs:number;authenticated:boolean;
 }){
@@ -16,16 +17,29 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   const [search,setSearch]=useState('');
   const [groupRepeats,setGroupRepeats]=useState(true);
   const [selected,setSelected]=useState<string|null>(null);
+  const [bookmarks,setBookmarks]=useState<number[]>([]);
+  const [bookmarkedOnly,setBookmarkedOnly]=useState(false);
+  const [previousReview,setPreviousReview]=useState<ReviewSnapshot|null>(null);
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const observationList=useRef<HTMLDivElement>(null);
   const navigated=useRef(false);
   useEffect(()=>{
     setSearch('');setSelected(null);setFilter('all');setSeverity('all');setGroupRepeats(true);
+    setBookmarks([]);setBookmarkedOnly(false);setPreviousReview(null);
     navigated.current=false;
   },[history.role,authenticated]);
   const entries=authenticated?history.observations:[];
-  const visible=ownerIncidentTriage(entries,{nowMs,search,status:filter,severity,groupRepeats});
+  const activeBookmarks=bookmarks.filter(sequence=>entries.some(entry=>entry.sequence===sequence));
+  const reviewed=ownerIncidentTriage(entries,{nowMs,search,status:filter,severity,groupRepeats});
+  const visible=bookmarkedOnly?reviewed.filter(group=>group.occurrences.some(entry=>activeBookmarks.includes(entry.sequence))):reviewed;
   const chosen=visible.find(group=>group.id===selected)??visible[0];
+  const chosenSequences=chosen?.occurrences.map(entry=>entry.sequence)??[];
+  const chosenBookmarked=chosenSequences.some(sequence=>activeBookmarks.includes(sequence));
+  const toggleBookmark=()=>{
+    if(!chosen)return;
+    setBookmarks(current=>chosenBookmarked?current.filter(sequence=>!chosenSequences.includes(sequence)):
+      [...current.filter(sequence=>entries.some(entry=>entry.sequence===sequence)),...chosenSequences.filter(sequence=>!current.includes(sequence))].slice(-40));
+  };
   const represented=visible.reduce((sum,group)=>sum+group.occurrences.length,0);
   const showing=visible.filter(group=>group.stillDisplayed).length;
   const action=visible.filter(group=>group.stillDisplayed&&group.latest.severity==='action').length;
@@ -44,9 +58,17 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   };
   const applyPreset=(preset:OwnerReviewPreset)=>{
     const next=ownerReviewPreset(preset);
+    setPreviousReview({filter,severity,search,groupRepeats});
     navigated.current=false;
-    setSelected(null);setSearch(next.search);setFilter(next.status);
+    setBookmarkedOnly(false);setSearch(next.search);setFilter(next.status);
     setSeverity(next.severity);setGroupRepeats(next.groupRepeats);
+  };
+  const restoreReview=()=>{
+    if(!previousReview)return;
+    navigated.current=false;
+    setFilter(previousReview.filter);setSeverity(previousReview.severity);
+    setSearch(previousReview.search);setGroupRepeats(previousReview.groupRepeats);
+    setPreviousReview(null);
   };
   useEffect(()=>{if(navigated.current&&chosen)detailHeading.current?.focus();},[selected,filter,severity,search,groupRepeats,chosen?.id]);
   return <section className="ql377-history" aria-labelledby="ql377-history-title">
@@ -59,6 +81,10 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
         <button type="button" onClick={()=>applyPreset('urgent')}>Action needed</button>
         <button type="button" onClick={()=>applyPreset('active')}>Still displayed</button>
         <button type="button" onClick={()=>applyPreset('historical')}>No longer displayed</button>
+      </div>
+      <div role="group" aria-label="Session review continuity" className="ql381-review-controls">
+        <button type="button" disabled={!previousReview} onClick={restoreReview}>Restore previous filters</button>
+        <label htmlFor="ql381-bookmarked-only"><input id="ql381-bookmarked-only" type="checkbox" checked={bookmarkedOnly} onChange={event=>{navigated.current=false;setBookmarkedOnly(event.target.checked);}}/> Bookmarked only ({activeBookmarks.length} observations)</label>
       </div>
       <label htmlFor="ql377-filter">Review session observations</label>
       <select id="ql377-filter" value={filter} onChange={event=>{navigated.current=false;setFilter(event.target.value as Filter);}}>
@@ -98,9 +124,13 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
             {group.occurrences.length>1&&<small>{group.occurrences.length} distinct session observations, grouped for review</small>}
           </button>)}
       </div>
-      <section id="ql377-detail" className="ql377-detail" aria-labelledby="ql377-detail-title">
+      <section id="ql377-detail" className="ql377-detail" aria-labelledby="ql377-detail-title" onKeyDown={event=>{
+        if(event.key==='Escape'&&chosen){event.preventDefault();observationList.current?.querySelectorAll<HTMLButtonElement>('.ql377-item')[visible.indexOf(chosen)]?.focus();}
+      }}>
         {chosen?<>
           <h5 id="ql377-detail-title" tabIndex={-1} ref={detailHeading}>{chosen.latest.title}</h5>
+          <button type="button" aria-pressed={chosenBookmarked} onClick={toggleBookmark}>{chosenBookmarked?'Remove session bookmark':'Bookmark this session alert'}</button>
+          <p>Bookmark applies only to observed episodes in this open owner session. Press Escape here to return to the selected result.</p>
           <p><strong>Triage:</strong> {chosen.priority.replace('-', ' ')}. <strong>Evidence:</strong> {OWNER_EVIDENCE_LABELS[chosen.evidence]}.</p>
           <p><strong>Observed for:</strong> {incidentAgeLabel(chosen.latest.firstSeenMs,chosen.latest.noLongerShownMs??nowMs)}. <strong>Current display:</strong> {chosen.latest.noLongerShownMs===null?'Still showing':'No longer showing; not independently resolved'}.</p>
           <p><strong>First seen in this session:</strong> {new Date(chosen.latest.firstSeenMs).toLocaleString()}</p>
