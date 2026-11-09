@@ -125,4 +125,19 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(followups.textContent).toContain('No source-scoped synthetic concern requires a draft');
     expect(followups.querySelectorAll('tbody tr')).toHaveLength(1);
   });
+  it('shows QL-394 in-memory approval history and review-only drift without action controls',async()=>{
+    await show();
+    const history=host.querySelector('.ql394-decision-history')!;
+    expect(history.textContent).toContain('INERT_PREVIEW');
+    expect(history.textContent).toContain('original owner authorization remains on HOLD');
+    expect(history.querySelectorAll('table')).toHaveLength(2);
+    expect(history.querySelectorAll('table')[0].querySelectorAll('tbody tr')).toHaveLength(15);
+    expect(history.querySelectorAll('table')[1].querySelectorAll('tbody tr')).toHaveLength(5);
+    expect(history.textContent).toContain('UNVERIFIED_GRANT_CHANGE');
+    expect(history.textContent).toContain('PIN_REFERENCE_DRIFT');
+    expect(history.textContent).toContain('GATE_REVERSAL');
+    expect(history.textContent).toContain('SCENARIO_REFERENCE_ONLY');
+    expect(history.querySelectorAll('button,input,form,textarea,select')).toHaveLength(0);
+    expect(history.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+  });
 });

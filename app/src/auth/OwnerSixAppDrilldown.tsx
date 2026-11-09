@@ -8,6 +8,7 @@ import {QL390_ILLUSTRATIVE_ROWS} from './ql390IncidentSimulationLedger';
 import {QL391_ILLUSTRATIVE_TIMELINE} from './ql391IncidentCorrelationPreview';
 import {QL392_DEFAULT_FILTERS,QL392_ILLUSTRATIVE_PREVIEW,reviewOperatorIncidents,type QL392Filters} from './ql392OperatorIncidentReview';
 import {QL393_DEFAULT_SCENARIO,previewOperatorFollowUps} from './ql393OperatorFollowUpDrafts';
+import {QL394_DEMO_HISTORY,QL394_DEMO_NOW,reviewDraftDecisionHistory} from './ql394DraftDecisionHistory';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -30,6 +31,8 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const intakeExample=reviewCrossAppIntake(QL388_EXAMPLE_EVENT);
   const operatorReview=reviewOperatorIncidents(QL392_ILLUSTRATIVE_PREVIEW,incidentFilters);
   const followUpReview=previewOperatorFollowUps(QL392_ILLUSTRATIVE_PREVIEW,followUpCorrelation,QL393_DEFAULT_SCENARIO);
+  const decisionHistory=reviewDraftDecisionHistory(QL392_ILLUSTRATIVE_PREVIEW,
+    'correlation-ql392-workshop',QL394_DEMO_HISTORY,QL394_DEMO_NOW);
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -152,6 +155,27 @@ export function OwnerSixAppDrilldown({truth}:Props){
       </tr>)}{followUpReview.drafts.length===0&&<tr><td colSpan={5}>No source-scoped synthetic concern requires a draft. No live incident status is implied.</td></tr>}</tbody></table></div>
       <p>Each simulated source-owner decision, signing pin and consent must match its own source and correlation; the separate master-owner decision must match the correlation. Even five simulated passes are <strong>not permission to send</strong>. Original witness, receiver, replay and retention evidence remain required.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL393_OPERATOR_FOLLOWUP_OWNER_GATES.md" target="_blank" rel="noopener noreferrer">View QL-393 operator draft and owner gate handoff</a>
+    </section>
+    <section className="ql394-decision-history" aria-labelledby="ql394-history-title">
+      <h4 id="ql394-history-title">Operator draft decision history, provenance and source authorization drift · offline preview</h4>
+      <p><strong>{decisionHistory.state} — original owner authorization remains on HOLD.</strong> This fixed Devil n Dove workshop example compares three in-memory synthetic observations. The claimed references below are not signatures, trusted owner approvals, witness receipts or verified custody evidence.</p>
+      <p role="status">{decisionHistory.history.length} simulated gate-history entries; {decisionHistory.alerts.length} review-only drift alerts. No messages, approval records or incident tasks were sent or persisted.</p>
+      <div className="ql394-table-scroll"><table><caption>Chronological QL-393 synthetic owner gate decisions; references cannot establish authorization</caption>
+        <thead><tr><th scope="col">Observation</th><th scope="col">Shell / correlation</th><th scope="col">Gate</th><th scope="col">Scenario decision</th><th scope="col">Claimed evidence provenance</th><th scope="col">Opaque reference</th></tr></thead>
+        <tbody>{decisionHistory.history.map(entry=><tr key={`${entry.snapshotId}-${entry.sourceId}-${entry.gate}`}>
+          <td><time dateTime={entry.observedAt}>{entry.observedAt}</time></td>
+          <td><code>{entry.sourceId}</code> / <code>{entry.correlationId}</code></td>
+          <th scope="row">{entry.gate}</th><td>{entry.decision}</td>
+          <td><strong>{entry.provenance}</strong></td><td>{entry.referenceId?<code>{entry.referenceId}</code>:'Not supplied'}</td>
+        </tr>)}{decisionHistory.history.length===0&&<tr><td colSpan={6}>No valid synthetic history; all authorization remains on HOLD.</td></tr>}</tbody></table></div>
+      <div className="ql394-table-scroll"><table><caption>Authorization drift alerts for operator review only</caption>
+        <thead><tr><th scope="col">Detected time</th><th scope="col">Source / gate</th><th scope="col">Drift</th><th scope="col">Required independent review</th></tr></thead>
+        <tbody>{decisionHistory.alerts.map((alert,index)=><tr key={`${alert.code}-${alert.sourceId}-${alert.gate}-${index}`}>
+          <td>{alert.observedAt}</td><th scope="row">{alert.sourceId} / {alert.gate}</th>
+          <td><strong>{alert.code}</strong></td><td>{alert.detail}</td>
+        </tr>)}{decisionHistory.alerts.length===0&&<tr><td colSpan={4}>No drift in these synthetic observations; this is not evidence of a healthy live authorization state.</td></tr>}</tbody></table></div>
+      <p>Cross-source evidence reference reuse is also detected when different registered shell IDs claim the same reference. Missing, conflicting, invalid and stale claims cannot turn a simulated approval into a grant. Original source and master owners, server receiver, signing-pin custody, replay controls and consent must be verified independently before any action.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL394_OPERATOR_DRAFT_DECISION_HISTORY_PROVENANCE.md" target="_blank" rel="noopener noreferrer">View QL-394 decision history and authorization drift handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
