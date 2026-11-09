@@ -10,6 +10,8 @@ import {QL392_DEFAULT_FILTERS,QL392_ILLUSTRATIVE_PREVIEW,reviewOperatorIncidents
 import {QL393_DEFAULT_SCENARIO,previewOperatorFollowUps} from './ql393OperatorFollowUpDrafts';
 import {QL394_DEMO_HISTORY,QL394_DEMO_NOW,reviewDraftDecisionHistory} from './ql394DraftDecisionHistory';
 import {compareOperatorEvidenceReviews} from './ql395EvidenceReviewComparison';
+import {QL396_DEFAULT_FILTERS,QL396_DEMO_NOW,QL396_DEMO_REQUESTS,
+  filterOperatorRecheckQueue,reviewOperatorRecheckQueue,type QL396QueueFilters} from './ql396OperatorRecheckQueue';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -22,6 +24,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const [incidentFilters,setIncidentFilters]=useState<QL392Filters>(QL392_DEFAULT_FILTERS);
   const [followUpCorrelation,setFollowUpCorrelation]=useState('correlation-ql392-workshop');
   const [comparisonWindow,setComparisonWindow]=useState<'FIRST_SECOND'|'SECOND_THIRD'|'FIRST_THIRD'>('FIRST_SECOND');
+  const [recheckFilters,setRecheckFilters]=useState<QL396QueueFilters>(QL396_DEFAULT_FILTERS);
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const navigated=useRef(false);
   const shell=QL375_SHELLS.find(item=>item.id===selected)!;
@@ -41,6 +44,9 @@ export function OwnerSixAppDrilldown({truth}:Props){
       ['snapshot-ql394-0001','snapshot-ql394-0002'];
   const evidenceComparison=compareOperatorEvidenceReviews(QL392_ILLUSTRATIVE_PREVIEW,
     'correlation-ql392-workshop',QL394_DEMO_HISTORY,comparisonFrom,comparisonTo,QL394_DEMO_NOW);
+  const recheckQueue=reviewOperatorRecheckQueue(QL392_ILLUSTRATIVE_PREVIEW,
+    QL396_DEMO_REQUESTS,QL396_DEMO_NOW);
+  const visibleRechecks=filterOperatorRecheckQueue(recheckQueue,recheckFilters);
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -219,6 +225,40 @@ export function OwnerSixAppDrilldown({truth}:Props){
         </tr>)}{evidenceComparison.ownerContinuity.length===0&&<tr><td colSpan={5}>No validated synthetic continuity; remain on HOLD.</td></tr>}</tbody></table></div>
       <p>The original source owner, separate master owner, signer custody, private receiver, replay protection and scoped consent require independent evidence. A comparison—or even a simulated passing gate—never renews, transfers or authorizes an approval.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL395_OPERATOR_EVIDENCE_COMPARISON_OWNER_CONTINUITY.md" target="_blank" rel="noopener noreferrer">View QL-395 comparison and decision continuity handoff</a>
+    </section>
+    <section className="ql396-recheck-queue" aria-labelledby="ql396-recheck-title">
+      <h4 id="ql396-recheck-title">Operator evidence recheck queue, outstanding approval aging and owner escalation · offline preview</h4>
+      <p><strong>{recheckQueue.state} — all original approval gates remain HOLD.</strong> This is a deterministic, non-sending queue made from three illustrative correlations covering Devil n Dove, iCamp and Rosevear AI Hub. The other registered shells are not proven incident-free by their absence here.</p>
+      <p>Age counts minutes since the <strong>first synthetic observation</strong>, never the real age of an owner approval, live incident or submitted request. The illustrative thresholds are NEW (under 10 minutes), AGING (10–29 minutes) and OVERDUE (30 minutes or longer).</p>
+      <div className="ql396-queue-controls" aria-label="Read-only illustrative recheck queue filters">
+        <label htmlFor="ql396-source-filter">Source shell
+          <select id="ql396-source-filter" value={recheckFilters.sourceId}
+            onChange={event=>setRecheckFilters(previous=>({...previous,sourceId:event.target.value}))}>
+            <option value="ALL">All illustrated shells</option>
+            {QL375_SHELLS.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}
+          </select>
+        </label>
+        <label htmlFor="ql396-age-filter">Synthetic age
+          <select id="ql396-age-filter" value={recheckFilters.ageBand}
+            onChange={event=>setRecheckFilters(previous=>({...previous,ageBand:event.target.value as QL396QueueFilters['ageBand']}))}>
+            <option value="ALL">All age bands</option><option value="NEW">New — under 10 minutes</option>
+            <option value="AGING">Aging — 10 to 29 minutes</option><option value="OVERDUE">Overdue — 30+ minutes</option>
+          </select>
+        </label>
+      </div>
+      <p role="status" aria-live="polite">Showing {visibleRechecks.length} of {recheckQueue.items.length} illustrative gate rechecks across {recheckQueue.sourceCount} affected shells and {recheckQueue.totalGroups} correlations: {recheckQueue.overdue} overdue, {recheckQueue.aging} aging and {recheckQueue.newCount} new (before filters). No notification has been sent.</p>
+      <div className="ql396-table-scroll"><table><caption>Source-scoped simulated owner and evidence recheck guidance, sorted by priority and age</caption>
+        <thead><tr><th scope="col">Source / correlation</th><th scope="col">Gate / reviewer scope</th><th scope="col">Synthetic age</th><th scope="col">Evidence</th><th scope="col">Priority / drift</th><th scope="col">Next independent review</th><th scope="col">Action state</th></tr></thead>
+        <tbody>{visibleRechecks.map(item=><tr key={item.queueId}>
+          <th scope="row"><code>{item.sourceId}</code> / <code>{item.correlationId}</code></th>
+          <td>{item.gate} / <strong>{item.ownerScope}</strong></td>
+          <td>{item.syntheticAgeMinutes} minutes · <strong>{item.ageBand}</strong></td>
+          <td>{item.evidenceProvenance} / {item.originalOwnerEvidence}</td>
+          <td>{item.priority}{item.driftCodes.length>0?` / ${item.driftCodes.join(', ')}`:''}</td>
+          <td>{item.guidance}</td><td><strong>{item.status}</strong> · no send, approval or persistence</td>
+        </tr>)}{visibleRechecks.length===0&&<tr><td colSpan={7}>No illustrative recheck matches these filters. This does not prove live evidence is current or that no actual incidents exist.</td></tr>}</tbody></table></div>
+      <p>Escalation text is guidance only. Source and master owners, signing-pin custodians, receiver operators and consent custodians require independently verified original evidence before any real request, approval or communication can proceed.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL396_OPERATOR_RECHECK_QUEUE_AGING_ESCALATION.md" target="_blank" rel="noopener noreferrer">View QL-396 recheck queue and owner escalation handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
