@@ -2,6 +2,7 @@ import {useEffect,useRef,useState} from 'react';
 import {QL375_HELP_LINKS,QL375_SHELLS,ownerShellStatus} from './ql375OwnerStatus';
 import {MASTER_SHELL_REGISTRY,reconcileSourceIdentities} from './ql386MasterShellRegistry';
 import {MASTER_ROUTING_PATTERNS,reviewRoutingDraft} from './ql387MasterShellRouting';
+import {QL388_CONTRACT_VERSION,QL388_EVENT_KINDS,QL388_EXAMPLE_EVENT,reviewCrossAppIntake} from './ql388CrossAppIntake';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -19,6 +20,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const identityClaims=reconcileSourceIdentities([]);
   const routingExample=reviewRoutingDraft({sources:['yw','icamp'],targets:['ai-data-platform'],
     shape:'many-to-one',purpose:'monitoring',tenantScope:'shell',sourceApproved:false,targetApproved:false});
+  const intakeExample=reviewCrossAppIntake(QL388_EXAMPLE_EVENT);
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -27,6 +29,13 @@ export function OwnerSixAppDrilldown({truth}:Props){
       <h4 id="ql386-registry-title">Master Shell integration registry · expected contracts</h4>
       <p>Identity registry: {MASTER_SHELL_REGISTRY.length} approved shell-level sources. Independent source identity claims received here: 0. All {identityClaims.filter(item=>item.state==='MISSING').length} are awaiting claim reconciliation; no connection or enrollment is inferred from this catalogue.</p>
       <p>Source IDs, repositories and health handlers are the approved software contract; tenant businesses are not additional source identities. AI Data Platform owns module completion evidence, while Comms Hub owns authorized communications and incident routing.</p>
+    </section>
+    <section className="ql388-intake" aria-labelledby="ql388-intake-title">
+      <h4 id="ql388-intake-title">Cross-application notification and incident intake · contract only</h4>
+      <p>V1 envelope: <code>{QL388_CONTRACT_VERSION}</code>. Kinds: {QL388_EVENT_KINDS.join(' / ')}. The envelope accepts shell-level machine event codes, correlation and idempotency IDs, and opaque evidence references—no customer text or tenant records.</p>
+      <p role="status">Example contract review: <strong>{intakeExample.state}</strong> — {intakeExample.reason}.</p>
+      <p>Sender authentication, owner approval, replay protection, receiver enrollment and actual incident creation remain separate. Module completion and health metrics belong to AI Data Platform.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL388_CROSS_APP_NOTIFICATION_INCIDENT_INTAKE_CONTRACT.md" target="_blank" rel="noopener noreferrer">View the shared QL-388 contract and application handoff</a>
     </section>
     <section className="ql387-routing" aria-labelledby="ql387-routing-title">
       <h4 id="ql387-routing-title">Master Shell application routing map · design only</h4>
