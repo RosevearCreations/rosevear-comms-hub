@@ -12,6 +12,8 @@ import {QL394_DEMO_HISTORY,QL394_DEMO_NOW,reviewDraftDecisionHistory} from './ql
 import {compareOperatorEvidenceReviews} from './ql395EvidenceReviewComparison';
 import {QL396_DEFAULT_FILTERS,QL396_DEMO_NOW,QL396_DEMO_REQUESTS,
   filterOperatorRecheckQueue,reviewOperatorRecheckQueue,type QL396QueueFilters} from './ql396OperatorRecheckQueue';
+import {QL397_DEFAULT_FILTERS,QL397_DEMO_OBSERVATIONS,
+  filterOperatorRecheckOutcomes,reviewOperatorRecheckOutcomes,type QL397Filters} from './ql397RecheckOutcomeHistory';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -25,6 +27,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const [followUpCorrelation,setFollowUpCorrelation]=useState('correlation-ql392-workshop');
   const [comparisonWindow,setComparisonWindow]=useState<'FIRST_SECOND'|'SECOND_THIRD'|'FIRST_THIRD'>('FIRST_SECOND');
   const [recheckFilters,setRecheckFilters]=useState<QL396QueueFilters>(QL396_DEFAULT_FILTERS);
+  const [outcomeFilters,setOutcomeFilters]=useState<QL397Filters>(QL397_DEFAULT_FILTERS);
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const navigated=useRef(false);
   const shell=QL375_SHELLS.find(item=>item.id===selected)!;
@@ -47,6 +50,9 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const recheckQueue=reviewOperatorRecheckQueue(QL392_ILLUSTRATIVE_PREVIEW,
     QL396_DEMO_REQUESTS,QL396_DEMO_NOW);
   const visibleRechecks=filterOperatorRecheckQueue(recheckQueue,recheckFilters);
+  const recheckOutcomes=reviewOperatorRecheckOutcomes(QL392_ILLUSTRATIVE_PREVIEW,
+    QL396_DEMO_REQUESTS,QL397_DEMO_OBSERVATIONS,QL396_DEMO_NOW);
+  const visibleOutcomes=filterOperatorRecheckOutcomes(recheckOutcomes,outcomeFilters);
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -259,6 +265,47 @@ export function OwnerSixAppDrilldown({truth}:Props){
         </tr>)}{visibleRechecks.length===0&&<tr><td colSpan={7}>No illustrative recheck matches these filters. This does not prove live evidence is current or that no actual incidents exist.</td></tr>}</tbody></table></div>
       <p>Escalation text is guidance only. Source and master owners, signing-pin custodians, receiver operators and consent custodians require independently verified original evidence before any real request, approval or communication can proceed.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL396_OPERATOR_RECHECK_QUEUE_AGING_ESCALATION.md" target="_blank" rel="noopener noreferrer">View QL-396 recheck queue and owner escalation handoff</a>
+    </section>
+    <section className="ql397-outcome-history" aria-labelledby="ql397-outcome-title">
+      <h4 id="ql397-outcome-title">Recheck outcome history, owner review state and evidence-based closure · offline preview</h4>
+      <p><strong>{recheckOutcomes.state} — all closure decisions remain HOLD.</strong> This is a fixed, in-memory example of recheck notes attached to QL-396 source/correlation/gate identities. No original source-owner or master-owner review is verified, even when a simulated reference was rechecked.</p>
+      <div className="ql397-outcome-controls" aria-label="Illustrative outcome history filters">
+        <label htmlFor="ql397-source-filter">Source shell
+          <select id="ql397-source-filter" value={outcomeFilters.sourceId}
+            onChange={event=>setOutcomeFilters(previous=>({...previous,sourceId:event.target.value}))}>
+            <option value="ALL">All illustrated shells</option>
+            {QL375_SHELLS.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}
+          </select>
+        </label>
+        <label htmlFor="ql397-review-filter">Illustrative review state
+          <select id="ql397-review-filter" value={outcomeFilters.reviewState}
+            onChange={event=>setOutcomeFilters(previous=>({...previous,reviewState:event.target.value as QL397Filters['reviewState']}))}>
+            <option value="ALL">All review states</option>
+            <option value="AWAITING_ORIGINAL_REVIEW">Awaiting original review</option>
+            <option value="SCENARIO_REVIEW_NOTE_ONLY">Scenario note only</option>
+            <option value="CONFLICT_REQUIRES_INDEPENDENT_REVIEW">Conflict needs independent review</option>
+          </select>
+        </label>
+      </div>
+      <p role="status" aria-live="polite">Showing {visibleOutcomes.length} of {recheckOutcomes.gates.length} illustrative gate histories. {recheckOutcomes.observationCount} scenario observations, {recheckOutcomes.reviewedScenarios} gate(s) with notes, {recheckOutcomes.conflicts} gate(s) requiring independent conflict review; {recheckOutcomes.closureEligible} eligible for closure. No actual approval or request was made.</p>
+      <div className="ql397-table-scroll"><table><caption>Chronological scenario outcomes and blocked original-owner closure</caption>
+        <thead><tr><th scope="col">Shell / correlation / gate</th><th scope="col">Latest synthetic outcome</th><th scope="col">Operator review state</th><th scope="col">Source / master-owner decision</th><th scope="col">Closure guidance</th><th scope="col">History</th></tr></thead>
+        <tbody>{visibleOutcomes.map(item=><tr key={item.queueId}>
+          <th scope="row"><code>{item.sourceId}</code> / <code>{item.correlationId}</code> / {item.gate}</th>
+          <td>{item.latestOutcome??'No simulated recheck yet'}</td><td><strong>{item.reviewState}</strong></td>
+          <td>{item.sourceOwnerReview} / {item.masterOwnerReview}</td>
+          <td><strong>{item.closureState}</strong> — {item.closureGuidance}</td>
+          <td><details><summary>{item.outcomes.length} scenario outcome(s)</summary>
+            {item.outcomes.length?<ol>{item.outcomes.map(entry=><li key={entry.observationId}>
+              <time dateTime={entry.observedAt}>{entry.observedAt}</time> · {entry.outcome} · {entry.reviewerScope}
+            </li>)}</ol>:<p>Awaiting original evidence; no historical recheck exists.</p>}
+          </details></td>
+        </tr>)}{visibleOutcomes.length===0&&<tr><td colSpan={6}>No illustrative outcome matches these filters. This says nothing about live source reviews or closure readiness.</td></tr>}</tbody></table></div>
+      <details className="ql397-closure-checks"><summary>Five independent original-evidence checks required before any real closure</summary>
+        <ol>{recheckOutcomes.gates[0]?.requiredIndependentChecks.map(check=><li key={check}>{check}</li>)}</ol>
+      </details>
+      <p><strong>HOLD:</strong> History entries and reviewer scope labels are not authenticated actions or assignments. Closure, communications, source proof acceptance, signing keys, private receiver activation, consent and persistence remain disabled until independently authorized outside this preview.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL397_OPERATOR_RECHECK_OUTCOME_HISTORY_CLOSURE.md" target="_blank" rel="noopener noreferrer">View QL-397 outcome history, owner review and closure handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}

@@ -37,7 +37,7 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(host.querySelector('#ql375-detail-title')).toBe(document.activeElement);
     expect(cards[4].getAttribute('aria-pressed')).toBe('true');
     expect(host.querySelectorAll('form,input,textarea')).toHaveLength(0);
-    expect(host.querySelectorAll('select')).toHaveLength(7); // QL-392/393/395/396 preview filters only
+    expect(host.querySelectorAll('select')).toHaveLength(9); // QL-392/393/395/396/397 preview filters only
   });
   it('does not claim a live per-shell status when protected readback is absent',async()=>{
     await show(null);
@@ -185,5 +185,32 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     await act(async()=>{age.value='AGING';age.dispatchEvent(new Event('change',{bubbles:true}));});
     expect(queue.querySelectorAll('tbody tr')).toHaveLength(5);
     expect(queue.querySelector('[role="status"]')?.textContent).toContain('Showing 5 of 15');
+  });
+  it('shows QL-397 chronological synthetic outcomes with original owner review and closure on HOLD',async()=>{
+    await show();
+    const history=host.querySelector('.ql397-outcome-history')!;
+    expect(history.textContent).toContain('INERT_PREVIEW');
+    expect(history.textContent).toContain('all closure decisions remain HOLD');
+    expect(history.querySelectorAll('tbody tr')).toHaveLength(15);
+    expect(history.textContent).toContain('SIMULATED_CONFLICT_IDENTIFIED');
+    expect(history.textContent).toContain('SCENARIO_REVIEW_NOTE_ONLY');
+    expect(history.textContent).toContain('NOT_VERIFIED');
+    expect(history.querySelectorAll('button,input,form,textarea')).toHaveLength(0);
+    expect(history.querySelectorAll('.ql397-closure-checks ol li')).toHaveLength(5);
+    expect(history.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+    const source=history.querySelector<HTMLSelectElement>('#ql397-source-filter')!;
+    const review=history.querySelector<HTMLSelectElement>('#ql397-review-filter')!;
+    await act(async()=>{source.value='devilndove';source.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(history.querySelectorAll('tbody tr')).toHaveLength(5);
+    await act(async()=>{review.value='CONFLICT_REQUIRES_INDEPENDENT_REVIEW';
+      review.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(history.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(history.querySelector('[role="status"]')?.textContent).toContain('Showing 1 of 15');
+    await act(async()=>{source.value='rosevear-ai-hub';source.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(history.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(history.textContent).toContain('No illustrative outcome matches');
+    await act(async()=>{review.value='SCENARIO_REVIEW_NOTE_ONLY';
+      review.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(history.querySelectorAll('tbody tr')).toHaveLength(1);
   });
 });
