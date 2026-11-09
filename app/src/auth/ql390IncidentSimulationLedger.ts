@@ -6,7 +6,7 @@ export type QL390Candidate={event:unknown;proof:unknown};
 export type QL390RowState='PREVIEW_NEW'|'PREVIEW_DUPLICATE'|'PREVIEW_CONFLICT'|'HELD';
 export type QL390OperatorRow={
   sequence:number;state:QL390RowState;sourceId:string;kind:string;eventCode:string;
-  correlationId:string;evidenceRefCount:number;stage:string;explanation:string;
+  correlationId:string;occurredAt:string;evidenceRefCount:number;stage:string;explanation:string;
 };
 export type QL390Simulation={
   state:'INERT_PREVIEW'|'REJECTED_BATCH';
@@ -17,12 +17,12 @@ export type QL390Simulation={
 
 const held=(sequence:number,stage:string,explanation:string):QL390OperatorRow=>({
   sequence,state:'HELD',sourceId:'UNVERIFIED',kind:'REDACTED',eventCode:'REDACTED',
-  correlationId:'REDACTED',evidenceRefCount:0,stage,explanation
+  correlationId:'REDACTED',occurredAt:'REDACTED',evidenceRefCount:0,stage,explanation
 });
 
 const safeRow=(sequence:number,event:CrossAppIntake,state:QL390RowState,explanation:string):QL390OperatorRow=>({
   sequence,state,sourceId:event.sourceId,kind:event.kind,eventCode:event.eventCode,
-  correlationId:event.correlationId,evidenceRefCount:event.evidenceRefs.length,
+  correlationId:event.correlationId,occurredAt:event.occurredAt,evidenceRefCount:event.evidenceRefs.length,
   stage:state==='PREVIEW_NEW'?'INERT':'DEDUPLICATION',explanation
 });
 

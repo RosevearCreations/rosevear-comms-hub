@@ -5,6 +5,7 @@ import {MASTER_ROUTING_PATTERNS,reviewRoutingDraft} from './ql387MasterShellRout
 import {QL388_CONTRACT_VERSION,QL388_EVENT_KINDS,QL388_EXAMPLE_EVENT,reviewCrossAppIntake} from './ql388CrossAppIntake';
 import {QL389_PREVIEW_STAGES} from './ql389SignedIntakePreview';
 import {QL390_ILLUSTRATIVE_ROWS} from './ql390IncidentSimulationLedger';
+import {QL391_ILLUSTRATIVE_TIMELINE} from './ql391IncidentCorrelationPreview';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -64,6 +65,18 @@ export function OwnerSixAppDrilldown({truth}:Props){
       </tr>)}</tbody></table>
       <p>Signed scenario replay checks and all operator actions remain on HOLD. The actual ledger would require a server-authorized receiver, atomic replay reservations, consent and retention policy.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL390_CROSS_APP_INTAKE_SIMULATION_LEDGER.md" target="_blank" rel="noopener noreferrer">View QL-390 simulation and operator evidence handoff</a>
+    </section>
+    <section className="ql391-correlation" aria-labelledby="ql391-correlation-title">
+      <h4 id="ql391-correlation-title">Cross-application incident correlation and operator timeline · illustrative only</h4>
+      <p><strong>INERT_PREVIEW:</strong> This two-source example shows how a shared opaque correlation ID could arrange synthetic signed events by event time. It is not a real incident, live timeline, customer association, source connection or accepted operator task.</p>
+      <table><caption>Illustrative chronological review — no live source or tenant evidence</caption><thead><tr>
+        <th scope="col">Synthetic time</th><th scope="col">Source</th><th scope="col">Event code</th><th scope="col">Evidence freshness</th>
+      </tr></thead><tbody>{QL391_ILLUSTRATIVE_TIMELINE.map(row=><tr key={`${row.source}-${row.code}`}>
+        <td>{row.occurred}</td><th scope="row">{row.source}</th><td><code>{row.code}</code></td><td>{row.freshness}</td>
+      </tr>)}</tbody></table>
+      <p>Evidence-age labels are <strong>simulated observations</strong> matched by source and correlation ID; the event timestamp alone never establishes evidence freshness. Missing, stale, invalid or conflicting observations remain visible as review concerns. Unverified and HELD event claims are excluded and redacted.</p>
+      <p><strong>HOLD:</strong> Original source authority, persisted incident records, tenant access, alerts, acknowledgement and notification delivery are not enabled by this preview.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL391_CROSS_APP_INCIDENT_CORRELATION_TIMELINE.md" target="_blank" rel="noopener noreferrer">View QL-391 correlation, timeline and evidence freshness handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
