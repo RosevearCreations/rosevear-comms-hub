@@ -9,6 +9,7 @@ import './ql377OwnerIncidentHistory.css';
 type Filter='all'|'showing'|'ended';
 type Severity='all'|'action'|'warning'|'information';
 type ReviewSnapshot={filter:Filter;severity:Severity;search:string;groupRepeats:boolean};
+type SavedReview=ReviewSnapshot&{id:number;bookmarks:number[];reviewed:number[];bookmarkedOnly:boolean};
 export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   history:HistoryState;nowMs:number;authenticated:boolean;
 }){
@@ -20,21 +21,43 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
   const [bookmarks,setBookmarks]=useState<number[]>([]);
   const [bookmarkedOnly,setBookmarkedOnly]=useState(false);
   const [previousReview,setPreviousReview]=useState<ReviewSnapshot|null>(null);
+  const [reviewedSequences,setReviewedSequences]=useState<number[]>([]);
+  const [savedReviews,setSavedReviews]=useState<SavedReview[]>([]);
+  const nextSaveId=useRef(1);
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const observationList=useRef<HTMLDivElement>(null);
   const navigated=useRef(false);
   useEffect(()=>{
     setSearch('');setSelected(null);setFilter('all');setSeverity('all');setGroupRepeats(true);
     setBookmarks([]);setBookmarkedOnly(false);setPreviousReview(null);
+    setReviewedSequences([]);setSavedReviews([]);nextSaveId.current=1;
     navigated.current=false;
   },[history.role,authenticated]);
   const entries=authenticated?history.observations:[];
   const activeBookmarks=bookmarks.filter(sequence=>entries.some(entry=>entry.sequence===sequence));
+  const activeReviewed=reviewedSequences.filter(sequence=>entries.some(entry=>entry.sequence===sequence));
   const reviewed=ownerIncidentTriage(entries,{nowMs,search,status:filter,severity,groupRepeats});
   const visible=bookmarkedOnly?reviewed.filter(group=>group.occurrences.some(entry=>activeBookmarks.includes(entry.sequence))):reviewed;
   const chosen=visible.find(group=>group.id===selected)??visible[0];
   const chosenSequences=chosen?.occurrences.map(entry=>entry.sequence)??[];
   const chosenBookmarked=chosenSequences.some(sequence=>activeBookmarks.includes(sequence));
+  const markReviewed=(sequences:number[])=>setReviewedSequences(current=>
+    [...current.filter(sequence=>entries.some(entry=>entry.sequence===sequence)),...sequences.filter(sequence=>!current.includes(sequence))].slice(-40));
+  const saveReview=()=>{
+    if(!authenticated)return;
+    const snapshot:SavedReview={id:nextSaveId.current++,filter,severity,search,groupRepeats,
+      bookmarks:activeBookmarks,reviewed:activeReviewed,bookmarkedOnly};
+    setSavedReviews(current=>[...current,snapshot].slice(-5));
+  };
+  const loadReview=(saved:SavedReview)=>{
+    if(!authenticated)return;
+    navigated.current=false;
+    setFilter(saved.filter);setSeverity(saved.severity);setSearch(saved.search);
+    setGroupRepeats(saved.groupRepeats);setBookmarkedOnly(saved.bookmarkedOnly);
+    setBookmarks(saved.bookmarks.filter(sequence=>entries.some(entry=>entry.sequence===sequence)));
+    setReviewedSequences(saved.reviewed.filter(sequence=>entries.some(entry=>entry.sequence===sequence)));
+    setSelected(null);
+  };
   const toggleBookmark=()=>{
     if(!chosen)return;
     setBookmarks(current=>chosenBookmarked?current.filter(sequence=>!chosenSequences.includes(sequence)):
@@ -86,6 +109,12 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
         <button type="button" disabled={!previousReview} onClick={restoreReview}>Restore previous filters</button>
         <label htmlFor="ql381-bookmarked-only"><input id="ql381-bookmarked-only" type="checkbox" checked={bookmarkedOnly} onChange={event=>{navigated.current=false;setBookmarkedOnly(event.target.checked);}}/> Bookmarked only ({activeBookmarks.length} observations)</label>
       </div>
+      <div role="group" aria-label="Saved session review views" className="ql382-review-sessions">
+        <button type="button" disabled={!authenticated} onClick={saveReview}>Save current session view</button>
+        {savedReviews.map(saved=><button type="button" key={saved.id} onClick={()=>loadReview(saved)} aria-label={`Restore saved view ${saved.id}`}>View {saved.id}</button>)}
+        {savedReviews.length>0&&<button type="button" onClick={()=>setSavedReviews([])}>Clear saved views</button>}
+        <span>{savedReviews.length} of 5 in-memory saved views</span>
+      </div>
       <label htmlFor="ql377-filter">Review session observations</label>
       <select id="ql377-filter" value={filter} onChange={event=>{navigated.current=false;setFilter(event.target.value as Filter);}}>
         <option value="all">All observed alerts</option>
@@ -110,6 +139,12 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
       <span role="status" aria-live="polite">{represented} of {entries.length} session observations · {visible.length} triage {visible.length===1?'item':'items'}</span>
     </div>
     <p className="ql380-summary" aria-label="Filtered session review summary">Review summary: {showing} still displayed, {action} action-level still displayed, {needingEvidence} needing evidence verification, {visible.length-showing} no longer displayed. These are grouped session observations, not independent incident resolutions or six source confirmations.</p>
+    <section className="ql382-handoff" aria-labelledby="ql382-handoff-title">
+      <h5 id="ql382-handoff-title">Session review progress and handoff summary</h5>
+      <progress max={Math.max(entries.length,1)} value={activeReviewed.length} aria-label="Observed alert episodes opened for review"/>
+      <p role="status">{activeReviewed.length} of {entries.length} observed alert episodes opened for review ({entries.length?Math.round(activeReviewed.length/entries.length*100):0}%). {activeBookmarks.length} bookmarked observations. Progress means viewed here, not independently verified or resolved.</p>
+      <p>Read-only handoff note: {visible.length} filtered groups; {showing} still displayed; {needingEvidence} needing evidence verification. No messages sent, approvals granted, or incident status changed. This summary exists only in the authenticated owner session.</p>
+    </section>
     <p id="ql380-keyboard-help">On an alert, use Up/Down arrows or Home/End to move between results. Press Enter to move focus to the selected detail.</p>
     <div className="ql377-layout">
       <div className="ql377-observations" ref={observationList} onKeyDown={navigateItems} aria-label="Session alert observations" aria-describedby="ql380-keyboard-help">
@@ -118,7 +153,7 @@ export function OwnerIncidentHistory({history,nowMs,authenticated}:{
             className={chosen?.id===group.id?'ql377-item ql377-selected':'ql377-item'}
             aria-pressed={chosen?.id===group.id} aria-controls="ql377-detail"
             aria-label={`${group.latest.title}; ${group.latest.severity}; ${group.stillDisplayed?'still displayed':'no longer displayed'}`}
-            onClick={()=>{navigated.current=true;setSelected(group.id);if(chosen?.id===group.id)detailHeading.current?.focus();}}>
+            onClick={()=>{navigated.current=true;setSelected(group.id);markReviewed(group.occurrences.map(entry=>entry.sequence));if(chosen?.id===group.id)detailHeading.current?.focus();}}>
             <strong>{group.latest.title}</strong>
             <small>{group.latest.category} · {group.latest.severity} · {group.priority.replace('-', ' ')} · {group.stillDisplayed?'Still displayed':'No longer displayed'}</small>
             {group.occurrences.length>1&&<small>{group.occurrences.length} distinct session observations, grouped for review</small>}
