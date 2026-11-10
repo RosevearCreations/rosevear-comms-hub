@@ -37,7 +37,7 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(host.querySelector('#ql375-detail-title')).toBe(document.activeElement);
     expect(cards[4].getAttribute('aria-pressed')).toBe('true');
     expect(host.querySelectorAll('form,input,textarea')).toHaveLength(0);
-    expect(host.querySelectorAll('select')).toHaveLength(17); // QL-392/393/395/396/397/398/399/400/401 preview filters only
+    expect(host.querySelectorAll('select')).toHaveLength(19); // QL-392/393/395/396/397/398/399/400/401/402 preview filters only
   });
   it('does not claim a live per-shell status when protected readback is absent',async()=>{
     await show(null);
@@ -311,6 +311,33 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     await act(async()=>{source.value='devilndove';source.dispatchEvent(new Event('change',{bubbles:true}));});
     expect(preview.textContent).toContain('No illustrative escalation matches');
     await act(async()=>{ack.value='SCENARIO_ACK_ONLY';ack.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(preview.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(preview.querySelector('[role="status"]')?.textContent).toContain('Showing 1 of 3');
+  });
+  it('shows QL-402 recovery decision drift and separate unsigned owner/witness checklists',async()=>{
+    await show();
+    const preview=host.querySelector('.ql402-recovery-audit')!;
+    expect(preview.textContent).toContain('INERT_PREVIEW');
+    expect(preview.textContent).toContain('no real recovery decision or original owner sign-off');
+    expect(preview.querySelectorAll('tbody tr')).toHaveLength(3);
+    expect(preview.textContent).toContain('SCENARIO_REFERENCE_DROPPED');
+    expect(preview.textContent).toContain('SCENARIO_REFERENCE_RESTORED');
+    expect(preview.textContent).toContain('HOLD_PRESERVED');
+    expect(preview.textContent).toContain('NOT_ATTESTED');
+    expect(preview.textContent).toContain('NOT_PRESENT');
+    expect(preview.querySelectorAll('tbody tr td details ol li')).toHaveLength(25); // five scenario notes x 2 + fifteen original gates
+    expect(preview.querySelector('[role="status"]')?.textContent).toContain('15 original gate checks still outstanding');
+    expect(preview.querySelector('[role="status"]')?.textContent).toContain('0 authorized closures');
+    expect(preview.querySelectorAll('button,input,form,textarea')).toHaveLength(0);
+    expect(preview.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+    const source=preview.querySelector<HTMLSelectElement>('#ql402-source-filter')!;
+    const drift=preview.querySelector<HTMLSelectElement>('#ql402-drift-filter')!;
+    await act(async()=>{drift.value='UNCHANGED';drift.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(preview.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(preview.textContent).toContain('icamp');
+    await act(async()=>{source.value='devilndove';source.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(preview.textContent).toContain('No illustrative recovery review matches');
+    await act(async()=>{drift.value='DRIFT_ONLY';drift.dispatchEvent(new Event('change',{bubbles:true}));});
     expect(preview.querySelectorAll('tbody tr')).toHaveLength(1);
     expect(preview.querySelector('[role="status"]')?.textContent).toContain('Showing 1 of 3');
   });
