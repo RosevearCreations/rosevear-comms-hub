@@ -37,7 +37,7 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(host.querySelector('#ql375-detail-title')).toBe(document.activeElement);
     expect(cards[4].getAttribute('aria-pressed')).toBe('true');
     expect(host.querySelectorAll('form,input,textarea')).toHaveLength(0);
-    expect(host.querySelectorAll('select')).toHaveLength(19); // QL-392/393/395/396/397/398/399/400/401/402 preview filters only
+    expect(host.querySelectorAll('select')).toHaveLength(21); // QL-392 through QL-403 read-only preview filters only
   });
   it('does not claim a live per-shell status when protected readback is absent',async()=>{
     await show(null);
@@ -340,5 +340,33 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     await act(async()=>{drift.value='DRIFT_ONLY';drift.dispatchEvent(new Event('change',{bubbles:true}));});
     expect(preview.querySelectorAll('tbody tr')).toHaveLength(1);
     expect(preview.querySelector('[role="status"]')?.textContent).toContain('Showing 1 of 3');
+  });
+  it('shows QL-403 original evidence casebook, independent checks and HOLD owner handoff',async()=>{
+    await show();
+    const section=host.querySelector('.ql403-casebook')!;
+    expect(section.textContent).toContain('INERT_PREVIEW');
+    expect(section.textContent).toContain('original evidence intake');
+    expect(section.textContent).toContain('HOLD_OWNER_VERIFICATION');
+    expect(section.textContent).toContain('HOLD_INTAKE');
+    expect(section.textContent).toContain('HOLD_INDEPENDENT_REVIEW');
+    expect(section.textContent).toContain('NOT_RECEIVED');
+    expect(section.textContent).toContain('NOT_PERFORMED');
+    expect(section.textContent).toContain('NOT_SIGNED');
+    expect(section.querySelectorAll('tbody tr')).toHaveLength(3);
+    expect(section.querySelectorAll('tbody tr td details ol li')).toHaveLength(15);
+    expect(section.querySelector('[role="status"]')?.textContent).toContain('15 independent original evidence axes unverified');
+    expect(section.querySelector('[role="status"]')?.textContent).toContain('0 authorized handoffs');
+    expect(section.querySelectorAll('button,input,form,textarea')).toHaveLength(0);
+    expect(section.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+    const source=section.querySelector<HTMLSelectElement>('#ql403-source-filter')!;
+    const kind=section.querySelector<HTMLSelectElement>('#ql403-kind-filter')!;
+    await act(async()=>{source.value='icamp';source.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(section.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(section.textContent).toContain('case-ql403-icamp-0002');
+    await act(async()=>{kind.value='OWNER_VERIFICATION';kind.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(section.textContent).toContain('No illustrative case matches');
+    await act(async()=>{source.value='devilndove';source.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(section.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(section.querySelector('[role="status"]')?.textContent).toContain('Showing 1 of 3');
   });
 });
