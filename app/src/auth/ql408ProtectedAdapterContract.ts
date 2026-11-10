@@ -85,6 +85,5 @@ export function reviewQl408AdapterContract(sourceId:QL405SourceId,
     'STRUCTURE_REVIEW_ONLY':'REQUIRES_PROTECTED_REVIEW',
     connection:'HOLD' as const,oneTestAuthorized:false,receiverEnabled:false,
     networkRequests:0,persisted:false,credentialsDisclosed:false,
-    exceptions,gateMap:QL408_AUDIT_GATES.map(gate=>({...gate,state:'HOLD' as const})),
-    requiredBoundary:'SERVER_SESSION_ORIGINAL_SIGNATURE_REPLAY_AND_CONSENT' as const};
+    exceptions,gateMap:QL408_AUDIT_GATES.map(gate=>({...gate,state:'HOLD' as const}))};
 }

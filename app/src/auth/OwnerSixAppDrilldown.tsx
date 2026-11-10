@@ -743,16 +743,14 @@ export function OwnerSixAppDrilldown({truth}:Props){
     </section>
     <section className="ql408-adapter-review" aria-labelledby="ql408-review-title">
       <h4 id="ql408-review-title">QL-408 · Authenticated adapter contract and receiver audit readiness</h4>
-      <p><strong>Protected adapter not connected; one-TEST remains on HOLD.</strong> The selected shell is <code>{adapterReview.sourceId}</code>. This screen has no original custody records, private receiver session or signed approval. A browser-provided “verified” claim cannot grant TEST authority.</p>
-      <p role="status">Adapter: <strong>{adapterReview.contractState}</strong> · One-TEST authorization: <strong>HOLD</strong> · Receiver: <strong>OFF</strong>. {adapterReview.exceptions.join(' · ')}.</p>
+      <p><strong>Adapter OFF · one-TEST HOLD.</strong> Shell: <code>{adapterReview.sourceId}</code>.</p>
+      <p role="status"><strong>{adapterReview.contractState}</strong> · Receiver OFF · {adapterReview.exceptions.join(' · ')}.</p>
       <div className="ql408-review-scroll"><table><caption>Seven separate receiver-side audit mappings · no original record imported</caption>
         <thead><tr><th scope="col">Protected gate</th><th scope="col">Independent custodian</th><th scope="col">Required audit mapping</th><th scope="col">State</th></tr></thead>
         <tbody>{adapterReview.gateMap.map(gate=><tr key={gate.code}>
           <th scope="row"><code>{gate.code}</code></th><td>{gate.owner}</td><td>{gate.audit}</td><td><strong>{gate.state}</strong></td>
         </tr>)}</tbody>
       </table></div>
-      <p>Future server integration must independently authenticate the session, validate original source/reviewer/master signatures, check source/case/purpose binding, consent and durable replay safety, then return only a redacted audit projection. Structural validation is not security verification.</p>
-      <p>No credentials, original bytes, network TEST, notifications, persistence or activation are processed by this component.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/dev/docs/handoffs/QL408_AUTHENTICATED_ADAPTER_RECEIVER_AUDIT_ONE_TEST.md" target="_blank" rel="noopener noreferrer">Read the QL-408 protected adapter contract and owner handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
