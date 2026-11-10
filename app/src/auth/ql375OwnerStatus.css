@@ -56,3 +56,20 @@
 .ql402-recovery-audit details li{margin:.3rem 0}
 .ql402-recovery-audit select:focus-visible,.ql402-recovery-audit summary:focus-visible,.ql402-recovery-audit a:focus-visible{outline:3px solid #f7ce8b;outline-offset:3px}
 @media(max-width:760px){.ql402-recovery-controls{grid-template-columns:1fr}}
+.ql403-casebook{margin:.75rem 0;padding:.8rem;border:1px solid #9fa9b8;border-radius:10px;background:#1d2c38;color:#f5f7fa}
+.ql403-casebook h4{margin:.1rem 0 .5rem}
+.ql403-casebook p{line-height:1.5}
+.ql403-casebook-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem;margin:.8rem 0}
+.ql403-casebook-controls label{display:flex;flex-direction:column;gap:.3rem;font-weight:700}
+.ql403-casebook-controls select{width:100%;min-height:44px;padding:.5rem;border:1px solid #adb8c7;border-radius:8px;background:#17212c;color:#f5f7fa}
+.ql403-table-scroll{max-width:100%;overflow-x:auto;margin:.7rem 0}
+.ql403-casebook table{width:100%;min-width:900px;border-collapse:collapse}
+.ql403-casebook caption{text-align:left;margin:.4rem 0}
+.ql403-casebook th,.ql403-casebook td{padding:.55rem;border:1px solid #8192a5;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+.ql403-casebook code{overflow-wrap:anywhere}
+.ql403-casebook a,.ql403-casebook summary{color:#ffda99;text-decoration:underline}
+.ql403-casebook summary{cursor:pointer}
+.ql403-casebook details ol{padding-left:1.5rem;line-height:1.5}
+.ql403-casebook details li{margin:.3rem 0}
+.ql403-casebook select:focus-visible,.ql403-casebook summary:focus-visible,.ql403-casebook a:focus-visible{outline:3px solid #ffda99;outline-offset:3px}
+@media(max-width:760px){.ql403-casebook-controls{grid-template-columns:1fr}}
