@@ -1,4 +1,4 @@
-import {useEffect,useRef,useState} from 'react';
+import {lazy,Suspense,useEffect,useRef,useState} from 'react';
 import {QL375_HELP_LINKS,QL375_SHELLS,ownerShellStatus} from './ql375OwnerStatus';
 import {MASTER_SHELL_REGISTRY,reconcileSourceIdentities} from './ql386MasterShellRegistry';
 import {MASTER_ROUTING_PATTERNS,reviewRoutingDraft} from './ql387MasterShellRouting';
@@ -32,9 +32,10 @@ import {QL405_CAPTURED_AT,QL405_PUBLIC_EVIDENCE,reviewQl405Acknowledgements,
 import {QL406_CAPTURED_AT,reviewQl406OneSource,type QL406PublicObservation}
   from './ql406ProtectedHandoffReview';
 import {reviewQl407OutcomeImport} from './ql407OutcomeImportReview';
-import {reviewQl408AdapterContract} from './ql408ProtectedAdapterContract';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
+const QL409AuditDecisionPanel=lazy(()=>import('./ql409AuditDecisionPanel'));
+const QL408AdapterPanel=lazy(()=>import('./ql408AdapterPanel'));
 
 type Props={truth:ReturnType<typeof ownerEntryTruth>};
 
@@ -109,7 +110,6 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const visibleAcks=filterQl405Acknowledgements(ackReview.rows,ackFilter);
   const receiptReview=reviewQl406OneSource(receiptReviewSource,publicRevisionInput,Date.now());
   const outcomeImportReview=reviewQl407OutcomeImport(receiptReviewSource,[],Date.now());
-  const adapterReview=reviewQl408AdapterContract(receiptReviewSource,null,Date.now());
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -741,18 +741,12 @@ export function OwnerSixAppDrilldown({truth}:Props){
       <p>Freshness alerts are computed from trusted review/expiry timestamps only after server validation. No source poll, notification delivery, persistence, credential capture or receiver activation occurs here.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/dev/docs/handoffs/QL407_PROTECTED_OUTCOME_EXCEPTION_FRESHNESS.md" target="_blank" rel="noopener noreferrer">Read the QL-407 protected import and operator handoff</a>
     </section>
-    <section className="ql408-adapter-review" aria-labelledby="ql408-review-title">
-      <h4 id="ql408-review-title">QL-408 · Authenticated adapter contract and receiver audit readiness</h4>
-      <p><strong>Adapter OFF · one-TEST HOLD.</strong> Shell: <code>{adapterReview.sourceId}</code>.</p>
-      <p role="status"><strong>{adapterReview.contractState}</strong> · Receiver OFF · {adapterReview.exceptions.join(' · ')}.</p>
-      <div className="ql408-review-scroll"><table><caption>Seven separate receiver-side audit mappings · no original record imported</caption>
-        <thead><tr><th scope="col">Protected gate</th><th scope="col">Independent custodian</th><th scope="col">Required audit mapping</th><th scope="col">State</th></tr></thead>
-        <tbody>{adapterReview.gateMap.map(gate=><tr key={gate.code}>
-          <th scope="row"><code>{gate.code}</code></th><td>{gate.owner}</td><td>{gate.audit}</td><td><strong>{gate.state}</strong></td>
-        </tr>)}</tbody>
-      </table></div>
-      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/dev/docs/handoffs/QL408_AUTHENTICATED_ADAPTER_RECEIVER_AUDIT_ONE_TEST.md" target="_blank" rel="noopener noreferrer">Read the QL-408 protected adapter contract and owner handoff</a>
-    </section>
+    <Suspense fallback={<p>Loading receiver audit contract…</p>}>
+      <QL408AdapterPanel sourceId={receiptReviewSource}/>
+    </Suspense>
+    <Suspense fallback={<p>Loading source audit review…</p>}>
+      <QL409AuditDecisionPanel sourceId={receiptReviewSource}/>
+    </Suspense>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
         className={selected===item.id?'ql375-source-card ql375-active':'ql375-source-card'}
