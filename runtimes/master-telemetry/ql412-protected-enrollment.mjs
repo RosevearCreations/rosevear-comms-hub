@@ -5,7 +5,7 @@ import {reviewQl411ProtectedTelemetry} from './ql411-protected-telemetry.mjs';
 
 const SHA=/^[a-f0-9]{40}$/;
 const DIGEST=/^[a-f0-9]{64}$/;
-const EPISODE=/^rosevear-ai-hub:[a-zA-Z0-9][a-zA-Z0-9_-]{7,95}$/;
+const EPISODE=/^(?:rosevear-ai-hub:[a-zA-Z0-9][a-zA-Z0-9_-]{7,95}|master360:(?:ai-data-platform|rosevear-comms-hub|rosevear-ai-hub):[a-zA-Z0-9_-]{12,96})$/;
 const hold=(reason)=>({state:'HOLD',reason,connection:'HOLD',receiver:'OFF',
   slaveGate:'HOLD_NEXT_MASTER_INTEGRATION_STAGE'});
 
