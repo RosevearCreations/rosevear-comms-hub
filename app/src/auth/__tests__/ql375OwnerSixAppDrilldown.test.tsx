@@ -37,7 +37,7 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(host.querySelector('#ql375-detail-title')).toBe(document.activeElement);
     expect(cards[4].getAttribute('aria-pressed')).toBe('true');
     expect(host.querySelectorAll('form,input,textarea')).toHaveLength(0);
-    expect(host.querySelectorAll('select')).toHaveLength(15); // QL-392/393/395/396/397/398/399/400 preview filters only
+    expect(host.querySelectorAll('select')).toHaveLength(17); // QL-392/393/395/396/397/398/399/400/401 preview filters only
   });
   it('does not claim a live per-shell status when protected readback is absent',async()=>{
     await show(null);
@@ -285,6 +285,32 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     await act(async()=>{source.value='icamp';source.dispatchEvent(new Event('change',{bubbles:true}));});
     expect(preview.textContent).toContain('No illustrative assignment matches');
     await act(async()=>{attention.value='COLLECT_ORIGINAL';attention.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(preview.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(preview.querySelector('[role="status"]')?.textContent).toContain('Showing 1 of 3');
+  });
+  it('shows QL-401 scenario acknowledgement and chronological HOLD recovery without sending',async()=>{
+    await show();
+    const preview=host.querySelector('.ql401-escalation-timeline')!;
+    expect(preview.textContent).toContain('INERT_PREVIEW');
+    expect(preview.textContent).toContain('no authenticated acknowledgement or release of HOLD');
+    expect(preview.querySelectorAll('tbody tr')).toHaveLength(3);
+    expect(preview.textContent).toContain('SCENARIO_ACK_ONLY');
+    expect(preview.textContent).toContain('NO_SCENARIO_ACK');
+    expect(preview.textContent).toContain('NOT_VERIFIED');
+    expect(preview.textContent).toContain('NOT_ATTESTED');
+    expect(preview.textContent).toContain('ql398/audit-ql398-0002');
+    expect(preview.textContent).toContain('No assignment accepted');
+    expect(preview.querySelector('[role="status"]')?.textContent).toContain('0 authorized closures');
+    expect(preview.querySelectorAll('button,input,form,textarea')).toHaveLength(0);
+    expect(preview.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+    const source=preview.querySelector<HTMLSelectElement>('#ql401-source-filter')!;
+    const ack=preview.querySelector<HTMLSelectElement>('#ql401-ack-filter')!;
+    await act(async()=>{ack.value='NO_SCENARIO_ACK';ack.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(preview.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(preview.textContent).toContain('icamp');
+    await act(async()=>{source.value='devilndove';source.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(preview.textContent).toContain('No illustrative escalation matches');
+    await act(async()=>{ack.value='SCENARIO_ACK_ONLY';ack.dispatchEvent(new Event('change',{bubbles:true}));});
     expect(preview.querySelectorAll('tbody tr')).toHaveLength(1);
     expect(preview.querySelector('[role="status"]')?.textContent).toContain('Showing 1 of 3');
   });
