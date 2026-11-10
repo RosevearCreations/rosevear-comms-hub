@@ -36,8 +36,9 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(host.querySelector('#ql375-detail-title')?.textContent).toContain('AI Data Platform');
     expect(host.querySelector('#ql375-detail-title')).toBe(document.activeElement);
     expect(cards[4].getAttribute('aria-pressed')).toBe('true');
-    expect(host.querySelectorAll('form,input,textarea')).toHaveLength(0);
-    expect(host.querySelectorAll('select')).toHaveLength(22); // QL-392 through QL-405 read-only preview filters only
+    expect(host.querySelectorAll('form,textarea,input[type="password"],input[type="file"]')).toHaveLength(0);
+    expect(host.querySelectorAll('input')).toHaveLength(1); // QL-406 public SHA-only, local comparison
+    expect(host.querySelectorAll('select')).toHaveLength(23); // QL-392 through QL-406 safe review controls
   });
   it('does not claim a live per-shell status when protected readback is absent',async()=>{
     await show(null);
@@ -399,5 +400,33 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(section.textContent).toContain('Rosevear AI Hub');
     expect(section.textContent).not.toContain('Rosie Dazzlers');
     expect(section.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+  it('offers QL-406 single-source revision recheck while leaving the protected receipt decision on HOLD',async()=>{
+    await show();
+    const section=host.querySelector('.ql406-protected-review')!;
+    expect(section.textContent).toContain('One-source original receipt review');
+    expect(section.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(section.textContent).toContain('HOLD_ORIGINAL_REVIEW_REQUIRED');
+    expect(section.textContent).toContain('0');
+    expect(section.textContent).toContain('QL406-COMMS-REVIEW yw READ_ONLY');
+    expect(section.textContent).toContain('Original TEST receipt: NOT_VERIFIED');
+    expect(section.textContent).toContain('NOT AUTHORIZED');
+    expect(section.querySelectorAll('input[type="password"],input[type="file"],form')).toHaveLength(0);
+    expect(section.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+    const source=section.querySelector<HTMLSelectElement>('#ql406-review-source')!;
+    const sha=section.querySelector<HTMLInputElement>('#ql406-manual-sha')!;
+    await act(async()=>{source.value='rosiedazzlers';source.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(section.textContent).toContain('MAIN ADVANCED SINCE QL-405');
+    expect(section.textContent).toContain('QL406-COMMS-REVIEW rosiedazzlers READ_ONLY main=d079b7');
+    expect(section.textContent).not.toContain('QL406-COMMS-REVIEW yw READ_ONLY');
+    await act(async()=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value')!.set!
+      .call(sha,'d079b7fac034885142a556b5df155d85af6bf495');
+      sha.dispatchEvent(new Event('input',{bubbles:true}));});
+    expect(section.textContent).toContain('MATCHES_CAPTURED_MAIN');
+    await act(async()=>{source.value='icamp';source.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(sha.value).toBe('');
+    expect(section.textContent).toContain('MAIN UNCHANGED AT RECHECK');
+    expect(section.textContent).toContain('NOT_SUPPLIED');
+    expect(section.textContent).toContain('HOLD_ORIGINAL_REVIEW_REQUIRED');
   });
 });

@@ -95,3 +95,20 @@
 .ql405-ack-ledger code{overflow-wrap:anywhere}
 .ql405-ack-ledger a{color:#ffdc99;text-decoration:underline}
 .ql405-ack-ledger :is(select,a):focus-visible{outline:3px solid #ffdc99;outline-offset:3px}
+.ql406-protected-review{margin:.8rem 0;padding:.85rem;border:1px solid #b69a76;border-radius:10px;background:#1e2b35;color:#f7f8fc}
+.ql406-protected-review h4{margin:.1rem 0 .5rem}
+.ql406-protected-review p{line-height:1.5;overflow-wrap:anywhere}
+.ql406-review-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;margin:.85rem 0}
+.ql406-review-controls label{display:flex;flex-direction:column;gap:.4rem;font-weight:700}
+.ql406-review-controls select,.ql406-review-controls input{width:100%;min-height:44px;padding:.55rem;border:1px solid #c3b299;border-radius:8px;background:#142331;color:#fff}
+.ql406-review-controls button{justify-self:start;align-self:end;min-height:44px;padding:.55rem .85rem;border:1px solid #e9d19d;border-radius:8px;background:#39465a;color:#fff;cursor:pointer}
+.ql406-review-scroll{overflow-x:auto;max-width:100%;margin:.75rem 0}
+.ql406-protected-review table{width:100%;min-width:800px;border-collapse:collapse}
+.ql406-protected-review caption{text-align:left;margin:.4rem 0}
+.ql406-protected-review th,.ql406-protected-review td{padding:.6rem;border:1px solid #a18c77;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+.ql406-protected-review code{overflow-wrap:anywhere}
+.ql406-protected-review a,.ql406-protected-review summary{color:#ffe0a2;text-decoration:underline}
+.ql406-protected-review summary{cursor:pointer}
+.ql406-protected-review details ol{padding-left:1.5rem;line-height:1.6}
+.ql406-protected-review :is(select,input,button,summary,a):focus-visible{outline:3px solid #ffe0a2;outline-offset:3px}
+@media(max-width:760px){.ql406-review-controls{grid-template-columns:1fr}}
