@@ -20,6 +20,9 @@ import {QL399_DEFAULT_FILTERS,QL399_DEMO_EXCEPTIONS,filterOriginalEvidenceHandof
   reviewOriginalEvidenceHandoff,type QL399Filters} from './ql399EvidenceHandoffReadiness';
 import {QL400_DEFAULT_FILTERS,QL400_DEMO_DRAFTS,filterOperatorHandoffAssignments,
   reviewOperatorHandoffAssignments,type QL400Filters} from './ql400HandoffAssignmentPreview';
+import {QL401_DEFAULT_FILTERS,QL401_DEMO_ACKNOWLEDGEMENTS,
+  filterOperatorEscalationTimeline,reviewOperatorEscalationTimeline,type QL401Filters}
+  from './ql401EscalationTimeline';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -37,6 +40,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const [closureFilters,setClosureFilters]=useState<QL398Filters>(QL398_DEFAULT_FILTERS);
   const [handoffFilters,setHandoffFilters]=useState<QL399Filters>(QL399_DEFAULT_FILTERS);
   const [assignmentFilters,setAssignmentFilters]=useState<QL400Filters>(QL400_DEFAULT_FILTERS);
+  const [escalationFilters,setEscalationFilters]=useState<QL401Filters>(QL401_DEFAULT_FILTERS);
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const navigated=useRef(false);
   const shell=QL375_SHELLS.find(item=>item.id===selected)!;
@@ -73,6 +77,10 @@ export function OwnerSixAppDrilldown({truth}:Props){
     QL396_DEMO_REQUESTS,QL397_DEMO_OBSERVATIONS,QL398_DEMO_AUDIT,QL399_DEMO_EXCEPTIONS,
     QL400_DEMO_DRAFTS,QL396_DEMO_NOW);
   const visibleAssignments=filterOperatorHandoffAssignments(assignmentReview,assignmentFilters);
+  const escalationReview=reviewOperatorEscalationTimeline(QL392_ILLUSTRATIVE_PREVIEW,
+    QL396_DEMO_REQUESTS,QL397_DEMO_OBSERVATIONS,QL398_DEMO_AUDIT,QL399_DEMO_EXCEPTIONS,
+    QL400_DEMO_DRAFTS,QL401_DEMO_ACKNOWLEDGEMENTS,QL396_DEMO_NOW);
+  const visibleEscalations=filterOperatorEscalationTimeline(escalationReview,escalationFilters);
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -456,6 +464,45 @@ export function OwnerSixAppDrilldown({truth}:Props){
         </tr>)}{visibleAssignments.length===0&&<tr><td colSpan={5}>No illustrative assignment matches these filters. Real owner decisions and assignments remain unverified.</td></tr>}</tbody></table></div>
       <p><strong>HOLD:</strong> No employee is assigned, reminder or escalation sent, evidence accepted, owner signed in, receiver enrolled or incident closed. Original source/master-owner approval and separate witnessed evidence must be verified independently in protected workflows.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL400_OPERATOR_ASSIGNMENT_FRESHNESS_OWNER_ESCALATION.md" target="_blank" rel="noopener noreferrer">View QL-400 assignment preview, freshness and owner escalation handoff</a>
+    </section>
+    <section className="ql401-escalation-timeline" aria-labelledby="ql401-escalation-title">
+      <h4 id="ql401-escalation-title">Operator escalation timeline, handoff acknowledgement preview and safe recovery · offline only</h4>
+      <p><strong>{escalationReview.state} — no authenticated acknowledgement or release of HOLD.</strong> All timeline events and role-based receipt marks are illustrative. A scenario acknowledgement never proves that a named worker, source owner, master owner or witness received, accepted or signed anything.</p>
+      <div className="ql401-escalation-controls" aria-label="Illustrative escalation timeline filters">
+        <label htmlFor="ql401-source-filter">Source shell
+          <select id="ql401-source-filter" value={escalationFilters.sourceId}
+            onChange={event=>setEscalationFilters(previous=>({...previous,sourceId:event.target.value}))}>
+            <option value="ALL">All illustrated shells</option>
+            {QL375_SHELLS.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}
+          </select>
+        </label>
+        <label htmlFor="ql401-ack-filter">Illustrative acknowledgement
+          <select id="ql401-ack-filter" value={escalationFilters.acknowledgement}
+            onChange={event=>setEscalationFilters(previous=>({...previous,acknowledgement:event.target.value as QL401Filters['acknowledgement']}))}>
+            <option value="ALL">All storyboard handoffs</option>
+            <option value="SCENARIO_ACK_ONLY">Role marked received in scenario only</option>
+            <option value="NO_SCENARIO_ACK">No scenario acknowledgement mark</option>
+          </select>
+        </label>
+      </div>
+      <p role="status" aria-live="polite">Showing {visibleEscalations.length} of {escalationReview.total} illustrative escalation timelines; {escalationReview.scenarioAcknowledged} role-only scenario acknowledgement marks, {escalationReview.notAcknowledged} without marks, {escalationReview.lateIllustrativeAcks} late example marks; {escalationReview.authorizedHandoffs} verified handoffs and {escalationReview.authorizedClosures} authorized closures.</p>
+      <div className="ql401-table-scroll"><table><caption>Source-bound HOLD trace, illustrative receipt and independent recovery steps</caption>
+        <thead><tr><th scope="col">Source and assignment</th><th scope="col">Handoff acknowledgement</th><th scope="col">Chronological scenario timeline</th><th scope="col">Safe recovery</th></tr></thead>
+        <tbody>{visibleEscalations.map(item=><tr key={item.assignmentId}>
+          <th scope="row"><code>{item.sourceId}</code> / <code>{item.correlationId}</code><p>{item.gate} / {item.intendedRole}</p><code>{item.assignmentId}</code></th>
+          <td><strong>{item.acknowledgementState}</strong><p>Illustrative mark: {item.acknowledgementAt?<time dateTime={item.acknowledgementAt}>{item.acknowledgementAt}</time>:'none'}</p>
+            <p>Late scenario mark: {item.lateIllustrativeAck?'yes':'no'}.</p><p>Actual original evidence: {item.originalEvidence}; source owner: {item.sourceOwnerApproval}; master owner: {item.masterOwnerApproval}; independent witness: {item.independentWitness}.</p>
+            <strong>Actual handoff not accepted; closure {item.closureState}.</strong></td>
+          <td><details><summary>Review {item.timeline.length} source-linked scenario events</summary><ol>{item.timeline.map(event=><li key={event.eventId}>
+            <time dateTime={event.at}>{event.at}</time> · <strong>{event.kind}</strong> · <code>{event.eventId}</code>: {event.description}
+          </li>)}</ol><p>No event in this timeline authenticates owner consent, an operator, or actual evidence.</p></details></td>
+          <td><strong>{item.attention} / HOLD</strong><details><summary>View {item.recoverySteps.length} non-executable recovery checks</summary>
+            <ol>{item.recoverySteps.map((step,index)=><li key={index}>{step}</li>)}</ol>
+          </details></td>
+        </tr>)}{visibleEscalations.length===0&&<tr><td colSpan={4}>No illustrative escalation matches these filters. Missing scenario marks do not prove real staff have been contacted.</td></tr>}</tbody>
+      </table></div>
+      <p><strong>HOLD:</strong> No assignment accepted, acknowledgement signed, message transmitted, retry scheduled, approval recorded, source connected or incident closed. Real recovery requires authenticated owner, witness, signing custody, receiver and consent verification outside this preview.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL401_ESCALATION_TIMELINE_ACKNOWLEDGEMENT_RECOVERY.md" target="_blank" rel="noopener noreferrer">View QL-401 timeline, acknowledgement and safe recovery handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
