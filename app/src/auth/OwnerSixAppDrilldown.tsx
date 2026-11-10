@@ -29,6 +29,8 @@ import {QL403_DEFAULT_FILTERS,QL403_DEMO_ENTRIES,filterOperatorRecoveryCasebook,
   reviewOperatorRecoveryCasebook,type QL403Filters} from './ql403OperatorRecoveryCasebook';
 import {QL405_CAPTURED_AT,QL405_PUBLIC_EVIDENCE,reviewQl405Acknowledgements,
   filterQl405Acknowledgements,type QL405Filter} from './ql405AcknowledgementLedger';
+import {QL406_CAPTURED_AT,reviewQl406OneSource,type QL406PublicObservation}
+  from './ql406ProtectedHandoffReview';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -50,6 +52,8 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const [recoveryFilters,setRecoveryFilters]=useState<QL402Filters>(QL402_DEFAULT_FILTERS);
   const [casebookFilters,setCasebookFilters]=useState<QL403Filters>(QL403_DEFAULT_FILTERS);
   const [ackFilter,setAckFilter]=useState<QL405Filter>('ALL');
+  const [receiptReviewSource,setReceiptReviewSource]=useState<QL406PublicObservation['sourceId']>('yw');
+  const [publicRevisionInput,setPublicRevisionInput]=useState('');
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const navigated=useRef(false);
   const shell=QL375_SHELLS.find(item=>item.id===selected)!;
@@ -101,6 +105,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const visibleRecoveryCases=filterOperatorRecoveryCasebook(recoveryCasebook,casebookFilters);
   const ackReview=reviewQl405Acknowledgements(QL405_PUBLIC_EVIDENCE,QL405_CAPTURED_AT,Date.now());
   const visibleAcks=filterQl405Acknowledgements(ackReview.rows,ackFilter);
+  const receiptReview=reviewQl406OneSource(receiptReviewSource,publicRevisionInput,Date.now());
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -663,6 +668,60 @@ export function OwnerSixAppDrilldown({truth}:Props){
       </table></div>
       <p>Matching a GitHub SHA verifies only public metadata at the snapshot time. A source “CONNECTED” claim, fresh build, or chat response cannot release HOLD without the protected original evidence and receipt workflow.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/issues/810" target="_blank" rel="noopener noreferrer">Review original Comms Hub acknowledgement evidence and reconciliation</a>
+    </section>
+    <section className="ql406-protected-review" aria-labelledby="ql406-review-title">
+      <h4 id="ql406-review-title">QL-406 · One-source original receipt review and protected owner handoff</h4>
+      <p><strong>One source at a time; original evidence still on HOLD.</strong> This is a second, manually captured public GitHub revision check at <time dateTime={QL406_CAPTURED_AT}>{QL406_CAPTURED_AT}</time>. It cannot inspect original Windows receipts, contact another ChatGPT session, authenticate the reviewer, or approve a live connection.</p>
+      <p role="status"><strong>{receiptReview.freshness==='RECENT_PUBLIC_SNAPSHOT'?'Public snapshot recent':'Public snapshot stale — recheck GitHub before use'}.</strong> Protected decision: <strong>{receiptReview.protectedDecision}</strong>. Authenticated connections: <strong>0</strong>.</p>
+      <div className="ql406-review-controls">
+        <label htmlFor="ql406-review-source">Source for this review
+          <select id="ql406-review-source" value={receiptReviewSource} onChange={event=>{
+            setReceiptReviewSource(event.target.value as QL406PublicObservation['sourceId']);
+            setPublicRevisionInput('');
+          }}>
+            {QL375_SHELLS.map(item=><option value={item.id} key={item.id}>{item.name}</option>)}
+          </select>
+        </label>
+        <label htmlFor="ql406-manual-sha">Optional operator public GitHub SHA comparison (40 hex characters; no credentials)
+          <input id="ql406-manual-sha" type="text" inputMode="text" maxLength={40}
+            autoComplete="off" autoCapitalize="off" spellCheck={false}
+            value={publicRevisionInput} onChange={event=>setPublicRevisionInput(event.target.value)}
+            placeholder="Paste a public GitHub main commit SHA only" />
+        </label>
+        <button type="button" onClick={()=>setPublicRevisionInput('')}>Clear local comparison</button>
+      </div>
+      {receiptReview.source&&<>
+        <div className="ql406-review-scroll"><table><caption>Selected source only · public revision comparison and original evidence gate</caption>
+          <thead><tr><th scope="col">Source identity</th><th scope="col">Revision and manifest truth</th><th scope="col">Independent protected decision</th></tr></thead>
+          <tbody><tr>
+            <th scope="row">{receiptReview.source.name}<p><code>{receiptReview.source.sourceId}</code></p><code>{receiptReview.source.repository}</code></th>
+            <td><strong>{receiptReview.source.mainAdvanced?'MAIN ADVANCED SINCE QL-405':'MAIN UNCHANGED AT RECHECK'}</strong>
+              <p>Earlier acknowledged: <code>{receiptReview.source.priorAcknowledgement}</code></p>
+              <p>Current captured main: <code>{receiptReview.source.observedMainRevision}</code></p>
+              <p>{receiptReview.source.ackNeedsRefresh?'ACK revision needs refresh':'ACK matched this captured main'}.</p>
+              <p><strong>{receiptReview.source.manifestPinNeedsReview?'Manifest pin mismatch — source-owner review':'Manifest pin matches at capture'}</strong></p>
+              <p>Manifest pin: <code>{receiptReview.source.manifestRevision}</code></p>
+              <p>Manifest: <code>{receiptReview.source.manifestPath}</code></p>
+              <p>Handler: <code>{receiptReview.source.handlerPath}</code></p>
+              <p>Manual input: <strong>{receiptReview.manualComparison}</strong></p></td>
+            <td><strong>DISCONNECTED / HOLD</strong>
+              <p>Public source signer: AWAITING_INDEPENDENT_SOURCE_SIGNER.</p>
+              <p>Independent reviewer: {receiptReview.reviewerDisposition}.</p>
+              <p>Source/master owner proof: {receiptReview.ownerProof}.</p>
+              <p>Original TEST receipt: {receiptReview.signedReceipt}.</p>
+              <p><strong>Receiver activation and protected TEST: NOT AUTHORIZED.</strong></p></td>
+          </tr></tbody>
+        </table></div>
+        <p><strong>Safe message for the selected source's ChatGPT conversation:</strong> <code>{receiptReview.source.prompt}</code></p>
+      </>}
+      <details><summary>Show the six protected original evidence requirements</summary>
+        <ol>{receiptReview.protectedGates.map(gate=><li key={gate.id}>
+          <strong>{gate.state} · {gate.label}</strong> — independent custodian: {gate.owner}.
+        </li>)}</ol>
+      </details>
+      <p><strong>Handoff decision: HOLD.</strong> Only an independently authenticated original source-owner packet, witness/reviewer signature, separate master-owner signature, consent/receiver checks and one signed scoped TEST receipt can enter the protected decision process. Public SHA matches and ChatGPT messages cannot approve it.</p>
+      <p>No network requests, private evidence uploads, persistent data writes, credential capture or receiver activation are performed by this review.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL406_ONE_SOURCE_PUBLIC_REVISION_PROTECTED_HANDOFF.md" target="_blank" rel="noopener noreferrer">Read the QL-406 one-source review and protected handoff guide</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
