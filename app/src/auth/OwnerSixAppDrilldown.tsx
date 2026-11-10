@@ -31,6 +31,7 @@ import {QL405_CAPTURED_AT,QL405_PUBLIC_EVIDENCE,reviewQl405Acknowledgements,
   filterQl405Acknowledgements,type QL405Filter} from './ql405AcknowledgementLedger';
 import {QL406_CAPTURED_AT,reviewQl406OneSource,type QL406PublicObservation}
   from './ql406ProtectedHandoffReview';
+import {reviewQl407OutcomeImport} from './ql407OutcomeImportReview';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -106,6 +107,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const ackReview=reviewQl405Acknowledgements(QL405_PUBLIC_EVIDENCE,QL405_CAPTURED_AT,Date.now());
   const visibleAcks=filterQl405Acknowledgements(ackReview.rows,ackFilter);
   const receiptReview=reviewQl406OneSource(receiptReviewSource,publicRevisionInput,Date.now());
+  const outcomeImportReview=reviewQl407OutcomeImport(receiptReviewSource,[],Date.now());
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -722,6 +724,20 @@ export function OwnerSixAppDrilldown({truth}:Props){
       <p><strong>Handoff decision: HOLD.</strong> Only an independently authenticated original source-owner packet, witness/reviewer signature, separate master-owner signature, consent/receiver checks and one signed scoped TEST receipt can enter the protected decision process. Public SHA matches and ChatGPT messages cannot approve it.</p>
       <p>No network requests, private evidence uploads, persistent data writes, credential capture or receiver activation are performed by this review.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL406_ONE_SOURCE_PUBLIC_REVISION_PROTECTED_HANDOFF.md" target="_blank" rel="noopener noreferrer">Read the QL-406 one-source review and protected handoff guide</a>
+    </section>
+    <section className="ql407-outcome-review" aria-labelledby="ql407-review-title">
+      <h4 id="ql407-review-title">QL-407 · Protected outcome import, source exceptions and evidence freshness</h4>
+      <p><strong>HOLD — no authenticated, redacted original-review projection has been imported.</strong> This display is tied to the one source selected above. Protected original bytes, signatures, keys and customer records must never be pasted into this browser.</p>
+      <p role="status" aria-live="polite">Selected source: <strong>{outcomeImportReview.sourceId}</strong>. Outcome: <strong>{outcomeImportReview.state}</strong>. Operator priority: <strong>{outcomeImportReview.priority}</strong>.</p>
+      <div className="ql407-review-scroll"><table><caption>Source-specific import exceptions and next owner route · read-only</caption>
+        <thead><tr><th scope="col">Exception</th><th scope="col">Required handling</th></tr></thead>
+        <tbody>{outcomeImportReview.exceptions.map(exception=><tr key={exception}>
+          <th scope="row">{exception}</th><td>Obtain independently authenticated original evidence through the protected server-side review workflow; check source binding, reviewer decision, expiry and separate receiver gates.</td>
+        </tr>)}</tbody>
+      </table></div>
+      <p>Operator route: <strong>source owner → independent reviewer → Master Shell owner</strong>. When a protected server adapter supplies a minimal verified projection, the review model flags malformed, mismatched, unverified, future-dated, expiring or rejected outcomes. It never changes connection state or starts a TEST.</p>
+      <p>Freshness alerts are computed from trusted review/expiry timestamps only after server validation. No source poll, notification delivery, persistence, credential capture or receiver activation occurs here.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/dev/docs/handoffs/QL407_PROTECTED_OUTCOME_EXCEPTION_FRESHNESS.md" target="_blank" rel="noopener noreferrer">Read the QL-407 protected import and operator handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
