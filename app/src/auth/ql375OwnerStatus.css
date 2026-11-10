@@ -150,3 +150,8 @@
 .ql410-master-review th,.ql410-master-review td{padding:.6rem;border:1px solid #ba9b76;text-align:left;overflow-wrap:anywhere}
 .ql410-master-review a{color:#ffe0a2;text-decoration:underline}
 .ql410-master-review :is(a,button):focus-visible{outline:3px solid #ffe0a2;outline-offset:3px}
+.ql411-master-pilot{margin:.8rem 0;padding:.9rem;border:1px solid #a2a9ca;border-radius:10px;background:#222b3d;color:#f8f8fd}
+.ql411-master-pilot h4{margin:.1rem 0 .55rem}
+.ql411-master-pilot p{line-height:1.5;overflow-wrap:anywhere}
+.ql411-master-pilot a{color:#ffe0a2;text-decoration:underline}
+.ql411-master-pilot a:focus-visible{outline:3px solid #ffe0a2;outline-offset:3px}
