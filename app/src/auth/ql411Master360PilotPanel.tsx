@@ -2,10 +2,17 @@ import type {QL405SourceId} from './ql405AcknowledgementLedger';
 
 export default function QL411Master360PilotPanel({sourceId}:{sourceId:QL405SourceId}){
   return <section className="ql411-master-pilot" aria-labelledby="ql411-master-title">
-    <h4 id="ql411-master-title">QL-411 · Master 360 protected telemetry pilot</h4>
-    <p role="status"><strong>HOLD · NOT CONNECTED</strong> — source {sourceId}. No original-host signed telemetry or protected replay-store acknowledgement has been imported into this browser.</p>
-    <p>AI Data Platform: uptime aggregation <strong>UNKNOWN</strong>. Comms Hub: incident correlation <strong>AWAITING VERIFIED FEED</strong>. Ree's AI Hub: original-host runtime <strong>NOT VERIFIED HERE</strong>.</p>
-    <p>The independent server adapter checks pinned Ed25519 signatures, original host and source revision, five-minute freshness, sample identifiers, replay episodes and bounded uptime. It cannot send messages, repair Windows services, start the receiver or grant a TEST.</p>
-    <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL411_MASTER360_PROTECTED_TELEMETRY_PILOT.md" target="_blank" rel="noopener noreferrer">Master 360 QL-411 integration and owner handoff</a>
+    <h4 id="ql411-master-title">QL-412 · Master 360 protected three-system uptime</h4>
+    <p role="status"><strong>HOLD · NOT CONNECTED</strong> — source {sourceId}. Original-Ree server telemetry and persistent replay evidence have not been authenticated into this owner screen.</p>
+    <dl className="ql412-master-readiness">
+      <div><dt>Ree's original Windows host</dt><dd>DESKTOP-AE894KC · runtime unverified</dd></div>
+      <div><dt>AI Data Platform uptime</dt><dd>UNKNOWN · awaiting signed samples</dd></div>
+      <div><dt>Comms incident correlation</dt><dd>HOLD · supervised acceptance required</dd></div>
+      <div><dt>Independent signer enrollment</dt><dd>HOLD · owner-approved public pin needed</dd></div>
+      <div><dt>Durable replay ledger</dt><dd>HOLD · protected host deployment needed</dd></div>
+      <div><dt>Receiver / slave onboarding</dt><dd>OFF / HOLD</dd></div>
+    </dl>
+    <p>QL-412 adds a protected, read-only signer-candidate review, persistent replay ledger and source-scoped supervised incident acceptance. It cannot remotely start services, send messages, grant a TEST or infer uptime from a green build.</p>
+    <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL412_MASTER360_THREE_MASTER_ACCEPTANCE.md" target="_blank" rel="noopener noreferrer">Master 360 QL-412 verification and owner handoff</a>
   </section>;
 }
