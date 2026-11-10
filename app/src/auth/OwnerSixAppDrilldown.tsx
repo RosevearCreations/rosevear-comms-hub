@@ -32,6 +32,7 @@ import {QL405_CAPTURED_AT,QL405_PUBLIC_EVIDENCE,reviewQl405Acknowledgements,
 import {QL406_CAPTURED_AT,reviewQl406OneSource,type QL406PublicObservation}
   from './ql406ProtectedHandoffReview';
 import {reviewQl407OutcomeImport} from './ql407OutcomeImportReview';
+import {reviewQl408AdapterContract} from './ql408ProtectedAdapterContract';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -108,6 +109,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const visibleAcks=filterQl405Acknowledgements(ackReview.rows,ackFilter);
   const receiptReview=reviewQl406OneSource(receiptReviewSource,publicRevisionInput,Date.now());
   const outcomeImportReview=reviewQl407OutcomeImport(receiptReviewSource,[],Date.now());
+  const adapterReview=reviewQl408AdapterContract(receiptReviewSource,null,Date.now());
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -738,6 +740,20 @@ export function OwnerSixAppDrilldown({truth}:Props){
       <p>Operator route: <strong>source owner → independent reviewer → Master Shell owner</strong>. When a protected server adapter supplies a minimal verified projection, the review model flags malformed, mismatched, unverified, future-dated, expiring or rejected outcomes. It never changes connection state or starts a TEST.</p>
       <p>Freshness alerts are computed from trusted review/expiry timestamps only after server validation. No source poll, notification delivery, persistence, credential capture or receiver activation occurs here.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/dev/docs/handoffs/QL407_PROTECTED_OUTCOME_EXCEPTION_FRESHNESS.md" target="_blank" rel="noopener noreferrer">Read the QL-407 protected import and operator handoff</a>
+    </section>
+    <section className="ql408-adapter-review" aria-labelledby="ql408-review-title">
+      <h4 id="ql408-review-title">QL-408 · Authenticated adapter contract and receiver audit readiness</h4>
+      <p><strong>Protected adapter not connected; one-TEST remains on HOLD.</strong> The selected shell is <code>{adapterReview.sourceId}</code>. This screen has no original custody records, private receiver session or signed approval. A browser-provided “verified” claim cannot grant TEST authority.</p>
+      <p role="status">Adapter: <strong>{adapterReview.contractState}</strong> · One-TEST authorization: <strong>HOLD</strong> · Receiver: <strong>OFF</strong>. {adapterReview.exceptions.join(' · ')}.</p>
+      <div className="ql408-review-scroll"><table><caption>Seven separate receiver-side audit mappings · no original record imported</caption>
+        <thead><tr><th scope="col">Protected gate</th><th scope="col">Independent custodian</th><th scope="col">Required audit mapping</th><th scope="col">State</th></tr></thead>
+        <tbody>{adapterReview.gateMap.map(gate=><tr key={gate.code}>
+          <th scope="row"><code>{gate.code}</code></th><td>{gate.owner}</td><td>{gate.audit}</td><td><strong>{gate.state}</strong></td>
+        </tr>)}</tbody>
+      </table></div>
+      <p>Future server integration must independently authenticate the session, validate original source/reviewer/master signatures, check source/case/purpose binding, consent and durable replay safety, then return only a redacted audit projection. Structural validation is not security verification.</p>
+      <p>No credentials, original bytes, network TEST, notifications, persistence or activation are processed by this component.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/dev/docs/handoffs/QL408_AUTHENTICATED_ADAPTER_RECEIVER_AUDIT_ONE_TEST.md" target="_blank" rel="noopener noreferrer">Read the QL-408 protected adapter contract and owner handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
