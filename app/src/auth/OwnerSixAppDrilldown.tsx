@@ -616,6 +616,21 @@ export function OwnerSixAppDrilldown({truth}:Props){
       <p><strong>Owner handoff boundary:</strong> the source owner supplies independently witnessed original issuer and signing custody evidence; a separate Master Shell owner reviews purpose, scope and consent; the receiver verifies enrollment and replay-safe signed receipts. Only those authenticated protected workflows can change HOLD. This screen does not connect, send, authorize or close cases.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL403_OPERATOR_RECOVERY_CASEBOOK_ORIGINAL_INTAKE_OWNER_HANDOFF.md" target="_blank" rel="noopener noreferrer">View QL-403 original evidence and owner verification handoff guide</a>
     </section>
+    <section className="ql404-connection-desk" aria-labelledby="ql404-connection-title">
+      <h4 id="ql404-connection-title">QL-404 · Six-app original evidence and signed approval connection desk</h4>
+      <p><strong>Contract routing ready; authenticated source connection not individually verified.</strong> This desk gives us non-secret messages for each app's separate ChatGPT session. It cannot read those sessions, provision an owner account, attest a password, or activate the private receiver.</p>
+      <p>Protected verification must check the five original evidence gates, independent reviewer signature, separate source-owner signature and master-owner signature. Even a successful signed evidence review permits only the next protected TEST review; it is not a live link.</p>
+      <div className="ql404-desk-scroll"><table><caption>Send these strings to the matching application ChatGPT windows; no passwords or private evidence</caption>
+        <thead><tr><th scope="col">Source shell</th><th scope="col">ChatGPT test string</th><th scope="col">Contract and connection truth</th></tr></thead>
+        <tbody>{QL375_SHELLS.map(item=><tr key={item.id}>
+          <th scope="row">{item.name}<p><code>{item.id}</code></p></th>
+          <td><code>QL404-COMMS-HELLO {item.id} READ_ONLY</code></td>
+          <td>Contract <strong>DEFINED</strong>; source original evidence <strong>NOT VERIFIED</strong>; independently signed owner approval <strong>NOT VERIFIED</strong>; authenticated individual connection <strong>HOLD</strong>.</td>
+        </tr>)}</tbody>
+      </table></div>
+      <p>Expected safe reply: source ID, repository, current `main` revision, manifest location, read-only health handler and whether an original signed receipt has been independently verified. Send no passwords, signing keys, private addresses or customer records.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL404_PROTECTED_EVIDENCE_SIGNED_APPROVAL_SIX_APP_GREETING.md" target="_blank" rel="noopener noreferrer">View protected QL-404 six-app greeting and signed review guidance</a>
+    </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
         className={selected===item.id?'ql375-source-card ql375-active':'ql375-source-card'}

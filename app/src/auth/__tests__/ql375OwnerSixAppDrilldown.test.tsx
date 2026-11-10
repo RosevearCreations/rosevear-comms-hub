@@ -369,4 +369,17 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(section.querySelectorAll('tbody tr')).toHaveLength(1);
     expect(section.querySelector('[role="status"]')?.textContent).toContain('Showing 1 of 3');
   });
+  it('shows six QL-404 non-secret per-app greetings without claiming live connection',async()=>{
+    await show();
+    const desk=host.querySelector('.ql404-connection-desk')!;
+    expect(desk.textContent).toContain('authenticated source connection not individually verified');
+    expect(desk.querySelectorAll('tbody tr')).toHaveLength(6);
+    for(const id of ['yw','icamp','rosiedazzlers','devilndove','ai-data-platform','rosevear-ai-hub'])
+      expect(desk.textContent).toContain(`QL404-COMMS-HELLO ${id} READ_ONLY`);
+    expect(desk.textContent).toContain('signed owner approval');
+    expect(desk.textContent).toContain('NOT VERIFIED');
+    expect(desk.textContent).toContain('HOLD');
+    expect(desk.querySelectorAll('button,input,select,form,textarea')).toHaveLength(0);
+    expect(desk.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+  });
 });
