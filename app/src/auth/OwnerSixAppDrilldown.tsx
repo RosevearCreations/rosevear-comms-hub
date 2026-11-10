@@ -27,6 +27,8 @@ import {QL402_DEFAULT_FILTERS,QL402_DEMO_NOTES,filterOperatorRecoveryDecisions,
   reviewOperatorRecoveryDecisions,type QL402Filters} from './ql402RecoveryDecisionAudit';
 import {QL403_DEFAULT_FILTERS,QL403_DEMO_ENTRIES,filterOperatorRecoveryCasebook,
   reviewOperatorRecoveryCasebook,type QL403Filters} from './ql403OperatorRecoveryCasebook';
+import {QL405_CAPTURED_AT,QL405_PUBLIC_EVIDENCE,reviewQl405Acknowledgements,
+  filterQl405Acknowledgements,type QL405Filter} from './ql405AcknowledgementLedger';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -47,6 +49,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const [escalationFilters,setEscalationFilters]=useState<QL401Filters>(QL401_DEFAULT_FILTERS);
   const [recoveryFilters,setRecoveryFilters]=useState<QL402Filters>(QL402_DEFAULT_FILTERS);
   const [casebookFilters,setCasebookFilters]=useState<QL403Filters>(QL403_DEFAULT_FILTERS);
+  const [ackFilter,setAckFilter]=useState<QL405Filter>('ALL');
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const navigated=useRef(false);
   const shell=QL375_SHELLS.find(item=>item.id===selected)!;
@@ -96,6 +99,8 @@ export function OwnerSixAppDrilldown({truth}:Props){
     QL400_DEMO_DRAFTS,QL401_DEMO_ACKNOWLEDGEMENTS,QL402_DEMO_NOTES,
     QL403_DEMO_ENTRIES,QL396_DEMO_NOW);
   const visibleRecoveryCases=filterOperatorRecoveryCasebook(recoveryCasebook,casebookFilters);
+  const ackReview=reviewQl405Acknowledgements(QL405_PUBLIC_EVIDENCE,QL405_CAPTURED_AT,Date.now());
+  const visibleAcks=filterQl405Acknowledgements(ackReview.rows,ackFilter);
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -630,6 +635,34 @@ export function OwnerSixAppDrilldown({truth}:Props){
       </table></div>
       <p>Expected safe reply: source ID, repository, current `main` revision, manifest location, read-only health handler and whether an original signed receipt has been independently verified. Send no passwords, signing keys, private addresses or customer records.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL404_PROTECTED_EVIDENCE_SIGNED_APPROVAL_SIX_APP_GREETING.md" target="_blank" rel="noopener noreferrer">View protected QL-404 six-app greeting and signed review guidance</a>
+    </section>
+    <section className="ql405-ack-ledger" aria-labelledby="ql405-ack-title">
+      <h4 id="ql405-ack-title">QL-405 · Six-app acknowledgement and source revision review</h4>
+      <p><strong>Read-only GitHub evidence snapshot — not live source status.</strong> Captured <time dateTime={QL405_CAPTURED_AT}>{QL405_CAPTURED_AT}</time>. The operator can compare acknowledgement revisions with public source commits as they stood at capture. The dashboard never authenticates a receipt or contacts a source.</p>
+      <p role="status"><strong>{ackReview.age==='RECENT_SNAPSHOT'?'Recent public snapshot':'Snapshot needs fresh GitHub recheck'}.</strong> {ackReview.ackMatches} of 6 ACK revisions matched the observed commits; {ackReview.ackDrift} require an ACK revision refresh; {ackReview.manifestPinDrift} manifest source revisions need review. <strong>{ackReview.connected} verified individual connections — all HOLD.</strong></p>
+      <label htmlFor="ql405-ack-filter">Acknowledgement revision at capture</label>
+      <select id="ql405-ack-filter" value={ackFilter} onChange={event=>setAckFilter(event.target.value as QL405Filter)}>
+        <option value="ALL">All six</option>
+        <option value="MATCH_AT_CAPTURE">Matched at capture</option>
+        <option value="STALE_AT_CAPTURE">Did not match at capture</option>
+      </select>
+      <div className="ql405-ack-scroll"><table>
+        <caption>Public source metadata only; no credentials, original approvals, signed receipts or private transport</caption>
+        <thead><tr><th scope="col">Source</th><th scope="col">Acknowledgement</th><th scope="col">Manifest revision</th><th scope="col">Connection and next step</th></tr></thead>
+        <tbody>{visibleAcks.map(row=><tr key={row.sourceId}>
+          <th scope="row">{row.name}<p><code>{row.sourceId}</code></p></th>
+          <td><strong>{row.acknowledgement==='MATCH_AT_CAPTURE'?'MATCH AT CAPTURE':'REFRESH ACK REVISION'}</strong>
+            <p>ACK: <code>{row.acknowledgedRevision.slice(0,12)}</code></p>
+            <p>Observed GitHub main: <code>{row.observedMainRevision.slice(0,12)}</code></p></td>
+          <td><strong>{row.manifestPin==='MATCH_AT_CAPTURE'?'MATCH AT CAPTURE':'RECONCILE SOURCE PIN'}</strong>
+            <p>Manifest source revision: <code>{row.manifestRevision.slice(0,12)}</code></p>
+            <p>Handler: <code>{row.handlerPath}</code></p></td>
+          <td><strong>DISCONNECTED / HOLD</strong><p>Owner proof: HOLD · signed TEST receipt: HOLD.</p>
+            <p>Recheck source revision, then use independently authenticated source/master owner review before one scoped TEST. No automatic activation.</p></td>
+        </tr>)}{visibleAcks.length===0&&<tr><td colSpan={4}>No acknowledgement matches this filter.</td></tr>}</tbody>
+      </table></div>
+      <p>Matching a GitHub SHA verifies only public metadata at the snapshot time. A source “CONNECTED” claim, fresh build, or chat response cannot release HOLD without the protected original evidence and receipt workflow.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/issues/810" target="_blank" rel="noopener noreferrer">Review original Comms Hub acknowledgement evidence and reconciliation</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}

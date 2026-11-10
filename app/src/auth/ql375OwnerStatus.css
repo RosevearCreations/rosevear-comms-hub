@@ -83,3 +83,15 @@
 .ql404-connection-desk code{overflow-wrap:anywhere}
 .ql404-connection-desk a{color:#ffda99;text-decoration:underline}
 .ql404-connection-desk a:focus-visible{outline:3px solid #ffda99;outline-offset:3px}
+.ql405-ack-ledger{margin:.8rem 0;padding:.85rem;border:1px solid #8fa6c6;border-radius:10px;background:#192737;color:#f5f8fc}
+.ql405-ack-ledger h4{margin:.1rem 0 .5rem}
+.ql405-ack-ledger p{line-height:1.5}
+.ql405-ack-ledger label{display:block;font-weight:700;margin:.7rem 0 .3rem}
+.ql405-ack-ledger select{min-height:44px;max-width:100%;padding:.5rem;border:1px solid #a7b9cb;border-radius:7px;background:#152335;color:#fff}
+.ql405-ack-scroll{overflow-x:auto;max-width:100%;margin:.7rem 0}
+.ql405-ack-ledger table{width:100%;min-width:780px;border-collapse:collapse}
+.ql405-ack-ledger caption{text-align:left;margin:.45rem 0}
+.ql405-ack-ledger th,.ql405-ack-ledger td{border:1px solid #728aa6;padding:.65rem;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+.ql405-ack-ledger code{overflow-wrap:anywhere}
+.ql405-ack-ledger a{color:#ffdc99;text-decoration:underline}
+.ql405-ack-ledger :is(select,a):focus-visible{outline:3px solid #ffdc99;outline-offset:3px}
