@@ -18,6 +18,8 @@ import {QL398_DEFAULT_FILTERS,QL398_DEMO_AUDIT,filterOperatorClosureReadiness,
   reviewOperatorClosureReadiness,type QL398Filters} from './ql398ClosureReadinessAudit';
 import {QL399_DEFAULT_FILTERS,QL399_DEMO_EXCEPTIONS,filterOriginalEvidenceHandoffs,
   reviewOriginalEvidenceHandoff,type QL399Filters} from './ql399EvidenceHandoffReadiness';
+import {QL400_DEFAULT_FILTERS,QL400_DEMO_DRAFTS,filterOperatorHandoffAssignments,
+  reviewOperatorHandoffAssignments,type QL400Filters} from './ql400HandoffAssignmentPreview';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -34,6 +36,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const [outcomeFilters,setOutcomeFilters]=useState<QL397Filters>(QL397_DEFAULT_FILTERS);
   const [closureFilters,setClosureFilters]=useState<QL398Filters>(QL398_DEFAULT_FILTERS);
   const [handoffFilters,setHandoffFilters]=useState<QL399Filters>(QL399_DEFAULT_FILTERS);
+  const [assignmentFilters,setAssignmentFilters]=useState<QL400Filters>(QL400_DEFAULT_FILTERS);
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const navigated=useRef(false);
   const shell=QL375_SHELLS.find(item=>item.id===selected)!;
@@ -66,6 +69,10 @@ export function OwnerSixAppDrilldown({truth}:Props){
     QL396_DEMO_REQUESTS,QL397_DEMO_OBSERVATIONS,QL398_DEMO_AUDIT,
     QL399_DEMO_EXCEPTIONS,QL396_DEMO_NOW);
   const visibleHandoffCases=filterOriginalEvidenceHandoffs(handoffReview,handoffFilters);
+  const assignmentReview=reviewOperatorHandoffAssignments(QL392_ILLUSTRATIVE_PREVIEW,
+    QL396_DEMO_REQUESTS,QL397_DEMO_OBSERVATIONS,QL398_DEMO_AUDIT,QL399_DEMO_EXCEPTIONS,
+    QL400_DEMO_DRAFTS,QL396_DEMO_NOW);
+  const visibleAssignments=filterOperatorHandoffAssignments(assignmentReview,assignmentFilters);
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -407,6 +414,48 @@ export function OwnerSixAppDrilldown({truth}:Props){
         </tr>)}{visibleHandoffCases.length===0&&<tr><td colSpan={5}>No illustrative handoff matches these filters. All real original evidence and closure authorization remain unverified.</td></tr>}</tbody></table></div>
       <p><strong>HOLD:</strong> No document is uploaded, exception assigned, owner decision signed, source connected, message sent or incident closed. Original source and master-owner approvals, witness separation, pin custody, receiver proof, replay controls and scoped consent require independent verification outside this preview.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL399_ORIGINAL_EVIDENCE_HANDOFF_EXCEPTION_QUEUE_DECISION_TRACE.md" target="_blank" rel="noopener noreferrer">View QL-399 original evidence handoff and independent reviewer exception guidance</a>
+    </section>
+    <section className="ql400-assignment-preview" aria-labelledby="ql400-assignment-title">
+      <h4 id="ql400-assignment-title">Operator handoff assignment, evidence freshness warnings and owner decision escalation · offline preview</h4>
+      <p><strong>{assignmentReview.state} — assignment preview only; closure HOLD.</strong> These are proposed evidence-custodian <em>roles</em>, not named employees, actual assignments, live service-level deadlines or verified original owner decisions. All dates and source observations below are synthetic.</p>
+      <div className="ql400-assignment-controls" aria-label="Illustrative assignment escalation filters">
+        <label htmlFor="ql400-source-filter">Source shell
+          <select id="ql400-source-filter" value={assignmentFilters.sourceId}
+            onChange={event=>setAssignmentFilters(previous=>({...previous,sourceId:event.target.value}))}>
+            <option value="ALL">All illustrated shells</option>
+            {QL375_SHELLS.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}
+          </select>
+        </label>
+        <label htmlFor="ql400-attention-filter">Illustrative escalation priority
+          <select id="ql400-attention-filter" value={assignmentFilters.attention}
+            onChange={event=>setAssignmentFilters(previous=>({...previous,attention:event.target.value as QL400Filters['attention']}))}>
+            <option value="ALL">All draft handoffs</option>
+            <option value="OVERDUE">Simulated review deadline elapsed</option>
+            <option value="CONFLICT">Independent conflict review</option>
+            <option value="COLLECT_ORIGINAL">Collect original evidence</option>
+          </select>
+        </label>
+      </div>
+      <p role="status" aria-live="polite">Showing {visibleAssignments.length} of {assignmentReview.count} role-only drafts; {assignmentReview.overdueCount} simulated overdue reviews, {assignmentReview.staleScenarioCount} stale scenario observations and {assignmentReview.conflictCount} linked synthetic conflicts; {assignmentReview.originalDecisionsVerified} original owner decisions verified and {assignmentReview.authorizedClosures} closures authorized.</p>
+      <div className="ql400-table-scroll"><table><caption>Role-only assignment drafts and non-authorizing source evidence age</caption>
+        <thead><tr><th scope="col">Source and gate</th><th scope="col">Role-only draft</th><th scope="col">Evidence freshness warning</th><th scope="col">Escalation guidance</th><th scope="col">Handoff provenance</th></tr></thead>
+        <tbody>{visibleAssignments.map(item=><tr key={item.assignmentId}>
+          <th scope="row"><code>{item.sourceId}</code> / <code>{item.correlationId}</code> / {item.gate}</th>
+          <td><strong>{item.handoffStatus}</strong><p>Intended custodian: {item.intendedRole}</p>
+            <p>Drafted: <time dateTime={item.draftedAt}>{item.draftedAt}</time></p>
+            <p>Illustrative review due: <time dateTime={item.reviewDueAt}>{item.reviewDueAt}</time></p></td>
+          <td><strong>{item.scenarioFreshness}</strong> · {item.scenarioAgeMinutes} minutes since last synthetic evidence snapshot.
+            <p>Actual original evidence freshness: <strong>{item.originalEvidenceFreshness}</strong>. A recent example is not a new signed receipt.</p></td>
+          <td><strong>{item.attention}</strong> · {item.guidance}
+            <p>Source owner: {item.sourceOwnerDecision}; master owner: {item.masterOwnerDecision}; independent reviewer: {item.independentReviewer}; closure: <strong>{item.closureState}</strong>.</p></td>
+          <td><details><summary>{item.linkedExceptionIds.length} exception(s) and {item.linkedTraceIds.length} trace reference(s)</summary>
+            <ul>{item.linkedExceptionIds.map(id=><li key={id}>Exception: <code>{id}</code></li>)}
+              {item.linkedTraceIds.map(id=><li key={id}>HOLD trace: <code>{id}</code></li>)}</ul>
+            <p>These are scenario references only, never authenticated approvals.</p>
+          </details></td>
+        </tr>)}{visibleAssignments.length===0&&<tr><td colSpan={5}>No illustrative assignment matches these filters. Real owner decisions and assignments remain unverified.</td></tr>}</tbody></table></div>
+      <p><strong>HOLD:</strong> No employee is assigned, reminder or escalation sent, evidence accepted, owner signed in, receiver enrolled or incident closed. Original source/master-owner approval and separate witnessed evidence must be verified independently in protected workflows.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL400_OPERATOR_ASSIGNMENT_FRESHNESS_OWNER_ESCALATION.md" target="_blank" rel="noopener noreferrer">View QL-400 assignment preview, freshness and owner escalation handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
