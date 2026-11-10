@@ -37,6 +37,7 @@ import './ql375OwnerStatus.css';
 const QL409AuditDecisionPanel=lazy(()=>import('./ql409AuditDecisionPanel'));
 const QL408AdapterPanel=lazy(()=>import('./ql408AdapterPanel'));
 const QL410MasterContinuityPanel=lazy(()=>import('./ql410MasterContinuityPanel'));
+const QL411Master360PilotPanel=lazy(()=>import('./ql411Master360PilotPanel'));
 
 type Props={truth:ReturnType<typeof ownerEntryTruth>};
 
@@ -750,6 +751,9 @@ export function OwnerSixAppDrilldown({truth}:Props){
     </Suspense>
     <Suspense fallback={<p>Loading Master Shell continuity…</p>}>
       <QL410MasterContinuityPanel sourceId={receiptReviewSource}/>
+    </Suspense>
+    <Suspense fallback={<p>Loading Master 360 telemetry pilot…</p>}>
+      <QL411Master360PilotPanel sourceId={receiptReviewSource}/>
     </Suspense>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
