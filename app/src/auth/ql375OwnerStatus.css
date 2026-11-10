@@ -121,3 +121,13 @@
 .ql407-outcome-review th,.ql407-outcome-review td{padding:.6rem;border:1px solid #76a79f;text-align:left;vertical-align:top;overflow-wrap:anywhere}
 .ql407-outcome-review a{color:#ffe0a2;text-decoration:underline}
 .ql407-outcome-review a:focus-visible{outline:3px solid #ffe0a2;outline-offset:3px}
+.ql408-adapter-review{margin:.8rem 0;padding:.85rem;border:1px solid #8ba3c1;border-radius:10px;background:#1b293a;color:#f5f8fc}
+.ql408-adapter-review h4{margin:.1rem 0 .5rem}
+.ql408-adapter-review p{line-height:1.5;overflow-wrap:anywhere}
+.ql408-review-scroll{overflow-x:auto;max-width:100%;margin:.7rem 0}
+.ql408-adapter-review table{width:100%;min-width:750px;border-collapse:collapse}
+.ql408-adapter-review caption{text-align:left;margin:.4rem 0}
+.ql408-adapter-review th,.ql408-adapter-review td{padding:.55rem;border:1px solid #7f96b2;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+.ql408-adapter-review code{overflow-wrap:anywhere}
+.ql408-adapter-review a{color:#ffe0a2;text-decoration:underline}
+.ql408-adapter-review a:focus-visible{outline:3px solid #ffe0a2;outline-offset:3px}
