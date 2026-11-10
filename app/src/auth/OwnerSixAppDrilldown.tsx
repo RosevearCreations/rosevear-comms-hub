@@ -23,6 +23,8 @@ import {QL400_DEFAULT_FILTERS,QL400_DEMO_DRAFTS,filterOperatorHandoffAssignments
 import {QL401_DEFAULT_FILTERS,QL401_DEMO_ACKNOWLEDGEMENTS,
   filterOperatorEscalationTimeline,reviewOperatorEscalationTimeline,type QL401Filters}
   from './ql401EscalationTimeline';
+import {QL402_DEFAULT_FILTERS,QL402_DEMO_NOTES,filterOperatorRecoveryDecisions,
+  reviewOperatorRecoveryDecisions,type QL402Filters} from './ql402RecoveryDecisionAudit';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -41,6 +43,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const [handoffFilters,setHandoffFilters]=useState<QL399Filters>(QL399_DEFAULT_FILTERS);
   const [assignmentFilters,setAssignmentFilters]=useState<QL400Filters>(QL400_DEFAULT_FILTERS);
   const [escalationFilters,setEscalationFilters]=useState<QL401Filters>(QL401_DEFAULT_FILTERS);
+  const [recoveryFilters,setRecoveryFilters]=useState<QL402Filters>(QL402_DEFAULT_FILTERS);
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const navigated=useRef(false);
   const shell=QL375_SHELLS.find(item=>item.id===selected)!;
@@ -81,6 +84,10 @@ export function OwnerSixAppDrilldown({truth}:Props){
     QL396_DEMO_REQUESTS,QL397_DEMO_OBSERVATIONS,QL398_DEMO_AUDIT,QL399_DEMO_EXCEPTIONS,
     QL400_DEMO_DRAFTS,QL401_DEMO_ACKNOWLEDGEMENTS,QL396_DEMO_NOW);
   const visibleEscalations=filterOperatorEscalationTimeline(escalationReview,escalationFilters);
+  const recoveryReview=reviewOperatorRecoveryDecisions(QL392_ILLUSTRATIVE_PREVIEW,
+    QL396_DEMO_REQUESTS,QL397_DEMO_OBSERVATIONS,QL398_DEMO_AUDIT,QL399_DEMO_EXCEPTIONS,
+    QL400_DEMO_DRAFTS,QL401_DEMO_ACKNOWLEDGEMENTS,QL402_DEMO_NOTES,QL396_DEMO_NOW);
+  const visibleRecovery=filterOperatorRecoveryDecisions(recoveryReview,recoveryFilters);
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -503,6 +510,57 @@ export function OwnerSixAppDrilldown({truth}:Props){
       </table></div>
       <p><strong>HOLD:</strong> No assignment accepted, acknowledgement signed, message transmitted, retry scheduled, approval recorded, source connected or incident closed. Real recovery requires authenticated owner, witness, signing custody, receiver and consent verification outside this preview.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL401_ESCALATION_TIMELINE_ACKNOWLEDGEMENT_RECOVERY.md" target="_blank" rel="noopener noreferrer">View QL-401 timeline, acknowledgement and safe recovery handoff</a>
+    </section>
+    <section className="ql402-recovery-audit" aria-labelledby="ql402-recovery-title">
+      <h4 id="ql402-recovery-title">Recovery decision review, acknowledgement drift audit and independent owner sign-off · offline preview</h4>
+      <p><strong>{recoveryReview.state} — no real recovery decision or original owner sign-off.</strong> Every change below compares role-only scenario references, not source-signed acknowledgements. A missing or reappearing example reference never proves delivery, authorization, a witnessed signature or closure.</p>
+      <div className="ql402-recovery-controls" aria-label="Illustrative recovery drift review filters">
+        <label htmlFor="ql402-source-filter">Source shell
+          <select id="ql402-source-filter" value={recoveryFilters.sourceId}
+            onChange={event=>setRecoveryFilters(previous=>({...previous,sourceId:event.target.value}))}>
+            <option value="ALL">All illustrated shells</option>
+            {QL375_SHELLS.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}
+          </select>
+        </label>
+        <label htmlFor="ql402-drift-filter">Illustrative acknowledgement drift
+          <select id="ql402-drift-filter" value={recoveryFilters.drift}
+            onChange={event=>setRecoveryFilters(previous=>({...previous,drift:event.target.value as QL402Filters['drift']}))}>
+            <option value="ALL">All scenario reviews</option>
+            <option value="DRIFT_ONLY">Dropped or restored scenario reference</option>
+            <option value="UNCHANGED">No scenario reference drift</option>
+          </select>
+        </label>
+      </div>
+      <p role="status" aria-live="polite">Showing {visibleRecovery.length} of {recoveryReview.total} source-scoped recovery reviews; {recoveryReview.reviewed} with scenario review notes, {recoveryReview.driftEvents} illustrative acknowledgement reference changes, {recoveryReview.awaitingOriginalSignoffs} original gate checks still outstanding, {recoveryReview.originalOwnerDecisionsVerified} verified owner decisions, {recoveryReview.authorizedClosures} authorized closures.</p>
+      <div className="ql402-table-scroll"><table><caption>Recovery decision history, scenario-only drift and five independent original sign-off prerequisites</caption>
+        <thead><tr><th scope="col">Source and role</th><th scope="col">Recovery decision review</th><th scope="col">Acknowledgement drift</th><th scope="col">Independent sign-off checklist</th></tr></thead>
+        <tbody>{visibleRecovery.map(item=><tr key={item.assignmentId}>
+          <th scope="row"><code>{item.sourceId}</code> / <code>{item.correlationId}</code>
+            <p>{item.gate} / {item.reviewerRole}</p><code>{item.assignmentId}</code></th>
+          <td><strong>{item.recoveryState} / {item.closureState}</strong>
+            <p>Latest scenario intent: {item.latestIntent??'NONE'}. No intent can authorize a handoff.</p>
+            <details><summary>{item.decisionTrace.length} HOLD-preserving decision trace(s)</summary>
+              {item.decisionTrace.length?<ol>{item.decisionTrace.map(note=><li key={note.reviewId}>
+                <time dateTime={note.observedAt}>{note.observedAt}</time> · <code>{note.reviewId}</code> · {note.intent} / {note.disposition}. {note.reason}
+              </li>)}</ol>:<p>No scenario review note; real operator status is unknown.</p>}
+            </details></td>
+          <td><strong>{item.driftEvents} scenario reference change(s)</strong>
+            <p>Baseline: <code>{item.baselineScenarioAcknowledgementId??'NO_SCENARIO_REFERENCE'}</code>.</p>
+            <details><summary>Compare sample acknowledgement references</summary>
+              {item.decisionTrace.length?<ol>{item.decisionTrace.map(note=><li key={note.reviewId}>
+                <strong>{note.drift}</strong> · before: <code>{note.priorScenarioAcknowledgementId??'NONE'}</code> · after: <code>{note.referencedScenarioAcknowledgementId??'NONE'}</code>.
+              </li>)}</ol>:<p>No scenario decision to compare. Actual receipt status remains unknown.</p>}
+            </details></td>
+          <td><strong>{item.signoffsVerified} of {item.signoffChecklist.length} original checks verified</strong>
+            <p>Source owner signed: no; master owner signed: no; independent witness attested: no.</p>
+            <details><summary>View separately verified original requirements</summary><ol>{item.signoffChecklist.map(check=><li key={check.gate}>
+              <strong>{check.gate}</strong> / {check.custodian}: {check.requirement} · original: {check.originalReceipt}; independent witness: {check.independentWitness}; signed decision: {check.signedOriginalDecision}.
+            </li>)}</ol></details>
+            <strong>Original evidence unverified — HOLD.</strong></td>
+        </tr>)}{visibleRecovery.length===0&&<tr><td colSpan={4}>No illustrative recovery review matches these filters. No original sign-off is inferred.</td></tr>}</tbody>
+      </table></div>
+      <p><strong>HOLD:</strong> No employee assigned, real acknowledgement accepted, owner signed, witness attested, message sent, retry scheduled, receiver activated, tenant data shared or incident closed. Original source/master-owner proof and independently witnessed custody must be reviewed through protected workflows.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL402_RECOVERY_ACKNOWLEDGEMENT_DRIFT_OWNER_SIGNOFF.md" target="_blank" rel="noopener noreferrer">View QL-402 recovery audit and independent sign-off handoff</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
