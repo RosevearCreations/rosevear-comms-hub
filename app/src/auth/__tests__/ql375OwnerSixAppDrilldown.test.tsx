@@ -37,7 +37,7 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(host.querySelector('#ql375-detail-title')).toBe(document.activeElement);
     expect(cards[4].getAttribute('aria-pressed')).toBe('true');
     expect(host.querySelectorAll('form,input,textarea')).toHaveLength(0);
-    expect(host.querySelectorAll('select')).toHaveLength(21); // QL-392 through QL-403 read-only preview filters only
+    expect(host.querySelectorAll('select')).toHaveLength(22); // QL-392 through QL-405 read-only preview filters only
   });
   it('does not claim a live per-shell status when protected readback is absent',async()=>{
     await show(null);
@@ -381,5 +381,23 @@ describe('QL-375 six-app identity drilldown accessible and non-authorizing',()=>
     expect(desk.textContent).toContain('HOLD');
     expect(desk.querySelectorAll('button,input,select,form,textarea')).toHaveLength(0);
     expect(desk.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+  it('shows QL-405 dated public ACK snapshot and lets operators filter drift without changing HOLD',async()=>{
+    await show();
+    const section=host.querySelector('.ql405-ack-ledger')!;
+    expect(section.textContent).toContain('Read-only GitHub evidence snapshot');
+    expect(section.textContent).toMatch(/Recent public snapshot|Snapshot needs fresh GitHub recheck/);
+    expect(section.textContent).toContain('4 of 6 ACK revisions matched');
+    expect(section.textContent).toContain('2 require an ACK revision refresh');
+    expect(section.textContent).toContain('0 verified individual connections');
+    expect(section.querySelectorAll('tbody tr')).toHaveLength(6);
+    expect(section.querySelectorAll('button,input,form,textarea')).toHaveLength(0);
+    const filter=section.querySelector<HTMLSelectElement>('#ql405-ack-filter')!;
+    await act(async()=>{filter.value='STALE_AT_CAPTURE';filter.dispatchEvent(new Event('change',{bubbles:true}));});
+    expect(section.querySelectorAll('tbody tr')).toHaveLength(2);
+    expect(section.textContent).toContain('AI Data Platform');
+    expect(section.textContent).toContain('Rosevear AI Hub');
+    expect(section.textContent).not.toContain('Rosie Dazzlers');
+    expect(section.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
   });
 });
