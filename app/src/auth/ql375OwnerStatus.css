@@ -155,3 +155,7 @@
 .ql411-master-pilot p{line-height:1.5;overflow-wrap:anywhere}
 .ql411-master-pilot a{color:#ffe0a2;text-decoration:underline}
 .ql411-master-pilot a:focus-visible{outline:3px solid #ffe0a2;outline-offset:3px}
+.ql412-master-readiness{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.65rem;margin:.8rem 0}
+.ql412-master-readiness>div{padding:.75rem;border:1px solid var(--border-color,#697887);border-radius:.75rem;background:rgba(128,128,128,.06)}
+.ql412-master-readiness dt{font-weight:700;margin-bottom:.3rem}
+.ql412-master-readiness dd{margin:0;overflow-wrap:anywhere}
