@@ -25,6 +25,8 @@ import {QL401_DEFAULT_FILTERS,QL401_DEMO_ACKNOWLEDGEMENTS,
   from './ql401EscalationTimeline';
 import {QL402_DEFAULT_FILTERS,QL402_DEMO_NOTES,filterOperatorRecoveryDecisions,
   reviewOperatorRecoveryDecisions,type QL402Filters} from './ql402RecoveryDecisionAudit';
+import {QL403_DEFAULT_FILTERS,QL403_DEMO_ENTRIES,filterOperatorRecoveryCasebook,
+  reviewOperatorRecoveryCasebook,type QL403Filters} from './ql403OperatorRecoveryCasebook';
 import {ownerEntryTruth} from './ql374OwnerEntry';
 import './ql375OwnerStatus.css';
 
@@ -44,6 +46,7 @@ export function OwnerSixAppDrilldown({truth}:Props){
   const [assignmentFilters,setAssignmentFilters]=useState<QL400Filters>(QL400_DEFAULT_FILTERS);
   const [escalationFilters,setEscalationFilters]=useState<QL401Filters>(QL401_DEFAULT_FILTERS);
   const [recoveryFilters,setRecoveryFilters]=useState<QL402Filters>(QL402_DEFAULT_FILTERS);
+  const [casebookFilters,setCasebookFilters]=useState<QL403Filters>(QL403_DEFAULT_FILTERS);
   const detailHeading=useRef<HTMLHeadingElement>(null);
   const navigated=useRef(false);
   const shell=QL375_SHELLS.find(item=>item.id===selected)!;
@@ -88,6 +91,11 @@ export function OwnerSixAppDrilldown({truth}:Props){
     QL396_DEMO_REQUESTS,QL397_DEMO_OBSERVATIONS,QL398_DEMO_AUDIT,QL399_DEMO_EXCEPTIONS,
     QL400_DEMO_DRAFTS,QL401_DEMO_ACKNOWLEDGEMENTS,QL402_DEMO_NOTES,QL396_DEMO_NOW);
   const visibleRecovery=filterOperatorRecoveryDecisions(recoveryReview,recoveryFilters);
+  const recoveryCasebook=reviewOperatorRecoveryCasebook(QL392_ILLUSTRATIVE_PREVIEW,
+    QL396_DEMO_REQUESTS,QL397_DEMO_OBSERVATIONS,QL398_DEMO_AUDIT,QL399_DEMO_EXCEPTIONS,
+    QL400_DEMO_DRAFTS,QL401_DEMO_ACKNOWLEDGEMENTS,QL402_DEMO_NOTES,
+    QL403_DEMO_ENTRIES,QL396_DEMO_NOW);
+  const visibleRecoveryCases=filterOperatorRecoveryCasebook(recoveryCasebook,casebookFilters);
 
   useEffect(()=>{if(navigated.current)detailHeading.current?.focus();},[selected]);
   return <div className="ql375-drilldown">
@@ -561,6 +569,52 @@ export function OwnerSixAppDrilldown({truth}:Props){
       </table></div>
       <p><strong>HOLD:</strong> No employee assigned, real acknowledgement accepted, owner signed, witness attested, message sent, retry scheduled, receiver activated, tenant data shared or incident closed. Original source/master-owner proof and independently witnessed custody must be reviewed through protected workflows.</p>
       <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL402_RECOVERY_ACKNOWLEDGEMENT_DRIFT_OWNER_SIGNOFF.md" target="_blank" rel="noopener noreferrer">View QL-402 recovery audit and independent sign-off handoff</a>
+    </section>
+    <section className="ql403-casebook" aria-labelledby="ql403-casebook-title">
+      <h4 id="ql403-casebook-title">Operator recovery casebook, original evidence intake and owner verification handoff · offline preview</h4>
+      <p><strong>{recoveryCasebook.state} — illustrative case records only.</strong> A case number or requested review never means that evidence was received or accepted. There is no upload, signature collection, remote call, case persistence or owner approval in this preview.</p>
+      <div className="ql403-casebook-controls" aria-label="Illustrative recovery casebook filters">
+        <label htmlFor="ql403-source-filter">Source shell
+          <select id="ql403-source-filter" value={casebookFilters.sourceId}
+            onChange={event=>setCasebookFilters(previous=>({...previous,sourceId:event.target.value}))}>
+            <option value="ALL">All illustrated shells</option>
+            {QL375_SHELLS.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}
+          </select>
+        </label>
+        <label htmlFor="ql403-kind-filter">Proposed handoff stage
+          <select id="ql403-kind-filter" value={casebookFilters.kind}
+            onChange={event=>setCasebookFilters(previous=>({...previous,kind:event.target.value as QL403Filters['kind']}))}>
+            <option value="ALL">All HOLD casebook entries</option>
+            <option value="ORIGINAL_EVIDENCE_INTAKE">Original evidence intake</option>
+            <option value="INDEPENDENT_REVIEW">Independent reviewer</option>
+            <option value="OWNER_VERIFICATION">Owner verification</option>
+          </select>
+        </label>
+      </div>
+      <p role="status" aria-live="polite">Showing {visibleRecoveryCases.length} of {recoveryCasebook.total} scenario cases; {recoveryCasebook.unverifiedEvidenceAxes} independent original evidence axes unverified; {recoveryCasebook.verifiedOriginals} original packets verified; {recoveryCasebook.verifiedOwnerDecisions} signed owner decisions; {recoveryCasebook.authorizedHandoffs} authorized handoffs.</p>
+      <div className="ql403-table-scroll"><table><caption>Source-bound case ledger and independent custody, witness and owner verification requirements</caption>
+        <thead><tr><th scope="col">Recovery case</th><th scope="col">Requested handoff</th><th scope="col">Original evidence intake checklist</th><th scope="col">Owner verification and safe next step</th></tr></thead>
+        <tbody>{visibleRecoveryCases.map(item=><tr key={item.caseId}>
+          <th scope="row"><code>{item.caseId}</code><p><code>{item.sourceId}</code> / <code>{item.correlationId}</code></p><code>{item.assignmentId}</code></th>
+          <td><strong>{item.caseState} / {item.closureDecision}</strong>
+            <p>{item.kind} · {item.requestedBy}</p>
+            <time dateTime={item.recordedAt}>{item.recordedAt}</time>
+            <p>Scenario review: <code>{item.referenceReviewId??'NOT_REFERENCED'}</code></p></td>
+          <td><strong>0 of {item.originalEvidenceRequirements.length} original checks verified.</strong>
+            <details><summary>View original documents and independent verification</summary>
+              <ol>{item.originalEvidenceRequirements.map(check=><li key={check.gate}>
+                <strong>{check.gate} / {check.custodian}:</strong> {check.originalArtifact}.
+                <p>Independent check: {check.requiredVerification}.</p>
+                <p>Intake {check.evidenceIntake}; reviewer {check.independentReview}; signed decision {check.ownerDecision}.</p>
+              </li>)}</ol>
+            </details></td>
+          <td><strong>Separate source and master owner signatures: not verified.</strong>
+            <p>Independent witness and source key custody: not verified. Receiver scope and consent: not verified.</p>
+            <p>{item.nextSafeAction}</p><strong>HOLD — no transfer or closure permitted.</strong></td>
+        </tr>)}{visibleRecoveryCases.length===0&&<tr><td colSpan={4}>No illustrative case matches these filters. No actual case closure or intake is inferred.</td></tr>}</tbody>
+      </table></div>
+      <p><strong>Owner handoff boundary:</strong> the source owner supplies independently witnessed original issuer and signing custody evidence; a separate Master Shell owner reviews purpose, scope and consent; the receiver verifies enrollment and replay-safe signed receipts. Only those authenticated protected workflows can change HOLD. This screen does not connect, send, authorize or close cases.</p>
+      <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL403_OPERATOR_RECOVERY_CASEBOOK_ORIGINAL_INTAKE_OWNER_HANDOFF.md" target="_blank" rel="noopener noreferrer">View QL-403 original evidence and owner verification handoff guide</a>
     </section>
     <div className="ql375-source-grid" aria-label="Read-only six-app source cards">
       {QL375_SHELLS.map(item=><button type="button" key={item.id}
