@@ -73,3 +73,13 @@
 .ql403-casebook details li{margin:.3rem 0}
 .ql403-casebook select:focus-visible,.ql403-casebook summary:focus-visible,.ql403-casebook a:focus-visible{outline:3px solid #ffda99;outline-offset:3px}
 @media(max-width:760px){.ql403-casebook-controls{grid-template-columns:1fr}}
+.ql404-connection-desk{margin:.75rem 0;padding:.8rem;border:1px solid #73abbd;border-radius:10px;background:#162a36;color:#f5f8fc}
+.ql404-connection-desk h4{margin:.1rem 0 .5rem}
+.ql404-connection-desk p{line-height:1.5}
+.ql404-desk-scroll{overflow-x:auto;max-width:100%;margin:.65rem 0}
+.ql404-connection-desk table{width:100%;min-width:700px;border-collapse:collapse}
+.ql404-connection-desk caption{text-align:left;margin:.4rem 0}
+.ql404-connection-desk th,.ql404-connection-desk td{border:1px solid #6696aa;padding:.6rem;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+.ql404-connection-desk code{overflow-wrap:anywhere}
+.ql404-connection-desk a{color:#ffda99;text-decoration:underline}
+.ql404-connection-desk a:focus-visible{outline:3px solid #ffda99;outline-offset:3px}
