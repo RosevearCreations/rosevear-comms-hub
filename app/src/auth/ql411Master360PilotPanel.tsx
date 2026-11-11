@@ -2,7 +2,7 @@ import type {QL405SourceId} from './ql405AcknowledgementLedger';
 
 export default function QL411Master360PilotPanel({sourceId}:{sourceId:QL405SourceId}){
   return <section className="ql411-master-pilot" aria-labelledby="ql411-master-title">
-    <h4 id="ql411-master-title">QL-414 · Original-Ree one-TEST and signed receiver acknowledgement</h4>
+    <h4 id="ql411-master-title">QL-415 · Protected Master360 runtime receipt and uptime acceptance</h4>
     <p role="status"><strong>HOLD · NOT CONNECTED</strong> — source {sourceId}. Original-Ree server telemetry and persistent replay evidence have not been authenticated into this owner screen.</p>
     <dl className="ql412-master-readiness">
       <div><dt>Ree's original Windows host</dt><dd>DESKTOP-AE894KC · runtime unverified</dd></div>
@@ -16,8 +16,10 @@ export default function QL411Master360PilotPanel({sourceId}:{sourceId:QL405Sourc
       <div><dt>AI Hub original-host receipt</dt><dd>HOLD · Build 305 runtime not verified</dd></div>
       <div><dt>Owner-supervised one-TEST</dt><dd>HOLD · no authorized source-side execution</dd></div>
       <div><dt>Receiver signature and decision</dt><dd>HOLD · no genuine signed receiver ACK</dd></div>
+      <div><dt>Independent public pin custody</dt><dd>HOLD · host/reviewer verification outstanding</dd></div>
+      <div><dt>Signed uptime trend</dt><dd>UNKNOWN · awaiting verified live original-host samples</dd></div>
     </dl>
-    <p>QL-414 adds a server-side read-only one-TEST handler with authenticated transport and owner/reviewer prerequisites, durable replay checks, and independently verifiable signed receiver ACK generation. No listener, Windows recovery execution, automatic connection grant or production private-key provisioning is included.</p>
-    <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL414_MASTER360_ONE_TEST_ACK_HANDOFF.md" target="_blank" rel="noopener noreferrer">Master 360 QL-414 protected one-TEST and signed ACK handoff</a>
+    <p>QL-415 provides a protected read-only review of independently witnessed public-key custody, fresh signed original-host samples, durable episode admission, and a correlated signed Comms receiver ACK. Sampled uptime is not continuous SLA uptime. No live approval or connection is inferred from repository releases.</p>
+    <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL415_MASTER360_RUNTIME_ACCEPTANCE.md" target="_blank" rel="noopener noreferrer">Master 360 QL-415 protected runtime acceptance handoff</a>
   </section>;
 }
