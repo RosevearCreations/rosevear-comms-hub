@@ -2,7 +2,7 @@ import type {QL405SourceId} from './ql405AcknowledgementLedger';
 
 export default function QL411Master360PilotPanel({sourceId}:{sourceId:QL405SourceId}){
   return <section className="ql411-master-pilot" aria-labelledby="ql411-master-title">
-    <h4 id="ql411-master-title">QL-415 · Protected Master360 runtime receipt and uptime acceptance</h4>
+    <h4 id="ql411-master-title">QL-416 · Original-host one-TEST import and uptime incident review</h4>
     <p role="status"><strong>HOLD · NOT CONNECTED</strong> — source {sourceId}. Original-Ree server telemetry and persistent replay evidence have not been authenticated into this owner screen.</p>
     <dl className="ql412-master-readiness">
       <div><dt>Ree's original Windows host</dt><dd>DESKTOP-AE894KC · runtime unverified</dd></div>
@@ -18,8 +18,12 @@ export default function QL411Master360PilotPanel({sourceId}:{sourceId:QL405Sourc
       <div><dt>Receiver signature and decision</dt><dd>HOLD · no genuine signed receiver ACK</dd></div>
       <div><dt>Independent public pin custody</dt><dd>HOLD · host/reviewer verification outstanding</dd></div>
       <div><dt>Signed uptime trend</dt><dd>UNKNOWN · awaiting verified live original-host samples</dd></div>
+      <div><dt>QL-416 operational evidence import</dt><dd>HOLD · no authenticated original-host episode imported</dd></div>
+      <div><dt>Independent protected replay record</dt><dd>HOLD · durable ledger episode not confirmed</dd></div>
+      <div><dt>Master controller revision correlation</dt><dd>HOLD · runtime version match unverified</dd></div>
+      <div><dt>Owner-reviewed reachability incidents</dt><dd>HOLD · no signed operational sample accepted</dd></div>
     </dl>
-    <p>QL-415 provides a protected read-only review of independently witnessed public-key custody, fresh signed original-host samples, durable episode admission, and a correlated signed Comms receiver ACK. Sampled uptime is not continuous SLA uptime. No live approval or connection is inferred from repository releases.</p>
-    <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL415_MASTER360_RUNTIME_ACCEPTANCE.md" target="_blank" rel="noopener noreferrer">Master 360 QL-415 protected runtime acceptance handoff</a>
+    <p>QL-416 correlates a genuine source-signed one-TEST episode, an independently signed Comms receiver ACK, protected durable replay admission and AI Data controller revision for owner review. Reachability gaps are incident candidates, not confirmed outages; sampled uptime is not continuous SLA uptime. No connection or recovery authority is conferred.</p>
+    <a href="https://github.com/RosevearCreations/rosevear-comms-hub/blob/main/docs/handoffs/QL416_MASTER360_OPERATIONAL_IMPORT.md" target="_blank" rel="noopener noreferrer">Master 360 QL-416 protected operational evidence handoff</a>
   </section>;
 }
