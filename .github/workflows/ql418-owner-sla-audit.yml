@@ -1,0 +1,25 @@
+name: QL-418 protected owner SLA audit
+on:
+  pull_request:
+    paths:
+      - 'runtimes/master-telemetry/ql417-discrepancy-worklist.mjs'
+      - 'runtimes/master-telemetry/ql418-owner-sla-audit*.mjs'
+      - '.github/workflows/ql418-owner-sla-audit.yml'
+  push:
+    branches: [dev, main]
+    paths:
+      - 'runtimes/master-telemetry/ql417-discrepancy-worklist.mjs'
+      - 'runtimes/master-telemetry/ql418-owner-sla-audit*.mjs'
+      - '.github/workflows/ql418-owner-sla-audit.yml'
+permissions:
+  contents: read
+jobs:
+  protected-audit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: QL-417 and QL-418 contract tests
+        run: node --test runtimes/master-telemetry/ql417-discrepancy-worklist.test.mjs runtimes/master-telemetry/ql418-owner-sla-audit.test.mjs
