@@ -94,7 +94,9 @@ export function buildQl420IncidentTimeline({
    if(!item||!episode||record.sourceRevision!==item.sourceRevision||
      record.ownerId!==item.ownerId||
      record.reviewedAtMs<episode.observedAtMs||
-     record.reviewedAtMs<Math.max(episode.observedAtMs,...assignments.filter(a=>\n       a.sourceId===record.sourceId&&a.episodeId===record.episodeId)\n       .map(a=>a.assignedAtMs))||
+     record.reviewedAtMs<Math.max(episode.observedAtMs,...assignments.filter(a=>
+       a.sourceId===record.sourceId&&a.episodeId===record.episodeId)
+       .map(a=>a.assignedAtMs))||
      prior.notifications.some(n=>n.sourceId===record.sourceId&&
        n.episodeId===record.episodeId&&n.occurredAtMs>record.reviewedAtMs))
      return fail('CLOSURE_CASE_OR_CHRONOLOGY_MISMATCH');
