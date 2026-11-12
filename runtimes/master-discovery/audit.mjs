@@ -1,5 +1,6 @@
 /** Recurring public immutable GitHub contract discovery; never calls tenant APIs. */
 import {SOURCES,discoverSource} from './manifest.mjs';
+import {evaluateDiscoveryAudit} from './audit-result.mjs';
 const results=[];
 for(const [sourceId,{repo}] of Object.entries(SOURCES)){
   let sha=null;
@@ -13,8 +14,11 @@ for(const [sourceId,{repo}] of Object.entries(SOURCES)){
   }catch{results.push({sourceId,status:'SOURCE_COMMIT_UNAVAILABLE_HELD',connected:false});continue;}
   results.push(await discoverSource(sourceId,sha));
 }
-const summary={build:'QL-333',observedAt:new Date().toISOString(),
+const verdict=evaluateDiscoveryAudit(results);
+const summary={build:'QL-333/424',observedAt:new Date().toISOString(),
+  ...verdict,
   mode:'PUBLIC_GITHUB_IMMUTABLE_GET_ONLY',sourceCount:results.length,
   authenticallyConnected:0,sourcePrivateGets:0,externalWrites:0,results};
 process.stdout.write(JSON.stringify(summary,null,2)+'\n');
-if(results.length!==6||results.some(r=>r.status!=='DISCOVERED_UNSIGNED_HELD'))process.exitCode=1;
+if(verdict.ci==='FAIL')process.exitCode=1;
+if(verdict.operational==='HOLD')process.stderr.write('::warning::Six-source public discovery is operational HOLD; no source is CONNECTED. '+verdict.reason+'\n');
