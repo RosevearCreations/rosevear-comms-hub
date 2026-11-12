@@ -157,3 +157,21 @@ test('missing master, tampered source, forged owner or receiver proof fail close
   ...ceremony.receiverProof,signature:'invalid'}},
   reports:e.reports,ownerAcceptance:e.ownerAcceptance},e.opts).state,'HOLD');
 });
+
+test('rollback failure remains an explicit unknown receiver state',async()=>{
+ const a=setup();
+ a.adapter.readSignedState=async()=>{throw Error('unavailable')};
+ a.adapter.disableOneTest=async()=>{throw Error('rollback inaccessible')};
+ const r=await runQl424SupervisedReceiverCeremony(a.ceremonyInputs,a.ceremonyOptions);
+ assert.equal(r.reason,'RECEIVER_ROLLBACK_FAILED_MANUAL_RECOVERY_REQUIRED');
+ assert.equal(r.receiver,'UNKNOWN_MANUAL_OPERATOR_RECOVERY_REQUIRED');
+ assert.equal(r.connection,'HOLD');
+});
+test('malformed source SPKI never crashes enrollment or bypasses authority',()=>{
+ const a=setup(),p={...a.p,sourceSignerSpki:'not-der'};
+ const certificate={payload:p,ownerSignature:signIt(p,owner),
+  reviewerSignature:signIt(p,reviewer)};
+ const result=enrollQl424OriginalHostAuthority(certificate,{
+  ...a.enrollmentArgs,ledger:openQl424ProtectedCeremonyLedger(directory())});
+ assert.equal(result.state,'HOLD');
+});
