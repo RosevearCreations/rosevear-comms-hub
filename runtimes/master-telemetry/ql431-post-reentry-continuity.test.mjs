@@ -76,14 +76,14 @@ function fixture(){
    const p={schema:'rosevear.ql431.master-incident-custody.v1',masterId,scope,
     incidentId:incident(n),shutdownRecordDigest:previous.recordDigest,
     receiverOffDigest:previous.entry.receiverOffDigest,
-    status:'ISOLATED_RECEIVER_OFF_INCIDENT_HELD',observedAt:iso(clock-20)};
+    status:'ISOLATED_RECEIVER_OFF_INCIDENT_HELD',observedAt:iso(clock)};
    return signed(p,masterKeys[masterId]);
   });
   const p={schema:'rosevear.ql431.owner-incident-reconciliation.v1',scope,
    incidentId:incident(n),shutdownRecordDigest:previous.recordDigest,
    reportsDigest:hash(reports.map(r=>r.payload)),
    action:'ACKNOWLEDGE_FAIL_CLOSED_INCIDENT_KEEP_RECEIVER_OFF',
-   ownerId:'Ree_Original',reviewerId:'Jack_Independent',acceptedAt:iso(clock-10)};
+   ownerId:'Ree_Original',reviewerId:'Jack_Independent',acceptedAt:iso(clock)};
   const acceptance={payload:p,
    ownerSignature:signed(p,owner).signature,
    reviewerSignature:signed(p,reviewer).signature};
