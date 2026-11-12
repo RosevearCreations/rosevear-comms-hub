@@ -117,6 +117,8 @@ test('tampered revision, digest, duplicate handoff and source confusion fail clo
  assert.equal(run(c).reason,'DUPLICATE_MASTER_HANDOFF');
  const d=complete();d.ownerAuditHistory[0].sourceId='ai-data-platform';
  assert.equal(run(d).reason,'OWNER_HISTORY_SOURCE_OR_OWNER_MISMATCH');
+ const e=complete();e.escalations[0].independentHistoricalReviewerVerified=false;
+ assert.equal(run(e).reason,'ESCALATION_ORDER_OR_ASSIGNMENT_UNVERIFIED');
 });
 test('owner audit hash chain is append-only and REOPEN never closes a case',()=>{
  const a=complete();const first=a.ownerAuditHistory[0];
