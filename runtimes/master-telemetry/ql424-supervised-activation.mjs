@@ -18,11 +18,13 @@ const exact=(o,keys)=>o&&typeof o==='object'&&!Array.isArray(o)&&
 const no=(reason)=>({state:'HOLD',reason,receiver:'OFF',connection:'HOLD',
  ownerAcceptance:'HOLD',runtimeUptime:'UNKNOWN',slaveGate:'HOLD_NEXT_MASTER_INTEGRATION_STAGE'});
 const keyFrom=pin=>{
- if(typeof pin!=='string'||pin.length>512)return null;
- const bytes=Buffer.from(pin,'base64');
- if(bytes.toString('base64')!==pin)return null;
- const key=createPublicKey({key:bytes,format:'der',type:'spki'});
- return key.asymmetricKeyType==='ed25519'?key:null;
+ try{
+  if(typeof pin!=='string'||pin.length>512)return null;
+  const bytes=Buffer.from(pin,'base64');
+  if(bytes.toString('base64')!==pin)return null;
+  const key=createPublicKey({key:bytes,format:'der',type:'spki'});
+  return key.asymmetricKeyType==='ed25519'?key:null;
+ }catch{return null;}
 };
 const signed=(payload,signature,pin)=>{
  try{return typeof signature==='string'&&/^[A-Za-z0-9+/]{86}==$/.test(signature)&&
@@ -139,11 +141,13 @@ export async function runQl424SupervisedReceiverCeremony({enrollment,activation,
   typeof receiverAdapter?.disableOneTest!=='function')
   return no('PROTECTED_CEREMONY_NOT_AUTHORIZED');
  const p=activation?.payload;
+ let persistedEnrollment;
+ try{persistedEnrollment=enrollment?.enrollmentId?ledger.read('enroll:'+enrollment.enrollmentId):null;}
+ catch{return no('ORIGINAL_HOST_ENROLLMENT_STORE_UNREADABLE');}
  if(enrollment?.state!=='SUPERVISED_SOURCE_PUBLIC_PIN_ENROLLED'||
   enrollment.sourceRevision!==expectedSourceRevision||
   enrollment.controllerRevision!==expectedControllerRevision||
-  !same(ledger.read('enroll:'+enrollment.enrollmentId)?.bindingDigest,
-   enrollment.enrollmentBindingDigest))
+  !same(persistedEnrollment?.bindingDigest,enrollment.enrollmentBindingDigest))
   return no('ORIGINAL_HOST_ENROLLMENT_CUSTODY_NOT_FOUND');
  if(!exact(activation,['payload','ownerSignature','reviewerSignature'])||
   !exact(p,['schema','sourceId','hostId','episodeId','sourceRevision',
@@ -164,8 +168,10 @@ export async function runQl424SupervisedReceiverCeremony({enrollment,activation,
   return no('DUAL_SIGNED_SUPERVISED_CEREMONY_REJECTED');
  // This rechecks the full protected QL-422/423 source evidence; a browser
  // cannot submit a readiness Boolean in place of signed receipts.
- const proof=reviewQl423ReplayRestorationAndActivation(ql423Input,{
-  ...ql423Options,nowMs});
+ let proof;
+ try{proof=reviewQl423ReplayRestorationAndActivation(ql423Input,{
+  ...ql423Options,nowMs});}
+ catch{return no('QL423_PROTECTED_RESTORATION_READ_FAILED');}
  if(proof.state!=='THREE_MASTER_REPLAY_RESTORED_FOR_REVIEW'||
   proof.activationReviewStatus!=='READY_FOR_SEPARATE_SUPERVISED_ACTIVATION_NOT_EXECUTED'||
   proof.sourceId!==p.sourceId||proof.episodeId!==p.episodeId||
@@ -204,7 +210,8 @@ export async function runQl424SupervisedReceiverCeremony({enrollment,activation,
    receiverProof:state};
  }catch{
   if(enabled)try{await receiverAdapter.disableOneTest({ceremonyId:p.ceremonyId});}
-   catch{return no('RECEIVER_ROLLBACK_FAILED_MANUAL_RECOVERY_REQUIRED');}
+   catch{return {...no('RECEIVER_ROLLBACK_FAILED_MANUAL_RECOVERY_REQUIRED'),
+      receiver:'UNKNOWN_MANUAL_OPERATOR_RECOVERY_REQUIRED'};}
   return no('ISOLATED_RECEIVER_ACTIVATION_OR_READBACK_FAILED');
  }
 }
