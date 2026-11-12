@@ -82,9 +82,7 @@ test('forged source, forged receiver, other host, missing pin custody and tamper
  const dir=directory(),store=openQl423DurableCustodyStore(dir);
  assert.equal(admitQl423OriginalHostCustody(signed(),admissionOpts(store)).state,
    'SIGNED_ORIGINAL_HOST_CUSTODY_COMMITTED');
- const fs=awaitImportNotUsed();
- function awaitImportNotUsed(){return null;}
-});
+ });
 function preparedCase(sourcePayload,ackPayload){
  const observedAtMs=now-60000,notifiedAtMs=now-35000;
  const notificationId='notify_original_001',notificationDigest='b'.repeat(64);
