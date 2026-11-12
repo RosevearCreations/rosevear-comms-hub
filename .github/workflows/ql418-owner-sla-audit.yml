@@ -1,4 +1,4 @@
-name: QL-418/419/420 protected owner and incident audit
+name: QL-417-421 protected master evidence audit
 on:
   pull_request:
     paths:
@@ -6,6 +6,7 @@ on:
       - 'runtimes/master-telemetry/ql418-owner-sla-audit*.mjs'
       - 'runtimes/master-telemetry/ql419-case-escalation-custody*.mjs'
       - 'runtimes/master-telemetry/ql420-incident-timeline*.mjs'
+      - 'runtimes/master-telemetry/ql421-closure-handoff-history*.mjs'
       - '.github/workflows/ql418-owner-sla-audit.yml'
   push:
     branches: [dev, main]
@@ -14,6 +15,7 @@ on:
       - 'runtimes/master-telemetry/ql418-owner-sla-audit*.mjs'
       - 'runtimes/master-telemetry/ql419-case-escalation-custody*.mjs'
       - 'runtimes/master-telemetry/ql420-incident-timeline*.mjs'
+      - 'runtimes/master-telemetry/ql421-closure-handoff-history*.mjs'
       - '.github/workflows/ql418-owner-sla-audit.yml'
 permissions:
   contents: read
@@ -25,5 +27,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: QL-417 through QL-420 contract tests
-        run: node --test runtimes/master-telemetry/ql417-discrepancy-worklist.test.mjs runtimes/master-telemetry/ql418-owner-sla-audit.test.mjs runtimes/master-telemetry/ql419-case-escalation-custody.test.mjs runtimes/master-telemetry/ql420-incident-timeline.test.mjs
+      - name: QL-417 through QL-421 contract tests
+        run: node --test runtimes/master-telemetry/ql417-discrepancy-worklist.test.mjs runtimes/master-telemetry/ql418-owner-sla-audit.test.mjs runtimes/master-telemetry/ql419-case-escalation-custody.test.mjs runtimes/master-telemetry/ql420-incident-timeline.test.mjs runtimes/master-telemetry/ql421-closure-handoff-history.test.mjs

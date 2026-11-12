@@ -39,7 +39,19 @@ export function buildQl419CaseEscalationReview({
       return hold('ESCALATION_PROVENANCE_INVALID');
     const key=e.sourceId+':'+e.episodeId;
     const item=byCase.get(key),prev=latest.get(key);
-    if(!item.ownerId||!item.reasons.length||e.occurredAtMs<item.slaStartMs||
+    // A historically escalated episode may later have zero CURRENT discrepancies.
+    // In that case require an independently custodied prior discrepancy snapshot.
+    const historicalFieldsPresent=e.historicalSeverity!==undefined||
+      e.historicalDiscrepancyDigest!==undefined||
+      e.historicalDiscrepancyVerified!==undefined||
+      e.independentHistoricalReviewerVerified!==undefined;
+    const historicalValid=['CRITICAL','REVIEW'].includes(e.historicalSeverity)&&
+      HEX.test(e.historicalDiscrepancyDigest??'')&&
+      e.historicalDiscrepancyVerified===true&&
+      e.independentHistoricalReviewerVerified===true;
+    if((historicalFieldsPresent&&!historicalValid)||
+      !item.ownerId||(!item.reasons.length&&!historicalValid)||
+      e.occurredAtMs<item.slaStartMs||
       e.occurredAtMs<(item.assignedAtMs??0)||
       (prev&&e.occurredAtMs<=prev.occurredAtMs)||
       notifications.some(n=>n.notificationId===e.notificationId))
@@ -48,6 +60,8 @@ export function buildQl419CaseEscalationReview({
     notifications.push({sourceId:e.sourceId,episodeId:e.episodeId,
       notificationId:e.notificationId,notificationDigest:e.notificationDigest,
       occurredAtMs:e.occurredAtMs,deliveryState:e.deliveryState,
+      historicalSeverity:historicalValid?e.historicalSeverity:null,
+      historicalDiscrepancyDigest:historicalValid?e.historicalDiscrepancyDigest:null,
       verifiedDelivery:e.deliveryState==='DELIVERED',
       action:'REVIEW_ONLY_NO_DELIVERY_EXECUTED'});
   }
