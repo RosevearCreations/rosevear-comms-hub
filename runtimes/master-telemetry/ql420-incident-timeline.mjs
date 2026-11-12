@@ -63,8 +63,12 @@ export function buildQl420IncidentTimeline({
       notification.episodeId!==proof.episodeId||
       proof.reviewedAtMs<notification.occurredAtMs)
      return fail('SLA_EVIDENCE_SOURCE_OR_ORDER_MISMATCH');
-   const deadlineAtMs=SLA_MS[item.severity]===null?null:
-     episode.observedAtMs+SLA_MS[item.severity];
+   // Preserve the independently witnessed severity of an earlier open
+   // discrepancy even when its current QL-417 projection is resolved.
+   const slaSeverity=item.severity==='NONE'?
+     (notification.historicalSeverity??'NONE'):item.severity;
+   const deadlineAtMs=SLA_MS[slaSeverity]===null?null:
+     episode.observedAtMs+SLA_MS[slaSeverity];
    const expected=ql420EscalationSlaDigest({sourceId:proof.sourceId,
      episodeId:proof.episodeId,sourceRevision:item.sourceRevision,
      observedAtMs:episode.observedAtMs,deadlineAtMs,
@@ -126,8 +130,10 @@ export function buildQl420IncidentTimeline({
        notificationId:n.notificationId,notificationDigest:n.notificationDigest});
    const latest=sourceNotifications.at(-1);
    const proof=latest?proofById.get(latest.notificationId):null;
-   const deadlineAtMs=SLA_MS[item.severity]===null?null:
-     episode.observedAtMs+SLA_MS[item.severity];
+   const slaSeverity=item.severity==='NONE'?
+     (latest?.historicalSeverity??'NONE'):item.severity;
+   const deadlineAtMs=SLA_MS[slaSeverity]===null?null:
+     episode.observedAtMs+SLA_MS[slaSeverity];
    const slaStatus=!latest?'HOLD_NO_ESCALATION_PROOF':
      !proof?'HOLD_NO_INDEPENDENT_SLA_EVIDENCE':
      latest.deliveryState!=='DELIVERED'?'HOLD_DELIVERY_NOT_VERIFIED':
@@ -147,7 +153,7 @@ export function buildQl420IncidentTimeline({
      'OWNER_REVIEW_ELIGIBLE_NOT_ACCEPTED';
    return {sourceId:item.sourceId,episodeId:item.episodeId,
      sourceRevision:item.sourceRevision,ownerId:item.ownerId,
-     severity:item.severity,deadlineAtMs,slaStatus,
+     severity:item.severity,escalationSeverity:slaSeverity,deadlineAtMs,slaStatus,
      notificationId:latest?.notificationId??null,
      independentlyReviewedSla:Boolean(proof),
      closureStatus,closureReviewId:closure?.reviewId??null,
