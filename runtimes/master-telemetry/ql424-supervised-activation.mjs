@@ -9,7 +9,7 @@ const ID=/^[A-Za-z0-9_-]{12,96}$/;
 const PERSON=/^[A-Za-z0-9_-]{3,80}$/;
 const MASTERS=['rosevear-ai-hub','rosevear-comms-hub','ai-data-platform'];
 const WINDOW=120000, HOST='DESKTOP-AE894KC';
-const hash=x=>createHash('sha256').update(typeof x==='string'?x:JSON.stringify(x)).digest('hex');
+const hash=x=>createHash('sha256').update(Buffer.isBuffer(x)?x:typeof x==='string'?x:JSON.stringify(x)).digest('hex');
 const same=(a,b)=>HEX.test(a??'')&&HEX.test(b??'')&&
  timingSafeEqual(Buffer.from(a,'hex'),Buffer.from(b,'hex'));
 const iso=s=>typeof s==='string'&&Number.isFinite(Date.parse(s))&&new Date(Date.parse(s)).toISOString()===s;
