@@ -272,7 +272,11 @@ export async function runQl431PostReentryPilotHealth({
   return hold('PROTECTED_QL430_ORIGINAL_HOST_MONITOR_AUTHORITY_REQUIRED');
  let prior;
  try{prior=store.read(scope);}
- catch{return hold('PROTECTED_QL431_LEDGER_UNREADABLE');}
+ catch{return failClosed({receiverAdapter,independentReceiverAdapter,store,scope,
+  observationId,incidentId,acceptedDigest:ql430Acceptance.acceptedRecordDigest,
+  sequences:emptySequences(),prior:null,reason:'PROTECTED_QL431_LEDGER_UNREADABLE'},{
+  nowMs,shutdownPin,independentReceiverPin,
+  independentShutdownPinVerified,independentReceiverPinVerified});}
  if(prior&&['PENDING','OFF','RECONCILED'].includes(prior.entry.kind))
   return hold('PILOT_TERMINAL_INCIDENT_NEW_CEREMONY_REQUIRED',
    prior.entry.kind==='PENDING'?'UNKNOWN_MANUAL_OPERATOR_RECOVERY_REQUIRED':'OFF_PENDING_REVALIDATION');
