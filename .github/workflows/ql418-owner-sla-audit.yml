@@ -1,4 +1,4 @@
-name: QL-417-426 protected master evidence audit
+name: QL-417-427 protected master evidence audit
 on:
   pull_request:
     paths:
@@ -13,6 +13,7 @@ on:
       - 'runtimes/master-telemetry/ql424-test-fixture.mjs'
       - 'runtimes/master-telemetry/ql425-pilot-health-continuity*.mjs'
       - 'runtimes/master-telemetry/ql426-durable-pilot-custody*.mjs'
+      - 'runtimes/master-telemetry/ql427-independent-witness-recovery*.mjs'
       - 'runtimes/master-discovery/audit-result*.mjs'
       - '.github/workflows/ql418-owner-sla-audit.yml'
   push:
@@ -29,6 +30,7 @@ on:
       - 'runtimes/master-telemetry/ql424-test-fixture.mjs'
       - 'runtimes/master-telemetry/ql425-pilot-health-continuity*.mjs'
       - 'runtimes/master-telemetry/ql426-durable-pilot-custody*.mjs'
+      - 'runtimes/master-telemetry/ql427-independent-witness-recovery*.mjs'
       - 'runtimes/master-discovery/audit-result*.mjs'
       - '.github/workflows/ql418-owner-sla-audit.yml'
 permissions:
@@ -41,5 +43,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: QL-417 through QL-426 plus six-source result classification
-        run: node --test runtimes/master-telemetry/ql417-discrepancy-worklist.test.mjs runtimes/master-telemetry/ql418-owner-sla-audit.test.mjs runtimes/master-telemetry/ql419-case-escalation-custody.test.mjs runtimes/master-telemetry/ql420-incident-timeline.test.mjs runtimes/master-telemetry/ql421-closure-handoff-history.test.mjs runtimes/master-telemetry/ql422-original-host-witness.test.mjs runtimes/master-telemetry/ql423-signed-custody-replay.test.mjs runtimes/master-telemetry/ql424-supervised-activation.test.mjs runtimes/master-telemetry/ql425-pilot-health-continuity.test.mjs runtimes/master-telemetry/ql426-durable-pilot-custody.test.mjs runtimes/master-discovery/audit-result.test.mjs
+      - name: QL-417 through QL-427 plus six-source result classification
+        run: node --test runtimes/master-telemetry/ql417-discrepancy-worklist.test.mjs runtimes/master-telemetry/ql418-owner-sla-audit.test.mjs runtimes/master-telemetry/ql419-case-escalation-custody.test.mjs runtimes/master-telemetry/ql420-incident-timeline.test.mjs runtimes/master-telemetry/ql421-closure-handoff-history.test.mjs runtimes/master-telemetry/ql422-original-host-witness.test.mjs runtimes/master-telemetry/ql423-signed-custody-replay.test.mjs runtimes/master-telemetry/ql424-supervised-activation.test.mjs runtimes/master-telemetry/ql425-pilot-health-continuity.test.mjs runtimes/master-telemetry/ql426-durable-pilot-custody.test.mjs runtimes/master-telemetry/ql427-independent-witness-recovery.test.mjs runtimes/master-discovery/audit-result.test.mjs
