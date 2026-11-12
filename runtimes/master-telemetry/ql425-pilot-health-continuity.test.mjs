@@ -1,0 +1,17 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {generateKeyPairSync,sign} from 'node:crypto';
+import {checkQl425ProtectedPilotContinuity} from './ql425-pilot-health-continuity.mjs';
+const ids=['rosevear-ai-hub','rosevear-comms-hub','ai-data-platform'];
+const pair=Object.fromEntries(ids.map(id=>[id,generateKeyPairSync('ed25519')]));
+const pins=Object.fromEntries(ids.map(id=>[id,pair[id].publicKey.export({format:'der',type:'spki'}).toString('base64')]));
+const accepted={state:'VERIFIED_THREE_MASTER_ISOLATED_PILOT_ACCEPTANCE',connection:'VERIFIED_CONNECTED_PILOT',receiver:'ISOLATED_ONE_TEST_ON',ownerAcceptance:'DUAL_SIGNED_FOR_ISOLATED_PILOT',sourceId:'rosevear-ai-hub',ceremonyId:'ceremony_123456',episodeId:'episode_123456',sourceRevision:'a'.repeat(40),controllerRevision:'b'.repeat(40),masterCount:3};
+const now=Date.parse('2026-11-12T10:00:00.000Z');
+const beat=(id,sequence=1,offset=0)=>{const payload={schema:'rosevear.ql425.master-pilot-heartbeat.v1',masterId:id,ceremonyId:accepted.ceremonyId,sourceId:accepted.sourceId,episodeId:accepted.episodeId,sourceRevision:accepted.sourceRevision,controllerRevision:accepted.controllerRevision,status:'ISOLATED_PILOT_HEALTHY',observedAt:new Date(now+offset).toISOString(),sequence};return {payload,signature:sign(null,Buffer.from(JSON.stringify(payload)),pair[id].privateKey).toString('base64')};};
+const input=(heartbeats=ids.map(id=>beat(id)),adapter={disableOneTest:async()=>({disabled:true})})=>({accepted,heartbeats,receiverAdapter:adapter});
+const opts={masterPins:pins,independentMasterPinsVerified:true,protectedOperatorSession:true,nowMs:now};
+test('three independently signed fresh reports yield only a bounded pilot snapshot',async()=>{const r=await checkQl425ProtectedPilotContinuity(input(),opts);assert.equal(r.state,'VERIFIED_ISOLATED_PILOT_HEALTH_SNAPSHOT');assert.equal(r.slaveGate,'HOLD_NEXT_MASTER_INTEGRATION_STAGE');assert.match(r.runtimeUptime,/NOT_CONTINUOUS/);});
+test('missing report forces receiver disable',async()=>{let calls=0;const r=await checkQl425ProtectedPilotContinuity(input([beat(ids[0]),beat(ids[1])],{disableOneTest:async()=>{calls++;return {disabled:true};}}),opts);assert.equal(calls,1);assert.equal(r.receiver,'OFF');assert.equal(r.connection,'HOLD');});
+test('stale, future, replayed and forged reports all fail closed',async()=>{for(const beats of [[beat(ids[0],1,-61000),beat(ids[1]),beat(ids[2])],[beat(ids[0],1,1000),beat(ids[1]),beat(ids[2])],[beat(ids[0]),beat(ids[1]),beat(ids[2])],[{...beat(ids[0]),signature:beat(ids[1]).signature},beat(ids[1]),beat(ids[2])]]){const r=await checkQl425ProtectedPilotContinuity({...input(beats),previousSequences:{[ids[0]]:beats[0].payload.sequence}},opts);assert.equal(r.connection,'HOLD');}});
+test('failed disable does not falsely claim receiver OFF',async()=>{const r=await checkQl425ProtectedPilotContinuity(input([], {disableOneTest:async()=>{throw Error('offline');}}),opts);assert.equal(r.receiver,'UNKNOWN_MANUAL_OPERATOR_RECOVERY_REQUIRED');assert.equal(r.connection,'HOLD');});
+test('unsigned acceptance or missing protected session cannot authorize monitoring',async()=>{let calls=0;const r=await checkQl425ProtectedPilotContinuity(input(ids.map(id=>beat(id)),{disableOneTest:async()=>{calls++;}}),{...opts,protectedOperatorSession:false});assert.equal(r.state,'HOLD');assert.equal(calls,0);});
