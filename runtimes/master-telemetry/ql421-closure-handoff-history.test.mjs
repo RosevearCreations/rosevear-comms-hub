@@ -135,8 +135,8 @@ test('missing closure or stale proof remains HOLD, even with prior verified meta
  assert.equal(r.ownerAcceptance,'HOLD');
  const b=complete();b.nowMs+=360_000;
  const stale=run(b);
- assert.equal(stale.state,'PROTECTED_THREE_MASTER_HANDOFF_REVIEW');
- assert.equal(stale.cases[0].handoffState,'HOLD_STALE_HANDOFF_PROOF');
+ assert.equal(stale.reason,'CLOSURE_CASE_OR_REVIEW_NOT_ELIGIBLE');
+ assert.equal(stale.receiver,'OFF');
  const c=complete();c.protectedReadAuthorized=false;
  assert.equal(run(c).state,'HOLD');
 });
