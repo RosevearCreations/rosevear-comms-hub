@@ -20,3 +20,106 @@
 .ql374-guide{padding-left:1.4rem}.ql374-boundary{border-left:4px solid #e7be79;padding:.8rem 1rem;background:#29243b;line-height:1.5}
 @media(max-width:680px){.ql374-entry{padding:1rem}.ql374-nav{grid-template-columns:1fr}.ql374-cards{grid-template-columns:1fr}}
 @media(forced-colors:active){.ql374-nav button.ql374-selected,.ql374-cards article,.ql374-truth{border:2px solid CanvasText}}
+
+
+/* QL-440 first design-system alignment for the authenticated personal Master Shell.
+   Reference: owner's ten-screen Workshop Operations PDF (pages 5, 19, 23, 25).
+   Presentation-only: no mock CONNECTED state, artificial counters or activation controls. */
+.ql374-entry{
+ --rosevear-command-bg:#0b1020;--rosevear-command-panel:#111d30;
+ --rosevear-command-raised:#17243a;--rosevear-command-line:#34425c;
+ --rosevear-command-accent:#a78bfa;--rosevear-command-ink:#f6f4ff;
+ --rosevear-command-muted:#c4cee3;--rosevear-command-ok:#85d8bd;
+ --rosevear-command-warn:#f4bf79;--rosevear-command-stop:#ffabb8;
+ color:var(--rosevear-command-ink);background:var(--rosevear-command-bg);
+ border:1px solid var(--rosevear-command-line);border-radius:22px;
+ box-shadow:0 24px 70px #0007;padding:clamp(1rem,2.2vw,2rem);min-width:0
+}
+@supports selector(:has(*)){
+ .ql367-card:has(.ql374-entry){width:min(1440px,100%);max-width:100%}
+}
+.ql374-heading{
+ padding:clamp(1rem,2.4vw,1.75rem);border:1px solid #41416a;
+ border-radius:17px;position:relative;overflow:hidden;
+ background:radial-gradient(circle at 92% 14%,#58357466,transparent 45%),
+ linear-gradient(112deg,#1b2342 0%,#1c1b39 48%,#111a31 100%)
+}
+.ql374-heading:before{
+ content:'ROSEVEAR  /  MASTER OPERATIONS';display:block;
+ color:#cfb8ff;font-size:.7rem;font-weight:800;letter-spacing:.13em;
+ margin-bottom:.7rem
+}
+.ql374-heading h2{font-size:clamp(1.7rem,3vw,2.4rem);letter-spacing:-.025em}
+.ql374-heading p{max-width:82ch;color:var(--rosevear-command-muted)}
+.ql374-badge{border:1px solid #655a8b;background:#2c234c;color:#e8d7ff}
+.ql374-badge.ql374-stop{background:#492039;color:#ffe3e8;border-color:#e59aab}
+.ql374-nav{gap:.55rem}
+.ql374-nav button{
+ border:1px solid var(--rosevear-command-line);border-radius:12px;
+ background:var(--rosevear-command-panel);color:var(--rosevear-command-ink);
+ min-height:66px;padding:1rem;transition:background .12s,border-color .12s
+}
+.ql374-nav button:hover{background:#232746;border-color:#9175d6}
+.ql374-nav button small{color:var(--rosevear-command-muted)}
+.ql374-nav button.ql374-selected{
+ border:1px solid var(--rosevear-command-accent);
+ box-shadow:inset 4px 0 var(--rosevear-command-accent);
+ background:linear-gradient(110deg,#32254f,#1a2341)
+}
+.ql374-panel{
+ min-width:0;border:1px solid var(--rosevear-command-line);
+ border-radius:15px;background:var(--rosevear-command-panel);
+ padding:clamp(1rem,2vw,1.6rem)
+}
+.ql374-panel h3{margin-top:0;color:#faf8ff}
+.ql374-announcement{color:var(--rosevear-command-muted)}
+.ql374-cards{grid-template-columns:repeat(4,minmax(0,1fr));gap:.8rem}
+.ql374-cards article{
+ position:relative;border:1px solid var(--rosevear-command-line);
+ border-top:3px solid #9363d6;border-radius:14px;
+ background:linear-gradient(150deg,#1b2b43,#121d30);
+ padding:1.15rem;min-height:128px
+}
+.ql374-cards article:nth-child(2){border-top-color:#509cd7}
+.ql374-cards article:nth-child(3){border-top-color:#c9a95c}
+.ql374-cards article:nth-child(4){border-top-color:#72b69d}
+.ql374-cards span{font-size:.73rem;letter-spacing:.065em;
+ text-transform:uppercase;font-weight:700;color:var(--rosevear-command-muted)}
+.ql374-cards strong{font-size:clamp(1rem,1.5vw,1.35rem);overflow-wrap:anywhere}
+.ql374-cards small{color:var(--rosevear-command-muted)}
+.ql374-actions button{
+ background:#6c47aa;color:#fff;border:1px solid #a68adc;
+ box-shadow:0 2px 0 #0003
+}
+.ql374-actions button:hover{background:#835bc1}
+.ql374-entry a{color:#e5ccff}
+.ql374-truth{border-color:#507b79;background:#192f39}
+.ql374-truth.ql374-stop{border-color:#df8796;background:#49243b}
+.ql374-boundary{border:1px solid #ae8356;border-left:4px solid #f4bf79;
+ background:#322938;border-radius:10px}
+.ql374-nav button:focus-visible,.ql374-actions button:focus-visible,
+.ql374-entry a:focus-visible{
+ outline:3px solid #ddbbff;outline-offset:3px
+}
+@media(min-width:980px){
+ .ql374-entry{display:grid;grid-template-columns:minmax(195px,235px) minmax(0,1fr);
+  grid-template-areas:'heading heading' 'rail panel' 'boundary boundary';
+  gap:1rem}
+ .ql374-heading{grid-area:heading}
+ .ql374-nav{grid-area:rail;grid-template-columns:minmax(0,1fr);
+  align-content:start;margin:0}
+ .ql374-panel{grid-area:panel}
+ .ql374-boundary{grid-area:boundary;margin:0}
+}
+@media(max-width:979px){
+ .ql374-nav{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .ql374-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:680px){
+ .ql374-nav{grid-template-columns:1fr}
+ .ql374-cards{grid-template-columns:1fr}
+ .ql374-heading{padding:1rem}
+}
+@media(prefers-reduced-motion:reduce){
+ .ql374-nav button{transition:none}
+}
