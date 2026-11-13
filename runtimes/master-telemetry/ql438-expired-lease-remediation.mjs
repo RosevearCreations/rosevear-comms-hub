@@ -57,7 +57,7 @@ function protectedLineage({
   a.masterCount!==3||
   a.permittedNextAction!=='OWNER_SUPERVISED_LEASE_EXCEPTION_REMEDIATION_NO_REENTRY'||
   !ID.test(a.originalIncidentId??'')||!ID.test(a.nextCeremonyId??'')||
-  !REMEDIATIONS[a.leaseDisposition]||
+  (!Object.hasOwn(REMEDIATIONS,a.leaseDisposition))||
   !HEX.test(a.externalAnchorDigest??'')||
   !HEX.test(a.independentReadbackDigest??'')||
   !HEX.test(a.pendingReceiptDigest??'')||!HEX.test(a.finalReceiptDigest??'')||
@@ -80,10 +80,11 @@ function protectedLineage({
   d?.state!=='DURABLE_QL434_SIGNED_NEW_CEREMONY_READINESS_HANDOFF'||
   d.connection!=='HOLD'||d.activationAuthorized!==false||
   d.incidentId!==a.originalIncidentId||d.nextCeremonyId!==a.nextCeremonyId||
+  d.nextEpisodeId!==c.nextEpisodeId||
   !HEX.test(d.readinessRecordDigest??'')||
   e?.state!=='DURABLE_QL433_NEW_CEREMONY_PRECHECK_ONLY'||
   e.connection!=='HOLD'||e.incidentId!==a.originalIncidentId||
-  e.nextCeremonyId!==a.nextCeremonyId||
+  e.nextCeremonyId!==a.nextCeremonyId||e.nextEpisodeId!==c.nextEpisodeId||
   !HEX.test(e.precheckRecordDigest??'')||
   f?.state!=='DURABLE_QL432_EXTERNAL_ANCHOR_RECOVERY_OWNER_REVIEW'||
   f.connection!=='HOLD'||f.incidentId!==a.originalIncidentId||
