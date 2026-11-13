@@ -1,4 +1,4 @@
-name: QL-417-436 protected master evidence audit
+name: QL-417-437 protected master evidence audit
 on:
   pull_request:
     paths:
@@ -23,6 +23,7 @@ on:
       - 'runtimes/master-telemetry/ql434-protected-ceremony-readiness*.mjs'
       - 'runtimes/master-telemetry/ql435-original-host-pilot-witness*.mjs'
       - 'runtimes/master-telemetry/ql436-signed-pilot-shutdown*.mjs'
+      - 'runtimes/master-telemetry/ql437-anchored-off-closure*.mjs'
       - 'runtimes/master-discovery/audit-result*.mjs'
       - '.github/workflows/ql418-owner-sla-audit.yml'
   push:
@@ -49,6 +50,7 @@ on:
       - 'runtimes/master-telemetry/ql434-protected-ceremony-readiness*.mjs'
       - 'runtimes/master-telemetry/ql435-original-host-pilot-witness*.mjs'
       - 'runtimes/master-telemetry/ql436-signed-pilot-shutdown*.mjs'
+      - 'runtimes/master-telemetry/ql437-anchored-off-closure*.mjs'
       - 'runtimes/master-discovery/audit-result*.mjs'
       - '.github/workflows/ql418-owner-sla-audit.yml'
 permissions:
@@ -61,5 +63,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: QL-417 through QL-436 plus six-source result classification
-        run: node --test runtimes/master-telemetry/ql417-discrepancy-worklist.test.mjs runtimes/master-telemetry/ql418-owner-sla-audit.test.mjs runtimes/master-telemetry/ql419-case-escalation-custody.test.mjs runtimes/master-telemetry/ql420-incident-timeline.test.mjs runtimes/master-telemetry/ql421-closure-handoff-history.test.mjs runtimes/master-telemetry/ql422-original-host-witness.test.mjs runtimes/master-telemetry/ql423-signed-custody-replay.test.mjs runtimes/master-telemetry/ql424-supervised-activation.test.mjs runtimes/master-telemetry/ql425-pilot-health-continuity.test.mjs runtimes/master-telemetry/ql426-durable-pilot-custody.test.mjs runtimes/master-telemetry/ql427-independent-witness-recovery.test.mjs runtimes/master-telemetry/ql428-external-anchor-reentry.test.mjs runtimes/master-telemetry/ql429-anchor-enrollment-challenge.test.mjs runtimes/master-telemetry/ql430-supervised-pilot-reentry.test.mjs runtimes/master-telemetry/ql431-post-reentry-continuity.test.mjs runtimes/master-telemetry/ql432-external-incident-recovery.test.mjs runtimes/master-telemetry/ql433-recovery-decision-handoff.test.mjs runtimes/master-telemetry/ql434-protected-ceremony-readiness.test.mjs runtimes/master-telemetry/ql435-original-host-pilot-witness.test.mjs runtimes/master-telemetry/ql436-signed-pilot-shutdown.test.mjs runtimes/master-discovery/audit-result.test.mjs
+      - name: QL-417 through QL-437 plus six-source result classification
+        run: node --test runtimes/master-telemetry/ql417-discrepancy-worklist.test.mjs runtimes/master-telemetry/ql418-owner-sla-audit.test.mjs runtimes/master-telemetry/ql419-case-escalation-custody.test.mjs runtimes/master-telemetry/ql420-incident-timeline.test.mjs runtimes/master-telemetry/ql421-closure-handoff-history.test.mjs runtimes/master-telemetry/ql422-original-host-witness.test.mjs runtimes/master-telemetry/ql423-signed-custody-replay.test.mjs runtimes/master-telemetry/ql424-supervised-activation.test.mjs runtimes/master-telemetry/ql425-pilot-health-continuity.test.mjs runtimes/master-telemetry/ql426-durable-pilot-custody.test.mjs runtimes/master-telemetry/ql427-independent-witness-recovery.test.mjs runtimes/master-telemetry/ql428-external-anchor-reentry.test.mjs runtimes/master-telemetry/ql429-anchor-enrollment-challenge.test.mjs runtimes/master-telemetry/ql430-supervised-pilot-reentry.test.mjs runtimes/master-telemetry/ql431-post-reentry-continuity.test.mjs runtimes/master-telemetry/ql432-external-incident-recovery.test.mjs runtimes/master-telemetry/ql433-recovery-decision-handoff.test.mjs runtimes/master-telemetry/ql434-protected-ceremony-readiness.test.mjs runtimes/master-telemetry/ql435-original-host-pilot-witness.test.mjs runtimes/master-telemetry/ql436-signed-pilot-shutdown.test.mjs runtimes/master-telemetry/ql437-anchored-off-closure.test.mjs runtimes/master-discovery/audit-result.test.mjs
