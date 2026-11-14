@@ -1,0 +1,27 @@
+# Rosevear Comms Hub QL-449 — Independently Anchored Corrective Closure Evidence, Fresh Original-Host OFF Re-Attestation & Owner-Gated Incident Disposition Continuity
+
+## Strict safety boundary
+
+QL-449 records verifiable historical evidence for an **incident disposition review**, not final incident closure or a current physical receiver OFF claim. Even a successful review retains connection=HOLD, activationAuthorized=false, physicalReceiverCurrentlyOff=false, incidentStatus=OPEN, manualIsolationAndIndependentOffRequired=true and slaveGate=HOLD_NEXT_MASTER_INTEGRATION_STAGE. It has no device-control channel.
+
+## Required protected evidence ceremony
+
+1. **Exact original QL-448 source.** Admit only a QL-448 DURABLE_QL448_CORRECTIVE_PRECONDITIONS_EVIDENCED outcome with exceptionClosurePreconditionsEvidenced=true, matching protected one-use PENDING + REVIEWED ledger receipts, no conflicting EXCEPTION receipt, three Master reports, QL-448 long-horizon digest and OPEN/HOLD/disabled flags. QL-448 historical continuity without an exception does not qualify.
+2. **Trusted independent authority.** Require verified original Windows-host session on DESKTOP-AE894KC, trusted clock, verified original private QL-448 custody, distinct owner roles, independently verified pins and nine different Ed25519 signer keys: original Comms source, independent external anchor, original host, independent observer, three Master systems and two separate owners. Synthetic fixtures can only test the mechanism, not prove enrollment.
+3. **One-use PENDING.** A new scoped QL-449 ceremony ID and challenge nonce distinct from QL-448 are claimed before any external I/O in an exclusive fsynced 0600 file under a 0700 private directory; exact record digest is read back. Any crash, corruption, replay or unauthorized directory remains HOLD requiring supervised recovery.
+4. **Original open incident readback.** Verify the external original Comms source Ed25519 receipt for the exact QL-448 summary, prior REVIEWED receipt and long-horizon digest, with OPEN_HOLD and fresh observedAt.
+5. **Independently anchored corrective closure evidence.** Independently retrieve and verify an anchor-signing authority receipt referencing the exact prior QL-448 result, signed Comms source digest, ceremony/nonce, unique anchor ID, positive sequence, historical-only disposition and timestamp after source. The anchor does not represent current physical OFF or final closure.
+6. **Fresh original-host OFF re-attestation.** Obtain the original host's separate Ed25519 signed readback for exact anchor digest, original Windows ID, incident, ceremony, challenge and QL-448 receipt, host sequence higher than anchor, and fresh time after anchor. Signed ON/OFF, isolation lock, revoked lease and armed watchdog are verified as data; never infer a state without an independent source.
+7. **Independent receiver witness.** Obtain fresh separately pinned signed OFF/ON observation after host with strictly higher sequence, same nonce/ceremony/prior QL-448 and independently anchored digest, exact signed host-payload hash and explicit isolation confirmation.
+8. **Conservative disposition.** Only when both host and independent observer report OFF, and all signed isolation/lease/watchdog booleans agree safe, classify SIGNED_ANCHORED_HISTORICAL_OFF_REVIEW_ONLY; this is a historical review and still leaves incident OPEN/HOLD. Any signed ON, divergence, missing isolation lock, unrevoked lease, unarmed watchdog or observer isolation failure yields SIGNED_OFF_REATTESTATION_EXCEPTION_INCIDENT_OPEN. Missing or invalid signatures are HOLD.
+9. **Three Master corrective disposition votes.** Verify fresh distinct signed responses from Rosevear AI Hub, Comms Hub and AI Data Platform binding exact prior QL-448 receipt, anchored OFF evidence digest, case and ceremony, classification, explicit open/HOLD-only disposition and reviewed timestamps after independent witness. No Master can authorize CONNECTED or closure.
+10. **Two-owner review, not closure.** Independent source/master owners both sign the same Master report digest and OPEN_HOLD decision. Recheck prior QL-448 custody, fresh signed observations, exclusive PENDING and absence of any previous REVIEW/EXCEPTION receipt. Commit immutable mutually exclusive historical REVIEW or safety EXCEPTION receipt with file and directory fsync and independent readback. Physical activation, live OFF, and final closure remain prohibited.
+
+## Verification and release
+
+- Run: node --test runtimes/master-telemetry/ql449-anchored-incident-disposition.test.mjs
+- Test fixtures use generated synthetic Ed25519 keys and isolated temporary ledger directories. They verify successful historical anchored review, ON/divergent exceptions, prior QL-448 custody, forged source/anchor/host/observer, wrong host ID, stale or regressed times and sequences, three-Master and owner veto, replay and tamper HOLD behavior.
+- GitHub PR and postmerge production checks: QL-417–449 protected audit, unchanged QL-336A app/Windows security gates, Cloudflare production Worker build and exact final-main public JS/CSS SHA-256 parity.
+- Publish identical four-file code/test/docs/workflow changes to dev via PR and independently scoped protected main PR. Do not merge unrelated divergent dev history.
+
+**Next proposed QL-450 — Independent Post-Disposition OFF Stability Sampling, Closure-Authority Boundary Attestation & Three-Master Recurrence Prevention Continuity.**
