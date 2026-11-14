@@ -52,7 +52,7 @@ function fixture({priorException=false,recoveryExpired=false,ceremonyExpired=fal
   incidentId,monitorId,challengeNonce,ql454ReceiptDigest:priorOutcome.recordDigest,
   sourceDigest:digest(p),recoveryStatus:recovered?'RECOVERED_UNDER_HOLD':'UNRESOLVED_OPEN_HOLD',
   recoveryIssuedAt:iso(now-11500),
-  recoveryExpiresAt:iso(now+(recoveryExpired?-100:20000)),
+  recoveryExpiresAt:iso(now+(recoveryExpired?-100:10000)),
   signedAt:iso(now-11000)};
  const h={schema:'rosevear.ql455.original-host-off-review.v1',
   incidentId,monitorId,challengeNonce,ql454ReceiptDigest:priorOutcome.recordDigest,
@@ -71,11 +71,11 @@ function fixture({priorException=false,recoveryExpired=false,ceremonyExpired=fal
   originalHostId:'DESKTOP-AE894KC',receiverId:'ISOLATED_COMMS_RECEIVER',
   sensorId:'ql455_new_sensor_abc12345',originalSensorId,
   receiverState:witnessOn?'ON':'OFF',isolationConfirmed:physicalIsolation,
-  observerSequence:102,observedAt:iso(now-7000)};
+  observerSequence:102,observedAt:iso(now-3000)};
  const c={schema:'rosevear.ql455.historical-ceremony-authority.v1',
   incidentId,monitorId,ql454ReceiptDigest:priorOutcome.recordDigest,
   recoveryDigest:digest(r),ceremonyId:'ql455_historical_ceremony_12345',
-  issuedAt:iso(now-10500),expiresAt:iso(now+(ceremonyExpired?-100:20000)),
+  issuedAt:iso(now-10500),expiresAt:iso(now+(ceremonyExpired?-100:10000)),
   authorityDecision:'HISTORICAL_READINESS_ONLY_NO_CLOSURE',
   incidentStatus:'OPEN_HOLD',closureAuthorized:false,
   activationAuthorized:false,physicalReceiverCurrentlyOff:false};
@@ -93,13 +93,13 @@ function fixture({priorException=false,recoveryExpired=false,ceremonyExpired=fal
   incidentId,monitorId,ql454ReceiptDigest:priorOutcome.recordDigest,
   monitorDigest,classification,closureDecision,incidentStatus:'OPEN_HOLD',
   closureAuthorized:false,activationAuthorized:false,physicalReceiverCurrentlyOff:false,
-  separateCeremonyRequired:true,attestedAt:iso(now-5000)};
+  separateCeremonyRequired:true,attestedAt:iso(now-2000)};
  const gateDigest=digest(g);
  const votes=MASTERS.map(masterId=>({
   schema:'rosevear.ql455.three-master-expiry-review.v1',
   incidentId,monitorId,masterId,ql454ReceiptDigest:priorOutcome.recordDigest,
   monitorDigest,gateDigest,classification,closureDecision,
-  incidentStatus:'OPEN_HOLD',reviewedAt:iso(now-3000)}));
+  incidentStatus:'OPEN_HOLD',reviewedAt:iso(now-1500)}));
  const owner={schema:'rosevear.ql455.dual-owner-expiry-review.v1',
   incidentId,monitorId,sourceOwnerId:'Original_Source_Owner',
   masterOwnerId:'Independent_Master_Owner',
@@ -229,7 +229,7 @@ test('QL455 independent gate, three Master votes and both owners cannot override
 test('QL455 independent final clock prevents accepting expired recovery/authority and stale physical witness',async()=>{
  await rejected(f=>{f.opts.readTrustedNowMs=()=>f.now+22000;},
   'QL455_PROTECTED_CUSTODY_OR_INDEPENDENT_OFF_EXPIRED');
- await rejected(f=>{f.opts.readTrustedNowMs=()=>f.now+8500;},
+ await rejected(f=>{f.opts.readTrustedNowMs=()=>f.now+11000;},
   'QL455_RECOVERY_OR_CEREMONY_EXPIRED_DURING_REVIEW');
  await rejected(f=>{f.opts.readTrustedNowMs=()=>f.now-1;},'QL455_TRUSTED_CLOCK_DRIFT');
 });
