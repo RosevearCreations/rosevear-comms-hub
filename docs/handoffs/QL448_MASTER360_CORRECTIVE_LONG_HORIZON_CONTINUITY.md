@@ -1,0 +1,29 @@
+# Rosevear Comms Hub QL-448 — Independent Corrective Remediation Receipts, Original-Host Isolation Exception Closure Preconditions & Three-Master Long-Horizon Continuity Review
+
+## Safety and authority boundary
+
+QL-448 is signed historical evidence intake for open QL-447 cases. Even successful isolation correction **does not close** a recurrence incident, attest current physical OFF, restore a receiver, permit activation, grant connection, or remotely operate the original Windows host.
+
+All outcomes retain connection=HOLD, activationAuthorized=false, physicalReceiverCurrentlyOff=false, receiver=UNKNOWN_REQUIRES_FRESH_INDEPENDENT_OFF, manualIsolationAndIndependentOffRequired=true, incidentStatus=OPEN and slaveGate=HOLD_NEXT_MASTER_INTEGRATION_STAGE. Signed historical OFF is not a live readback.
+
+## Protected corrective review
+
+1. **Exact source.** Accept only the exact durably receipted QL-447 isolation exception or historical isolation reconfirmation case, with its original incident and follow-up IDs, independently verified private PENDING and EXCEPTION/RECONFIRMED receipt digests, noncontradictory custody, three Master signatures and open HOLD status. Reject a closed case.
+2. **Independent trust.** Require original protected host session for DESKTOP-AE894KC, verified trusted time, protected QL-447 custody, separate owner roles and nine different pinned Ed25519 keys: original Comms source, independent corrective officer, original host, independent receiver observer, three Masters and two owners.
+3. **Nonreplayable private claim.** Require fresh QL-448 scoped remediation ID and challenge. Before any external reads, atomically create a 0600 PENDING receipt in 0700 directory; fsync file and directory and re-read exact hash. Crash/replay/corrupt/symlink custody is HOLD and must not silently retry.
+4. **Original Comms recurrence incident.** Independently fetch signed open incident source bound to the exact QL-447 summary, QL-447 durable result and original classification with fresh timestamp and OPEN_HOLD status.
+5. **Independent corrective remediation receipt.** Separately signed officer's disposition, incident, remediation ID, original source digest, exact QL-447 digest, fresh timestamp and reported lease-revocation/isolation-lock/watchdog booleans. A prior exception can report SIGNED_CORRECTIVE_ACTION_COMPLETE_UNDER_HOLD or SIGNED_CORRECTIVE_ACTION_INCOMPLETE_KEEP_HOLD; signed incomplete remediation cannot be treated as a successful correction. Prior reconfirmed QL-447 evidence permits NO_EXCEPTION_SIGNED_CONTINUITY_RECHECK only. A self-asserted or forged officer receipt is HOLD.
+6. **Three long-horizon host observations.** Require SHORT, MEDIUM at least 10 seconds after SHORT, and LONG at least 30 seconds after SHORT. Original Windows host must separately sign incident, challenge, prior QL-447 and remediation digests, incrementing sequence, prior independent observation digest, receiver ON/OFF and isolation/lease/watchdog booleans. All times must be monotonic and within 60 seconds of trusted now.
+7. **Independent observers.** Every horizon requires its own distinct receiver observer signature binding the matching host payload, previous signed receipt, nonce, incident, horizon, later observedAt and strictly greater sequence. An ON, host/observer mismatch, isolation failure or incomplete corrective receipt is an unresolved exception; missing/invalid signatures are HOLD.
+8. **Closure preconditions are not closure.** A prior QL-447 exception may set exceptionClosurePreconditionsEvidenced=true **only** when the signed independent corrective receipt reports completed under HOLD and all six signed host/observer observations are OFF with lease revoked, isolation lock, watchdog and independent isolation confirmed. Outcome is SIGNED_CORRECTIVE_PRECONDITIONS_EVIDENCED_INCIDENT_OPEN. Existing historical stable QL-447 cases may show SIGNED_LONG_HORIZON_HISTORICAL_CONTINUITY_INCIDENT_OPEN but never a new exception closure. Failed signed correction produces SIGNED_LONG_HORIZON_ISOLATION_EXCEPTION_OPEN. All cases remain OPEN/HOLD.
+9. **Three-Master follow-up.** Distinct pinned fresh Ed25519 votes from Rosevear AI Hub, Comms Hub and AI Data Platform must bind the exact horizon digest, source QL-447 durable receipt, remediation ID, classification, signed decision and OPEN_HOLD. No Master can vote to close/connect.
+10. **Two-owner continuity.** Separate source/master owners sign exactly the same canonical Master digest and historic-only corrective result, retaining OPEN_HOLD. Before committing, recheck prior QL-447 protected custody, QL-448 PENDING, absence of alternative outcomes and evidence freshness. Exclusively fsync either REVIEWED (historical evidence only) or EXCEPTION, re-read digest, never retry interrupted actions without explicit owner-supervised recovery.
+
+## Verification and release
+
+- Test command: node --test runtimes/master-telemetry/ql448-corrective-remediation-continuity.test.mjs
+- Covers valid repaired exception and historical continuity; ON and conflicting receiver signatures; lease, lock, watchdog, remediation incomplete; wrong original host; incorrect horizon timing; invalid signer; three-Master and dual-owner veto; one-use, crash and tamper handling.
+- Synthetic tests do not represent a genuine receipt from a live original Windows host or an actual completed physical remediation.
+- Require protected QL-417–448 audit and unchanged application QL-336A / Windows owner safety checks for PR and main. Promote the same exact four files to dev then a scoped main release based on the current main. No unrelated dev history. Require Cloudflare Workers production check and public JS/CSS SHA-256 parity on exact final main before declaring GREEN.
+
+**Next proposed QL-449 — Independently Anchored Corrective Closure Evidence, Fresh Original-Host OFF Re-Attestation & Owner-Gated Incident Disposition Continuity.**
