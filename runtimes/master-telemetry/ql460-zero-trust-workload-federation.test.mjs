@@ -5,7 +5,7 @@ import {mkdtempSync,rmSync,writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {openQl459RegistryLedger} from './ql459-registry-enrollment-handoff.mjs';
-import {APPS,MASTERS,TOPOLOGY,openQl460FederationLedger,readQl460Federation,
+import {APPS,SOURCE_IDS,MASTERS,TOPOLOGY,openQl460FederationLedger,readQl460Federation,
  runQl460FederationReview} from './ql460-zero-trust-workload-federation.mjs';
 const hash=x=>createHash('sha256').update(JSON.stringify(x)).digest('hex');
 const iso=x=>new Date(x).toISOString();
@@ -44,7 +44,7 @@ function fixture({priorException=false,revoked=false,tokenExpired=false}={}){
  const issuerPayloads=APPS.map((app,i)=>({
   schema:'rosevear.ql460.issuer-lifecycle.v1',incidentId,batchId,challengeNonce,
   ql459ReceiptDigest:previous.recordDigest,registryDigest:prior.registryDigest,
-  appId:app,role:ROLES[i],repoFullName:'RosevearCreations/'+app,
+  appId:app,sourceId:SOURCE_IDS[i],role:ROLES[i],repoFullName:'RosevearCreations/'+app,
   sourceMainSha:expectedMainShas[app],keyPin:workloadKeys[app].pin,
   issuerId:'ql460_issuer_'+i+'_abc123456',credentialId:'ql460_cert_'+i+'_abc123456',
   generation:2,priorCredentialDigest:(i+1).toString(16).repeat(64),
@@ -59,7 +59,7 @@ function fixture({priorException=false,revoked=false,tokenExpired=false}={}){
  const tokenPayloads=APPS.flatMap((app,i)=>MASTERS.map((audience,j)=>({
   schema:'rosevear.ql460.workload-proof.v1',incidentId,batchId,challengeNonce,
   ql459ReceiptDigest:previous.recordDigest,issuerDigest:hash(issuerPayloads[i]),
-  appId:app,sourceMainSha:expectedMainShas[app],audience,
+  appId:app,sourceId:SOURCE_IDS[i],sourceMainSha:expectedMainShas[app],audience,
   tokenId:'ql460_token_'+i+'_'+j+'_abc123456',
   subjectId:'ql460_subject_'+i+'_abc123456',operation:'SOURCE_READ_ONLY',
   tenantBoundary:'ISOLATED_READ_ONLY',scope:'SOURCE_READ_ONLY',
@@ -170,6 +170,10 @@ test('QL460 issuer identities reject forged keys, tenant privilege, revocation e
   f.issuerKeys.rosiedazzlers);},'QL460_ISSUER_PIN_ROLE_LIFECYCLE_OR_SCOPE_DENIED');
  await rejected(f=>{f.env.issuers[1]=signed({...f.issuerPayloads[1],generation:1},
   f.issuerKeys['rosevear-ai-hub']);},'QL460_ISSUER_PIN_ROLE_LIFECYCLE_OR_SCOPE_DENIED');
+ await rejected(f=>{f.env.issuers[5]=signed({...f.issuerPayloads[5],sourceId:'devilndove-site'},
+  f.issuerKeys['devilndove-site']);},'QL460_ISSUER_PIN_ROLE_LIFECYCLE_OR_SCOPE_DENIED');
+ await rejected(f=>{f.env.issuers[3]=signed({...f.issuerPayloads[3],sourceId:'iCamp'},
+  f.issuerKeys.iCamp);},'QL460_ISSUER_PIN_ROLE_LIFECYCLE_OR_SCOPE_DENIED');
  await rejected(f=>{f.env.issuers[0].signature=f.env.issuers[1].signature;},
   'QL460_ISSUER_PIN_ROLE_LIFECYCLE_OR_SCOPE_DENIED');
 });
@@ -187,6 +191,8 @@ test('QL460 workload rejects master impersonation, wrong audience, token replay,
   'QL460_WORKLOAD_SIGNATURE_AUDIENCE_REPLAY_OR_SCOPE_DENIED');
  await rejected(f=>{f.env.tokens[9]=signed({...f.tokenPayloads[9],expiresAt:iso(f.now+65000)},
   f.workloadKeys.iCamp);},'QL460_WORKLOAD_SIGNATURE_AUDIENCE_REPLAY_OR_SCOPE_DENIED');
+ await rejected(f=>{f.env.tokens[20]=signed({...f.tokenPayloads[20],sourceId:'devilndove'},
+  f.workloadKeys.rosiedazzlers);},'QL460_WORKLOAD_SIGNATURE_AUDIENCE_REPLAY_OR_SCOPE_DENIED');
  await rejected(f=>{f.env.tokens[5]=signed({...f.tokenPayloads[5],tenantBoundary:'SHARED'},
   f.workloadKeys['rosevear-ai-hub']);},'QL460_WORKLOAD_SIGNATURE_AUDIENCE_REPLAY_OR_SCOPE_DENIED');
 });
