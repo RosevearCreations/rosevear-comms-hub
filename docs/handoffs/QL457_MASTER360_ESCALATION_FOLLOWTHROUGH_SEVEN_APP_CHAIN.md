@@ -1,0 +1,23 @@
+# QL-457 — Independent Escalation Follow-Through, Ceremony Re-enrollment Expiry Recurrence & Three-Master Closure-Evidence Continuity Monitoring
+
+## Unchanged fail-closed boundary
+Software evidence only. All responses, including signed historical review, preserve **incident OPEN / connection HOLD**, no activation, no closure, no current physical receiver-OFF assertion. Source-only software GREEN cannot confer operating authority on original Windows host `DESKTOP-AE894KC`. No tool in this module actuates the receiver.
+
+## Exact one-use independent record
+1. Verify original **QL-456** source summary and exact private immutable QL-456 PENDING + REVIEW/EXCEPTION receipts, original incident, master count, canonical digests and dual owner HOLD. A signed prior exception cannot silently become a healthy outcome.
+2. Exclusively create 0600 QL-457 PENDING in a 0700 protected absolute directory; fsync, read back and reject symlink, replay, tampered custody or interrupted evidence intake. Do not retry a consumed nonce silently.
+3. Require **12 distinct pinned Ed25519 keys** from original Comms, independent escalation officer, original Windows host, external anchor, independent physical sensor, separately re-enrolled ceremony authority, independent closure veto, three Masters, two owners. Every signature is source-, incident-, challenge- and predecessor-bound.
+4. Independent escalation follow-through must contain signed original QL-456 monitor digest, fresh follow-up case ID, evidence digest, signed timestamp, `SIGNED_FOLLOWUP_ACKNOWLEDGED_OPEN_HOLD` or `FOLLOWUP_PENDING_OPEN_HOLD`, and bounded signed recovery validity. Pending is an OPEN exception, not closure.
+5. Original Windows host OFF/ON, isolation lock, revoked lease and watchdog plus independent anchored physical OFF/ON witness remain mandatory. Recurrence sample includes bounded >10 s history window, strictly increasing previous/current observer sequence and integer recurrence count; any signed recurrence >0 remains an exception even if current sample says OFF. Independent witness must be <=15 s fresh at intake and final write.
+6. Re-enrolled historical ceremony supplies a **new** authority ID, prior ceremony ID, prior enrollment digest, distinct current enrollment digest, generation >=2, signed status `REENROLLED_REVIEW_ONLY` or `PENDING_REENROLLMENT_OPEN_HOLD` and finite expiration. Signed expiry, pending re-enrollment or reused enrollment is OPEN exception or HOLD, never authority to activate/close.
+7. Independent closure-veto signer, three distinct Master report signatures and both distinct owner signatures must bind the exact classification, follow-through/recurrence digest and all previous custody; each denies activation, closure and present physical-OFF assertion.
+8. Re-read trusted clock, source QL-456 custody, signed witness freshness, escalation validity and ceremony expiry immediately before fsynced one-use REVIEW/EXCEPTION final receipt. If the healthy evidence expires during review, HOLD; if already signed expired or recurrent, durable EXCEPTION OPEN. No live physical actuation or future authority is claimed.
+
+## Seven-application connectivity order (source-only, never a grant)
+`ai-data-platform → rosevear-ai-hub → rosevear-comms-hub → iCamp → yw → devilndove-site → rosiedazzlers`. First three are Masters; iCamp and yw are tenant/service shells, final two internal companies. Record per-application exact `main` SHA, provenance, source signer/owner, external verification result and pending action. Never infer CONNECTED or GREEN runtime from GitHub CI. Link the shared public handoff chain, never distribute credentials.
+
+**Tests** `node --test runtimes/master-telemetry/ql457-escalation-followthrough-reenrollment-recurrence.test.mjs`; protected QL-417–457 suite, unchanged QL-336A app and original-host Windows safety, Production Workers and exact final-main public JS/CSS SHA-256 parity. Synthetic Ed25519 samples test prior exception, follow-up pending, witnessed recurrence, authority generation/expiry, forged pin, changed source digest, signed host ON, stale physical observation, one-use replay, final TOCTOU expiry and corruption.
+
+**Next proposed QL-458:** Independent Multi-Horizon Follow-Through SLA Aging, Ceremony Re-enrollment Drift Challenge & Seven-App Connectivity Provenance Reconciliation.
+
+**Queue accounting:** QL-458 is the only explicitly named immediate successor. The older QL-311–330 queue document is obsolete as a current completion counter; no finite terminal build count or fixed complete future schedule is established by this record. Do not claim 16 builds remain.
