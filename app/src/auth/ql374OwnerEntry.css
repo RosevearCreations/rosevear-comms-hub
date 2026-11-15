@@ -26,11 +26,14 @@
    Reference: owner's ten-screen Workshop Operations PDF (pages 5, 19, 23, 25).
    Presentation-only: no mock CONNECTED state, artificial counters or activation controls. */
 .ql374-entry{
- --rosevear-command-bg:#0b1020;--rosevear-command-panel:#111d30;
- --rosevear-command-raised:#17243a;--rosevear-command-line:#34425c;
- --rosevear-command-accent:#a78bfa;--rosevear-command-ink:#f6f4ff;
- --rosevear-command-muted:#c4cee3;--rosevear-command-ok:#85d8bd;
- --rosevear-command-warn:#f4bf79;--rosevear-command-stop:#ffabb8;
+ /* Build 407: rosevear-master-instrument.v1 — exact shared Master palette. */
+ --rosevear-command-bg:#050b16;--rosevear-command-surface:#081625;
+ --rosevear-command-panel:#0b1c2d;--rosevear-command-raised:#0d2135;
+ --rosevear-command-line:rgba(121,156,196,.2);
+ --rosevear-command-accent:#9a46ff;--rosevear-command-blue:#31a9ff;
+ --rosevear-command-ink:#eef6ff;--rosevear-command-muted:#8ca3b8;
+ --rosevear-command-ok:#2ed58f;--rosevear-command-warn:#ffbd4a;
+ --rosevear-command-stop:#ff5c72;
  color:var(--rosevear-command-ink);background:var(--rosevear-command-bg);
  border:1px solid var(--rosevear-command-line);border-radius:22px;
  box-shadow:0 24px 70px #0007;padding:clamp(1rem,2.2vw,2rem);min-width:0
