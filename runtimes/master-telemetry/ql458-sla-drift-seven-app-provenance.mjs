@@ -352,7 +352,7 @@ export async function runQl458ProvenanceReview({
  const ceremonyDrifted=Math.abs(c.issuerClockDriftMs)>30000;
  const recoveryExpired=opts.nowMs>=at(r.recoveryExpiresAt);
  const ceremonyExpired=opts.nowMs>=at(c.expiresAt);
- const priorException=s.state==='DURABLE_QL457_ESCALATION_OR_REENROLLMENT_EXCEPTION_OPEN';
+ const priorException=s.state==='DURABLE_QL457_FOLLOWUP_RECURRENCE_EXCEPTION_OPEN';
  const healthy=!priorException&&!recoveryExpired&&!ceremonyExpired&&
   !slaEscalated&&!ceremonyDrifted&&denied===0&&s.recurrenceCount===0&&
   r.recoveryStatus==='ESCALATION_OUTCOME_ATTESTED_OPEN_HOLD'&&
