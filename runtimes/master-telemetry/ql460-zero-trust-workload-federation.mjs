@@ -6,6 +6,8 @@ import {isAbsolute,resolve,join} from 'node:path';
  * Proof-only, no outbound network, no secret provisioning, no receiver activation. */
 export const APPS=Object.freeze(['ai-data-platform','rosevear-ai-hub','rosevear-comms-hub',
  'iCamp','yw','devilndove-site','rosiedazzlers']);
+export const SOURCE_IDS=Object.freeze(['ai-data-platform','rosevear-ai-hub','rosevear-comms-hub',
+ 'icamp','yw','devilndove','rosiedazzlers']);
 export const MASTERS=Object.freeze(['ai-data-platform','rosevear-ai-hub','rosevear-comms-hub']);
 export const TOPOLOGY='rosevear-master-shell-seven-apps.v1';
 const SCHEMA='rosevear.ql460.workload-federation.v1';
@@ -113,12 +115,12 @@ function validQl459(s,ledger){
  }catch{return false;}
 }
 const issuerFields=['schema','incidentId','batchId','challengeNonce','ql459ReceiptDigest',
- 'registryDigest','appId','role','repoFullName','sourceMainSha','keyPin',
+ 'registryDigest','appId','sourceId','role','repoFullName','sourceMainSha','keyPin',
  'issuerId','credentialId','generation','priorCredentialDigest','revokedPriorPinDigest',
  'revokedPriorAt','scope','tenantBoundary','audiences','issuedAt','expiresAt',
  'issuerDisposition','authorityTransfer'];
 const proofFields=['schema','incidentId','batchId','challengeNonce','ql459ReceiptDigest',
- 'issuerDigest','appId','sourceMainSha','audience','tokenId','subjectId','operation',
+ 'issuerDigest','appId','sourceId','sourceMainSha','audience','tokenId','subjectId','operation',
  'tenantBoundary','scope','notBefore','expiresAt','signedAt','runtimeConnection',
  'authorityTransfer'];
 const masterFields=['schema','incidentId','batchId','masterId','issuerSetDigest',
@@ -179,7 +181,7 @@ export async function runQl460FederationReview({
    c.schema!=='rosevear.ql460.issuer-lifecycle.v1'||
    c.incidentId!==id||c.batchId!==batchId||c.challengeNonce!==challengeNonce||
    c.ql459ReceiptDigest!==prior||c.registryDigest!==s.registryDigest||
-   c.appId!==app||c.role!==ROLES[i]||
+   c.appId!==app||c.sourceId!==SOURCE_IDS[i]||c.role!==ROLES[i]||
    c.repoFullName!=='RosevearCreations/'+app||
    c.sourceMainSha!==opts.expectedMainShas[app]||
    c.keyPin!==opts.workloadPins[app]||
@@ -218,7 +220,7 @@ export async function runQl460FederationReview({
     p.schema!=='rosevear.ql460.workload-proof.v1'||
     p.incidentId!==id||p.batchId!==batchId||p.challengeNonce!==challengeNonce||
     p.ql459ReceiptDigest!==prior||p.issuerDigest!==issuerDigest||
-    p.appId!==app||p.sourceMainSha!==opts.expectedMainShas[app]||
+    p.appId!==app||p.sourceId!==SOURCE_IDS[i]||p.sourceMainSha!==opts.expectedMainShas[app]||
     p.audience!==target||!ID.test(p.tokenId??'')||tokenIds.has(p.tokenId)||
     !ID.test(p.subjectId??'')||p.operation!=='SOURCE_READ_ONLY'||
     p.tenantBoundary!=='ISOLATED_READ_ONLY'||p.scope!=='SOURCE_READ_ONLY'||
