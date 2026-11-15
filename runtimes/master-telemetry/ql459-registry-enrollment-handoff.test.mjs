@@ -175,7 +175,7 @@ test('QL459 requires original protected QL458 receipts, exact incident and pre-e
  await denied(f=>{f.opts.appPins.iCamp=f.opts.appPins.yw;},
   'QL459_TWELVE_DISTINCT_TRUST_PINS_AND_EXACT_SOURCE_SHAS_REQUIRED');
  await denied(f=>{f.opts.expectedMainShas.yw='1'.repeat(40);},
-  'QL459_TWELVE_DISTINCT_TRUST_PINS_AND_EXACT_SOURCE_SHAS_REQUIRED');
+  'QL459_SIGNED_CERTIFICATE_SCOPE_OR_INDEPENDENT_ACK_INVALID');
  await denied(f=>{f.args.challengeNonce=f.previous.challengeNonce;},
   'QL459_INDEPENDENT_PREDECESSOR_AND_TRUST_ROOT_REQUIRED');
 });
