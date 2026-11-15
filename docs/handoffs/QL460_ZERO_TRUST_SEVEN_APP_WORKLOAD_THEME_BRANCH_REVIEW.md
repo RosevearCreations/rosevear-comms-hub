@@ -13,6 +13,8 @@ Topology `rosevear-master-shell-seven-apps.v1`; read-only source manifest and ex
 6. devilndove-site — Devil n Dove internal company
 7. rosiedazzlers — Rosie Dazzlers internal company
 
+**Source-ID crosswalk:** repository `iCamp` is signed source `icamp`; repository `devilndove-site` is signed source `devilndove`; all other application source IDs match their repository names. QL-460 cryptographically binds both the repository and the source ID; mismatches are HOLD, not an alias-based privilege grant.
+
 **Strict signed audience expansion** is a data-only proof: each of seven app workload identities signs three separate short-lived audience-specific tokens (`7 × 3 = 21`) exclusively for the three named Masters, with `SOURCE_READ_ONLY`, `ISOLATED_READ_ONLY`, no authority transfer and `UNVERIFIED_HOLD`. The Devil n Dove and Rosie credentials must also have all three Master audiences in the signed issuer record, but **this does not establish an active network route or permit private business data exchange**.
 
 ## Seven-tier security and cryptographic governance
