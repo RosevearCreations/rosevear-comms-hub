@@ -111,7 +111,9 @@ function fixture({priorException=false,recoveryExpired=false,ceremonyExpired=fal
   sourceStatus:deniedApp&&i===4?'SOURCE_DENIED':'SOURCE_SIGNED_HELD'}));
  const manifests=manifestPayloads.map((m,i)=>signed(m,appKeys[m.appId]));
  const sourceManifestDigest=digest(manifestPayloads);
- const SLA={followUp5m:slowAck,ownerResponse1h:staleOwner,followUp24h:oldCase};
+ const SLA={followUp5m:Date.parse(r.followUpAcknowledgedAt)-Date.parse(r.followUpOpenedAt)>300000,
+  ownerResponse1h:now-Date.parse(r.lastOwnerResponseAt)>3600000,
+  followUp24h:now-Date.parse(r.followUpOpenedAt)>86400000};
  const slaEscalated=Object.values(SLA).some(Boolean);
  const health=!priorException&&!recoveryExpired&&!ceremonyExpired&&!reenrollmentPending&&
   !slaEscalated&&!ceremonyDrift&&!deniedApp&&!priorRecurrence&&
