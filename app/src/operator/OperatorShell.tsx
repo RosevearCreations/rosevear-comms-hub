@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import App from '../App';
 import type { BrandId } from '../types';
 import { DisabledInterfacePreview } from './DisabledInterfacePreview';
@@ -26,6 +26,7 @@ import { Ql188SecurityHarnessPreview } from './Ql188SecurityHarnessPreview';
 import { Ql189OperationsSafetyPreview } from './Ql189OperationsSafetyPreview';
 import { Ql190IndependentReviewPacketPreview } from './Ql190IndependentReviewPacketPreview';
 import { Ql191OperatorDashboard } from './Ql191OperatorDashboard';
+
 import { Ql191AdditionalOrganizationPreview } from './Ql191AdditionalOrganizationPreview';
 import { Ql192UnifiedInbox } from './Ql192UnifiedInbox';
 import { emptyInboxTriagePresets, type InboxTriagePresets } from './ql292InboxTriage';
@@ -121,6 +122,9 @@ import './operator-shell.css';
 import './ql312-theme.css';
 import './ql313-responsive.css';
 import './ql349-dark-appearance.css';
+
+const Ql462UnifiedServerShell = lazy(() => import('./Ql462UnifiedServerShell')
+  .then(module => ({default:module.Ql462UnifiedServerShell})));
 
 const workspaces: ReadonlyArray<{ id: OperatorWorkspace; label: string; description: string }> = [
   { id: 'accessibility_review', label: 'Accessibility owner walkthrough', description: 'Device-by-device keyboard, focus, contrast, zoom and screen-reader review queue' },
@@ -360,6 +364,11 @@ export function OperatorShell() {
             <span>Only fabricated samples and browser-local demo records. No live integrations.</span>
         </div>
       </header>
+
+      {['dashboard','it_command','system_status'].includes(workspace)&&
+        <Suspense fallback={<div role="status">Loading Master Server Shell preview</div>}>
+          <Ql462UnifiedServerShell />
+        </Suspense>}
 
       <div className="ql172-layout">
         <button ref={mobileNavigationButtonRef} type="button" className="ql313-mobile-toggle"
