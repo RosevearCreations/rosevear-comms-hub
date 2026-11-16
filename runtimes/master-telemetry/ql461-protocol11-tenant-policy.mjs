@@ -99,7 +99,7 @@ export function certifyQl461Matrix(envelope,{controllerPin,controllerSha,nowMs}=
   if(seen.has(key)||p.policyVersion!==1||
    p.subjectScope!==EXPECTED_SCOPES[t]||
    p.capabilityNamespace!==p.appId+'.'+tierNS(p.tier)||
-   p.allowedActions.length===0||!Array.isArray(p.allowedActions)||
+   !Array.isArray(p.allowedActions)||p.allowedActions.length===0||
    p.allowedActions.some(a=>!['READ','WRITE','EXECUTE','APPROVE'].includes(a))||
    new Set(p.allowedActions).size!==p.allowedActions.length||
    !p.resourceScopeDefined||!p.denyByDefault||
@@ -167,13 +167,14 @@ export function evaluateQl461Authorization({
     state:'APP_LOCAL_GATE_ONLY',localOperationsRemainAvailable:true};
   return HOLD('QL461_LOCAL_OWNER_POLICY_NOT_PROVEN','LOCAL');
  }
- if(!matrixCert||matrixCert.state!=='SIGNED_MATRIX_REVIEW_ONLY')
+ if(!matrixCert||matrixCert.state!=='SIGNED_MATRIX_REVIEW_ONLY'||
+  !matrixCert.matrix||hash(matrixCert.matrix)!==matrixCert.digest)
   return HOLD('QL461_SIGNED_MATRIX_REQUIRED');
  if(!exact(request,['kind','proof'])||request.kind!=='CROSS_APP'||
   !exact(request.proof,['payload','signature']))
   return HOLD('QL461_CROSS_APP_SIGNATURE_REQUIRED');
  const p=request.proof.payload;
- if(!exact(p,proofFields)||!SOURCE_IDS.includes(p.sourceId)||
+ if(!exact(p,proofFields)||p.schema!=='rosevear.ql461.workload-action.v1'||!SOURCE_IDS.includes(p.sourceId)||
   !MASTER_IDS.includes(p.targetAudience)||
   REPO_BY_SOURCE[p.sourceId]!==p.repository||
   !SHA.test(expectedMainShas?.[p.sourceId]??'')||
