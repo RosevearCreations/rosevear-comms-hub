@@ -26,6 +26,7 @@ import { Ql188SecurityHarnessPreview } from './Ql188SecurityHarnessPreview';
 import { Ql189OperationsSafetyPreview } from './Ql189OperationsSafetyPreview';
 import { Ql190IndependentReviewPacketPreview } from './Ql190IndependentReviewPacketPreview';
 import { Ql191OperatorDashboard } from './Ql191OperatorDashboard';
+import { Ql462UnifiedServerShell } from './Ql462UnifiedServerShell';
 import { Ql191AdditionalOrganizationPreview } from './Ql191AdditionalOrganizationPreview';
 import { Ql192UnifiedInbox } from './Ql192UnifiedInbox';
 import { emptyInboxTriagePresets, type InboxTriagePresets } from './ql292InboxTriage';
@@ -360,6 +361,9 @@ export function OperatorShell() {
             <span>Only fabricated samples and browser-local demo records. No live integrations.</span>
         </div>
       </header>
+
+      {['dashboard','it_command','system_status'].includes(workspace)&&
+        <Ql462UnifiedServerShell />}
 
       <div className="ql172-layout">
         <button ref={mobileNavigationButtonRef} type="button" className="ql313-mobile-toggle"
