@@ -213,6 +213,6 @@ test('QL461 proof signature, token expiry, reused JTI, transport and protocol do
   'QL461_PRIVILEGED_T5_OR_UNSCOPED_ACTION_DENIED');
  deny(f=>{f.args.peerProtocol='1.0';f.setProof({...f.p,protocol:'1.1',capability:'source.health.read'})},
   'QL461_SIGNATURE_PROTOCOL_DOWNGRADE_DENIED');
- deny(f=>{f.args.request.proof.signature=f.args.request.proof.signature.replace(/^./,'A')},
+ deny(f=>{{const s=f.args.request.proof.signature;f.args.request.proof.signature=(s[0]==='A'?'B':'A')+s.slice(1)}},
   'QL461_SIGNED_SOURCE_IDENTITY_OR_SHA_DENIED');
 });
