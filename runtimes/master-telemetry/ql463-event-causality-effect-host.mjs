@@ -66,7 +66,7 @@ const QL462_MESSAGE_FIELDS=['schema','messageId','idempotencyKey','replayNonce',
  'bodyClass','issuedAt','expiresAt','requestScope','authorityTransfer',
  'privateDataIncluded','directPeerDatabaseWrite','ownerCeremonyRequested'];
 const QL463_RECEIPT_FIELDS=['schema','kind','recordId','evidence','digest'];
-const QL463_EVIDENCE_FIELDS=['eventId','effectKey','eventDigest','sourceId',
+const QL463_EVIDENCE_FIELDS=['eventId','effectKey','messageId','idempotencyKey','eventDigest','sourceId',
  'targetAudience','tenantId','workspaceId','sequence','referenceDigest',
  'state','originalHost'];
 /** Append-only single-process/multi-process custody with exclusive atomic claim.
@@ -81,7 +81,7 @@ export function openQl463CausalLedger(directory){
  if(!st.isDirectory()||st.isSymbolicLink()||(st.mode&0o077))
   throw Error('QL463_UNSAFE_LEDGER_DIRECTORY');
  const path=(kind,id)=>{
-  if(!['reconciled','effectclaim','exception'].includes(kind)||!ID.test(id??''))
+  if(!['reconciled','effectclaim','exception','eventindex','messageindex'].includes(kind)||!ID.test(id??''))
    throw Error('QL463_INVALID_LEDGER_KEY');
   return join(root,'ql463-'+kind+'-'+id+'.json');
  };
@@ -97,7 +97,13 @@ export function openQl463CausalLedger(directory){
    if(!exact(rec,QL463_RECEIPT_FIELDS)||rec.schema!==QL463_SCHEMA||
     rec.kind!==kind||rec.recordId!==id||
     !exact(rec.evidence,QL463_EVIDENCE_FIELDS)||
-    rec.evidence.effectKey!==id||!ID.test(rec.evidence.eventId??'')||
+    (!ID.test(rec.evidence.effectKey??'')||
+     (kind==='eventindex'?rec.evidence.eventId!==id:
+      kind==='messageindex'?rec.evidence.idempotencyKey!==id:
+      rec.evidence.effectKey!==id))||
+    !ID.test(rec.evidence.eventId??'')||
+    !ID.test(rec.evidence.messageId??'')||
+    !ID.test(rec.evidence.idempotencyKey??'')||
     !HEX.test(rec.evidence.eventDigest??'')||
     !HEX.test(rec.evidence.referenceDigest??'')||
     !SOURCE_IDS.includes(rec.evidence.sourceId)||
@@ -225,7 +231,9 @@ export function reconcileQl463SignedEvent({
     parent.evidence.workspaceId!==e.workspaceId)
     return hold('QL463_PARENT_CAUSAL_CHAIN_TENANT_OR_ORDER_DENIED');
   }
-  if(causalLedger.read('reconciled',e.effectKey)||
+  if(causalLedger.read('eventindex',e.eventId)||
+   causalLedger.read('messageindex',e.idempotencyKey)||
+   causalLedger.read('reconciled',e.effectKey)||
    causalLedger.read('effectclaim',e.effectKey)||
    causalLedger.read('exception',e.effectKey))
    return hold('QL463_REPLAY_OR_DUPLICATE_CAUSAL_EFFECT');
@@ -237,11 +245,18 @@ export function reconcileQl463SignedEvent({
    ql462Ledger.read('deadletter',e.idempotencyKey))
    return hold('QL463_COMMIT_TRUSTED_CLOCK_OR_CUSTODY_CHANGED');
   const evidence={eventId:e.eventId,effectKey:e.effectKey,
+   messageId:e.messageId,idempotencyKey:e.idempotencyKey,
    eventDigest:digest,sourceId:e.sourceId,targetAudience:e.targetAudience,
    tenantId:e.tenantId,workspaceId:e.workspaceId,sequence:e.sequence,
    referenceDigest:sha({old:old.digest,ack:ackRec.digest,
     parent:e.parentReceiptDigest,master:wd,owner:sha(o)}),
    state:'SIGNED_CAUSAL_RECONCILED_NO_EXECUTION',originalHost:QL463_ORIGINAL_HOST};
+  // Reserve both names BEFORE the effect record. A crash between these
+  // exclusive writes leaves HOLD for manual recovery; never retry effects.
+  causalLedger.claim('messageindex',e.idempotencyKey,{
+   ...evidence,state:'RESERVED_ONE_USE_ORIGINAL_MESSAGE_NO_EFFECT'});
+  causalLedger.claim('eventindex',e.eventId,{
+   ...evidence,state:'RESERVED_ONE_USE_CAUSAL_EVENT_NO_EFFECT'});
   const rec=causalLedger.claim('reconciled',e.effectKey,evidence);
   return {...hold('SIGNED_CAUSAL_REVIEW_IS_NOT_LIVE_DELIVERY'),
    state:'DURABLE_SIGNED_CAUSAL_REVIEW_ONLY',eventId:e.eventId,
@@ -267,6 +282,8 @@ export function claimQl463ExactlyOnceEffect({
  try{
   const rec=causalLedger.read('reconciled',effectKey);
   if(!rec||rec.digest!==reconciledDigest||
+   !causalLedger.read('eventindex',rec.evidence.eventId)||
+   !causalLedger.read('messageindex',rec.evidence.idempotencyKey)||
    rec.evidence.state!=='SIGNED_CAUSAL_RECONCILED_NO_EXECUTION'||
    causalLedger.read('effectclaim',effectKey)||
    causalLedger.read('exception',effectKey))
