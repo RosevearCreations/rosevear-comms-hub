@@ -107,3 +107,59 @@
   --ql462-txt:#f1f7fb;--ql462-accent:#8fc7e8;--ql462-muted:#c0d0dc;
   --ql462-border:color-mix(in srgb,#8fc7e8 52%,transparent);
 }
+
+.ql462-unified[data-ql462-theme="aurora"]{
+ --ql462-bg:#061c28;--ql462-surface:#123749;--ql462-panel:#194b5c;
+ --ql462-txt:#eafcff;--ql462-accent:#60e8df;--ql462-muted:#b5e2e9;
+ --ql462-border:color-mix(in srgb,#60e8df 52%,transparent);
+ color-scheme:dark;
+}
+
+
+.ql462-unified[data-ql462-theme="amber-night"]{
+ --ql462-bg:#21150e;--ql462-surface:#352417;--ql462-panel:#4a3020;
+ --ql462-txt:#fff5e6;--ql462-accent:#ffc274;--ql462-muted:#ecd3b5;
+ --ql462-border:color-mix(in srgb,#ffc274 52%,transparent);
+ color-scheme:dark;
+}
+
+
+.ql462-unified[data-ql462-theme="orchid"]{
+ --ql462-bg:#170d23;--ql462-surface:#291838;--ql462-panel:#3a264e;
+ --ql462-txt:#fff3ff;--ql462-accent:#eea4ff;--ql462-muted:#e1c3ed;
+ --ql462-border:color-mix(in srgb,#eea4ff 52%,transparent);
+ color-scheme:dark;
+}
+
+
+.ql462-unified[data-ql462-theme="daylight"]{
+ --ql462-bg:#edf4fd;--ql462-surface:#ffffff;--ql462-panel:#dce9f8;
+ --ql462-txt:#142d48;--ql462-accent:#005bb5;--ql462-muted:#415a76;
+ --ql462-border:color-mix(in srgb,#005bb5 52%,transparent);
+ color-scheme:light;
+}
+
+/* QL-468: consistent Master inputs, date pickers, card text and light-theme contrast. */
+.ql462-unified :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea){
+ min-height:46px;width:min(100%,40rem);min-width:0;max-width:100%;
+ padding:.65rem .8rem;font:inherit;font-size:max(16px,1rem);line-height:1.45;
+ border:1px solid var(--ql462-accent);border-radius:10px;
+ color:var(--ql462-txt);background:var(--ql462-surface);
+ box-sizing:border-box;
+}
+.ql462-unified :is(input[type="date"],input[type="datetime-local"],input[type="month"],input[type="time"]){
+ width:min(100%,22rem);color-scheme:dark;
+}
+.ql462-unified[data-ql462-theme="daylight"] :is(input,select,textarea){
+ background:#fff;color:#142d48;border-color:#426c9e;color-scheme:light;
+}
+.ql462-unified[data-ql462-theme="daylight"] :is(.ql462-module,.ql462-monitor-grid article,.ql462-disclaimer){
+ color:#142d48;
+}
+.ql462-unified[data-ql462-theme="daylight"] :is(p,small,h2,h3,h4,label){color:#142d48}
+.ql462-unified :is(label,.ql462-module,.ql462-monitor-grid article){min-width:0;max-width:100%;overflow-wrap:anywhere}
+.ql462-unified :is(button,select){min-height:44px;white-space:normal}
+.ql462-unified textarea{min-height:7rem;max-height:32rem;resize:vertical}
+.ql462-unified :is(input,select,textarea):focus-visible{outline:3px solid var(--ql462-accent);outline-offset:2px}
+@media(max-width:650px){.ql462-unified :is(input,select,textarea){width:100%}}
+@media(forced-colors:active){.ql462-unified :is(input,select,textarea){forced-color-adjust:auto;border:2px solid CanvasText}}
