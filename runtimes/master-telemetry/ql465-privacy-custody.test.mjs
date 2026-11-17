@@ -56,7 +56,7 @@ test('QL465 AES-256-GCM encrypts only approved fields, binds tenant and requires
  assert.equal(decryptQl465Pii({packet,key,...args,ownerApproved:true,role:'operator'}).state,'HOLD');
  assert.equal(decryptQl465Pii({packet,key,...args,ownerApproved:true,role:'tenant_privacy_owner',
   tenantId:'different_tenant_123'}).state,'HOLD');
- assert.equal(decryptQl465Pii({packet,key:randomBytes(32),...args,ownerApproved:true,
+ assert.equal(decryptQl465Pii({packet,...args,key:randomBytes(32),ownerApproved:true,
   role:'tenant_privacy_owner'}).state,'HOLD');
  const good=decryptQl465Pii({packet,key,...args,ownerApproved:true,role:'tenant_privacy_owner'});
  assert.equal(good.state,'OWNER_LOCAL_DECRYPT_ONLY');
