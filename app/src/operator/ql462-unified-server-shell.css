@@ -64,7 +64,7 @@
 @media (max-width:900px){.ql462-module-grid,.ql462-monitor-grid{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.ql462-unified *{scroll-behavior:auto;animation:none;transition:none}}
 
-/* QL-467: identical eight Master display skins in three independent apps. */
+/* QL-467: identical twelve Master display skins in three independent apps. */
 .ql462-unified[data-ql462-theme="copper"]{
   --ql462-bg:#181018;--ql462-surface:#2b1c1a;--ql462-panel:#362624;
   --ql462-txt:#fff3e9;--ql462-accent:#f6b46d;--ql462-muted:#ead2c5;
@@ -86,3 +86,24 @@
   --ql462-border:color-mix(in srgb,#55e3e6 52%,transparent);
 }
 .ql462-unified select{min-width:min(230px,100%);max-width:100%;color-scheme:dark}
+
+.ql462-unified[data-ql462-theme="crimson"]{
+  --ql462-bg:#19090d;--ql462-surface:#32121a;--ql462-panel:#451923;
+  --ql462-txt:#fff0f3;--ql462-accent:#ff6b84;--ql462-muted:#efb8c3;
+  --ql462-border:color-mix(in srgb,#ff6b84 52%,transparent);
+}
+.ql462-unified[data-ql462-theme="emerald"]{
+  --ql462-bg:#061813;--ql462-surface:#0c3026;--ql462-panel:#104638;
+  --ql462-txt:#ecfff7;--ql462-accent:#4ee0a5;--ql462-muted:#b8dfd0;
+  --ql462-border:color-mix(in srgb,#4ee0a5 52%,transparent);
+}
+.ql462-unified[data-ql462-theme="ultraviolet"]{
+  --ql462-bg:#100920;--ql462-surface:#22113c;--ql462-panel:#321653;
+  --ql462-txt:#fbf1ff;--ql462-accent:#b884ff;--ql462-muted:#dbc9ef;
+  --ql462-border:color-mix(in srgb,#b884ff 52%,transparent);
+}
+.ql462-unified[data-ql462-theme="steel"]{
+  --ql462-bg:#0c1218;--ql462-surface:#18232d;--ql462-panel:#23313d;
+  --ql462-txt:#f1f7fb;--ql462-accent:#8fc7e8;--ql462-muted:#c0d0dc;
+  --ql462-border:color-mix(in srgb,#8fc7e8 52%,transparent);
+}
