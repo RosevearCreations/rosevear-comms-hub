@@ -1,0 +1,45 @@
+/* QL-464 safe responsive/operator preview, inheriting QL-462 Master themes. */
+.ql464{box-sizing:border-box;margin-top:20px;padding:clamp(14px,2vw,24px);color:var(--ql462-txt);
+  border:1px solid var(--ql462-border);border-radius:16px;overflow-wrap:anywhere;
+  background:linear-gradient(140deg,var(--ql462-bg),var(--ql462-surface))}
+.ql464 *{box-sizing:border-box}
+.ql464 :is(button,input,select):focus-visible,.ql464:focus-visible{outline:3px solid var(--ql462-accent);outline-offset:3px}
+.ql464 h2,.ql464 h3{color:var(--ql462-txt);line-height:1.25}
+.ql464 h2{font-size:clamp(1.2rem,2.2vw,1.75rem)}.ql464 h3{font-size:1.05rem}
+.ql464 p,.ql464 small{color:var(--ql462-muted);line-height:1.5}
+.ql464 .ql464-kicker{color:var(--ql462-accent);font-size:.73rem;letter-spacing:.07em;font-weight:850}
+.ql464-hero{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px}
+.ql464-hold{display:grid;gap:5px;padding:14px;border:1px solid #e1b264;border-radius:9px;background:#35270e;color:#fff0be;max-width:280px}
+.ql464-hold small,.ql464-hold span{color:#ffe6b5}.ql464-hold strong{font-size:1.15rem}
+.ql464-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0}
+.ql464-stats article{min-width:0;display:grid;gap:4px;padding:14px;border:1px solid var(--ql462-border);
+  border-top:3px solid var(--ql462-accent);border-radius:10px;background:var(--ql462-panel)}
+.ql464-stats span{font-size:.76rem;font-weight:800}.ql464-stats strong{font-size:clamp(1.05rem,1.7vw,1.45rem)}
+.ql464-columns{display:grid;grid-template-columns:1.1fr 1fr;gap:12px;margin-bottom:12px}
+.ql464-panel{min-width:0;padding:clamp(12px,2vw,18px);border:1px solid var(--ql462-border);border-radius:12px;background:var(--ql462-panel)}
+.ql464-filters{display:grid;gap:7px;margin:13px 0}.ql464-filters label{font-weight:800;font-size:.8rem}
+.ql464 :is(button,input,select){max-width:100%;min-height:44px;padding:9px 11px;border:1px solid var(--ql462-border);border-radius:8px;
+  font:inherit;font-size:.86rem;color:var(--ql462-txt);background:var(--ql462-bg)}
+.ql464 input{width:100%}.ql464 input::placeholder{color:#adc4d9;opacity:1}
+.ql464 button{cursor:pointer;font-weight:750}.ql464 button:hover{border-color:var(--ql462-accent)}
+.ql464-count{font-size:.8rem;font-weight:800}
+.ql464-tasks,.ql464-timeline{list-style:none;margin:9px 0 0;padding:0}
+.ql464-tasks{display:grid;gap:9px}
+.ql464-tasks li{display:grid;gap:8px;padding:12px;border:1px solid var(--ql462-border);border-radius:9px;background:var(--ql462-bg)}
+.ql464-tasks li strong,.ql464-tasks li small{display:block}.ql464-tasks li p{margin:6px 0}
+.ql464-tasks button{justify-self:start}.ql464-tasks button[aria-pressed="true"]{border-color:#b0e3cc}
+.ql464-timeline{border-left:2px solid var(--ql462-accent);padding-left:18px}
+.ql464-timeline li{position:relative;padding:0 0 19px 4px}.ql464-timeline li:before{content:'';position:absolute;left:-25px;top:7px;width:10px;height:10px;border-radius:50%;background:var(--ql462-accent)}
+.ql464-timeline li div{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.ql464-timeline li p{margin:6px 0}
+.ql464-state{display:inline-block;flex-shrink:0;font-weight:850;font-size:.7rem;letter-spacing:.04em;
+  color:#ffe5a9;background:#3b2b11;border:1px solid #e4b66b;border-radius:7px;padding:5px 7px}
+.ql464-sources{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:14px}
+.ql464-sources article{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;
+  border:1px solid var(--ql462-border);border-radius:9px;padding:12px;min-width:0}
+.ql464-sources article>div{display:grid;gap:3px}.ql464-sources article>small{flex-basis:100%}
+.ql464-score{border-left:4px solid var(--ql462-accent);padding:14px 18px;margin-top:12px;background:var(--ql462-panel);border-radius:9px}
+@media(max-width:1000px){.ql464-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.ql464-columns{grid-template-columns:1fr}}
+@media(max-width:600px){.ql464-stats,.ql464-sources{grid-template-columns:1fr}.ql464-hold{width:100%;max-width:100%}}
+@media(prefers-reduced-motion:reduce){.ql464 *{animation:none!important;transition:none!important}}
+@media(forced-colors:active){.ql464-panel,.ql464-sources article,.ql464-state{border:2px solid CanvasText}}
