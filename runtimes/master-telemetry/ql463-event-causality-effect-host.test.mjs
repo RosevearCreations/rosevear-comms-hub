@@ -172,7 +172,7 @@ test('QL463 reject owner veto, Master witness escalation and fake CONNECTED',()=
 });
 test('QL463 require cryptographically verifiable matching QL462 outbox and signed ACK custody',()=>{
  denied(f=>f.eventChange({ackReceiptDigest:'a'.repeat(64)}),
-  'QL463_SIGNED_QL462_SOURCE_OR_ACK_MISMATCH');
+  'QL463_QL462_ACK_CUSTODY_UNTRUSTED');
  denied(f=>f.eventChange({bodyDigest:'f'.repeat(64)}),
   'QL463_SIGNED_QL462_SOURCE_OR_ACK_MISMATCH');
  denied(f=>{f.opts.signedAck=enc({...f.opts.signedAck.payload,
@@ -195,6 +195,18 @@ test('QL463 tenant/workspace mismatch against prior lineage, source and signed o
   'QL463_PARENT_CAUSAL_CHAIN_TENANT_OR_ORDER_DENIED');
  denied(f=>f.eventChange({parentEffectKey:'a'.repeat(14)}),
   'QL463_GENESIS_CAUSAL_ROOT_INVALID');
+});
+test('QL463 same original message or same event ID cannot be re-signed under a new effect key',()=>{
+ const f=fixture();
+ try{
+  const original=f.run();assert.equal(original.state,'DURABLE_SIGNED_CAUSAL_REVIEW_ONLY');
+  f.eventChange({eventId:'another_event_abc12345',
+   effectKey:'another_effect_abc12345'});
+  assert.equal(f.run().reason,'QL463_REPLAY_OR_DUPLICATE_CAUSAL_EFFECT');
+  f.eventChange({eventId:'ql463_event_abc12345',
+   effectKey:'new_effect_abc12345'});
+  assert.equal(f.run().reason,'QL463_REPLAY_OR_DUPLICATE_CAUSAL_EFFECT');
+ }finally{f.cleanup();}
 });
 test('QL463 signed linked parent receipt enforces contiguous monotonic causal chain',()=>{
  const f=fixture();
