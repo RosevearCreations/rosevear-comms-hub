@@ -6,7 +6,7 @@ import { Ql466CustodyReadiness } from './Ql466CustodyReadiness';
 import { Ql467SinkReadiness } from './Ql467SinkReadiness';
 
 type ModuleId = 'ai-data-platform' | 'rosevear-ai-hub' | 'rosevear-comms-hub';
-type VisualTheme = 'instrument' | 'nebula' | 'meadow' | 'high-contrast' | 'copper' | 'arctic' | 'solar' | 'graphite';
+type VisualTheme = 'instrument' | 'nebula' | 'meadow' | 'high-contrast' | 'copper' | 'arctic' | 'solar' | 'graphite' | 'crimson' | 'emerald' | 'ultraviolet' | 'steel';
 
 const modules: ReadonlyArray<{id:ModuleId;label:string;purpose:string}> = [
   {id:'ai-data-platform',label:'Intelligence & Server Shell',
@@ -24,7 +24,11 @@ const themes: ReadonlyArray<{id:VisualTheme;label:string}> = [
   {id:'copper',label:'Copper Workshop'},
   {id:'arctic',label:'Arctic Blue'},
   {id:'solar',label:'Solar Gold'},
-  {id:'graphite',label:'Graphite Cyan'}
+  {id:'graphite',label:'Graphite Cyan'},
+  {id:'crimson',label:'Crimson Forge'},
+  {id:'emerald',label:'Emerald Circuit'},
+  {id:'ultraviolet',label:'Ultraviolet Grid'},
+  {id:'steel',label:'Steel Command'}
 ];
 
 export function Ql462UnifiedServerShell(){
