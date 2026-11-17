@@ -66,7 +66,7 @@ export function createQl467LocalSink({directory,sourceIssuerPin,ackPrivateKey,te
  if(!publicKey||!ID.test(tenantId??'')||!ID.test(workspaceId??'')||
   !HEX.test(tlsClientLeafSha256??''))throw Error('QL467_PINNED_SOURCE_SCOPE_REQUIRED');
  let signer;
- try{signer=createPrivateKey(ackPrivateKey);
+ try{signer=ackPrivateKey?.type==='private' ? ackPrivateKey : createPrivateKey(ackPrivateKey);
   if(signer.asymmetricKeyType!=='ed25519')throw Error('bad key');
  }catch{throw Error('QL467_PRIVATE_ACK_SIGNER_REQUIRED')}
  function read(filename){
