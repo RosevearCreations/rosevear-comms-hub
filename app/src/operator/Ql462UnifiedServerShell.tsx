@@ -3,9 +3,10 @@ import './ql462-unified-server-shell.css';
 import { Ql464OperatorExperience } from './Ql464OperatorExperience';
 import { Ql465PrivacyReadiness } from './Ql465PrivacyReadiness';
 import { Ql466CustodyReadiness } from './Ql466CustodyReadiness';
+import { Ql467SinkReadiness } from './Ql467SinkReadiness';
 
 type ModuleId = 'ai-data-platform' | 'rosevear-ai-hub' | 'rosevear-comms-hub';
-type VisualTheme = 'instrument' | 'nebula' | 'meadow' | 'high-contrast';
+type VisualTheme = 'instrument' | 'nebula' | 'meadow' | 'high-contrast' | 'copper' | 'arctic' | 'solar' | 'graphite';
 
 const modules: ReadonlyArray<{id:ModuleId;label:string;purpose:string}> = [
   {id:'ai-data-platform',label:'Intelligence & Server Shell',
@@ -19,7 +20,11 @@ const themes: ReadonlyArray<{id:VisualTheme;label:string}> = [
   {id:'instrument',label:'Master Instrument'},
   {id:'nebula',label:'Nebula Purple'},
   {id:'meadow',label:'Meadow'},
-  {id:'high-contrast',label:'High Contrast'}
+  {id:'high-contrast',label:'High Contrast'},
+  {id:'copper',label:'Copper Workshop'},
+  {id:'arctic',label:'Arctic Blue'},
+  {id:'solar',label:'Solar Gold'},
+  {id:'graphite',label:'Graphite Cyan'}
 ];
 
 export function Ql462UnifiedServerShell(){
@@ -97,6 +102,7 @@ export function Ql462UnifiedServerShell(){
       <Ql464OperatorExperience />
       <Ql465PrivacyReadiness />
       <Ql466CustodyReadiness />
+      <Ql467SinkReadiness />
       <p className="ql462-disclaimer" role="status">
         Module visibility and theme selection are browser-session display preferences only.
         They do not start, stop, install or authorize a Windows service. Production integrations and

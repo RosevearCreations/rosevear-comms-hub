@@ -122,6 +122,7 @@ import './operator-shell.css';
 import './ql312-theme.css';
 import './ql313-responsive.css';
 import './ql349-dark-appearance.css';
+import './ql467-visual-contrast.css';
 
 const Ql462UnifiedServerShell = lazy(() => import('./Ql462UnifiedServerShell')
   .then(module => ({default:module.Ql462UnifiedServerShell})));
