@@ -179,6 +179,9 @@ test('QL463 require cryptographically verifiable matching QL462 outbox and signe
   runtimeConnection:'CONNECTED'},f.keys.master)},
   'QL463_SIGNED_QL462_SOURCE_OR_ACK_MISMATCH');
  denied(f=>{f.opts.signedOutbox=enc({...f.opts.signedOutbox.payload,
+  sourceRepository:'iCamp'},f.keys.source)},
+  'QL463_SIGNED_QL462_SOURCE_OR_ACK_MISMATCH');
+ denied(f=>{f.opts.signedOutbox=enc({...f.opts.signedOutbox.payload,
   bodyDigest:'f'.repeat(64)},f.keys.source)},
   'QL463_SIGNED_QL462_SOURCE_OR_ACK_MISMATCH');
  denied(f=>{f.opts.signedAck=enc({...f.opts.signedAck.payload,
