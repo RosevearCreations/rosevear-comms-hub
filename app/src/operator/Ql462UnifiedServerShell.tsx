@@ -6,7 +6,7 @@ import { Ql466CustodyReadiness } from './Ql466CustodyReadiness';
 import { Ql467SinkReadiness } from './Ql467SinkReadiness';
 
 type ModuleId = 'ai-data-platform' | 'rosevear-ai-hub' | 'rosevear-comms-hub';
-type VisualTheme = 'instrument' | 'nebula' | 'meadow' | 'high-contrast' | 'copper' | 'arctic' | 'solar' | 'graphite' | 'crimson' | 'emerald' | 'ultraviolet' | 'steel';
+type VisualTheme = 'instrument' | 'nebula' | 'meadow' | 'high-contrast' | 'copper' | 'arctic' | 'solar' | 'graphite' | 'crimson' | 'emerald' | 'ultraviolet' | 'steel' | 'aurora' | 'amber-night' | 'orchid' | 'daylight';
 
 const modules: ReadonlyArray<{id:ModuleId;label:string;purpose:string}> = [
   {id:'ai-data-platform',label:'Intelligence & Server Shell',
@@ -28,7 +28,11 @@ const themes: ReadonlyArray<{id:VisualTheme;label:string}> = [
   {id:'crimson',label:'Crimson Forge'},
   {id:'emerald',label:'Emerald Circuit'},
   {id:'ultraviolet',label:'Ultraviolet Grid'},
-  {id:'steel',label:'Steel Command'}
+  {id:'steel',label:'Steel Command'},
+  {id:'aurora',label:'Aurora Signal'},
+  {id:'amber-night',label:'Amber Night'},
+  {id:'orchid',label:'Orchid Circuit'},
+  {id:'daylight',label:'Daylight Control'}
 ];
 
 export function Ql462UnifiedServerShell(){
@@ -51,7 +55,7 @@ export function Ql462UnifiedServerShell(){
       <div className="ql462-hero-status" role="status">
         <span>CONTROL PLANE</span>
         <strong>DESIGN / HOLD</strong>
-        <small>Original receiver OPEN · no verified live peers</small>
+        <small>Private receiver OFF / unverified · no verified live peers</small>
       </div>
     </div>
 
