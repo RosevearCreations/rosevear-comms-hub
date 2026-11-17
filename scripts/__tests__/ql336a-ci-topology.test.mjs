@@ -18,6 +18,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql336a-ci-topology.test.mjs')
       && !line.includes('ql465-privacy-custody.test.mjs')
       && !line.includes('ql466-vault-rotation-host-readiness.test.mjs')
+      && !line.includes('ql467-private-event-sink.test.mjs')
       && !line.includes('master-broker/event-inbox.test.mjs')
       && !line.includes('hub-relay/heartbeat.test.mjs')
       && !line.includes('hub-relay/private-receiver.test.mjs')
@@ -88,6 +89,9 @@ test('QL-336A retains all 43 existing application checks in their original order
   const ql466Gate='run_gate node --test ../runtimes/master-telemetry/ql466-vault-rotation-host-readiness.test.mjs';
   assert.ok(gates.includes(ql466Gate),'QL-466 signed custody, independent pins and worker/sink HOLD are required');
   assert.ok(gates.indexOf(privacyGate)<gates.indexOf(ql466Gate),'QL-466 follows QL-465 privacy custody regression');
+  const ql467Gate='run_gate node --test ../runtimes/master-telemetry/ql467-private-event-sink.test.mjs';
+  assert.ok(gates.includes(ql467Gate),'QL-467 mTLS, Ed25519, tenant isolation, durable ACK and source-only HOLD required');
+  assert.ok(gates.indexOf(ql466Gate)<gates.indexOf(ql467Gate));
   assert.match(gates, /run_gate node --test \.\.\/scripts\/__tests__\/ql379-owner-review-presets\.test\.mjs/);
   assert.match(gates, /set -euo pipefail/);
   assert.match(gates, /"\$@"/);
