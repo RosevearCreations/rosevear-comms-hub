@@ -2,7 +2,7 @@ import {createHash,createPublicKey,verify} from 'node:crypto';
 import {mkdirSync,lstatSync,openSync,readFileSync,writeFileSync,fsyncSync,
  closeSync,fstatSync,constants} from 'node:fs';
 import {isAbsolute,resolve,join} from 'node:path';
-import {SOURCE_IDS,MASTER_IDS} from './ql461-protocol11-tenant-policy.mjs';
+import {SOURCE_IDS,MASTER_IDS,REPO_BY_SOURCE} from './ql461-protocol11-tenant-policy.mjs';
 import {QL462_SCHEMA} from './ql462-signed-outbox-inbox.mjs';
 
 /** QL-463 signed-causality evidence ONLY. Never invoke a transport, service,
@@ -165,7 +165,10 @@ export function reconcileQl463SignedEvent({
   !recent(e.issuedAt,nowMs)||!Number.isFinite(clock(e.expiresAt))||
   clock(e.expiresAt)<=nowMs||clock(e.expiresAt)-clock(e.issuedAt)>60000)
   return hold('QL463_EVENT_SCOPE_CLOCK_OR_IDENTITY_DENIED');
- if(msg.schema!==QL462_SCHEMA||msg.messageId!==e.messageId||
+ if(msg.schema!==QL462_SCHEMA||REPO_BY_SOURCE[e.sourceId]!==msg.sourceRepository||
+  !recent(msg.issuedAt,nowMs,300000)||
+  !Number.isFinite(clock(msg.expiresAt))||clock(msg.expiresAt)<=nowMs||
+  msg.messageId!==e.messageId||
   msg.idempotencyKey!==e.idempotencyKey||msg.sourceId!==e.sourceId||
   msg.targetAudience!==e.targetAudience||msg.sourceMainSha!==expectedSourceSha||
   msg.protocol!==e.protocol||msg.tenantId!==e.tenantId||
@@ -178,6 +181,7 @@ export function reconcileQl463SignedEvent({
   ack.sourceId!==e.sourceId||ack.targetAudience!==e.targetAudience||
   ack.protocol!==e.protocol||ack.outboxDigest!==e.outboxDigest||
   ack.reviewState!=='SOURCE_REVIEW_ACCEPTED'||
+  clock(ack.acceptedAt)<clock(msg.issuedAt)||
   ack.runtimeConnection!=='UNVERIFIED_HOLD'||ack.authorityTransfer!==false||
   !recent(ack.acceptedAt,nowMs))
   return hold('QL463_SIGNED_QL462_SOURCE_OR_ACK_MISMATCH');
