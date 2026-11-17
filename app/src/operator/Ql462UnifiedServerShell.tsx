@@ -2,6 +2,7 @@ import {useState} from 'react';
 import './ql462-unified-server-shell.css';
 import { Ql464OperatorExperience } from './Ql464OperatorExperience';
 import { Ql465PrivacyReadiness } from './Ql465PrivacyReadiness';
+import { Ql466CustodyReadiness } from './Ql466CustodyReadiness';
 
 type ModuleId = 'ai-data-platform' | 'rosevear-ai-hub' | 'rosevear-comms-hub';
 type VisualTheme = 'instrument' | 'nebula' | 'meadow' | 'high-contrast';
@@ -95,6 +96,7 @@ export function Ql462UnifiedServerShell(){
       </div>
       <Ql464OperatorExperience />
       <Ql465PrivacyReadiness />
+      <Ql466CustodyReadiness />
       <p className="ql462-disclaimer" role="status">
         Module visibility and theme selection are browser-session display preferences only.
         They do not start, stop, install or authorize a Windows service. Production integrations and

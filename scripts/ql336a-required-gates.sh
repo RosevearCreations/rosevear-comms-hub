@@ -13,6 +13,7 @@ run_gate() {
 run_gate npm run check
 run_gate npm test
 run_gate node --test ../runtimes/master-telemetry/ql465-privacy-custody.test.mjs
+run_gate node --test ../runtimes/master-telemetry/ql466-vault-rotation-host-readiness.test.mjs
 run_gate node --test ../runtimes/master-custody/rotation.test.mjs
 run_gate node --test ../runtimes/master-procedures/engine.test.mjs ../runtimes/master-discovery/manifest.test.mjs
 run_gate node --test ../runtimes/shell-handshakes/protocol.test.mjs
