@@ -16,6 +16,7 @@ test('QL-336A retains all 43 existing application checks in their original order
   const commands = gates.split('\n')
     .filter((line) => line.startsWith('run_gate ')
       && !line.includes('ql336a-ci-topology.test.mjs')
+      && !line.includes('ql465-privacy-custody.test.mjs')
       && !line.includes('master-broker/event-inbox.test.mjs')
       && !line.includes('hub-relay/heartbeat.test.mjs')
       && !line.includes('hub-relay/private-receiver.test.mjs')
@@ -80,6 +81,9 @@ test('QL-336A retains all 43 existing application checks in their original order
   const fingerprint = createHash('sha256').update(commands.join('\n') + '\n').digest('hex');
   assert.equal(commands.length, 43);
   assert.equal(fingerprint, 'a8eca667fae03b9078cef1c701c09f41a49d1e1dea5a758efcaf4106bfd496ec');
+  const privacyGate='run_gate node --test ../runtimes/master-telemetry/ql465-privacy-custody.test.mjs';
+  assert.ok(gates.includes(privacyGate),'QL-465 privacy withdrawal, encryption and retention audit test is required');
+  assert.ok(gates.indexOf('run_gate npm test')<gates.indexOf(privacyGate),'QL-465 guard follows all app tests');
   assert.match(gates, /run_gate node --test \.\.\/scripts\/__tests__\/ql379-owner-review-presets\.test\.mjs/);
   assert.match(gates, /set -euo pipefail/);
   assert.match(gates, /"\$@"/);
