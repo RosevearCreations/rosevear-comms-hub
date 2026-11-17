@@ -63,3 +63,26 @@
   background:var(--ql462-panel);border-radius:4px;font-size:.87rem;}
 @media (max-width:900px){.ql462-module-grid,.ql462-monitor-grid{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.ql462-unified *{scroll-behavior:auto;animation:none;transition:none}}
+
+/* QL-467: identical eight Master display skins in three independent apps. */
+.ql462-unified[data-ql462-theme="copper"]{
+  --ql462-bg:#181018;--ql462-surface:#2b1c1a;--ql462-panel:#362624;
+  --ql462-txt:#fff3e9;--ql462-accent:#f6b46d;--ql462-muted:#ead2c5;
+  --ql462-border:color-mix(in srgb,#f6b46d 52%,transparent);
+}
+.ql462-unified[data-ql462-theme="arctic"]{
+  --ql462-bg:#071b30;--ql462-surface:#0d3450;--ql462-panel:#154461;
+  --ql462-txt:#edfbff;--ql462-accent:#78dcff;--ql462-muted:#c6ecf8;
+  --ql462-border:color-mix(in srgb,#78dcff 52%,transparent);
+}
+.ql462-unified[data-ql462-theme="solar"]{
+  --ql462-bg:#201911;--ql462-surface:#352819;--ql462-panel:#423321;
+  --ql462-txt:#fff8e5;--ql462-accent:#ffcd68;--ql462-muted:#ead8ac;
+  --ql462-border:color-mix(in srgb,#ffcd68 52%,transparent);
+}
+.ql462-unified[data-ql462-theme="graphite"]{
+  --ql462-bg:#0b141c;--ql462-surface:#192933;--ql462-panel:#203843;
+  --ql462-txt:#eaf9ff;--ql462-accent:#55e3e6;--ql462-muted:#bfdee6;
+  --ql462-border:color-mix(in srgb,#55e3e6 52%,transparent);
+}
+.ql462-unified select{min-width:min(230px,100%);max-width:100%;color-scheme:dark}
