@@ -4,6 +4,8 @@ import {generateKeyPairSync,sign,createHash} from 'node:crypto';
 import {readFileSync} from 'node:fs';
 import {ARCHIVE_OWNER,ARCHIVE_WITNESS,WORKER_OWNER,WORKER_WITNESS,QL473_BOUNDARY,
  reviewQl473BackupClaims,reviewQl473ArchivePlan,reviewQl473WorkerPlan} from './ql473-original-host-backup-review.mjs';
+import {QL468_WORKER_SCHEMA} from './ql468-original-host-readiness.mjs';
+import {QL472_OWNER,QL472_WITNESS,reviewQl472ManualBootstrap} from './ql472-original-host-source-consolidation.mjs';
 const sha='a'.repeat(40),now=Date.now(),paths=[
 'C:\\Users\\Ree\\rosevear-comms-hub',
 'C:\\Users\\Ree\\rosevear-comms-hub-current',
@@ -20,7 +22,7 @@ const claims={schema:'rosevear.comms.ql473.backup-claims.v1',host:'DESKTOP-AE894
  archiveSha256:String(i+2).repeat(64),zipEntryCount:2500,
  readOnlyZipChecked:true,restoredCoverageVerified:false,safeToDeleteAutomatically:false}))};
 const backups=reviewQl473BackupClaims({consolidation,claims,expectedMainSha:sha});
-const keys=Object.fromEntries(['owner','witness','supervisor','workerWitness'].map(k=>[k,generateKeyPairSync('ed25519')]));
+const keys=Object.fromEntries(['owner','witness','supervisor','workerWitness','installOwner','installWitness','bootstrapOwner','bootstrapWitness'].map(k=>[k,generateKeyPairSync('ed25519')]));
 const pin=k=>keys[k].publicKey.export({format:'der',type:'spki'}).toString('base64');
 const pkt=(v,k)=>({payload:v,signature:sign(null,Buffer.from(JSON.stringify(v)),keys[k].privateKey).toString('base64')});
 const o={schema:ARCHIVE_OWNER,host:'DESKTOP-AE894KC',mainSha:sha,backupHash:backups.backupHash,
@@ -51,9 +53,41 @@ test('independent archive signatures are review ONLY and never delete ql340',()=
   {restoredBackupVerified:true}])
  assert.equal(archive(o,{...w,...bad}).state,'HOLD');
 });
+
+const bootstrapCensus={...consolidation,censusSha256:'c'.repeat(64)};
+const intake={state:'MISSING_WORKER_REVIEW_HELD',workerMissing:true,stale:false,
+ sourceMainSha:sha,observed470AtMs:now-18000,receiverPort8788ListenerCount:0,
+ snapshotSha256:'f'.repeat(64)};
+const install={schema:QL468_WORKER_SCHEMA,host:'DESKTOP-AE894KC',
+ serviceName:'Rosevear-CommsHub',serviceAccount:'NT SERVICE\\Rosevear-CommsHub',
+ startupMode:'DEMAND_ONLY',sourceMainSha:sha,workerImageSha256:'b'.repeat(64),
+ receiverOffEvidenceSha256:'c'.repeat(64),obsoleteTaskDisabled:true,
+ networkExposure:'PRIVATE_LOOPBACK_ONLY',rollbackPlanSha256:'d'.repeat(64),
+ issuedAtMs:now-14000,expiresAtMs:now+120000,
+ authorityTransfer:false,automaticInstall:false};
+const installPlan={owner:pkt(install,'installOwner'),witness:pkt(install,'installWitness')};
+const bOwner={schema:QL472_OWNER,host:'DESKTOP-AE894KC',sourceMainSha:sha,
+ sourcePath:'C:\\rc470',censusSha256:bootstrapCensus.censusSha256,
+ snapshotSha256:intake.snapshotSha256,workerPlanSha256:createHash('sha256').update(JSON.stringify(install)).digest('hex'),
+ workerImageSha256:install.workerImageSha256,issuedAtMs:now-11000,
+ expiresAtMs:now+120000,scope:'MANUAL_ORIGINAL_HOST_PREPARATION_ONLY',
+ humanHostInstallRequired:true,automaticInstall:false,automaticStart:false,
+ autoSend:false,receiverActivationRequested:false,cleanupRequested:false,
+ authorityTransfer:false};
+const bWitness={schema:QL472_WITNESS,host:'DESKTOP-AE894KC',sourceMainSha:sha,
+ sourcePath:'C:\\rc470',censusSha256:bootstrapCensus.censusSha256,
+ snapshotSha256:intake.snapshotSha256,workerPlanSha256:bOwner.workerPlanSha256,
+ workerImageSha256:install.workerImageSha256,observedAtMs:now-10000,
+ independentReviewer:true,workerAbsentObserved:true,legacyTaskDisabledObserved:true,
+ port8788ListenerCount:0,automaticInstall:false,authorityTransfer:false};
+const bootstrapArgs={consolidation:bootstrapCensus,intake,workerPlan:installPlan,
+ workerOwnerPin:pin('installOwner'),workerWitnessPin:pin('installWitness'),
+ ownerPacket:pkt(bOwner,'bootstrapOwner'),witnessPacket:pkt(bWitness,'bootstrapWitness'),
+ ownerPin:pin('bootstrapOwner'),witnessPin:pin('bootstrapWitness')};
+
 test('supervised worker plan requires independent signatures and still cannot install',()=>{
- const bootstrap={state:'SIGNED_MANUAL_BOOTSTRAP_PLAN_REVIEW_HELD',sourceMainSha:sha,
- workerPlanSha256:'b'.repeat(64),censusSha256:'c'.repeat(64)};
+ const bootstrap=reviewQl472ManualBootstrap({...bootstrapArgs,expectedMainSha:sha,nowMs:now});
+ assert.equal(bootstrap.state,'SIGNED_MANUAL_BOOTSTRAP_PLAN_REVIEW_HELD');
  const hash=createHash;
  const bh=hash('sha256').update(JSON.stringify({main:sha,worker:bootstrap.workerPlanSha256,census:bootstrap.censusSha256})).digest('hex');
  const a={schema:WORKER_OWNER,host:'DESKTOP-AE894KC',mainSha:sha,backupHash:backups.backupHash,
@@ -63,7 +97,7 @@ test('supervised worker plan requires independent signatures and still cannot in
  const b={schema:WORKER_WITNESS,host:'DESKTOP-AE894KC',mainSha:sha,backupHash:backups.backupHash,
  bootstrapHash:bh,observedAtMs:now-4000,independentReviewer:true,
  workerAbsentObserved:true,rollbackReviewed:true,authorityTransfer:false};
- const run=(x=a,y=b)=>reviewQl473WorkerPlan({backups,bootstrap,
+ const run=(x=a,y=b)=>reviewQl473WorkerPlan({backups,bootstrapArgs,
  ownerPacket:pkt(x,'supervisor'),witnessPacket:pkt(y,'workerWitness'),
  ownerPin:pin('supervisor'),witnessPin:pin('workerWitness'),expectedMainSha:sha,nowMs:now});
  assert.equal(run().state,'SIGNED_WORKER_PLAN_REVIEW_HELD');
@@ -71,6 +105,7 @@ test('supervised worker plan requires independent signatures and still cannot in
  for(const x of [{automaticInstall:true},{automaticStart:true},{receiverEnable:true},
  {peerSend:true},{scope:'INSTALL_AUTOMATICALLY'}])assert.equal(run({...a,...x}).state,'HOLD');
  assert.equal(run(a,{...b,rollbackReviewed:false}).state,'HOLD');
+ assert.equal(reviewQl473WorkerPlan({backups,bootstrapArgs:{...bootstrapArgs,workerPlan:{...installPlan,owner:pkt({...install,automaticInstall:true},'installOwner')}},ownerPacket:pkt(a,'supervisor'),witnessPacket:pkt(b,'workerWitness'),ownerPin:pin('supervisor'),witnessPin:pin('workerWitness'),expectedMainSha:sha,nowMs:now}).state,'HOLD');
  assert.equal(QL473_BOUNDARY.automaticWorkerInstall,false);
 });
 test('QL473 original-host Powershell inspection never modifies files or services',()=>{
