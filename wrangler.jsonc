@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
+  // QL-472: no-behavior release marker; original Windows service NOT_INSTALLED, live peer HOLD.
   // QL-471: Cloudflare source deployment marker; host worker remains NOT_INSTALLED and pilot HOLD.
   // QL-470: nonfunctional Cloudflare release build marker. Original-host and supervised live peer remain HOLD.
   // QL-469: source-only Cloudflare Worker release check; original-host enrollment, live ACK and recovery remain field HOLD.
