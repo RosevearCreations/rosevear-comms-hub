@@ -24,6 +24,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql469-independent-original-host-acceptance.test.mjs')
       && !line.includes('ql470-original-host-field-assurance.test.mjs')
       && !line.includes('ql471-original-host-evidence-intake.test.mjs')
+      && !line.includes('ql472-original-host-source-consolidation.test.mjs')
       && !line.includes('master-broker/event-inbox.test.mjs')
       && !line.includes('hub-relay/heartbeat.test.mjs')
       && !line.includes('hub-relay/private-receiver.test.mjs')
@@ -112,6 +113,9 @@ test('QL-336A retains all 43 existing application checks in their original order
   const ql471Gate='run_gate node --test ../runtimes/master-telemetry/ql471-original-host-evidence-intake.test.mjs';
   assert.ok(gates.includes(ql471Gate),'QL-471 original-host signed evidence and checkout census is required');
   assert.ok(gates.indexOf(ql470Gate)<gates.indexOf(ql471Gate),'QL-471 follows QL-470 signed worker review');
+  const ql472Gate='run_gate node --test ../runtimes/master-telemetry/ql472-original-host-source-consolidation.test.mjs';
+  assert.ok(gates.includes(ql472Gate),'QL-472 source consolidation and bootstrap review mandatory');
+  assert.ok(gates.indexOf(ql471Gate)<gates.indexOf(ql472Gate),'QL-472 follows QL-471 original-host intake');
   assert.match(gates, /run_gate node --test \.\.\/scripts\/__tests__\/ql379-owner-review-presets\.test\.mjs/);
   assert.match(gates, /set -euo pipefail/);
   assert.match(gates, /"\$@"/);

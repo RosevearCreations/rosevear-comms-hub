@@ -20,6 +20,7 @@ run_gate node --test ../runtimes/master-telemetry/ql468-loopback-mtls.test.mjs
 run_gate node --test ../runtimes/master-telemetry/ql469-independent-original-host-acceptance.test.mjs
 run_gate node --test ../runtimes/master-telemetry/ql470-original-host-field-assurance.test.mjs
 run_gate node --test ../runtimes/master-telemetry/ql471-original-host-evidence-intake.test.mjs
+run_gate node --test ../runtimes/master-telemetry/ql472-original-host-source-consolidation.test.mjs
 run_gate node --test ../runtimes/master-custody/rotation.test.mjs
 run_gate node --test ../runtimes/master-procedures/engine.test.mjs ../runtimes/master-discovery/manifest.test.mjs
 run_gate node --test ../runtimes/shell-handshakes/protocol.test.mjs
