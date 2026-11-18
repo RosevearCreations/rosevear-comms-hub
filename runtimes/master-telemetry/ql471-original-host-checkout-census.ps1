@@ -1,5 +1,5 @@
 # QL-471 original host repository/launcher census (READ ONLY).
-# No git pull, fetch, checkout, branch deletion, task registration or service changes.
+# No repository updates, branch deletion, task registration or service changes.
 # Output includes no command lines, raw task actions, service arguments or secrets.
 [CmdletBinding()]
 param([ValidateSet('Inspect')][string]$Mode='Inspect')
