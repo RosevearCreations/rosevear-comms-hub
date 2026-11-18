@@ -86,7 +86,7 @@ const peerPacket=signed({schema:QL469_PEER,host:H,sourceMainSha:sha,bootId:h.boo
  durableReplayConfirmed:true,reviewerRole:'INDEPENDENT_PEER_REVIEWER',authorityTransfer:false},keys.peer);
 const peerArgs={envelope,ack,audit,peerPacket,issuerPin:pin(keys.issuer),ackPin:pin(keys.ack),
  auditorPin:pin(keys.auditor),peerPin:pin(keys.peer),tlsClientLeafSha256:'f'.repeat(64)};
-const owner={schema:QL470_OWNER,host:H,sourceMainSha:sha,observationId:h.observationId,
+const owner={schema:QL470_OWNER_SCHEMA,host:H,sourceMainSha:sha,observationId:h.observationId,
  bootId:h.bootId,messageId:event.messageId,ackSha256:hash(ack),issuedAtMs:now-2000,
  expiresAtMs:now+120000,approvedScope:'ONE_READ_ONLY_PEER_RECEIPT_REVIEW',
  automaticSend:false,automaticInstall:false,receiverActivationRequested:false,
