@@ -27,6 +27,7 @@ const recoverWitnessKeys=['schema','host','sourceMainSha','recoveryId','beforeSh
 export function reviewQl469Enrollment({inventory,hostPacket,ownerPacket,witnessPacket,hostPin,ownerPin,witnessPin,expectedMainSha,nowMs}={}){
  if(!distinct(hostPin,ownerPin,witnessPin)||!verifyQl468Packet(hostPacket,hostPin,hostKeys)||!verifyQl468Packet(ownerPacket,ownerPin,ownerKeys)||!verifyQl468Packet(witnessPacket,witnessPin,witnessKeys))return hold('QL469_DISTINCT_SIGNED_HOST_OWNER_REVIEWER_REQUIRED');
  const h=hostPacket.payload,o=ownerPacket.payload,w=witnessPacket.payload;
+ if(!inventory||typeof inventory!=='object'||Array.isArray(inventory))return hold('QL469_ORIGINAL_HOST_INVENTORY_REQUIRED');
  if(!SHA.test(expectedMainSha??'')||h.sourceMainSha!==expectedMainSha||o.sourceMainSha!==expectedMainSha||h.schema!==QL469_ENROLL||o.schema!==QL469_OWNER||w.schema!==QL469_WITNESS||
   h.host!==HOST||o.host!==HOST||w.host!==HOST||!ID.test(h.enrollmentId??'')||!ID.test(h.bootId??'')||
   h.enrollmentId!==o.enrollmentId||h.enrollmentId!==w.enrollmentId||
