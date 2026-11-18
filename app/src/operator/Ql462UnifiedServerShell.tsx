@@ -4,6 +4,7 @@ import { Ql464OperatorExperience } from './Ql464OperatorExperience';
 import { Ql465PrivacyReadiness } from './Ql465PrivacyReadiness';
 import { Ql466CustodyReadiness } from './Ql466CustodyReadiness';
 import { Ql467SinkReadiness } from './Ql467SinkReadiness';
+import { Ql468OriginalHostReadiness } from './Ql468OriginalHostReadiness';
 
 type ModuleId = 'ai-data-platform' | 'rosevear-ai-hub' | 'rosevear-comms-hub';
 type VisualTheme = 'instrument' | 'nebula' | 'meadow' | 'high-contrast' | 'copper' | 'arctic' | 'solar' | 'graphite' | 'crimson' | 'emerald' | 'ultraviolet' | 'steel' | 'aurora' | 'amber-night' | 'orchid' | 'daylight';
@@ -111,6 +112,7 @@ export function Ql462UnifiedServerShell(){
       <Ql465PrivacyReadiness />
       <Ql466CustodyReadiness />
       <Ql467SinkReadiness />
+      <Ql468OriginalHostReadiness />
       <p className="ql462-disclaimer" role="status">
         Module visibility and theme selection are browser-session display preferences only.
         They do not start, stop, install or authorize a Windows service. Production integrations and
