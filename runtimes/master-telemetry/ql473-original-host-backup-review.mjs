@@ -1,6 +1,7 @@
 /** QL-473: nonexecuting, independently signed original-host backup/worker plans. */
 import {createHash,timingSafeEqual} from 'node:crypto';
 import {verifyQl468Packet} from './ql468-original-host-readiness.mjs';
+import {reviewQl472ManualBootstrap} from './ql472-original-host-source-consolidation.mjs';
 export const ARCHIVE_OWNER='rosevear.comms.ql473.archive-owner.v1';
 export const ARCHIVE_WITNESS='rosevear.comms.ql473.archive-witness.v1';
 export const WORKER_OWNER='rosevear.comms.ql473.worker-owner.v1';
@@ -64,7 +65,10 @@ export function reviewQl473ArchivePlan({backups,consolidation,ownerPacket,witnes
  return {...hold('QL473_SIGNED_ARCHIVE_PLAN_NO_DELETION'),
   state:'SIGNED_ARCHIVE_PLAN_REVIEW_HELD',signedReview:true,archivePath:QL340};
 }
-export function reviewQl473WorkerPlan({backups,bootstrap,ownerPacket,witnessPacket,ownerPin,witnessPin,expectedMainSha,nowMs=Date.now()}={}){
+export function reviewQl473WorkerPlan({backups,bootstrapArgs,ownerPacket,witnessPacket,ownerPin,witnessPin,expectedMainSha,nowMs=Date.now()}={}){
+ const bootstrap=reviewQl472ManualBootstrap({...bootstrapArgs,expectedMainSha,nowMs});
+ const otherPins=[bootstrapArgs?.workerOwnerPin,bootstrapArgs?.workerWitnessPin,bootstrapArgs?.ownerPin,bootstrapArgs?.witnessPin];
+ if(otherPins.some(p=>p===ownerPin||p===witnessPin))return hold('QL473_SUPERVISORS_MUST_BE_INDEPENDENT_OF_Q472_SIGNERS');
  if(backups?.state!=='BACKUP_CLAIMS_REVIEW_HELD'||
  bootstrap?.state!=='SIGNED_MANUAL_BOOTSTRAP_PLAN_REVIEW_HELD'||
  bootstrap.sourceMainSha!==expectedMainSha||typeof ownerPin!=='string'||
