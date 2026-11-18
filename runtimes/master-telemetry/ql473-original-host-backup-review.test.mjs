@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {generateKeyPairSync,sign} from 'node:crypto';
+import {generateKeyPairSync,sign,createHash} from 'node:crypto';
 import {readFileSync} from 'node:fs';
 import {ARCHIVE_OWNER,ARCHIVE_WITNESS,WORKER_OWNER,WORKER_WITNESS,QL473_BOUNDARY,
  reviewQl473BackupClaims,reviewQl473ArchivePlan,reviewQl473WorkerPlan} from './ql473-original-host-backup-review.mjs';
@@ -54,7 +54,7 @@ test('independent archive signatures are review ONLY and never delete ql340',()=
 test('supervised worker plan requires independent signatures and still cannot install',()=>{
  const bootstrap={state:'SIGNED_MANUAL_BOOTSTRAP_PLAN_REVIEW_HELD',sourceMainSha:sha,
  workerPlanSha256:'b'.repeat(64),censusSha256:'c'.repeat(64)};
- const hash=(await import('node:crypto')).createHash;
+ const hash=createHash;
  const bh=hash('sha256').update(JSON.stringify({main:sha,worker:bootstrap.workerPlanSha256,census:bootstrap.censusSha256})).digest('hex');
  const a={schema:WORKER_OWNER,host:'DESKTOP-AE894KC',mainSha:sha,backupHash:backups.backupHash,
  bootstrapHash:bh,issuedAtMs:now-5000,expiresAtMs:now+90000,
