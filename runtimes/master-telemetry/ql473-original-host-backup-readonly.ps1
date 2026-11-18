@@ -10,9 +10,10 @@ if($ManifestPath){
  if($manifest -and -not $manifest.PSIsContainer -and -not ($manifest.Attributes -band [IO.FileAttributes]::ReparsePoint)){
   $j=Get-Content -LiteralPath $manifest.FullName -Raw | ConvertFrom-Json
   if($j.schema -ceq 'rosevear.comms.ql473.local-backup-check.v1' -and @($j.archives).Count -eq 3){
-   $ok=$true;$names=@('rosevear-comms-hub','rosevear-comms-hub-current','rosevear-comms-hub-clean')
+   $ok=$true;$seen=@{};$names=@('rosevear-comms-hub','rosevear-comms-hub-current','rosevear-comms-hub-clean')
    foreach($entry in $j.archives){
-    $allow=($names -ccontains [string]$entry.sourceName)
+    $allow=($names -ccontains [string]$entry.sourceName) -and -not $seen.ContainsKey([string]$entry.sourceName)
+    if($allow){$seen[[string]$entry.sourceName]=$true}
     $f=if($allow){Get-Item -LiteralPath ([string]$entry.zipPath) -ErrorAction SilentlyContinue}else{$null}
     $pass=$false;$count=0
     if($f -and -not $f.PSIsContainer -and -not ($f.Attributes -band [IO.FileAttributes]::ReparsePoint) -and
@@ -21,6 +22,7 @@ if($ManifestPath){
      if($hash -ceq [string]$entry.expectedSha256){
       try{
        Add-Type -AssemblyName System.IO.Compression
+       Add-Type -AssemblyName System.IO.Compression.FileSystem
        $z=[System.IO.Compression.ZipFile]::OpenRead($f.FullName)
        try{$count=$z.Entries.Count}finally{$z.Dispose()}
        $pass=($count -ge [int]$entry.expectedMinimumEntries -and [int]$entry.expectedMinimumEntries -gt 0)
