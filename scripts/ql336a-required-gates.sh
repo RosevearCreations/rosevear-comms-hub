@@ -17,6 +17,7 @@ run_gate node --test ../runtimes/master-telemetry/ql466-vault-rotation-host-read
 run_gate node --test ../runtimes/master-telemetry/ql467-private-event-sink.test.mjs
 run_gate node --test ../runtimes/master-telemetry/ql468-original-host-readiness.test.mjs
 run_gate node --test ../runtimes/master-telemetry/ql468-loopback-mtls.test.mjs
+run_gate node --test ../runtimes/master-telemetry/ql469-independent-original-host-acceptance.test.mjs
 run_gate node --test ../runtimes/master-custody/rotation.test.mjs
 run_gate node --test ../runtimes/master-procedures/engine.test.mjs ../runtimes/master-discovery/manifest.test.mjs
 run_gate node --test ../runtimes/shell-handshakes/protocol.test.mjs

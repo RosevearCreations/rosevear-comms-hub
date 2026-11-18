@@ -21,6 +21,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql467-private-event-sink.test.mjs')
       && !line.includes('ql468-original-host-readiness.test.mjs')
       && !line.includes('ql468-loopback-mtls.test.mjs')
+      && !line.includes('ql469-independent-original-host-acceptance.test.mjs')
       && !line.includes('master-broker/event-inbox.test.mjs')
       && !line.includes('hub-relay/heartbeat.test.mjs')
       && !line.includes('hub-relay/private-receiver.test.mjs')
@@ -100,6 +101,9 @@ test('QL-336A retains all 43 existing application checks in their original order
   assert.ok(gates.includes(ql468Mtls),'QL468 real isolated TLS1.3 mTLS peer and signed ACK integration required');
   assert.ok(gates.indexOf(ql467Gate)<gates.indexOf(ql468Readiness));
   assert.ok(gates.indexOf(ql468Readiness)<gates.indexOf(ql468Mtls));
+  const ql469Gate='run_gate node --test ../runtimes/master-telemetry/ql469-independent-original-host-acceptance.test.mjs';
+  assert.ok(gates.includes(ql469Gate),'QL-469 original-host enrollment, independent peer and recovery regression is required');
+  assert.ok(gates.indexOf(ql468Mtls)<gates.indexOf(ql469Gate),'QL-469 follows QL-468 live loopback security gate');
   assert.match(gates, /run_gate node --test \.\.\/scripts\/__tests__\/ql379-owner-review-presets\.test\.mjs/);
   assert.match(gates, /set -euo pipefail/);
   assert.match(gates, /"\$@"/);
