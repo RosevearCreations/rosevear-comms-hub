@@ -23,6 +23,8 @@ test('QL469 signed enrollment remains HELD and rejects forged host, OFF, install
  assert.equal(reviewQl469Enrollment(enrollArgs(h,o,{...w,receiverOffObserved:false})).state,'HOLD');
  assert.equal(reviewQl469Enrollment(enrollArgs(h,o,w,{...inv,workerPresent:false})).state,'HOLD');
  assert.equal(reviewQl469Enrollment({...enrollArgs(),witnessPin:pin(keys.host)}).state,'HOLD');
+ assert.equal(reviewQl469Enrollment({...enrollArgs(),inventory:undefined}).state,'HOLD');
+ assert.equal(reviewQl469Enrollment({...enrollArgs(),inventory:null}).state,'HOLD');
 });
 const event={schema:QL467_SCHEMA,protocolVersion:'1.1',messageId:'message_abcdef123456',issuer:'rosevear-ai-hub',audience:'rosevear-comms-hub',tenantId:'tenant_abcdef123456',workspaceId:'workspace_abcdef123456',eventId:'event_abcdef123456',eventType:'status.read-only',payloadSha256:'c'.repeat(64),dataClass:'NONPERSONAL',issuedAtMs:now-6000,expiresAtMs:now+60000,authorityTransfer:false};
 const envelope=pack(event,keys.issuer);
