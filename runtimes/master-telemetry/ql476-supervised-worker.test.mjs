@@ -71,6 +71,7 @@ test('Windows source is explicitly on-demand, fenced from CI and never deletes o
  assert.match(ps,/ApproveInstall/);
  assert.match(ps,/ApproveFirstRun/);
  assert.match(ps,/ApproveRecovery/);
+ assert.match(ps,/phase='RECOVERED'/);
  assert.match(ps,/sourceDeletes=0/);
  assert.doesNotMatch(ps,/\b(?:Remove-Item|Restart-Computer|New-Service|Set-Service|Start-Service|Register-Service|Enable-ScheduledTask)\b/i);
  assert.equal(QL476_BOUNDARY.automaticInstall,false);
