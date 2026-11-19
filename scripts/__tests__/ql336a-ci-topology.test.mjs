@@ -28,6 +28,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql473-original-host-backup-review.test.mjs')
       && !line.includes('ql474-offline-restore-firstboot.test.mjs')
       && !line.includes('ql475-three-archive-acceptance.test.mjs')
+      && !line.includes('ql476-supervised-worker.test.mjs')
       && !line.includes('master-broker/event-inbox.test.mjs')
       && !line.includes('hub-relay/heartbeat.test.mjs')
       && !line.includes('hub-relay/private-receiver.test.mjs')
@@ -128,6 +129,10 @@ test('QL-336A retains all 43 existing application checks in their original order
   const ql475Gate='run_gate node --test ../runtimes/master-telemetry/ql475-three-archive-acceptance.test.mjs';
   assert.ok(gates.includes(ql475Gate),'QL-475 complete archive/restore and signed witness review required');
   assert.ok(gates.indexOf(ql474Gate)<gates.indexOf(ql475Gate),'QL-475 follows QL-474 safe readback');
+  const ql476Gate='run_gate node --test ../runtimes/master-telemetry/ql476-supervised-worker.test.mjs';
+  assert.ok(gates.includes(ql476Gate),'QL-476 on-demand Windows worker and independent recovery HOLD required');
+  assert.ok(gates.indexOf(ql475Gate)<gates.indexOf(ql476Gate),'QL-476 follows QL-475 archive safety');
+  assert.match(appCi, /QL476_POWERSHELL_PARSE_FAILED/);
   assert.match(gates, /run_gate node --test \.\.\/scripts\/__tests__\/ql379-owner-review-presets\.test\.mjs/);
   assert.match(gates, /set -euo pipefail/);
   assert.match(gates, /"\$@"/);
