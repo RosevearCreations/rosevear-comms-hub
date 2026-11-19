@@ -146,6 +146,8 @@ jobs:
         run: node runtimes/hub-relay/ql365c-original-preflight-cli.mjs --status
       - name: Verify QL-365D original dual-owner one-source signatures and six-app handoff fail closed
         run: node --test runtimes/hub-relay/ql365d-first-test-ceremony.test.mjs
+      - name: Verify AIDP Build 423 signed read-only Sysop telemetry source
+        run: node --test runtimes/hub-relay/sysop-telemetry423.test.mjs
       - name: Verify QL-365D nonoriginal Windows CI cannot prepare signatures or authorize TEST
         shell: pwsh
         run: node runtimes/hub-relay/ql365d-original-test-cli.mjs --status
