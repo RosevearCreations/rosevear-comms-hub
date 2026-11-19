@@ -28,6 +28,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql473-original-host-backup-review.test.mjs')
       && !line.includes('ql474-offline-restore-firstboot.test.mjs')
       && !line.includes('ql475-three-archive-acceptance.test.mjs')
+      && !line.includes('ql476-supervised-worker.test.mjs')
       && !line.includes('master-broker/event-inbox.test.mjs')
       && !line.includes('hub-relay/heartbeat.test.mjs')
       && !line.includes('hub-relay/private-receiver.test.mjs')
