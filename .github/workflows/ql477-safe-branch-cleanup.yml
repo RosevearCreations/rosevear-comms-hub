@@ -1,0 +1,24 @@
+# Owner-approved Nov 19 2026 branch cleanup; protected branch main push only.
+name: QL-477 safe merged-branch cleanup
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ql477-safe-branch-cleanup.yml
+permissions:
+  contents: write
+concurrency:
+  group: ql477-safe-branch-cleanup
+  cancel-in-progress: false
+jobs:
+  remove-only-merged-refs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify ancestry and remove only merged refs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .github/scripts/ql477_safe_branch_cleanup.py
