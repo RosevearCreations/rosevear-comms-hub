@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
+  // QL-476: supervised on-demand local SysOp worker; no auto-boot, peer send, receiver or reboot.
   // QL-475: guarded local ZIP backup staging, source retention and offline witness HOLD.
   // QL-474: read-only restored-file integrity/first-boot HELD; no Windows service installation.
   // QL-473: read-only backup claim review; original Windows worker remains NOT_INSTALLED.
