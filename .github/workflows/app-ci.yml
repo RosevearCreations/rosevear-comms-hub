@@ -54,6 +54,21 @@ jobs:
           } catch {
             if ($_.Exception.Message -notmatch 'HOLD_QL475_ORIGINAL_HOST_REQUIRED') { throw }
           }
+      - name: Parse QL-476 supervised Windows worker and reject nonoriginal CI
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $parseErrors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path 'runtimes/master-telemetry/ql476-original-host-worker.ps1'),
+            [ref]$tokens, [ref]$parseErrors) | Out-Null
+          if ($parseErrors.Count -ne 0) { throw 'QL476_POWERSHELL_PARSE_FAILED' }
+          try {
+            & .\runtimes\master-telemetry\ql476-original-host-worker.ps1 -Mode Inspect
+            throw 'QL476_NONORIGINAL_HOST_UNEXPECTEDLY_ACCEPTED'
+          } catch {
+            if ($_.Exception.Message -notmatch 'HOLD_QL476_ORIGINAL_HOST_REQUIRED') { throw }
+          }
       - name: Verify Windows key material never needs an unattended approval
         run: node --test runtimes/hub-relay/owner-authority-custody.test.mjs
       - name: Verify Windows offline dual-owner TEST enrollment ceremony
