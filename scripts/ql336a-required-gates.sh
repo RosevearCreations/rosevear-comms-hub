@@ -23,6 +23,7 @@ run_gate node --test ../runtimes/master-telemetry/ql471-original-host-evidence-i
 run_gate node --test ../runtimes/master-telemetry/ql472-original-host-source-consolidation.test.mjs
 run_gate node --test ../runtimes/master-telemetry/ql473-original-host-backup-review.test.mjs
 run_gate node --test ../runtimes/master-telemetry/ql474-offline-restore-firstboot.test.mjs
+run_gate node --test ../runtimes/master-telemetry/ql475-three-archive-acceptance.test.mjs
 run_gate node --test ../runtimes/master-custody/rotation.test.mjs
 run_gate node --test ../runtimes/master-procedures/engine.test.mjs ../runtimes/master-discovery/manifest.test.mjs
 run_gate node --test ../runtimes/shell-handshakes/protocol.test.mjs
