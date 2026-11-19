@@ -160,9 +160,22 @@ if($Mode -eq 'Start' -or $Mode -eq 'Recover'){
     $last.observedAtMs -le $prior.observedAtMs)){
   throw 'HOLD_QL476_RECOVERY_RUN_NOT_NEW_OR_OS_REBOOTED'
  }
+ if($Mode -eq 'Recover'){
+  $t=Worker-Task
+  [pscustomobject]@{schema='rosevear.comms.ql476.on-demand-worker.v1'
+   phase='RECOVERED';host=$env:COMPUTERNAME;mainSha=$sha;taskName=$name
+   taskTriggerCount=@($t.Triggers).Count;taskEnabled=($t.State -ne 'Disabled')
+   taskLogonMode='INTERACTIVE_OWNER';workerScriptHash=(Hash)
+   receiverPort8788Listeners=(Listeners);legacyTaskDisabled=(Legacy-Disabled)
+   serviceAutostartEnabled=(Service-Autostart);lastTaskResult=$info.LastTaskResult
+   observedAtMs=[DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+   run=$last;priorRunId=$prior.runId;receiverActivated=$false
+   rebootPerformed=$false;peerSent=$false;sourceWrites=0;sourceDeletes=0
+   state='LOCAL_RECOVERY_REVIEW_FIELD_WITNESS_HOLD'}|ConvertTo-Json -Depth 8
+  return
+ }
  [pscustomobject]@{state='LOCAL_RUN_ONLY_INDEPENDENT_FIELD_ACCEPTANCE_HOLD'
-  runId=$last.runId;priorRunId=$prior.runId;mainSha=$sha
-  receiverActivated=$false;sourceDeletes=0}|ConvertTo-Json
+  runId=$last.runId;mainSha=$sha;receiverActivated=$false;sourceDeletes=0}|ConvertTo-Json
  return
 }
 if($Mode -eq 'Verify'){
