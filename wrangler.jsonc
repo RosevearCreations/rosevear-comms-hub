@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
+  // QL-478: owner-only private TLS1.3 SysOp loopback and first durable ACK; original-host/production peer remain HOLD.
   // QL-477: local original-host evidence exporter and signed first telemetry review; live transport remains HOLD.
   // QL-476: supervised on-demand local SysOp worker; no auto-boot, peer send, receiver or reboot.
   // QL-475: guarded local ZIP backup staging, source retention and offline witness HOLD.
