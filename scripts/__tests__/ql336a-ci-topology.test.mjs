@@ -31,6 +31,7 @@ test('QL-336A retains all 43 existing application checks in their original order
       && !line.includes('ql476-supervised-worker.test.mjs')
        && !line.includes('ql477-field-telemetry.test.mjs')
        && !line.includes('ql478-private-pilot.test.mjs')
+       && !line.includes('ql479-enrolled-remote-pilot.test.mjs')
       && !line.includes('master-broker/event-inbox.test.mjs')
       && !line.includes('hub-relay/heartbeat.test.mjs')
       && !line.includes('hub-relay/private-receiver.test.mjs')
@@ -140,6 +141,9 @@ test('QL-336A retains all 43 existing application checks in their original order
   const ql478Gate='run_gate node --test ../runtimes/master-telemetry/ql478-private-pilot.test.mjs';
   assert.ok(gates.includes(ql478Gate),'QL-478 actual loopback TLS1.3 and durable signed ACK tests required');
   assert.ok(gates.indexOf(ql477Gate)<gates.indexOf(ql478Gate),'QL-478 follows QL-477');
+  const ql479Gate='run_gate node --test ../runtimes/master-telemetry/ql479-enrolled-remote-pilot.test.mjs';
+  assert.ok(gates.includes(ql479Gate),'QL-479 real opt-in mutual TLS remote and signed ACK gate mandatory');
+  assert.ok(gates.indexOf(ql478Gate)<gates.indexOf(ql479Gate),'QL-479 follows QL-478');
   assert.match(appCi,/QL478_POWERSHELL_PARSE_FAILED/);
   assert.match(appCi,/HOLD_QL478_ORIGINAL_HOST_REQUIRED/);
   assert.match(appCi,/QL477_POWERSHELL_PARSE_FAILED/);

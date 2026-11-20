@@ -106,6 +106,17 @@ jobs:
               $nodeSource -notmatch "HOLD\('ORIGINAL_HOST_REQUIRED'\)") {
             throw 'QL478_ORIGINAL_NODE_HOST_GUARD_MISSING'
           }
+      - name: QL-479 original-host remote pilot must never run in CI
+        shell: pwsh
+        run: |
+          $source = Get-Content -LiteralPath 'runtimes/master-telemetry/ql479-supervised-remote-cli.mjs' -Raw
+          if ($source -notmatch "process.platform!=='win32'" -or
+              $source -notmatch "DESKTOP-AE894KC" -or
+              $source -notmatch "SUPERVISED_ONE_TIME" -or
+              $source -notmatch "--supervised-source-send" -or
+              $source -notmatch "--supervised-receiver") {
+            throw 'QL479_ORIGINAL_HOST_ENROLLMENT_OR_OPERATOR_GUARD_MISSING'
+          }
       - name: Verify Windows key material never needs an unattended approval
         run: node --test runtimes/hub-relay/owner-authority-custody.test.mjs
       - name: Verify Windows offline dual-owner TEST enrollment ceremony
