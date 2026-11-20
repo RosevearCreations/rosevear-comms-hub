@@ -12,7 +12,7 @@ import {
 } from './ql478-private-pilot.mjs';
 import {QL478_AUDIT,reconcileQl478IndependentAck} from './ql478-evidence-reconciliation.mjs';
 
-const sha=x=>createHash('sha256').update(typeof x==='string'?x:JSON.stringify(x)).digest('hex');
+const sha=x=>createHash('sha256').update(Buffer.isBuffer(x)||typeof x==='string'?x:JSON.stringify(x)).digest('hex');
 const keys=Object.fromEntries(['host','receiver','owner','witness','auditor'].map(n=>[n,generateKeyPairSync('ed25519')]));
 const pin=n=>keys[n].publicKey.export({type:'spki',format:'der'}).toString('base64');
 const signature=(payload,who)=>({payload,signature:sign(null,Buffer.from(JSON.stringify(payload)),
