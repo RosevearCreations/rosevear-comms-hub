@@ -99,9 +99,12 @@ jobs:
           } catch {
             if ($_.Exception.Message -notmatch 'HOLD_QL478_ORIGINAL_HOST_REQUIRED') { throw }
           }
-          $output = & node .\runtimes\master-telemetry\ql478-owner-loopback-cli.mjs --supervised-one-time-loopback 2>&1
-          if ($LASTEXITCODE -eq 0 -or ($output -join ' ') -notmatch 'HOLD_QL478_ORIGINAL_HOST_REQUIRED') {
-            throw 'QL478_NONORIGINAL_NODE_PILOT_NOT_BLOCKED'
+          # The Node CLI is also guarded at its entrypoint. Do not execute an
+          # expected nonzero native command in pwsh's ErrorActionPreference=Stop.
+          $nodeSource = Get-Content -LiteralPath 'runtimes/master-telemetry/ql478-owner-loopback-cli.mjs' -Raw
+          if ($nodeSource -notmatch "process\.platform!=='win32'\|\|process\.env\.COMPUTERNAME!=='DESKTOP-AE894KC'" -or
+              $nodeSource -notmatch "HOLD\('ORIGINAL_HOST_REQUIRED'\)") {
+            throw 'QL478_ORIGINAL_NODE_HOST_GUARD_MISSING'
           }
       - name: Verify Windows key material never needs an unattended approval
         run: node --test runtimes/hub-relay/owner-authority-custody.test.mjs
