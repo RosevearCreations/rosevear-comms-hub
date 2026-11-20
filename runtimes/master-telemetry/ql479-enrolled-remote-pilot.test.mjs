@@ -17,6 +17,7 @@ const packet=(payload,k)=>({payload,signature:sign(null,Buffer.from(JSON.stringi
 const main='a'.repeat(40),host='DESKTOP-AE894KC',now=Date.now();
 const field={state:'FIELD_EXPORT_REVIEW_HELD',sourceMainSha:main,
  fieldDigest:'b'.repeat(64),sampleDigest:'c'.repeat(64),
+ sampleId:'11111111-1111-4111-8111-111111111111',
  telemetry:{sampleId:'11111111-1111-4111-8111-111111111111',
   osBootId:'22222222-2222-4222-8222-222222222222',
   observedAtMs:now-15000,uptimeSeconds:323,processCount:61,
