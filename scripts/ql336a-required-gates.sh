@@ -26,6 +26,7 @@ run_gate node --test ../runtimes/master-telemetry/ql474-offline-restore-firstboo
 run_gate node --test ../runtimes/master-telemetry/ql475-three-archive-acceptance.test.mjs
 run_gate node --test ../runtimes/master-telemetry/ql476-supervised-worker.test.mjs
 run_gate node --test ../runtimes/master-telemetry/ql477-field-telemetry.test.mjs
+run_gate node --test ../runtimes/master-telemetry/ql478-private-pilot.test.mjs
 run_gate node --test ../runtimes/master-custody/rotation.test.mjs
 run_gate node --test ../runtimes/master-procedures/engine.test.mjs ../runtimes/master-discovery/manifest.test.mjs
 run_gate node --test ../runtimes/shell-handshakes/protocol.test.mjs

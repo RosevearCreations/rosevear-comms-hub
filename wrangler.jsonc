@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
+  // QL-478: owner-only private TLS1.3 SysOp loopback and first durable ACK; original-host/production peer remain HOLD.
   // QL-477: local original-host evidence exporter and signed first telemetry review; live transport remains HOLD.
   // QL-476: supervised on-demand local SysOp worker; receiver remains OFF and first host recovery awaits physical witness.
   // QL-092: no-behavior Cloudflare Worker redeploy trigger after docs-only trigger did not post a Worker check.

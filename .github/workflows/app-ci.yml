@@ -84,6 +84,28 @@ jobs:
           } catch {
             if ($_.Exception.Message -notmatch 'HOLD_QL477_ORIGINAL_HOST_REQUIRED') { throw }
           }
+      - name: Parse QL-478 original-host reconciliation; reject CI environment and manual pilot
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $parseErrors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path 'runtimes/master-telemetry/ql478-original-host-reconcile.ps1'),
+            [ref]$tokens, [ref]$parseErrors) | Out-Null
+          if ($parseErrors.Count -ne 0) { throw 'QL478_POWERSHELL_PARSE_FAILED' }
+          try {
+            & .\runtimes\master-telemetry\ql478-original-host-reconcile.ps1 -Mode Inspect
+            throw 'QL478_UNTRUSTED_WINDOWS_RUNNER_ACCEPTED'
+          } catch {
+            if ($_.Exception.Message -notmatch 'HOLD_QL478_ORIGINAL_HOST_REQUIRED') { throw }
+          }
+          # The Node CLI is also guarded at its entrypoint. Do not execute an
+          # expected nonzero native command in pwsh's ErrorActionPreference=Stop.
+          $nodeSource = Get-Content -LiteralPath 'runtimes/master-telemetry/ql478-owner-loopback-cli.mjs' -Raw
+          if ($nodeSource -notmatch "process\.platform!=='win32'\|\|process\.env\.COMPUTERNAME!=='DESKTOP-AE894KC'" -or
+              $nodeSource -notmatch "HOLD\('ORIGINAL_HOST_REQUIRED'\)") {
+            throw 'QL478_ORIGINAL_NODE_HOST_GUARD_MISSING'
+          }
       - name: Verify Windows key material never needs an unattended approval
         run: node --test runtimes/hub-relay/owner-authority-custody.test.mjs
       - name: Verify Windows offline dual-owner TEST enrollment ceremony
