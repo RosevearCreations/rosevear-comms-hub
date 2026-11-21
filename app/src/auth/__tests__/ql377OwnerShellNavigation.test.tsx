@@ -29,6 +29,10 @@ describe('QL-377 shell history navigation and personal session isolation',()=>{
   it('keeps history across navigation but hides it after an owner changes',async()=>{
     await act(async()=>root.render(<MasterOperatorEntry ownerRole="source" enrolled={false} aal2={true} progress={progress}/>));
     await nav('I.T. and security');
+    // QL-481 code-splits history without altering its protected data rules.
+    // Await the actual component; a Suspense placeholder is not a case review.
+    await act(async()=>{await import('../OwnerIncidentHistory');});
+    expect(host.querySelector('.ql377-history')).toBeTruthy();
     expect(host.textContent).toContain('session observations');
     expect(host.textContent).toContain('Six application shells held');
     await nav('My overview');
