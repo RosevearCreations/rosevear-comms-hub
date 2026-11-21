@@ -28,6 +28,8 @@ run_gate node --test ../runtimes/master-telemetry/ql476-supervised-worker.test.m
 run_gate node --test ../runtimes/master-telemetry/ql477-field-telemetry.test.mjs
 run_gate node --test ../runtimes/master-telemetry/ql478-private-pilot.test.mjs
 run_gate node --test ../runtimes/master-telemetry/ql479-enrolled-remote-pilot.test.mjs
+run_gate node --test ../runtimes/master-telemetry/ql480-scoped-incident-adapter.test.mjs
+run_gate node ../scripts/ql480-two-source-rehearsal.mjs
 run_gate node --test ../runtimes/master-custody/rotation.test.mjs
 run_gate node --test ../runtimes/master-procedures/engine.test.mjs ../runtimes/master-discovery/manifest.test.mjs
 run_gate node --test ../runtimes/shell-handshakes/protocol.test.mjs
