@@ -1,10 +1,11 @@
-import {useEffect,useRef,useState} from 'react';
+import {lazy,Suspense,useEffect,useRef,useState} from 'react';
 import type {OwnerProgress} from './ql370OwnerProgress';
 import {OWNER_ENTRY_SECTIONS,QL374_HISTORICAL_PREREQUISITES,QL374_REQUIRED_GATES,
   ownerEntryTruth,type OwnerEntryRole,type OwnerEntrySection} from './ql374OwnerEntry';
 import {OwnerSixAppDrilldown} from './OwnerSixAppDrilldown';
 import {OwnerIncidentReview} from './OwnerIncidentReview';
-import {OwnerIncidentHistory} from './OwnerIncidentHistory';
+const OwnerIncidentHistory=lazy(async()=>({default:(await import('./OwnerIncidentHistory')).OwnerIncidentHistory}));
+const Ql481PrivateIncidentDesk=lazy(async()=>({default:(await import('./Ql481PrivateIncidentDesk')).Ql481PrivateIncidentDesk}));
 import {ownerIncidents,ownerReadbackFreshness} from './ql376OwnerIncidents';
 import {EMPTY_OWNER_HISTORY,observeOwnerIncidents} from './ql377OwnerIncidentHistory';
 import {ownerShellStatus} from './ql375OwnerStatus';
@@ -81,8 +82,13 @@ export function MasterOperatorEntry({ownerRole,enrolled,aal2,progress}:Props){
       {section==='sources'&&<OwnerSixAppDrilldown truth={truth}/>}
       {section==='it'&&<>
         <OwnerIncidentReview role={ownerRole} aal2={aal2} progress={progress} truth={truth} nowMs={nowMs}/>
-        <OwnerIncidentHistory history={incidentHistory} nowMs={nowMs}
-          authenticated={aal2&&incidentHistory.role===ownerRole}/>
+        <Suspense fallback={<p role="status">Loading private incident history…</p>}>
+          <OwnerIncidentHistory history={incidentHistory} nowMs={nowMs}
+            authenticated={aal2&&incidentHistory.role===ownerRole}/>
+        </Suspense>
+        <Suspense fallback={<p role="status">Loading private incident review desk…</p>}>
+          <Ql481PrivateIncidentDesk unlocked={Boolean(aal2&&enrolled&&truth.held&&truth.state==='MEMBERSHIP_VERIFIED_HOLD')}/>
+        </Suspense>
         <div className={truth.state==='STOP_REVIEW'?'ql374-truth ql374-stop':'ql374-truth'}
           role={truth.state==='STOP_REVIEW'?'alert':'status'}>
           <strong>{truth.label}</strong>

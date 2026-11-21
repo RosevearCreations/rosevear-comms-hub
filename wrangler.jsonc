@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
+  // QL-481: read-only owner case desk and independent private handover ledger; real source integrations HOLD.
   // QL-480: private durable scoped incident adapter and YW/iCamp simulation; no live production customer effects.
   // QL-479: one-time enrolled remote TLS1.3 transport and signed ACK; physical peer remains HOLD.
   // QL-478: owner-only private TLS1.3 SysOp loopback and first durable ACK; original-host/production peer remain HOLD.
