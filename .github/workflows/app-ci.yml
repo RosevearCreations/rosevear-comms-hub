@@ -134,7 +134,7 @@ jobs:
           $desk = Get-Content 'app/src/auth/Ql481PrivateIncidentDesk.tsx' -Raw
           $model = Get-Content 'app/src/auth/ql481PrivateIncidentDeskModel.ts' -Raw
           $entry = Get-Content 'app/src/auth/MasterOperatorEntry.tsx' -Raw
-          if ($desk -match 'fetch\\s*\\(' -or $desk -match 'localStorage|sessionStorage' -or
+          if ($desk -match 'fetch\s*\(' -or $desk -match 'localStorage|sessionStorage' -or
               $desk -notmatch 'FIELD ACCEPTANCE HOLD' -or
               $model -notmatch 'LOCAL_FILE_STRUCTURAL_REVIEW_NOT_AUTHENTICATED' -or
               $entry -notmatch "truth.state==='MEMBERSHIP_VERIFIED_HOLD'") {
