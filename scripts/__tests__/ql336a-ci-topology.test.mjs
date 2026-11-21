@@ -34,6 +34,9 @@ test('QL-336A retains all 43 existing application checks in their original order
        && !line.includes('ql479-enrolled-remote-pilot.test.mjs')
        && !line.includes('ql480-scoped-incident-adapter.test.mjs')
        && !line.includes('ql480-two-source-rehearsal.mjs')
+       && !line.includes('ql481-private-incident-handover.test.mjs')
+       && !line.includes('ql481PrivateIncidentDeskModel.test.ts')
+       && !line.includes('ql481PrivateIncidentDeskUI.test.tsx')
       && !line.includes('master-broker/event-inbox.test.mjs')
       && !line.includes('hub-relay/heartbeat.test.mjs')
       && !line.includes('hub-relay/private-receiver.test.mjs')
@@ -152,6 +155,12 @@ test('QL-336A retains all 43 existing application checks in their original order
   assert.ok(gates.includes(ql480Rehearsal),'QL-480 isolated YW+iCamp rehearsal mandatory');
   assert.ok(gates.indexOf(ql479Gate)<gates.indexOf(ql480Gate),'QL-480 follows QL-479');
   assert.ok(gates.indexOf(ql480Gate)<gates.indexOf(ql480Rehearsal),'rehearsal follows tamper tests');
+  const ql481Gate='run_gate node --test ../runtimes/master-telemetry/ql481-private-incident-handover.test.mjs';
+  const ql481UiGate='run_gate npm run test -- src/auth/__tests__/ql481PrivateIncidentDeskModel.test.ts src/auth/__tests__/ql481PrivateIncidentDeskUI.test.tsx';
+  assert.ok(gates.includes(ql481Gate),'QL-481 private handover signature/readback tests required');
+  assert.ok(gates.includes(ql481UiGate),'QL-481 owner-scoped desk tests required');
+  assert.ok(gates.indexOf(ql480Rehearsal)<gates.indexOf(ql481Gate),'QL-481 follows QL-480');
+  assert.match(appCi,/QL481_PRIVATE_OPERATOR_UI_BOUNDARY_BROKEN/);
   assert.match(appCi,/QL480_INTEGRITY_BOUNDARY_BROKEN/);
   assert.match(appCi,/QL478_POWERSHELL_PARSE_FAILED/);
   assert.match(appCi,/HOLD_QL478_ORIGINAL_HOST_REQUIRED/);
