@@ -128,6 +128,18 @@ jobs:
               $source -match "\b(?:fetch|createServer|Register-ScheduledTask|Start-ScheduledTask)\s*\(") {
             throw 'QL480_INTEGRITY_BOUNDARY_BROKEN'
           }
+      - name: QL-481 owner-scoped case desk remains offline and no-send
+        shell: pwsh
+        run: |
+          $desk = Get-Content 'app/src/auth/Ql481PrivateIncidentDesk.tsx' -Raw
+          $model = Get-Content 'app/src/auth/ql481PrivateIncidentDeskModel.ts' -Raw
+          $entry = Get-Content 'app/src/auth/MasterOperatorEntry.tsx' -Raw
+          if ($desk -match 'fetch\\s*\\(' -or $desk -match 'localStorage|sessionStorage' -or
+              $desk -notmatch 'FIELD ACCEPTANCE HOLD' -or
+              $model -notmatch 'LOCAL_FILE_STRUCTURAL_REVIEW_NOT_AUTHENTICATED' -or
+              $entry -notmatch "truth.state==='MEMBERSHIP_VERIFIED_HOLD'") {
+            throw 'QL481_PRIVATE_OPERATOR_UI_BOUNDARY_BROKEN'
+          }
       - name: Verify Windows key material never needs an unattended approval
         run: node --test runtimes/hub-relay/owner-authority-custody.test.mjs
       - name: Verify Windows offline dual-owner TEST enrollment ceremony
