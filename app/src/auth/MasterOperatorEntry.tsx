@@ -5,6 +5,7 @@ import {OWNER_ENTRY_SECTIONS,QL374_HISTORICAL_PREREQUISITES,QL374_REQUIRED_GATES
 import {OwnerSixAppDrilldown} from './OwnerSixAppDrilldown';
 import {OwnerIncidentReview} from './OwnerIncidentReview';
 import {OwnerIncidentHistory} from './OwnerIncidentHistory';
+import {Ql481PrivateIncidentDesk} from './Ql481PrivateIncidentDesk';
 import {ownerIncidents,ownerReadbackFreshness} from './ql376OwnerIncidents';
 import {EMPTY_OWNER_HISTORY,observeOwnerIncidents} from './ql377OwnerIncidentHistory';
 import {ownerShellStatus} from './ql375OwnerStatus';
@@ -83,6 +84,7 @@ export function MasterOperatorEntry({ownerRole,enrolled,aal2,progress}:Props){
         <OwnerIncidentReview role={ownerRole} aal2={aal2} progress={progress} truth={truth} nowMs={nowMs}/>
         <OwnerIncidentHistory history={incidentHistory} nowMs={nowMs}
           authenticated={aal2&&incidentHistory.role===ownerRole}/>
+        <Ql481PrivateIncidentDesk unlocked={Boolean(aal2&&enrolled&&truth.held&&truth.state==='MEMBERSHIP_VERIFIED_HOLD')}/>
         <div className={truth.state==='STOP_REVIEW'?'ql374-truth ql374-stop':'ql374-truth'}
           role={truth.state==='STOP_REVIEW'?'alert':'status'}>
           <strong>{truth.label}</strong>
