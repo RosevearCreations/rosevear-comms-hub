@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
+  // QL-480: private durable scoped incident adapter and YW/iCamp simulation; no live production customer effects.
   // QL-479: one-time enrolled remote TLS1.3 transport and signed ACK; physical peer remains HOLD.
   // QL-478: owner-only private TLS1.3 SysOp loopback and first durable ACK; original-host/production peer remain HOLD.
   // QL-477: local original-host evidence exporter and signed first telemetry review; live transport remains HOLD.
