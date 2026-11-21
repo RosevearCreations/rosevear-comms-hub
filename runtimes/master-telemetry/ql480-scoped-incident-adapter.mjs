@@ -269,7 +269,7 @@ export function createQl480PrivateCaseAdapter({directory,sourcePins,operatorPin,
   return transact(scope,(p,rows,save)=>{
    const existing=p.sourceEvents.get(data.eventId);
    if(existing)return existing===digest(envelope)?
-     {state:'DUPLICATE_SOURCE_EVENT_NO_NEW_EFFECT',...safeProjection(p,rows)}:
+     {...safeProjection(p,rows),state:'DUPLICATE_SOURCE_EVENT_NO_NEW_EFFECT'}:
      stopped('QL480_EVENT_ID_CONFLICT');
    let transition;
    if(data.sequence<=p.lastSequence)transition='HISTORICAL';
@@ -289,9 +289,9 @@ export function createQl480PrivateCaseAdapter({directory,sourcePins,operatorPin,
    const entry={kind:'SOURCE',transition,envelope,intent};
    const written=save(entry);
    const next=project([...rows,{...written}],scope);
-   return {state:transition==='HISTORICAL'?'HISTORICAL_RETAINED_NO_REOPEN':
-     'SCOPED_CASE_EVENT_DURABLY_RECORDED',transition,recordDigest:written.digest,
-     ...safeProjection(next,[...rows,written])};
+   return {...safeProjection(next,[...rows,written]),
+     state:transition==='HISTORICAL'?'HISTORICAL_RETAINED_NO_REOPEN':
+       'SCOPED_CASE_EVENT_DURABLY_RECORDED',transition,recordDigest:written.digest};
   });
  }
  function command(envelope){
@@ -303,7 +303,7 @@ export function createQl480PrivateCaseAdapter({directory,sourcePins,operatorPin,
   return transact(scope,(p,rows,save)=>{
    const previous=p.commands.get(data.commandId);
    if(previous)return previous===digest(envelope)?
-    {state:'DUPLICATE_OPERATOR_COMMAND_NO_EFFECT',...safeProjection(p,rows)}:
+    {...safeProjection(p,rows),state:'DUPLICATE_OPERATOR_COMMAND_NO_EFFECT'}:
     stopped('QL480_OPERATOR_COMMAND_ID_CONFLICT');
    let entry;
    if(data.action==='CLOSE_CASE'){
@@ -332,8 +332,9 @@ export function createQl480PrivateCaseAdapter({directory,sourcePins,operatorPin,
    }
    const written=save(entry);
    const next=project([...rows,written],scope);
-   return {state:'PRIVATE_OPERATOR_TRANSITION_DURABLY_RECORDED',
-    action:data.action,recordDigest:written.digest,...safeProjection(next,[...rows,written])};
+   return {...safeProjection(next,[...rows,written]),
+    state:'PRIVATE_OPERATOR_TRANSITION_DURABLY_RECORDED',
+    action:data.action,recordDigest:written.digest};
   });
  }
  function read(readEnvelope){
