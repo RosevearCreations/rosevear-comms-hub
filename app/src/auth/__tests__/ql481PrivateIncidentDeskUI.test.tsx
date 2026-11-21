@@ -22,7 +22,7 @@ describe('QL-481 private owner desk rejects untrusted authority and restricts lo
   expect(host.querySelector('#ql481-app')).toBeTruthy();
   expect(host.querySelectorAll('input[type="file"]')).toHaveLength(1);
   expect(host.textContent).toContain('No authorized production case feed');
-  expect(host.textContent).toContain('No live cases verified');
+  expect(host.textContent).toContain('No verified case');
   expect(host.querySelectorAll('textarea,form')).toHaveLength(0);
   const source=host.querySelector<HTMLSelectElement>('#ql481-app')!;
   await act(async()=>{
