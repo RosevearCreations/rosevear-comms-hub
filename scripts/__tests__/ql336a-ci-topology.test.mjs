@@ -32,6 +32,8 @@ test('QL-336A retains all 43 existing application checks in their original order
        && !line.includes('ql477-field-telemetry.test.mjs')
        && !line.includes('ql478-private-pilot.test.mjs')
        && !line.includes('ql479-enrolled-remote-pilot.test.mjs')
+       && !line.includes('ql480-scoped-incident-adapter.test.mjs')
+       && !line.includes('ql480-two-source-rehearsal.mjs')
       && !line.includes('master-broker/event-inbox.test.mjs')
       && !line.includes('hub-relay/heartbeat.test.mjs')
       && !line.includes('hub-relay/private-receiver.test.mjs')
@@ -144,6 +146,13 @@ test('QL-336A retains all 43 existing application checks in their original order
   const ql479Gate='run_gate node --test ../runtimes/master-telemetry/ql479-enrolled-remote-pilot.test.mjs';
   assert.ok(gates.includes(ql479Gate),'QL-479 real opt-in mutual TLS remote and signed ACK gate mandatory');
   assert.ok(gates.indexOf(ql478Gate)<gates.indexOf(ql479Gate),'QL-479 follows QL-478');
+  const ql480Gate='run_gate node --test ../runtimes/master-telemetry/ql480-scoped-incident-adapter.test.mjs';
+  const ql480Rehearsal='run_gate node ../scripts/ql480-two-source-rehearsal.mjs';
+  assert.ok(gates.includes(ql480Gate),'QL-480 durable private scoped incident adapter mandatory');
+  assert.ok(gates.includes(ql480Rehearsal),'QL-480 isolated YW+iCamp rehearsal mandatory');
+  assert.ok(gates.indexOf(ql479Gate)<gates.indexOf(ql480Gate),'QL-480 follows QL-479');
+  assert.ok(gates.indexOf(ql480Gate)<gates.indexOf(ql480Rehearsal),'rehearsal follows tamper tests');
+  assert.match(appCi,/QL480_INTEGRITY_BOUNDARY_BROKEN/);
   assert.match(appCi,/QL478_POWERSHELL_PARSE_FAILED/);
   assert.match(appCi,/HOLD_QL478_ORIGINAL_HOST_REQUIRED/);
   assert.match(appCi,/QL477_POWERSHELL_PARSE_FAILED/);

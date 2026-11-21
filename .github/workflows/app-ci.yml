@@ -117,6 +117,17 @@ jobs:
               $source -notmatch "--supervised-receiver") {
             throw 'QL479_ORIGINAL_HOST_ENROLLMENT_OR_OPERATOR_GUARD_MISSING'
           }
+      - name: QL-480 incident adapter must remain a private no-send library
+        shell: pwsh
+        run: |
+          $source = Get-Content 'runtimes/master-telemetry/ql480-scoped-incident-adapter.mjs' -Raw
+          if ($source -notmatch "publicRoute:false" -or
+              $source -notmatch "automaticDispatch:false" -or
+              $source -notmatch "SIMULATED_PRIVATE_NO_SEND" -or
+              $source -notmatch "fsyncSync" -or
+              $source -match "\b(?:fetch|createServer|Register-ScheduledTask|Start-ScheduledTask)\s*\(") {
+            throw 'QL480_INTEGRITY_BOUNDARY_BROKEN'
+          }
       - name: Verify Windows key material never needs an unattended approval
         run: node --test runtimes/hub-relay/owner-authority-custody.test.mjs
       - name: Verify Windows offline dual-owner TEST enrollment ceremony
