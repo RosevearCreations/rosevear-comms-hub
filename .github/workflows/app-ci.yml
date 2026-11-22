@@ -26,6 +26,8 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - name: Run unchanged fail-closed release gates (QL-336A)
         run: bash ../scripts/ql336a-required-gates.sh
+      - name: Verify QL-482 private case-read and independent Yard Workers review
+        run: node --test ../runtimes/master-telemetry/ql482-protected-case-read.test.mjs
 
   original-owner-keys-windows:
     name: QL-340 Windows encrypted owner key safety
