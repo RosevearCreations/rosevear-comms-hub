@@ -132,3 +132,4 @@ run_gate node --test ../scripts/__tests__/ql382-owner-saved-sessions.test.mjs
 run_gate npm run test -- src/auth/__tests__/ql382OwnerSavedSessions.test.tsx
 run_gate npm run test -- src/auth/__tests__/ql378OwnerIncidentTriage.test.ts src/auth/__tests__/ql378OwnerIncidentTriageUI.test.tsx
 run_gate node --test ../runtimes/hub-relay/ql369-activation-decision.test.mjs
+run_gate node --test ../runtimes/master-telemetry/ql482-protected-case-read.test.mjs
