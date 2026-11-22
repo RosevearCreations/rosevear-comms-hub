@@ -65,7 +65,11 @@ export default{
      metrics:{requests:null,serverErrors:null,jobsCompleted:null,jobsFailed:null,queueDepth:null,latencyP95Ms:null,activeSessions:null},
      sysop:{eventKind:"HEARTBEAT",observedAtMs:now,processUptimeSec:null,restartCount:null,lastRestartAtMs:null,bootTimeMs:null,rebootIsIndependentlyWitnessed:false},
      dataClass:"NON_SENSITIVE_AGGREGATE",tenantId:null,authorizesAction:false};
-    const stub=await signer(env);\n    const signed=await stub.fetch("https://signer.internal/sign",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});\n    if(!signed.ok)return signed;\n    const envelope=await signed.json();\n    return json({payload:envelope.payload,signature:envelope.signature});
+    const stub=await signer(env);
+    const signed=await stub.fetch("https://signer.internal/sign",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    if(!signed.ok)return signed;
+    const envelope=await signed.json();
+    return json({payload:envelope.payload,signature:envelope.signature});
    }catch{return json({state:"HOLD_SIGNER_UNAVAILABLE",connected:false,authorizesAction:false},503);}
   }
   return env.ASSETS.fetch(request);
