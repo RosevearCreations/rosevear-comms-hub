@@ -32,6 +32,8 @@ jobs:
         run: node --test ../runtimes/master-telemetry/ql482-protected-case-read.test.mjs
       - name: Verify QL-483 original YW enrollment, scoped mTLS ingress and independent field HOLD
         run: node --test ../runtimes/master-telemetry/ql483-original-yw-field.test.mjs ../runtimes/master-telemetry/ql483-original-windows-enroll.test.mjs
+      - name: Verify QL-484 original-host private YW field correlation, mTLS endpoint and release provenance
+        run: node --test ../runtimes/master-telemetry/ql484-supervised-original-host-field.test.mjs ../runtimes/master-telemetry/ql484-private-field-https.test.mjs ../runtimes/master-telemetry/ql484-original-host-cli.test.mjs
 
   original-owner-keys-windows:
     name: QL-340 Windows encrypted owner key safety
@@ -134,6 +136,8 @@ jobs:
               $source -match "\b(?:fetch|createServer|Register-ScheduledTask|Start-ScheduledTask)\s*\(") {
             throw 'QL480_INTEGRITY_BOUNDARY_BROKEN'
           }
+      - name: QL-484 original Windows field-review receiver remains manual and inert on CI
+        run: node --test runtimes/master-telemetry/ql484-original-host-cli.test.mjs
       - name: QL-483 original Windows enrollment must remain supervised and inert on CI
         run: node --test runtimes/master-telemetry/ql483-original-windows-enroll.test.mjs
       - name: QL-481 owner-scoped case desk remains offline and no-send
