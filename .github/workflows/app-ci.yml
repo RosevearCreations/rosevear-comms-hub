@@ -30,6 +30,8 @@ jobs:
         run: bash ../scripts/ql336a-required-gates.sh
       - name: Verify QL-482 private case-read and independent Yard Workers review
         run: node --test ../runtimes/master-telemetry/ql482-protected-case-read.test.mjs
+      - name: Verify QL-483 original YW enrollment, scoped mTLS ingress and independent field HOLD
+        run: node --test ../runtimes/master-telemetry/ql483-original-yw-field.test.mjs ../runtimes/master-telemetry/ql483-original-windows-enroll.test.mjs
 
   original-owner-keys-windows:
     name: QL-340 Windows encrypted owner key safety
@@ -132,6 +134,8 @@ jobs:
               $source -match "\b(?:fetch|createServer|Register-ScheduledTask|Start-ScheduledTask)\s*\(") {
             throw 'QL480_INTEGRITY_BOUNDARY_BROKEN'
           }
+      - name: QL-483 original Windows enrollment must remain supervised and inert on CI
+        run: node --test runtimes/master-telemetry/ql483-original-windows-enroll.test.mjs
       - name: QL-481 owner-scoped case desk remains offline and no-send
         shell: pwsh
         run: |
