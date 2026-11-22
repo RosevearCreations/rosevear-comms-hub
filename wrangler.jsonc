@@ -1,112 +1,21 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  // QL-481: read-only owner case desk and independent private handover ledger; real source integrations HOLD.
-  // QL-480: private durable scoped incident adapter and YW/iCamp simulation; no live production customer effects.
-  // QL-479: one-time enrolled remote TLS1.3 transport and signed ACK; physical peer remains HOLD.
-  // QL-478: owner-only private TLS1.3 SysOp loopback and first durable ACK; original-host/production peer remain HOLD.
-  // QL-477: local original-host evidence exporter and signed first telemetry review; live transport remains HOLD.
-  // QL-476: supervised on-demand local SysOp worker; receiver remains OFF and first host recovery awaits physical witness.
-  // QL-092: no-behavior Cloudflare Worker redeploy trigger after docs-only trigger did not post a Worker check.
-  // QL-093: no-behavior Cloudflare Worker redeploy trigger for validated synthetic safe reads production promotion.
-  // QL-094: no-behavior Cloudflare Worker redeploy trigger for safe-read review evidence production promotion.
-  // QL-095: no-behavior Cloudflare Worker redeploy trigger for operator acceptance plan production promotion.
-  // QL-096: no-behavior Cloudflare Worker redeploy trigger for operator acceptance review production promotion.
-  // QL-097: no-behavior Cloudflare Worker redeploy trigger for evidence ledger plan production promotion.
-  // QL-098: no-behavior Cloudflare Worker redeploy trigger for evidence ledger review production promotion.
-  // QL-099: no-behavior Cloudflare Worker redeploy trigger for evidence ledger resolution plan production promotion.
-  // QL-100: no-behavior Cloudflare Worker redeploy trigger for evidence ledger resolution review production promotion.
-  // QL-101: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence plan production promotion.
-  // QL-102: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence plan review production promotion.
-  // QL-103: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence implementation plan production promotion.
-  // QL-104: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence implementation plan review production promotion.
-  // QL-105: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence implementation readiness decision production promotion.
-  // QL-106: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence implementation draft plan production promotion.
-  // QL-107: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence implementation draft review production promotion.
-  // QL-107 retry: no-behavior Cloudflare Worker redeploy trigger after the first QL-107 main merge did not post a Worker check.
-  // QL-108: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation decision planning production promotion.
-  // QL-109: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation decision planning review production promotion.
-  // QL-110: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation planning readiness decision production promotion.
-  // QL-110 queue refresh: no-behavior trigger after the first PR-head app-build remained queued and the PR-side Worker check failed before merge.
-  // QL-111: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation plan draft production promotion.
-  // QL-112: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation plan draft review production promotion.
-  // QL-112 queue refresh: no-behavior trigger after the first PR-head app-build remained queued before merge.
-  // QL-113: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation owner decision planning production promotion.
-  // QL-113 queue refresh: no-behavior trigger after the first PR-head app-build remained queued before merge.
-  // QL-114: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation owner decision planning review production promotion.
-  // QL-115: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation owner decision readiness decision production promotion.
-  // QL-116: no-behavior Cloudflare Worker redeploy trigger for evidence ledger persistence bounded implementation owner decision readiness decision review production promotion.
-  // QL-117: no-behavior Cloudflare Worker redeploy trigger for owner decision packet review planning production promotion.
-  // QL-118: no-behavior Cloudflare Worker redeploy trigger for owner decision packet review planning review production promotion.
-  // QL-119: no-behavior Cloudflare Worker redeploy trigger for owner packet review readiness decision production promotion.
-  // QL-123 release verification: no-behavior production Worker rebuild. Cloudflare dev-sync checks are independent of the successful main deployment.
-  // QL-124: no-runtime-change deploy trigger for independent readiness review main production verification.
-  // QL-125: no-behavior production Worker build marker; validate on exact main SHA alongside disabled Pages.
-  // QL-126: nonfunctional production Worker verification marker for read-only handoff planning review.
-  // QL-127: nonfunctional production Worker redeploy marker for the safe-read handoff readiness decision.
-  // QL-128: no-behavior Cloudflare Worker trigger for exact-main handoff readiness decision review verification.
-  // QL-129: no-behavior Worker build marker for exact-main follow-up planning verification.
-  // QL-130: no-runtime-change Cloudflare Worker trigger for exact main handoff follow-up planning review verification.
-  // QL-131: no-runtime-change Worker build marker for exact main readiness decision verification.
-  // QL-132: no-runtime-change production Workers verification marker for follow-up readiness review.
-  // QL-133: no-runtime-change production Workers verification marker for read-only follow-up planning.
-  // QL-134: no-runtime-change production Workers verification marker for follow-up planning review.
-  // QL-135: no-runtime-change Worker build marker for exact main follow-up planning readiness decision.
-  // QL-136: no-runtime-change Worker verification marker for final main readiness decision review.
-  // QL-137: nonfunctional production Workers build trigger for safe-read follow-up planning.
-  // QL-138: no-runtime-change Worker build marker to verify exact-main synthetic follow-up planning review.
-  // QL-139: no-runtime-change Worker check for final-main synthetic follow-up readiness decision.
-  // QL-140: no-runtime-change Worker build marker for exact-final-main readiness decision review.
-  // QL-141: no-runtime-change verification marker for exact-final-main Worker build.
-  // QL-142: exact-main Worker build marker; export and provider runtime unchanged.
-  // QL-143: nonfunctional production Worker check marker; export remains disabled.
-  // QL-144: nonfunctional Worker verification marker; live behavior remains disabled.
-  // QL-145: no-behavior Worker verification marker; live comms and exports stay disabled.
-  // QL-146: source-only Worker verification marker; no export, storage or live-provider change.
-  // QL-147: source-only Worker verification marker; no production behavior changes.
-  // QL-148: source-only Worker verification marker; audit remains in-memory and private data excluded.
-  // QL-149: no-behavior Worker check marker; no real audit, acceptance or live export.
-  // QL-150: source-only Worker verification marker; no live service or data-path changes.
-  // QL-151: Worker build verification marker; no changes to live service permissions.
-  // QL-152: source-only Worker verification trigger; actual customer/communications runtime remains disabled.
-  // QL-153: exact-main Worker verification marker; public/synthetic operator preview only.
-  // QL-154: source-only exact-main Worker verification; live communications stay disabled.
-  // QL-155: source-only Worker verification marker; no live communications or persistence enabled.
-  // QL-156: source-only Worker check marker; operator preview remains synthetic and disabled.
-  // QL-157: nonfunctional exact-final-main Worker check marker; public preview remains synthetic only.
-  // QL-158: nonfunctional final-main Workers verification marker; no real escalation or live communications.
-  // QL-159: source-only final-main Worker verification marker; real escalation remains disabled.
-  // QL-160: source-only Workers build verification marker; live communications still disabled.
-  // QL-161: nonfunctional Worker release check marker; synthetic disabled preview only.
-  // QL-162: exact-main Worker verification marker; no live communications enabled.
-  // QL-163: source-only Worker release verification marker; follow-up authorization remains disabled.
-  // QL-163 final-main verification retry: no runtime/configuration changes after dev ref sync.
-  // QL-163 joint Pages/Workers release receipt: source-only rebuild marker.
-  // QL-164: automated synthetic authorization regression gate; no live provider changes.
-  // QL-165: version-pinned synthetic local fixtures with fail-closed drift detection; live runtime remains disabled.
-  // QL-166: accessible synthetic operator preview; source-only Worker check marker with live runtime disabled.
-  // QL-167: source-only Worker release check for brand-scoped synthetic safe reads and fail-closed fallback.
-  // QL-168: source-only Worker release verification for display-only synthetic hold review ordering.
-  // QL-169: source-only Worker check for public-safe privacy prerequisite matrix; no private records or live operations.
-  // QL-170: source-only Worker release receipt validation marker; live provider and private intake remain disabled.
-  // QL-197: source-only Workers build recheck after the calendar UI promotion; no runtime setting or live channel is enabled.
-  // QL-247: source-only Workers release verification marker; six-app census and all live connections remain HOLD.
-  // QL-248: source-only Workers check marker; proof reconciliation is offline and connections remain HOLD.
-  // QL-249: source-only Workers check marker; GitHub-only proof retest and all live app connections remain HOLD.
-  // QL-250: source-only Worker verification marker; key-custody and future GET-window review remain offline HELD.
-  // QL-251: source-only Workers release marker; witness and owner-test request signatures remain offline HELD.
-  // QL-252: source-only Workers release marker; proof escalation and test-only approval claim intake remain HELD.
-  // QL-253: source-only Workers release marker; six-app trusted pins, TEST-only approval and private relay remain HELD.
-  // QL-254: source-only Workers release marker; original proof witnesses and private 24/7 relay remain HELD.
-  // QL-255: source-only Workers release marker; real signer custody, owner TEST and mini-server activation remain HELD.
-  // QL-255 production Worker retry: trigger independent rebuild after main-only Cloudflare failure; runtime, permissions and HELD gates unchanged.
-  // QL-256: source-only Worker deployment check for signer/role/TEST readiness guides; no private relay, live gateway or permission enabled.
-  // QL-256 Workers retry: repeat exact disabled release build after branch-side external check failed; no runtime or secret changes.
-  // QL-257: source-only Worker rebuild for six real signer responses and static build-variable routing; live runtime remains disabled.
   "name": "rosevear-comms-hub",
-  "compatibility_date": "2026-10-10",
+  "main": "./worker/build432-sysop-telemetry.js",
+  "compatibility_date": "2026-11-21",
   "previews": {},
   "assets": {
     "directory": "./app/dist",
-    "not_found_handling": "single-page-application"
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/internal/rosevear/sysop/telemetry/*"]
+  },
+  "durable_objects": {
+    "bindings": [
+      {"name":"BUILD432_SIGNER","class_name":"Build432Signer"}
+    ]
+  },
+  "exports": {
+    "Build432Signer": {"type":"durable-object","storage":"sqlite"}
   }
 }
