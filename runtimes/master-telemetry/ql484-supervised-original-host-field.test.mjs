@@ -161,15 +161,15 @@ test('QL484 rejects missing original source enrollment, wrong cert, mismatched r
  const f=fixture(ctx);
  assert.equal(f.review.commit({sourceObservationPacket:{payload:{sessionId:id(900)}}}).state,'HOLD');
  f.setup();
- for(const mod of [
+ for(const [i,mod] of [
   {operatorClientCertificateFingerprint:srcCert},
   {operatorTlsAuthorized:false},
   {sourceObservationPacket:{payload:{sessionId:id(900)}}}
- ]){
-  const b=f.bundle({sessionNum:901,requestSeq:1001});
+ ].entries()){
+  const b=f.bundle({sessionNum:901,requestSeq:1001+i});
   assert.equal(f.review.commit({...b,...mod}).state,'HOLD');
  }
- for(const variation of [
+ for(const [i,variation] of [
   {source:{tenantId:'foreign-company'}},
   {source:{sourceRevision:'0'.repeat(40)}},
   {source:{commsMainRevision:'0'.repeat(40)}},
@@ -182,8 +182,8 @@ test('QL484 rejects missing original source enrollment, wrong cert, mismatched r
   {reviewer:{sourceRevision:'0'.repeat(40)}},
   {reviewer:{independentPhysicalAttestation:true}},
   {reviewerSigner:'attacker'}
- ]){
-  const b=f.bundle({sessionNum:902,requestSeq:1100,...variation});
+ ].entries()){
+  const b=f.bundle({sessionNum:902,requestSeq:1100+i,...variation});
   assert.equal(f.review.commit(b).state,'HOLD',JSON.stringify(variation));
  }
 });
