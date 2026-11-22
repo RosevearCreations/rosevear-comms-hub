@@ -1,4 +1,4 @@
-// AIDP Build 432 canonical-envelope Workers redeploy trigger; no configuration behavior change.
+// AIDP Build 432 canonical-envelope syntax-fix Workers redeploy trigger; no configuration behavior change.
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "rosevear-comms-hub",
