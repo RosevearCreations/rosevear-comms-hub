@@ -24,6 +24,8 @@ jobs:
           cache: npm
           cache-dependency-path: app/package-lock.json
       - run: npm ci --no-audit --no-fund
+      - name: Parse Cloudflare Worker entrypoint
+        run: node --check ../worker/build432-sysop-telemetry.js
       - name: Run unchanged fail-closed release gates (QL-336A)
         run: bash ../scripts/ql336a-required-gates.sh
       - name: Verify QL-482 private case-read and independent Yard Workers review

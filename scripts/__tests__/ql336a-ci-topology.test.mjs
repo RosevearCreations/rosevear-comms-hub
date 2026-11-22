@@ -170,6 +170,7 @@ test('QL-336A retains all 43 existing application checks in their original order
   assert.match(gates, /set -euo pipefail/);
   assert.match(gates, /"\$@"/);
   assert.match(appCi, /npm ci --no-audit --no-fund/);
+  assert.match(appCi, /node --check \.\.\/worker\/build432-sysop-telemetry\.js/);
   assert.match(appCi, /bash \.\.\/scripts\/ql336a-required-gates\.sh/);
   const originalHubGate = 'run_gate node --test ../runtimes/hub-relay/heartbeat.test.mjs';
   const newReceiverGate = 'run_gate node --test ../runtimes/hub-relay/private-receiver.test.mjs ../runtimes/hub-relay/server.test.mjs';
