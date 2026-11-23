@@ -168,7 +168,9 @@ export function readQl490PrivateFieldEvidence({evidenceDirectory,registry,journa
  }
  // Every existing QL489 closure must have a signed OPEN case in this
  // explicitly supplied case set; otherwise age reconciliation is incomplete.
- const knownClosed=closed.filter(c=>seen.has(c.caseId));
+ const knownClosed=closed.filter(c=>cases.some(k=>
+  k.caseId===c.caseId&&k.sourceId===c.sourceId&&
+  k.closureDigest===c.recordDigest));
  const unmatchedClosures=closed.length-knownClosed.length;
  const complete=unmatchedClosures===0;
  const sourceMatchCount=QL485_SOURCE_IDS.filter(id=>
