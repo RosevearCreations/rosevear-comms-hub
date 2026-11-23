@@ -44,6 +44,10 @@ jobs:
         run: node --test ../runtimes/master-discovery/ql488-original-host-transport.test.mjs
       - name: QL-488 original owner private probe remains inert on CI
         run: node ../runtimes/master-discovery/ql488-original-host-probe-cli.mjs --status
+      - name: QL-489 six-source signed live capture and exception closure regression
+        run: node --test ../runtimes/master-discovery/ql489-live-source-capture.test.mjs
+      - name: QL-489 original host remains inert on CI
+        run: node ../runtimes/master-discovery/ql489-original-host-cli.mjs --status
 
   original-owner-keys-windows:
     name: QL-340 Windows encrypted owner key safety
@@ -148,6 +152,8 @@ jobs:
           }
       - name: QL-486 original owner operator console remains manual and network-inert on Windows CI
         run: node --test runtimes/master-discovery/ql486-original-host-console-cli.test.mjs
+      - name: QL-489 Windows CI rejects nonoriginal signed-source capture and closure
+        run: node --test runtimes/master-discovery/ql489-live-source-capture.test.mjs
       - name: QL-485 offline source compatibility CLI remains non-networking on Windows CI
         run: node --test runtimes/master-discovery/ql485-offline-compatibility-cli.test.mjs
       - name: QL-484 original Windows field-review receiver remains manual and inert on CI
