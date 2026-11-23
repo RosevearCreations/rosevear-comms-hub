@@ -184,5 +184,15 @@ export function readQl490PrivateFieldEvidence({evidenceDirectory,registry,journa
   originalWindowsPhysicallyCertified:false,signerPacketsReverified:false,
   productionAcceptance:false,autoRecovery:false,customerWrites:false,
   sourceAuthority:false};
- return Object.freeze({...result,readbackDigest:hash(result)});
+ // Approval identity must be stable across process restarts and clock changes.
+ // Age/status remain visible in the report, but are not signed evidence bytes.
+ const immutableEvidence={
+  journalHead:result.journalHead,registryDigest:result.registryDigest,
+  sourceReceipts:Object.fromEntries(QL485_SOURCE_IDS.map(id=>[id,{
+   captureDigest:sources[id].lastCaptureDigest,
+   receiptDigest:sources[id].registryReceiptDigest
+  }])),
+  signedCasePacketDigests:openCasePackets.map(p=>hash(p)).sort()
+ };
+ return Object.freeze({...result,readbackDigest:hash(immutableEvidence)});
 }
