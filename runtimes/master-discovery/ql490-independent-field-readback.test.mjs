@@ -119,6 +119,8 @@ test('QL490 independent second-parser crosschecks six signed-capture metadata di
  }
  assert.equal(report.originalWindowsPhysicallyCertified,false);
  assert.equal(report.sourceAuthority,false);
+ assert.equal(f.read({nowMs:at+90000,receiptMaxAgeMs:60000}).readbackDigest,
+  report.readbackDigest,'time-relative aging cannot invalidate unchanged signed evidence');
 });
 test('QL490 modified custody chain and mismatched registry source receipt fail closed',ctx=>{
  const f=fixture(ctx,{withCaptures:true});
