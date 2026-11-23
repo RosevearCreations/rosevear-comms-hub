@@ -90,11 +90,15 @@ export function createQl487SupervisedSync({registry,pins,fetchSource,operatorPin
   return {state:'SUPERVISED_SWEEP_FINISHED_HELD',sources,
    sourceConnectionsVerified:0,customerWrites:false,automaticMerge:false};
  }
- function reconcile(packet){
+ function reconcile(packet,{noticePacket}={}){
   const p=packet?.payload,at=now();
   if(!p||!QL485_SOURCE_IDS.includes(p.sourceId)||
    !verifyDecision(packet,operatorPins[p.sourceId],at))
    return hold('QL487_INDEPENDENT_OPERATOR_SIGNATURE_REQUIRED');
+  const validated=verifyQl485SourceNotice({packet:noticePacket,pin:pins[p.sourceId],nowMs:at});
+  if(validated.state==='HOLD'||validated.noticeDigest!==p.noticeDigest||
+   noticePacket?.payload?.sourceRevision!==p.observedRevision)
+   return hold('QL487_OPERATOR_SIGNED_DECISION_NOTICE_MISMATCH');
   const snap=registry.summary(),source=snap.sources?.[p.sourceId];
   if(snap.state!=='PRIVATE_OPERATOR_REGISTRY_READ_ONLY_HELD'||!source||
    source.state==='PRIVATE_SOURCE_ATTESTATION_TAMPER_HOLD'||
