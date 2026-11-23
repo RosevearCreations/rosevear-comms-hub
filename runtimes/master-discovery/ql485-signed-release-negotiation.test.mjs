@@ -83,6 +83,15 @@ test('QL485 denies invalid signatures, source impersonation, reused keys, escala
   assert.equal(check({...baseline,sourceId:'unknown'}).state,'HOLD');
  }
 });
+test('QL485 a single signing key cannot impersonate two approved app sources',()=>{
+ const f=fixtures();
+ f.pins.icamp={...f.pins.icamp,publicKeyPem:f.pins.yw.publicKeyPem};
+ f.packets.icamp=signed(notice('icamp'),'yw');
+ const r=negotiateQl485SixSources({...f,nowMs:now});
+ assert.equal(r.compatibleCount,4);
+ assert.equal(r.results.icamp.reason,'QL485_REUSED_SOURCE_SIGNER_PIN_DENIED');
+ assert.equal(r.results.yw.reason,'QL485_REUSED_SOURCE_SIGNER_PIN_DENIED');
+});
 test('QL485 source release, major schema, minor contract and capability drift are distinct HOLDs',()=>{
  const id='yw',p=pin(id);
  const next=verifyQl485SourceNotice({packet:signed(notice(id,{

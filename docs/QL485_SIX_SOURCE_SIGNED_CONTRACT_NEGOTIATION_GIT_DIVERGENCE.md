@@ -17,7 +17,7 @@ Implemented in:
 
 Every source signs a short-lived exact QL-485 notice with its Ed25519 original source key. The JSON packet describes immutable source revision, previous source revision, contract version, supported event schemas, source-specific read-only capabilities, original repository, tenant boundary, environment, audience and no customer or authority transfer. Signature uses the QL-333 recursively sorted canonical JSON algorithm, but these are **separate** QL-485 source notices; QL-333 discovery signed/unsigned manifests are not silently upgraded.
 
-The receiver must already have a **separately verified owner-approved pin** containing each source's exact public signer, approved 40-character source Git SHA, major/minor/patch contract version, exact ordered approved schema set and capabilities. No trust-on-first-use. Exactly matching, current signed metadata produces SIGNED_COMPATIBLE_READ_ONLY_CONTRACT_HELD, never "connected".
+The receiver must already have a **separately verified owner-approved pin** containing each source's exact public signer, approved 40-character source Git SHA, major/minor/patch contract version, exact ordered approved schema set and capabilities. No trust-on-first-use, and the same signing key cannot impersonate two separately enrolled source IDs. Exactly matching, current signed metadata produces SIGNED_COMPATIBLE_READ_ONLY_CONTRACT_HELD, never "connected".
 
 Different, independently meaningful states:
 - Source revision changes with an approved previous revision: SIGNED_NEW_REVISION_OWNER_REENROLLMENT_REQUIRED. Unanchored revision chains are HOLD.

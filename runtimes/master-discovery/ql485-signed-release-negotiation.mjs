@@ -143,7 +143,17 @@ export function verifyQl485IndependentReview({release,reviewPacket,reviewerPin,
 /** One independently verified source slot for every one of the six apps. */
 export function negotiateQl485SixSources({packets={},pins={},nowMs=Date.now()}={}){
  const results={};
+ // Reused source keys are refused even when packets have different source IDs.
+ const keyUse=new Map();
  for(const id of QL485_SOURCE_IDS){
+  const pem=pins[id]?.publicKeyPem;
+  if(typeof pem==='string'&&pinnedKey(pem)){
+   const ids=keyUse.get(pem)??[];ids.push(id);keyUse.set(pem,ids);
+  }
+ }
+ const sharedKeys=new Set([...keyUse.values()].filter(ids=>ids.length>1).flat());
+ for(const id of QL485_SOURCE_IDS){
+  if(sharedKeys.has(id)){results[id]=hold('QL485_REUSED_SOURCE_SIGNER_PIN_DENIED');continue}
   if(!own(packets,id)){results[id]=hold('QL485_SOURCE_NOTICE_MISSING');continue}
   if(packets[id]?.payload?.sourceId!==id){
    results[id]=hold('QL485_WRONG_SOURCE_ENVELOPE');continue}
