@@ -13,7 +13,7 @@ const exact=(o,fields)=>!!o&&typeof o==='object'&&!Array.isArray(o)&&Object.keys
 const ENDPOINT_FIELDS=['sourceId','url','serverCertificateSha256','caPem','clientCertificatePem','clientKeyPem'];
 const ENTRY_FIELDS=['sequence','previousDigest','sourceId','decisionId','decision','decisionDigest','receiptDigest','registryDigest','recordedAtMs','recordDigest'];
 const safeDir=directory=>{
- if(typeof directory!=='string'||!isAbsolute(directory)||directory.split(/[\/]/).includes('..'))throw Error('QL488_PRIVATE_DIRECTORY_REQUIRED');
+ if(typeof directory!=='string'||!isAbsolute(directory)||directory.split(/[\\/]/).includes('..'))throw Error('QL488_PRIVATE_DIRECTORY_REQUIRED');
  const dir=resolve(directory);
  mkdirSync(dir,{recursive:true,mode:0o700});
  const st=lstatSync(dir);
