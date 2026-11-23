@@ -48,6 +48,10 @@ jobs:
         run: node --test ../runtimes/master-discovery/ql489-live-source-capture.test.mjs
       - name: QL-489 original host remains inert on CI
         run: node ../runtimes/master-discovery/ql489-original-host-cli.mjs --status
+      - name: QL-490 independent receipt readback, signed exception aging and no-send recovery drill
+        run: node --test ../runtimes/master-discovery/ql490-independent-field-readback.test.mjs
+      - name: QL-490 original-host CLI remains network-inert in CI
+        run: node ../runtimes/master-discovery/ql490-original-host-cli.mjs --status
 
   original-owner-keys-windows:
     name: QL-340 Windows encrypted owner key safety
@@ -154,6 +158,8 @@ jobs:
         run: node --test runtimes/master-discovery/ql486-original-host-console-cli.test.mjs
       - name: QL-489 Windows CI rejects nonoriginal signed-source capture and closure
         run: node --test runtimes/master-discovery/ql489-live-source-capture.test.mjs
+      - name: QL-490 Windows field/exception and recovery drill safety regression
+        run: node --test runtimes/master-discovery/ql490-independent-field-readback.test.mjs
       - name: QL-485 offline source compatibility CLI remains non-networking on Windows CI
         run: node --test runtimes/master-discovery/ql485-offline-compatibility-cli.test.mjs
       - name: QL-484 original Windows field-review receiver remains manual and inert on CI
