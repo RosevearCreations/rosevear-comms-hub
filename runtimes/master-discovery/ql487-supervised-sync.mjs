@@ -103,7 +103,7 @@ export function createQl487SupervisedSync({registry,pins,fetchSource,operatorPin
    p.approvedRevision!==source.approvedRevision||
    !SHA.test(p.observedRevision??'')||!SHA.test(p.approvedRevision??'')||
    !HEX.test(p.noticeDigest??'')||
-   p.noticeDigest!==source.evidenceNoticeDigest && false)
+   !TOKEN.test(p.operatorId??''))
    return hold('QL487_OPERATOR_DECISION_STALE_OR_REGISTRY_UNTRUSTED');
   return {state:'OPERATOR_DECISION_RECORDED_IN_MEMORY_HOLD',sourceId:p.sourceId,
    decision:p.decision,decisionDigest:digest(packet),
