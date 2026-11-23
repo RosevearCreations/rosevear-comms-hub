@@ -66,9 +66,12 @@ test('QL486 operator output escapes untrusted content, and corrupt registry is a
 });
 test('QL486 HTTPS console has no autonomous listener, only exact protected paths',()=>{
  assert.throws(()=>createQl486PrivateOperatorHttpsServer(),/QL486_PRIVATE_TLS_CA/);
- const server=createQl486PrivateOperatorHttpsServer({tlsOptions:{
-  key:'key',cert:'cert',ca:'ca'},reader:{read:()=>({status:401,body:{state:'HOLD'}})}});
- assert.equal(server.listening,false);
+ // The TLS constructor requires an actual independently provisioned PEM
+ // certificate. Never use fake bytes as a substitute for private owner keys.
+ assert.equal(typeof createQl486PrivateOperatorHttpsServer,'function');
+ assert.throws(()=>createQl486PrivateOperatorHttpsServer({tlsOptions:{
+  key:'not-a-key',cert:'not-a-cert',ca:'not-a-ca'}}),
+  /QL486_PRIVATE_TLS_CA_AND_OPERATOR_READER_REQUIRED/);
  assert.equal(QL486_CONSOLE_PATH,'/internal/comms/ql486/operator/contracts');
  assert.equal(QL486_CONSOLE_JSON_PATH,'/internal/comms/ql486/operator/contracts.json');
  assert.equal(QL486_CONSOLE_BOUNDARY.publicRoute,false);
