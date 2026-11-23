@@ -13,7 +13,7 @@ const exact=(o,fields)=>!!o&&typeof o==='object'&&!Array.isArray(o)&&Object.keys
 const ENDPOINT_FIELDS=['sourceId','url','serverCertificateSha256','caPem','clientCertificatePem','clientKeyPem'];
 const ENTRY_FIELDS=['sequence','previousDigest','sourceId','decisionId','decision','decisionDigest','receiptDigest','registryDigest','recordedAtMs','recordDigest'];
 const safeDir=directory=>{
- if(typeof directory!=='string'||!isAbsolute(directory)||directory.split(/[\\/]/).includes('..'))throw Error('QL488_PRIVATE_DIRECTORY_REQUIRED');
+ if(typeof directory!=='string'||!isAbsolute(directory)||directory.split(/[\/]/).includes('..'))throw Error('QL488_PRIVATE_DIRECTORY_REQUIRED');
  const dir=resolve(directory);
  mkdirSync(dir,{recursive:true,mode:0o700});
  const st=lstatSync(dir);
@@ -34,7 +34,7 @@ export function validateQl488Enrollment(endpoints){
   try{url=new URL(entry.url)}catch{throw Error('QL488_PRIVATE_HTTPS_URL_REQUIRED')}
   if(url.protocol!=='https:'||url.username||url.password||url.search||url.hash||
    url.pathname!=='/internal/comms/source-release'||
-   !/^([a-z0-9-]+\\.)+[a-z0-9-]+$/i.test(url.hostname)||
+   !/^([a-z0-9-]+\.)+[a-z0-9-]+$/i.test(url.hostname)||
    url.hostname.endsWith('.local')||url.hostname.endsWith('.localhost')||
    ![443,8443].includes(Number(url.port||443)))
    throw Error('QL488_PRIVATE_HTTPS_URL_REQUIRED');
@@ -69,7 +69,7 @@ export async function probeQl488PrivateEndpoint(entry,{timeoutMs=5000}={}){
     if((cert.fingerprint256??'').replaceAll(':','').toLowerCase()!==entry.serverCertificateSha256)
      return Error('QL488_SERVER_CERTIFICATE_PIN_MISMATCH');
    }},res=>{
-   if(res.statusCode!==200||!/^application\\/json(?:;|$)/i.test(String(res.headers['content-type']??''))){
+   if(res.statusCode!==200||!/^application\/json(?:;|$)/i.test(String(res.headers['content-type']??''))){
     res.resume();finish(hold('QL488_PRIVATE_SOURCE_HTTP_OR_MEDIA_DENIED'));return;
    }
    let body='',bytes=0;
@@ -99,8 +99,8 @@ export function createQl488DecisionLedger({directory,now=()=>Date.now()}={}){
    if(!st.isFile()||st.size>2000000||(process.platform!=='win32'&&(st.mode&0o077)))
     throw Error('QL488_PRIVATE_DECISION_LOG_UNSAFE');
    const raw=readFileSync(fd,'utf8');
-   if(!raw.endsWith('\\n'))throw Error('QL488_DECISION_LOG_TRUNCATED');
-   const rows=raw.trimEnd().split('\\n').map(s=>JSON.parse(s));
+   if(!raw.endsWith('\n'))throw Error('QL488_DECISION_LOG_TRUNCATED');
+   const rows=raw.trimEnd().split('\n').map(s=>JSON.parse(s));
    let prev=null;
    rows.forEach((r,i)=>{
     if(!exact(r,ENTRY_FIELDS)||r.sequence!==i+1||r.previousDigest!==prev||
@@ -132,7 +132,7 @@ export function createQl488DecisionLedger({directory,now=()=>Date.now()}={}){
    const record={...data,recordDigest:hash(data)};
    const out=openSync(path,constants.O_WRONLY|constants.O_APPEND|constants.O_NOFOLLOW|
     (rows.length?0:constants.O_CREAT|constants.O_EXCL),0o600);
-   try{writeFileSync(out,JSON.stringify(record)+'\\n');fsyncSync(out)}finally{closeSync(out)}
+   try{writeFileSync(out,JSON.stringify(record)+'\n');fsyncSync(out)}finally{closeSync(out)}
    if(read().at(-1)?.recordDigest!==record.recordDigest)return hold('QL488_DURABLE_READBACK_FAILED');
    return {state:'DURABLE_OPERATOR_DECISION_RECORDED_HELD',sourceId,sequence:record.sequence,
     recordDigest:record.recordDigest,authorityTransfer:false,productionAcceptance:false};
