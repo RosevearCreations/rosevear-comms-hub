@@ -120,6 +120,6 @@ export function createQl486PrivateOperatorHttpsServer({tlsOptions,reader}={}){
  });
 }
 export const QL486_CONSOLE_BOUNDARY=Object.freeze({
- autoListen:false,cloudflarePublicRoute:false,
+ autoListen:false,publicRoute:false,cloudflarePublicRoute:false,
  customerWrites:false,sourceConnect:false,jsClientScripts:false,
  sourceFieldAcceptance:'HOLD'});
