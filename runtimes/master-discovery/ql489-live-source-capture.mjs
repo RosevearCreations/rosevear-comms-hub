@@ -66,6 +66,8 @@ export function createQl489LiveCapture({
    exceptionPins[id].operatorPublicKeyPem===exceptionPins[id].reviewerPublicKeyPem||
    [exceptionPins[id].operatorPublicKeyPem,exceptionPins[id].reviewerPublicKeyPem].some(
     x=>x===pins[id].publicKeyPem||x===windowsHostPublicKeyPem))||
+  new Set(QL485_SOURCE_IDS.flatMap(id=>[
+   exceptionPins[id].operatorPublicKeyPem,exceptionPins[id].reviewerPublicKeyPem])).size!==12||
   typeof registry?.commit!=='function'||typeof registry?.summary!=='function'||
   typeof journal?.appendCapture!=='function'||typeof journal?.findCapture!=='function'||
   typeof journal?.appendClosure!=='function'||typeof transport!=='function'||

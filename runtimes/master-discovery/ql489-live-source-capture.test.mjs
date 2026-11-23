@@ -5,6 +5,7 @@ import {mkdtempSync,rmSync,readFileSync,writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import {execFileSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {canonicalize,SOURCES} from './manifest.mjs';
 import {QL485_SCHEMA,QL485_SOURCE_IDS} from './ql485-signed-release-negotiation.mjs';
 import {QL486_SOURCE,QL486_OWNER,QL486_REVIEW,
@@ -134,11 +135,11 @@ test('exception closure requires two fresh independent signatures and tamper-fre
  assert.equal(f.capture.closeException(input).state,'HOLD');
 });
 test('original Windows CLI CI status does not validate any source',()=>{
- const script=new URL('./ql489-original-host-cli.mjs',import.meta.url);
- const status=JSON.parse(execFileSync(process.execPath,[script.pathname,'--status'],{encoding:'utf8'}));
+ const script=fileURLToPath(new URL('./ql489-original-host-cli.mjs',import.meta.url));
+ const status=JSON.parse(execFileSync(process.execPath,[script,'--status'],{encoding:'utf8'}));
  assert.equal(status.state,'QL489_OFF_BY_DEFAULT');
  assert.equal(status.liveSourcesConfirmed,0);
  if(process.platform!=='win32'||process.env.CI==='true')
-  assert.throws(()=>execFileSync(process.execPath,[script.pathname,'--capture','x','yw','x'],
+  assert.throws(()=>execFileSync(process.execPath,[script,'--capture','x','yw','x'],
    {stdio:'pipe'}));
 });
