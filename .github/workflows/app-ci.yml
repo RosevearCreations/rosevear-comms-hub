@@ -38,6 +38,8 @@ jobs:
         run: node --test ../runtimes/master-discovery/ql485-signed-release-negotiation.test.mjs ../runtimes/master-discovery/ql485-offline-compatibility-cli.test.mjs
       - name: QL-486 six-app durable source registry, signed runtime claims, mTLS operator console
         run: node --test ../runtimes/master-discovery/ql486-six-source-registry.test.mjs ../runtimes/master-discovery/ql486-private-operator-console.test.mjs ../runtimes/master-discovery/ql486-original-host-console-cli.test.mjs
+      - name: QL-487 supervised private six-source signed drift and operator reconciliation
+        run: node --test ../runtimes/master-discovery/ql487-supervised-sync.test.mjs
 
   original-owner-keys-windows:
     name: QL-340 Windows encrypted owner key safety
