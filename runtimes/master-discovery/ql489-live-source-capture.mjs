@@ -53,13 +53,19 @@ function registryTrusted(snap){
  * original-host CLI wires the actual QL488 pinned HTTPS/mTLS client.
  */
 export function createQl489LiveCapture({
- endpoints,pins,windowsHostPublicKeyPem,registry,journal,
+ endpoints,pins,exceptionPins,windowsHostPublicKeyPem,registry,journal,
  transport=probeQl488PrivateEndpoint,signWitness,now=()=>Date.now()
 }={}){
  validateQl488Enrollment(endpoints);
- if(!exact(pins,QL485_SOURCE_IDS)||!pinned(windowsHostPublicKeyPem)||
+ if(!exact(pins,QL485_SOURCE_IDS)||!exact(exceptionPins,QL485_SOURCE_IDS)||
+  !pinned(windowsHostPublicKeyPem)||
   QL485_SOURCE_IDS.some(id=>!pins[id]||pins[id].sourceId!==id||
-   pins[id].publicKeyPem===windowsHostPublicKeyPem)||
+   pins[id].publicKeyPem===windowsHostPublicKeyPem||
+   !pinned(exceptionPins[id]?.operatorPublicKeyPem)||
+   !pinned(exceptionPins[id]?.reviewerPublicKeyPem)||
+   exceptionPins[id].operatorPublicKeyPem===exceptionPins[id].reviewerPublicKeyPem||
+   [exceptionPins[id].operatorPublicKeyPem,exceptionPins[id].reviewerPublicKeyPem].some(
+    x=>x===pins[id].publicKeyPem||x===windowsHostPublicKeyPem))||
   typeof registry?.commit!=='function'||typeof registry?.summary!=='function'||
   typeof journal?.appendCapture!=='function'||typeof journal?.findCapture!=='function'||
   typeof journal?.appendClosure!=='function'||typeof transport!=='function'||
@@ -133,9 +139,10 @@ export function createQl489LiveCapture({
    snap.registryDigest!==found.record.registryDigest)
    return hold('QL489_CAPTURE_REGISTRY_STALE_OR_TAMPERED');
   const op=operatorPacket?.payload,review=reviewerPacket?.payload;
-  const trust=pins[sourceId];
-  // Separate independently provisioned operator and reviewer pins, never source keys.
-  const opPem=trust?.ql489OperatorPublicKeyPem,reviewPem=trust?.ql489ReviewerPublicKeyPem;
+  const trust=pins[sourceId],exceptionTrust=exceptionPins[sourceId];
+  // Separately pinned operator and reviewer keys.
+  const opPem=exceptionTrust?.operatorPublicKeyPem;
+  const reviewPem=exceptionTrust?.reviewerPublicKeyPem;
   if(!pinned(opPem)||!pinned(reviewPem)||opPem===reviewPem||
    [opPem,reviewPem].includes(trust.publicKeyPem)||
    [opPem,reviewPem].includes(windowsHostPublicKeyPem)||
