@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {generateKeyPairSync,sign} from 'node:crypto';
+import {generateKeyPairSync,sign,createHash} from 'node:crypto';
 import {canonicalize,SOURCES} from './manifest.mjs';
 import {QL485_SCHEMA,QL485_SOURCE_IDS} from './ql485-signed-release-negotiation.mjs';
 import {classifyQl487Drift,createQl487SupervisedSync,QL487_DECISION_SCHEMA} from './ql487-supervised-sync.mjs';
@@ -74,18 +74,19 @@ test('QL487 transport errors and signature or source mismatch fail closed',async
  registry:registry(),pins,noticePacket:badSignature,nowMs:at}).state,'HOLD');
 });
 test('QL487 operator decisions must be fresh separately signed and cannot authorize source',()=>{
+ const n=notice(),noticeDigest=createHash('sha256').update(canonicalize(n)).digest('hex');
  const s=sync(async()=>null),p={schema:QL487_DECISION_SCHEMA,
  decisionId:'decision_00001',sourceId:'yw',observedRevision:revision,
  approvedRevision:revision,registryDigest:'a'.repeat(64),
- noticeDigest:'b'.repeat(64),decision:'ACKNOWLEDGE_HOLD',
+ noticeDigest,decision:'ACKNOWLEDGE_HOLD',
  operatorId:'operator_00001',issuedAtMs:at-10,expiresAtMs:at+60000,
  authorityTransfer:false};
  assert.equal(s.reconcile(signPacket(p)).state,'HOLD');
- assert.equal(s.reconcile(signPacket(p,operator.privateKey)).state,'HOLD');
+ assert.equal(s.reconcile(signPacket(p,operator.privateKey),{noticePacket:n}).state,'HOLD');
  const reg=registry();reg.summary=()=>({state:'PRIVATE_OPERATOR_REGISTRY_READ_ONLY_HELD',
   registryDigest:'a'.repeat(64),sources:{...sources(),
    yw:{...sources().yw,sourceRevision:revision}}});
- const result=sync(async()=>null,reg).reconcile(signPacket(p,operator.privateKey));
+ const result=sync(async()=>null,reg).reconcile(signPacket(p,operator.privateKey),{noticePacket:n});
  assert.equal(result.state,'OPERATOR_DECISION_RECORDED_IN_MEMORY_HOLD');
  assert.equal(result.automaticMerge,false);
  assert.equal(result.authorityTransfer,false);
