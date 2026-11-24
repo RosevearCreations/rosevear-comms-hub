@@ -190,7 +190,16 @@ export function createQl491ExceptionIntake({readCurrent,journal,now=()=>Date.now
    report.caseCount===packets.length&&Array.isArray(report.cases)&&
    report.cases.length===packets.length&&report.sourceCount===6&&
    QL485_SOURCE_IDS.every(id=>report.sources?.[id]?.sourceId===id)&&
-   Number.isSafeInteger(report.unmatchedClosures)&&report.unmatchedClosures>=0;
+   Number.isSafeInteger(report.unmatchedClosures)&&report.unmatchedClosures>=0&&
+   (report.journalHead===null||HEX.test(report.journalHead??''))&&
+   report.readbackDigest===hash({
+    journalHead:report.journalHead,registryDigest:report.registryDigest,
+    sourceReceipts:Object.fromEntries(QL485_SOURCE_IDS.map(id=>[id,{
+     captureDigest:report.sources[id].lastCaptureDigest,
+     receiptDigest:report.sources[id].registryReceiptDigest
+    }])),
+    signedCasePacketDigests:packets.map(x=>hash(x)).sort()
+   });
  }
  function classify(report){
   let open=0,overdue=0,closed=0;
