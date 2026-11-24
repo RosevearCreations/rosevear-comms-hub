@@ -247,8 +247,10 @@ export function createQl493MasterHandoff({readAudit,journal,pins,now=()=>Date.no
   throw Error('QL493_PRIVATE_QL492_AUDIT_AND_HANDOFF_JOURNAL_REQUIRED');
  const ownerKey=pins?.ownerPublicKeyPem,reviewerKey=pins?.reviewerPublicKeyPem,
   masterKey=pins?.masterPublicKeyPem;
- const pinnedDistinct=!!exactPem(ownerKey)&&!!exactPem(reviewerKey)&&
-  !!exactPem(masterKey)&&new Set([ownerKey,reviewerKey,masterKey]).size===3;
+ const keyStrings=[ownerKey,reviewerKey,masterKey];
+ const pinnedDistinct=keyStrings.every(key=>!!exactPem(key))&&
+  new Set(keyStrings.map(key=>createPublicKey(key).export({
+   type:'spki',format:'der'}).toString('hex'))).size===3;
  function readSafe(){
   try{
    const a=readAudit(),b=readAudit(),s=journal.summary();
