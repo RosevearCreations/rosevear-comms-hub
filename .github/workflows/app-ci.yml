@@ -56,6 +56,10 @@ jobs:
         run: node --test ../runtimes/master-discovery/ql491-exception-intake.test.mjs
       - name: QL-491 local owner status remains non-networking on CI
         run: node ../runtimes/master-discovery/ql491-original-host-cli.mjs --status
+      - name: QL-492 signed witness claims, due-date no-send escalation and six-source Master audit
+        run: node --test ../runtimes/master-discovery/ql492-field-witness-audit.test.mjs
+      - name: QL-492 original owner offline status remains inert on CI
+        run: node ../runtimes/master-discovery/ql492-original-host-cli.mjs --status
 
   original-owner-keys-windows:
     name: QL-340 Windows encrypted owner key safety
@@ -166,6 +170,8 @@ jobs:
         run: node --test runtimes/master-discovery/ql490-independent-field-readback.test.mjs
       - name: QL-491 Windows signed follow-up and private drill trend safety regression
         run: node --test runtimes/master-discovery/ql491-exception-intake.test.mjs
+      - name: QL-492 Windows independent signer, due-date and offline Master audit regression
+        run: node --test runtimes/master-discovery/ql492-field-witness-audit.test.mjs
       - name: QL-485 offline source compatibility CLI remains non-networking on Windows CI
         run: node --test runtimes/master-discovery/ql485-offline-compatibility-cli.test.mjs
       - name: QL-484 original Windows field-review receiver remains manual and inert on CI
