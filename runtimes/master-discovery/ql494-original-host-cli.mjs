@@ -95,7 +95,7 @@ async function main(){
   journal:ql493,pins:masterPins});
  const ql494=createQl494FirstSourceJournal({directory});
  const receiver=createQl494FirstSourceReceiver({readMasterAudit:()=>master.audit(),
-  journal:ql494,endpoints,sourcePins,ownerPins:trust.ownerPins,
+  journal:ql494,endpoints,sourcePins,approvedPins:trust.pins,ownerPins:trust.ownerPins,
   reviewerPins:trust.reviewerPins});
  if(reconcile){
   const result=receiver.reconcile();
