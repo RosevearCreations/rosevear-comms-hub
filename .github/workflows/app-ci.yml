@@ -64,6 +64,10 @@ jobs:
         run: node --test ../runtimes/master-discovery/ql493-private-source-master-handoff.test.mjs
       - name: QL-493 original host status must remain network-inert on CI
         run: node ../runtimes/master-discovery/ql493-original-host-cli.mjs --status
+      - name: QL-494 first-source signed private receiver receipt, anti-TOFU and independent Master correlation
+        run: node --test ../runtimes/master-discovery/ql494-first-source-receiver.test.mjs
+      - name: QL-494 original owner status remains offline and non-networking on CI
+        run: node ../runtimes/master-discovery/ql494-original-host-cli.mjs --status
 
   original-owner-keys-windows:
     name: QL-340 Windows encrypted owner key safety
@@ -178,6 +182,8 @@ jobs:
         run: node --test runtimes/master-discovery/ql492-field-witness-audit.test.mjs
       - name: QL-493 Windows mTLS preflight, offline Master custody and signer safety
         run: node --test runtimes/master-discovery/ql493-private-source-master-handoff.test.mjs
+      - name: QL-494 Windows original-host source adapter, signer anti-replay and Master HOLD regression
+        run: node --test runtimes/master-discovery/ql494-first-source-receiver.test.mjs
       - name: QL-485 offline source compatibility CLI remains non-networking on Windows CI
         run: node --test runtimes/master-discovery/ql485-offline-compatibility-cli.test.mjs
       - name: QL-484 original Windows field-review receiver remains manual and inert on CI
