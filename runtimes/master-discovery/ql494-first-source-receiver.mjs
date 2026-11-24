@@ -10,6 +10,7 @@ import {mkdirSync,lstatSync,openSync,closeSync,fstatSync,readFileSync,
 import {isAbsolute,resolve,join} from 'node:path';
 import {canonicalize} from './manifest.mjs';
 import {QL485_SOURCE_IDS} from './ql485-signed-release-negotiation.mjs';
+import {validateQl488Enrollment} from './ql488-original-host-transport.mjs';
 
 export const QL494_ADAPTER_SCHEMA='rosevear.comms.ql494.private-source-adapter-receipt.v1';
 export const QL494_REVIEW_SCHEMA='rosevear.comms.ql494.independent-first-source-review.v1';
@@ -142,6 +143,7 @@ export function inspectQl494AdapterReadiness({endpoints,sourcePins}={}){
  const bad=hold('QL494_SIX_SOURCE_PINNED_ADAPTER_CONFIG_REQUIRED');
  if(!exact(endpoints,QL485_SOURCE_IDS)||
   !exact(sourcePins,QL485_SOURCE_IDS))return bad;
+ try{validateQl488Enrollment(endpoints)}catch{return bad}
  const distinct=new Set(),sources={};
  for(const id of QL485_SOURCE_IDS){
   const e=endpoints[id],pin=sourcePins[id];
@@ -192,7 +194,7 @@ function validReview(packet,pin,role,at){
   p.customerDataIncluded===false&&p.authorityTransfer===false;
 }
 export function createQl494FirstSourceReceiver({readMasterAudit,
- journal,sourcePins,ownerPins,reviewerPins,endpoints,
+ journal,sourcePins,approvedPins,ownerPins,reviewerPins,endpoints,
  now=()=>Date.now()}={}){
  if(typeof readMasterAudit!=='function'||
   typeof journal?.append!=='function'||typeof journal?.summary!=='function')
@@ -221,7 +223,17 @@ export function createQl494FirstSourceReceiver({readMasterAudit,
    pin=sourcePins?.[sourceId],op=ownerPacket?.payload,rp=reviewerPacket?.payload,
    sourcePacket=observation?.bundle?.adapterPacket;
   if(!master)return hold('QL494_INDEPENDENT_QL493_MASTER_READBACK_REQUIRED');
-  if(!QL485_SOURCE_IDS.includes(sourceId)||
+  const independentlyApproved=approvedPins?.[sourceId];
+  let pinMatches=false;
+  try{
+   pinMatches=independentlyApproved?.sourceId===sourceId&&
+    independentlyApproved.independentlyVerified===true&&
+    independentlyApproved.sourceOwnerApproved===true&&
+    independentlyApproved.approvedRevision===pin?.sourceRevision&&
+    createPublicKey(independentlyApproved.publicKeyPem).export({type:'spki',format:'der'})
+     .equals(createPublicKey(pin.sourcePublicKeyPem).export({type:'spki',format:'der'}));
+  }catch{}
+  if(!QL485_SOURCE_IDS.includes(sourceId)||!pinMatches||
    !e||e.sourceId!==sourceId||!pin||
    observation?.state!=='MUTUAL_TLS_TRANSPORT_OBSERVED_UNVERIFIED'||
    observation.sourceId!==sourceId||observation.bundle?.sourceId!==sourceId||
