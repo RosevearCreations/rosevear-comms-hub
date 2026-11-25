@@ -126,8 +126,11 @@ export function createQl496MasterReceiverLedger({directory,now=()=>Date.now()}={
   const p=ack.payload;
   if(p.trialId!==trial.trialId||p.sourceId!==trial.sourceId||
    p.receiptId!==trial.receiptId||p.trialDigest!==hash(trial)||
-   p.decision!=='HOLD_FOR_INDEPENDENT_REVIEW')
-   return hold('QL496_ONLY_NONAUTHORIZING_SIGNED_RECEIPT_ACCEPTED');
+   p.decision!=='HOLD_FOR_INDEPENDENT_REVIEW'||
+   verifyQl495MasterTrialReceipt({requestPayload:trial,responsePacket:ack,
+    masterPublicKeyPem,now:now()}).state!==
+     'QL495_SIGNED_MASTER_DELIVERY_TRIAL_RECEIPT_HELD')
+   return hold('QL496_ONLY_EXACT_NONAUTHORIZING_SIGNED_RECEIPT_ACCEPTED');
   let fd;
   try{fd=openSync(lock,constants.O_WRONLY|constants.O_CREAT|
    constants.O_EXCL|(constants.O_NOFOLLOW||0),0o600)}
