@@ -226,7 +226,10 @@ export function createQl495ReceiptProvenance({directory,ql494Journal,readMasterA
    signedPacketDigest:row.sourcePacketDigest,recordedAtMs:row.recordedAtMs};
   return {state:'QL495_HISTORICAL_SOURCE_RECEIPT_PROVENANCE_RECHECKED_HELD',
    ...provenance,provenanceDigest:hash(provenance),
-   trialEligibleWhileSourcePacketFresh:sourcePacket.payload.expiresAtMs>at,
+   trialEligibleWhileSourcePacketFresh:sourcePacket.payload.expiresAtMs>at&&
+    ownerPacket.payload.expiresAtMs>at&&reviewerPacket.payload.expiresAtMs>at&&
+    at-ownerPacket.payload.issuedAtMs<=120000&&
+    at-reviewerPacket.payload.issuedAtMs<=120000,
    sourceSignatureHistoricallyVerified:true,
    originalHardwareProvenanceVerified:false,masterNetworkDeliveryVerified:false,
    sourceOperationallyCertified:false,customerWrites:false};
