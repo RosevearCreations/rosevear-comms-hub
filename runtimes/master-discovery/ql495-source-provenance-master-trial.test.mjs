@@ -142,12 +142,20 @@ test('QL495 rejects QL486 signer key and approved revision drift',t=>{
    independentlyVerified:false}}},
   {endpoints:{...endpoints,yw:{...endpoints.yw,
    serverCertificateSha256:sha('new-tls-endpoint')}}},
-  {ownerPins:{...ownerPins,yw:pem('impostor')}}
+  {ownerPins:{...ownerPins,yw:pem('impostor')}},
+  {reviewerPins:{...reviewerPins,yw:pem('impostor')}}
  ];
  for(const opts of changes){
   const f=fixture(t,true,opts);
+  // Replaying genuine historical packets detects changed owner/reviewer pins.
   assert.equal(f.provenance.review(f.args()).state,'HOLD');
-  assert.equal(f.provenance.reconciliation().state,'HOLD');
+  const aggregate=f.provenance.reconciliation();
+  if(opts.ownerPins||opts.reviewerPins){
+   // The old QL494 journal stores only packet digests: the aggregate cannot
+   // reverify historical signer keys without their full original packets.
+   assert.equal(aggregate.state,'QL495_INDEPENDENT_SOURCE_PROVENANCE_DRIFT_READBACK_HELD');
+   assert.equal(aggregate.independentHistoricalSignaturesRecheckedOnRead,false);
+  }else assert.equal(aggregate.state,'HOLD');
  }
 });
 test('QL495 denies changed QL493 master audit digest and journal head',t=>{
