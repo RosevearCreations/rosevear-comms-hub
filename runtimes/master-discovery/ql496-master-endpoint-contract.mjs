@@ -14,6 +14,7 @@ import {QL495_TRIAL_SCHEMA,QL495_ACK_SCHEMA,verifyQl495MasterTrialReceipt}
  from './ql495-source-provenance-master-trial.mjs';
 
 export const QL496_PATH='/internal/comms/master-delivery-trial';
+export const QL496_CHALLENGE_SCHEMA='rosevear.comms.ql496.device-presence-challenge.v1';
 export const QL496_DEVICE_SCHEMA='rosevear.comms.ql496.independent-device-evidence.v1';
 export const QL496_REVIEW_SCHEMA='rosevear.comms.ql496.independent-device-review.v1';
 const HEX=/^[0-9a-f]{64}$/,ID=/^[A-Za-z0-9_-]{8,96}$/;
@@ -23,6 +24,9 @@ const TRIAL=['schema','trialId','sourceId','receiptId','recordDigest',
 const ACK=['schema','trialId','sourceId','receiptId','recordDigest','trialDigest',
  'masterAuditDigest','masterJournalHead','decision','masterActorId','issuedAtMs',
  'expiresAtMs','customerDataIncluded','authorityTransfer'];
+const CHALLENGE=['schema','challengeId','sourceId','receiptId','trialId',
+ 'deviceEnrollmentDigest','issuedAtMs','expiresAtMs',
+ 'customerDataIncluded','authorityTransfer'];
 const DEVICE=['schema','evidenceId','challengeId','sourceId','receiptId','trialId',
  'sourceRecordDigest','masterPacketDigest','deviceEnrollmentDigest',
  'witnessActorId','observedAtMs','issuedAtMs','expiresAtMs',
@@ -116,8 +120,8 @@ export function createQl496MasterReceiverLedger({directory,now=()=>Date.now()}={
   try{return readRows(dir).find(x=>x.trialId===trialId)??null}
   catch{return {state:'HOLD'}}
  }
- function append({trial,ack,clientCertificateSha256}={}){
-  if(!exact(trial,TRIAL)||!signed(ack,arguments[0]?.masterPublicKeyPem,ACK)||
+ function append({trial,ack,clientCertificateSha256,masterPublicKeyPem}={}){
+  if(!exact(trial,TRIAL)||!signed(ack,masterPublicKeyPem,ACK)||
    !HEX.test(clientCertificateSha256??''))return hold('QL496_SIGNED_RECEIPT_AND_CLIENT_CERT_REQUIRED');
   const p=ack.payload;
   if(p.trialId!==trial.trialId||p.sourceId!==trial.sourceId||
@@ -291,18 +295,30 @@ export function createQl496MasterEndpointContract({ledger,clientPins,
  return Object.freeze({handle,networkListener:false,automaticReceiver:false});
 }
 /** Independent external field witness evidence is REVIEW-ONLY, not physical certification. */
-export function verifyQl496IndependentDeviceEvidence({attestationPacket,
+export function verifyQl496IndependentDeviceEvidence({challengePacket,attestationPacket,
  ownerPacket,reviewerPacket,pins,trial,masterPacket,now=Date.now()}={}){
  const a=attestationPacket?.payload,o=ownerPacket?.payload,r=reviewerPacket?.payload;
  const keys=[pins?.attestorPublicKeyPem,pins?.ownerPublicKeyPem,
   pins?.reviewerPublicKeyPem,pins?.masterPublicKeyPem].map(idKey);
  if(keys.some(x=>!x)||new Set(keys).size!==4)
   return hold('QL496_FOUR_DISTINCT_PREAPPROVED_ED25519_KEYS_REQUIRED');
- if(!signed(attestationPacket,pins.attestorPublicKeyPem,DEVICE)||
+ if(!signed(challengePacket,pins.masterPublicKeyPem,CHALLENGE)||
+   !signed(attestationPacket,pins.attestorPublicKeyPem,DEVICE)||
    !signed(ownerPacket,pins.ownerPublicKeyPem,REVIEW)||
    !signed(reviewerPacket,pins.reviewerPublicKeyPem,REVIEW)||
    !exact(trial,TRIAL)||!signed(masterPacket,pins.masterPublicKeyPem,ACK))
   return hold('QL496_GENUINE_INDEPENDENT_DEVICE_AND_MASTER_SIGNATURES_REQUIRED');
+ const ch=challengePacket.payload;
+ if(ch.schema!==QL496_CHALLENGE_SCHEMA||
+  !ID.test(ch.challengeId??'')||ch.challengeId!==a.challengeId||
+  ch.sourceId!==trial.sourceId||ch.receiptId!==trial.receiptId||
+  ch.trialId!==trial.trialId||ch.deviceEnrollmentDigest!==pins.deviceEnrollmentDigest||
+  !ms(ch.issuedAtMs)||ch.issuedAtMs>now||
+  now-ch.issuedAtMs>120000||!ms(ch.expiresAtMs)||
+  ch.expiresAtMs<=now||ch.expiresAtMs-ch.issuedAtMs>300000||
+  a.observedAtMs<ch.issuedAtMs||a.observedAtMs>ch.expiresAtMs||
+  ch.customerDataIncluded!==false||ch.authorityTransfer!==false)
+  return hold('QL496_INDEPENDENT_MASTER_CHALLENGE_MISSING_OR_STALE');
  if(a.schema!==QL496_DEVICE_SCHEMA||o.schema!==QL496_REVIEW_SCHEMA||
   r.schema!==QL496_REVIEW_SCHEMA||
   ![a.evidenceId,a.challengeId,a.witnessActorId,o.reviewId,
