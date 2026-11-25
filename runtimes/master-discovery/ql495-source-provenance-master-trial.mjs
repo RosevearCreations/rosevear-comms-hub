@@ -5,7 +5,8 @@
  * physical-original-host certification or automatic source acceptance.
  */
 import {createHash,createPublicKey,createPrivateKey,verify,X509Certificate} from 'node:crypto';
-import {readFileSync,lstatSync,openSync,closeSync,fstatSync,constants} from 'node:fs';
+import {readFileSync,writeFileSync,fsyncSync,unlinkSync,lstatSync,
+ openSync,closeSync,fstatSync,constants} from 'node:fs';
 import {join,resolve,isAbsolute} from 'node:path';
 import {request as httpsRequest} from 'node:https';
 import {checkServerIdentity} from 'node:tls';
