@@ -67,7 +67,7 @@ function fixture(t,withReceipt=true,options={}){
   masterJournalHead:masterHead,
   requestedAction:'REVIEW_ONE_FIRST_SOURCE_RECEIPT_NO_SEND',
   role:'owner',actorId:'owner_actor_ql495',
-  issuedAtMs:at-50,expiresAtMs:at+200000,
+  issuedAtMs:at-50,expiresAtMs:options.reviewExpiresAt??(at+200000),
   customerDataIncluded:false,authorityTransfer:false};
  const ownerPacket=signed(basic,'yw_owner');
  const reviewerPacket=signed({...basic,role:'independent-reviewer',
@@ -118,6 +118,14 @@ test('QL495 historical signature remains provable after expiry, but fresh Master
  assert.equal(r.state,'QL495_HISTORICAL_SOURCE_RECEIPT_PROVENANCE_RECHECKED_HELD');
  assert.equal(r.trialEligibleWhileSourcePacketFresh,false);
  assert.equal(r.sourceOperationallyCertified,false);
+});
+test('QL495 new network trial requires current independent owner and reviewer approvals',t=>{
+ const f=fixture(t,true,{reviewExpiresAt:at+50000});
+ f.setNow(at+70000);
+ const r=f.provenance.review(f.args());
+ assert.equal(r.state,'QL495_HISTORICAL_SOURCE_RECEIPT_PROVENANCE_RECHECKED_HELD');
+ assert.equal(r.trialEligibleWhileSourcePacketFresh,false);
+ assert.equal(r.sourceSignatureHistoricallyVerified,true);
 });
 test('QL495 denies forged historical packets, substituted review, tampered source data and wrong receipt',t=>{
  const f=fixture(t);

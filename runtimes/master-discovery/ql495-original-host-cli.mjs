@@ -122,6 +122,14 @@ async function main(){
  if(snap.state==='HOLD'||ledger.hasTrial(trialId))
   fail('PRIVATE_MASTER_TRIAL_LOG_OR_REPLAY_HOLD');
  await approve();
+ // Consent can take time. Revalidate all three original signatures and
+ // immutable source/Master custody now, before a single network send.
+ const afterApproval=review.review({...signed,sourceId,receiptId});
+ if(afterApproval.state!=='QL495_HISTORICAL_SOURCE_RECEIPT_PROVENANCE_RECHECKED_HELD'||
+    afterApproval.trialEligibleWhileSourcePacketFresh!==true||
+    afterApproval.provenanceDigest!==checked.provenanceDigest||
+    ledger.hasTrial(trialId))
+  fail('SOURCE_OR_REVIEW_SIGNATURE_EXPIRED_OR_CUSTODY_CHANGED_AFTER_APPROVAL');
  const payload={schema:QL495_TRIAL_SCHEMA,trialId,sourceId,receiptId,
   recordDigest:checked.sourceRecordDigest,masterAuditDigest:checked.masterAuditDigest,
   masterJournalHead:checked.masterJournalHead,
