@@ -365,3 +365,101 @@ export async function trialQl495PrivateMasterDelivery({endpoint,
   req.end(body);
  });
 }
+
+/** Private append-only trial receipt metadata; no keys, payloads or customer data. */
+const TRIAL_ROW=['sequence','previousDigest','trialId','sourceId','receiptId',
+ 'sourceRecordDigest','provenanceDigest','masterAuditDigest','masterJournalHead',
+ 'masterSignedPacketDigest','masterDecision','recordedAtMs','recordDigest'];
+function readTrialRows(directory){
+ const file=join(ownerDirectory(directory),'ql495-master-trial-receipts.ndjson');let fd;
+ try{
+  try{const st=lstatSync(file);if(!st.isFile()||st.isSymbolicLink())
+   throw Error('QL495_TRIAL_LOG_UNSAFE')}
+  catch(e){if(e.code==='ENOENT')return [];throw e}
+  fd=openSync(file,constants.O_RDONLY|(constants.O_NOFOLLOW||0));
+  const st=fstatSync(fd);
+  if(!st.isFile()||st.size<1||st.size>1000000||
+   (process.platform!=='win32'&&(st.mode&0o077)))
+   throw Error('QL495_TRIAL_LOG_PERMISSIONS_OR_SIZE_HOLD');
+  const raw=readFileSync(fd,'utf8');
+  if(!raw.endsWith('\n'))throw Error('QL495_TRIAL_TRUNCATED_LOG');
+  const rows=raw.trimEnd().split('\n').map(JSON.parse);
+  if(rows.length>64)throw Error('QL495_TRIAL_LOG_CAPACITY');
+  let digest=null,time=0;const ids=new Set();
+  for(const [i,r] of rows.entries()){
+   if(!exact(r,TRIAL_ROW)||r.sequence!==i+1||r.previousDigest!==digest||
+    !ID.test(r.trialId??'')||ids.has(r.trialId)||
+    !ID.test(r.receiptId??'')||!QL485_SOURCE_IDS.includes(r.sourceId)||
+    ![r.sourceRecordDigest,r.provenanceDigest,r.masterAuditDigest,
+     r.masterSignedPacketDigest,r.recordDigest].every(x=>HEX.test(x??''))||
+    !(r.masterJournalHead===null||HEX.test(r.masterJournalHead??''))||
+    !['HOLD_FOR_INDEPENDENT_REVIEW','DENY'].includes(r.masterDecision)||
+    !ms(r.recordedAtMs)||r.recordedAtMs<time||
+    hash(Object.fromEntries(TRIAL_ROW.filter(x=>x!=='recordDigest')
+      .map(x=>[x,r[x]])))!==r.recordDigest)
+    throw Error('QL495_TRIAL_JOURNAL_TAMPER_OR_REPLAY');
+   ids.add(r.trialId);time=r.recordedAtMs;digest=r.recordDigest;
+  }
+  return rows;
+ }finally{if(fd!==undefined)closeSync(fd)}
+}
+export function createQl495MasterTrialJournal({directory,now=()=>Date.now()}={}){
+ const dir=ownerDirectory(directory),file=join(dir,'ql495-master-trial-receipts.ndjson'),
+  lock=join(dir,'.ql495-trial-receipts.lock');
+ function summary(){
+  try{
+   const rows=readTrialRows(dir);
+   return {state:'QL495_PRIVATE_SIGNED_MASTER_TRIAL_RECEIPTS_HELD',
+    trialReceipts:rows.length,lastDigest:rows.at(-1)?.recordDigest??null,
+    physicalHostCertified:false,masterProductionAccepted:false,
+    automaticSend:false,customerWrites:false};
+  }catch{return hold('QL495_TRIAL_RECEIPT_JOURNAL_TAMPER')}
+ }
+ function hasTrial(trialId){
+  try{const rows=readTrialRows(dir);
+   return rows.some(r=>r.trialId===trialId)}
+  catch{return true} // fail closed, including corrupt log
+ }
+ function append({requestPayload,verifiedResult}={}){
+  const p=requestPayload,v=verifiedResult;
+  if(!exact(p,TRIAL)||p.schema!==QL495_TRIAL_SCHEMA||
+   v?.state!=='QL495_SIGNED_MASTER_DELIVERY_TRIAL_RECEIPT_HELD'||
+   v.verifiedPinnedPrivateTlsTransport!==true||
+   v.masterNetworkDeliveryVerified!==true||
+   v.trialId!==p.trialId||v.sourceId!==p.sourceId||
+   v.receiptId!==p.receiptId||!HEX.test(v.masterPacketDigest??''))
+   return hold('QL495_ONLY_GENUINE_SIGNED_MTLS_TRIAL_RECEIPT_RECORDABLE');
+  let fd;
+  try{fd=openSync(lock,constants.O_WRONLY|constants.O_CREAT|
+    constants.O_EXCL|(constants.O_NOFOLLOW||0),0o600)}
+  catch{return hold('QL495_SINGLE_TRIAL_WRITER_REQUIRED')}
+  try{
+   const rows=readTrialRows(dir);
+   if(rows.length>=64||rows.some(r=>r.trialId===p.trialId))
+    return hold('QL495_SIGNED_MASTER_TRIAL_REPLAY_OR_CAPACITY');
+   const base={sequence:rows.length+1,
+    previousDigest:rows.at(-1)?.recordDigest??null,
+    trialId:p.trialId,sourceId:p.sourceId,receiptId:p.receiptId,
+    sourceRecordDigest:p.recordDigest,provenanceDigest:p.provenanceDigest,
+    masterAuditDigest:p.masterAuditDigest,masterJournalHead:p.masterJournalHead,
+    masterSignedPacketDigest:v.masterPacketDigest,masterDecision:v.masterDecision,
+    recordedAtMs:now()};
+   const row={...base,recordDigest:hash(base)};
+   const out=openSync(file,constants.O_WRONLY|constants.O_APPEND|
+    (constants.O_NOFOLLOW||0)|
+    (rows.length?0:constants.O_CREAT|constants.O_EXCL),0o600);
+   try{writeFileSync(out,JSON.stringify(row)+'\n');fsyncSync(out)}
+   finally{closeSync(out)}
+   const latest=readTrialRows(dir);
+   if(latest.length!==rows.length+1||
+    latest.at(-1).recordDigest!==row.recordDigest)
+    return hold('QL495_TRIAL_FSYNC_READBACK_HOLD');
+   return {state:'QL495_DURABLE_PINNED_MASTER_TRIAL_RECEIPT_FOR_REVIEW_HELD',
+    trialId:p.trialId,recordDigest:row.recordDigest,
+    masterProductionAccepted:false,originalHostPhysicallyVerified:false,
+    customerWrites:false,automaticSend:false};
+  }catch{return hold('QL495_TRIAL_LOG_WRITE_OR_TAMPER_HOLD')}
+  finally{closeSync(fd);try{unlinkSync(lock)}catch{}}
+ }
+ return Object.freeze({summary,hasTrial,append,automaticSend:false});
+}
