@@ -80,6 +80,10 @@ jobs:
         run: node --test ../runtimes/master-discovery/ql497-independent-master-enrollment.test.mjs
       - name: QL-497 original Windows owner CLI must stay no-send on CI
         run: node ../runtimes/master-discovery/ql497-original-host-cli.mjs --status
+      - name: QL-498 independent cross-host signed runtime observation and fail-closed review regressions
+        run: node --test ../runtimes/master-discovery/ql498-cross-host-runtime-evidence.test.mjs
+      - name: QL-498 original Windows owner release status remains no-send
+        run: node ../runtimes/master-discovery/ql498-original-host-cli.mjs --status
 
   original-owner-keys-windows:
     name: QL-340 Windows encrypted owner key safety
@@ -202,6 +206,8 @@ jobs:
         run: node --test runtimes/master-discovery/ql496-master-endpoint-contract.test.mjs
       - name: QL-497 Windows independent Master signer, original-device witness and two-ledger readback safety
         run: node --test runtimes/master-discovery/ql497-independent-master-enrollment.test.mjs
+      - name: QL-498 Windows independent Master provider ceremony and cross-host audit safety
+        run: node --test runtimes/master-discovery/ql498-cross-host-runtime-evidence.test.mjs
       - name: QL-485 offline source compatibility CLI remains non-networking on Windows CI
         run: node --test runtimes/master-discovery/ql485-offline-compatibility-cli.test.mjs
       - name: QL-484 original Windows field-review receiver remains manual and inert on CI
