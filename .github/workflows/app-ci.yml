@@ -88,6 +88,10 @@ jobs:
         run: node --test ../runtimes/master-discovery/ql499-original-path-probe.test.mjs
       - name: QL-499 original Windows CLI must default to no network
         run: node ../runtimes/master-discovery/ql499-original-host-cli.mjs --status
+      - name: QL-500 original Master config inventory, signed two-sided custody and fail-closed audit
+        run: node --test ../runtimes/master-discovery/ql500-original-provider-custody.test.mjs
+      - name: QL-500 no-network original Windows provider inventory status
+        run: node ../runtimes/master-discovery/ql500-original-host-cli.mjs --status
 
   original-owner-keys-windows:
     name: QL-340 Windows encrypted owner key safety
@@ -214,6 +218,8 @@ jobs:
         run: node --test runtimes/master-discovery/ql498-cross-host-runtime-evidence.test.mjs
       - name: QL-499 Windows real mTLS entrypoint remains manual and fails closed on CI
         run: node --test runtimes/master-discovery/ql499-original-path-probe.test.mjs
+      - name: QL-500 Windows provider discovery, independent receipt custody and replay safety
+        run: node --test runtimes/master-discovery/ql500-original-provider-custody.test.mjs
       - name: QL-485 offline source compatibility CLI remains non-networking on Windows CI
         run: node --test runtimes/master-discovery/ql485-offline-compatibility-cli.test.mjs
       - name: QL-484 original Windows field-review receiver remains manual and inert on CI
