@@ -1,0 +1,13 @@
+.ql505-exceptions{border:1px solid #8b859c;border-left:4px solid #815cac;border-radius:10px;padding:1rem;margin:1rem 0;display:grid;gap:.8rem;min-width:0}
+.ql505-exceptions h5{font-size:1rem;margin:.25rem 0}
+.ql505-exceptions header p{margin:.35rem 0;line-height:1.5}
+.ql505-exceptions .ql505-status,.ql505-exceptions .ql505-boundary{border:1px solid #9b92a7;padding:.75rem;border-radius:6px;margin:0;overflow-wrap:anywhere}
+.ql505-exceptions ol{margin:0;padding-left:1.4rem;display:grid;gap:.65rem}
+.ql505-exceptions li{border:1px solid #a19caa;border-left:4px solid #865d33;border-radius:6px;padding:.6rem;overflow-wrap:anywhere}
+.ql505-exceptions li strong,.ql505-exceptions li span{display:block}
+.ql505-exceptions li p{margin:.3rem 0}
+.ql505-exceptions code{overflow-wrap:anywhere}
+@media(max-width:620px){.ql505-exceptions{padding:.7rem}.ql505-exceptions ol{padding-left:1.15rem}}
+@media(max-width:375px){.ql505-exceptions{padding:.45rem}}
+@media(forced-colors:active){.ql505-exceptions,.ql505-exceptions li{border:1px solid CanvasText}.ql505-exceptions li{border-left:4px solid CanvasText}}
+@media(prefers-reduced-motion:reduce){.ql505-exceptions *{animation:none!important;transition:none!important}}

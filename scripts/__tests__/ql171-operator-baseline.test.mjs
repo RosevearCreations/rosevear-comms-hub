@@ -31,7 +31,7 @@ test('QL-171 baseline inventories all surfaces, data paths and gaps without auth
   // allowlisted localRepository: one get and one set for versioned UI layouts.
   assert.equal(report.sinkCounts['browser-storage'], 5);
   // QL-367 adds exactly two UUID-scoped, SELECT-only self-enrollment reads.
-  assert.equal(report.sinkCounts['supabase-query'], 14); // QL503 adds three exact-tenant, RLS-only metadata SELECTs
+  assert.equal(report.sinkCounts['supabase-query'], 16); // QL505 adds two more exact-tenant, RLS-only metadata SELECTs
   assert.equal(report.sinkCounts['supabase-mutation'], 1); // QL-369: one owner-only Edge invoke
   assert.equal(report.sinkCounts['raw-network'], 0);
   assert.equal(report.liveCallsEnabled, false);
@@ -164,7 +164,7 @@ test('unexpected project-side query and client initialization are rejected', () 
 test('QL-503 reviewed exact-tenant read allowlist still rejects foreign tables and all browser writes',()=>{
   const safe=assessQl171Baseline(baseline);
   assert.equal(safe.status,'PASS',safe.issues.join('\n'));
-  assert.equal(safe.sinkCounts['supabase-query'],14);
+  assert.equal(safe.sinkCounts['supabase-query'],16);
   assert.equal(safe.sinkCounts['supabase-mutation'],1);
   const other=changeSource('app/src/operator/ql503DeliveryRead.ts',
     source=>source+"\nclient.from('messages')");
@@ -176,4 +176,19 @@ test('QL-503 reviewed exact-tenant read allowlist still rejects foreign tables a
   const mutation=assessQl171Baseline(writing);
   assert.equal(mutation.status,'DRIFT');
   assert.ok(mutation.issues.some(i=>i.includes('supabase-mutation')));
+});
+
+
+test('QL-505 explicit read-only exception allowlist denies customer/contact reads and mutations',()=>{
+ const current=assessQl171Baseline(baseline);
+ assert.equal(current.status,'PASS',current.issues.join('\n'));
+ assert.equal(current.sinkCounts['supabase-query'],16);
+ const illegal=changeSource('app/src/operator/ql505ExceptionRead.ts',
+  source=>source+"\nclient.from('messages')");
+ const denied=assessQl171Baseline(illegal);
+ assert.equal(denied.status,'DRIFT');
+ assert.ok(denied.issues.some(issue=>issue.includes('unreviewed table messages')));
+ const write=changeSource('app/src/operator/ql505ExceptionRead.ts',
+  source=>source+"\nclient.from('ql505_receipt_exceptions').insert({})");
+ assert.equal(assessQl171Baseline(write).status,'DRIFT');
 });

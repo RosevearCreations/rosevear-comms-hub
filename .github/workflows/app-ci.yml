@@ -118,6 +118,14 @@ jobs:
         run: npx vitest run src/operator/__tests__/ql504AutoReadback.test.tsx
       - name: QL-504 Python cross-language custody, permission and fail-closed checks
         run: python3 ../scripts/ql504_source_truth_python_checks.py
+      - name: QL-505 signed independent reviewer, private runtime, tenant-scoped exception and no-send negative tests
+        run: node --test ../runtimes/master-discovery/ql505-private-runtime.test.mjs
+      - name: QL-505 real operator exception read-only React / mobile and RLS isolation
+        run: npx vitest run src/operator/__tests__/ql505Exceptions.test.tsx
+      - name: QL-505 Python private original-host, SQL FORCE RLS and no-send cross-language checks
+        run: python3 ../scripts/ql505_source_truth_python_checks.py
+      - name: QL-505 owner CLI must remain status-only on nonoriginal CI
+        run: node ../runtimes/master-discovery/ql505-original-host-cli.mjs --status
 
   original-owner-keys-windows:
     name: QL-340 Windows encrypted owner key safety
@@ -256,6 +264,10 @@ jobs:
         run: node --test runtimes/master-discovery/ql504-private-receipt-worker.test.mjs
       - name: QL-504 Windows nonoriginal-host status remains offline and no-send
         run: node runtimes/master-discovery/ql504-original-host-cli.mjs --status
+      - name: QL-505 Windows signed independent receipt and private exception-safe runtime
+        run: node --test runtimes/master-discovery/ql505-private-runtime.test.mjs
+      - name: QL-505 Windows nonoriginal host cannot activate field worker
+        run: node runtimes/master-discovery/ql505-original-host-cli.mjs --status
       - name: QL-485 offline source compatibility CLI remains non-networking on Windows CI
         run: node --test runtimes/master-discovery/ql485-offline-compatibility-cli.test.mjs
       - name: QL-484 original Windows field-review receiver remains manual and inert on CI
