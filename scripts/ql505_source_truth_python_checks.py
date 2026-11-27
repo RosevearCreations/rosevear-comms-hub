@@ -67,9 +67,11 @@ class QL505SourceTruthAcceptance(unittest.TestCase):
         private=RUNTIME.read_text(encoding="utf-8")
         gateway=DB_GATEWAY.read_text(encoding="utf-8")
         self.assertIn("ql505_receipt_exceptions",browser)
-        for x in (browser,private):
-            for pattern in (r"\.insert\s*\(",r"\.update\s*\(",r"\.delete\s*\("):
-                self.assertNotRegex(x,pattern)
+        # Browser writes are forbidden. Node's crypto.hash.update() is NOT
+        # a database mutation and must not be rejected by this static check.
+        for pattern in (r"\.insert\s*\(",r"\.update\s*\(",r"\.delete\s*\("):
+            self.assertNotRegex(browser,pattern)
+        self.assertNotIn(".from(",private)
         self.assertNotIn("sendMail(",private)
         self.assertNotIn("sendSMS(",private)
         self.assertIn("ql505_record_receipt_exception",private)
