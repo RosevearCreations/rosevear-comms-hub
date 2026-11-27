@@ -31,7 +31,7 @@ test('QL-171 baseline inventories all surfaces, data paths and gaps without auth
   // allowlisted localRepository: one get and one set for versioned UI layouts.
   assert.equal(report.sinkCounts['browser-storage'], 5);
   // QL-367 adds exactly two UUID-scoped, SELECT-only self-enrollment reads.
-  assert.equal(report.sinkCounts['supabase-query'], 14); // QL503 adds three exact-tenant, RLS-only metadata SELECTs
+  assert.equal(report.sinkCounts['supabase-query'], 16); // QL505 adds two more exact-tenant, RLS-only metadata SELECTs
   assert.equal(report.sinkCounts['supabase-mutation'], 1); // QL-369: one owner-only Edge invoke
   assert.equal(report.sinkCounts['raw-network'], 0);
   assert.equal(report.liveCallsEnabled, false);
