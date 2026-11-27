@@ -110,6 +110,14 @@ jobs:
         run: npx vitest run src/operator/__tests__/ql503DeliveryHistory.test.tsx
       - name: QL-503 cross-language database RLS migration and no-key fail-closed verification
         run: python3 ../scripts/ql503_source_truth_python_checks.py
+      - name: QL-504 original source/prov signer pin rotation, durable fsync queue and replay/DEAD_LETTER
+        run: node --test ../runtimes/master-discovery/ql504-private-receipt-worker.test.mjs
+      - name: QL-504 inert original-host CLI, no network or receiver startup
+        run: node ../runtimes/master-discovery/ql504-original-host-cli.mjs --status
+      - name: QL-504 automatically refreshed authenticated operator readback
+        run: npx vitest run src/operator/__tests__/ql504AutoReadback.test.tsx
+      - name: QL-504 Python cross-language custody, permission and fail-closed checks
+        run: python3 ../scripts/ql504_source_truth_python_checks.py
 
   original-owner-keys-windows:
     name: QL-340 Windows encrypted owner key safety
@@ -244,6 +252,10 @@ jobs:
         run: node --test runtimes/master-discovery/ql502-provider-delivery-proof.test.mjs
       - name: QL-503 Windows signed source/provider import and immutable receipt audit safety
         run: node --test runtimes/master-discovery/ql503-durable-verified-import.test.mjs
+      - name: QL-504 Windows private journal lock, signed receipt retry, rotation and no customer send
+        run: node --test runtimes/master-discovery/ql504-private-receipt-worker.test.mjs
+      - name: QL-504 Windows nonoriginal-host status remains offline and no-send
+        run: node runtimes/master-discovery/ql504-original-host-cli.mjs --status
       - name: QL-485 offline source compatibility CLI remains non-networking on Windows CI
         run: node --test runtimes/master-discovery/ql485-offline-compatibility-cli.test.mjs
       - name: QL-484 original Windows field-review receiver remains manual and inert on CI
