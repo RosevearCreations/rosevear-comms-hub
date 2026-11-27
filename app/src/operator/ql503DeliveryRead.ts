@@ -56,7 +56,7 @@ export async function ql503ReadOwnTenantHistory(
    .gt('expires_at',new Date().toISOString())
    .order('expires_at',{ascending:false}).limit(10);
   if(grants.error)return blank(sourceApp,'ERROR','Exact-tenant grant read could not be verified.');
-  const trusted=(Array.isArray(grants.data)?grants.data:[]).filter(v=>
+  const trusted=(Array.isArray(grants.data)?grants.data:[]).filter((v:unknown)=>
    valid(v)&&v.source_app===sourceApp&&typeof v.tenant_digest==='string'&&
    HEX.test(v.tenant_digest)&&['operator','auditor'].includes(String(v.access_role))&&
    typeof v.expires_at==='string'&&Date.parse(v.expires_at)>Date.now());
@@ -75,12 +75,12 @@ export async function ql503ReadOwnTenantHistory(
     .order('occurred_at',{ascending:false}).limit(75)
   ]);
   if(m.error||e.error)return blank(sourceApp,'ERROR','Authenticated, scoped receipt read failed.');
-  const messages=(Array.isArray(m.data)?m.data:[]).filter(row=>
+  const messages=(Array.isArray(m.data)?m.data:[]).filter((row:unknown)=>
    valid(row)&&row.source_app===sourceApp&&row.tenant_digest===tenant&&
    Number.isSafeInteger(row.message_version)&&Number(row.message_version)>0&&
    HEX.test(String(row.thread_digest))&&HEX.test(String(row.content_digest))) as Ql503DeliveryMessage[];
   const keys=new Set(messages.map(row=>[row.thread_digest,row.message_key,row.message_version].join(':')));
-  const events=(Array.isArray(e.data)?e.data:[]).filter(row=>
+  const events=(Array.isArray(e.data)?e.data:[]).filter((row:unknown)=>
    valid(row)&&row.source_app===sourceApp&&row.tenant_digest===tenant&&
    keys.has([row.thread_digest,row.message_key,row.message_version].join(':'))&&
    ['PROVIDER_ACCEPTED','PROVIDER_DELIVERED','INBOUND_REPLY'].includes(String(row.evidence_kind))) as Ql503DeliveryEvent[];
