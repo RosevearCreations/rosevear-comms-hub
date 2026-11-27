@@ -104,6 +104,12 @@ jobs:
         run: npx vitest run src/operator/__tests__/ql502DeliveryTruth.test.tsx
       - name: QL-502 Python cross-language tenant, consent and delivery-status verification
         run: python3 ../scripts/ql502_source_of_truth_python_checks.py
+      - name: QL-503 server-only Ed25519 signed durable receipt import, no-send and migration regression
+        run: node --test ../runtimes/master-discovery/ql503-durable-verified-import.test.mjs
+      - name: QL-503 authenticated exact-tenant React inbox history, no unauthorized read/write
+        run: npx vitest run src/operator/__tests__/ql503DeliveryHistory.test.tsx
+      - name: QL-503 cross-language database RLS migration and no-key fail-closed verification
+        run: python3 ../scripts/ql503_source_truth_python_checks.py
 
   original-owner-keys-windows:
     name: QL-340 Windows encrypted owner key safety
@@ -236,6 +242,8 @@ jobs:
         run: node --test runtimes/master-discovery/ql501-source-signed-delivery-trial.test.mjs
       - name: QL-502 Windows source/provider signer isolation, stale reply and send-HOLD regression
         run: node --test runtimes/master-discovery/ql502-provider-delivery-proof.test.mjs
+      - name: QL-503 Windows signed source/provider import and immutable receipt audit safety
+        run: node --test runtimes/master-discovery/ql503-durable-verified-import.test.mjs
       - name: QL-485 offline source compatibility CLI remains non-networking on Windows CI
         run: node --test runtimes/master-discovery/ql485-offline-compatibility-cli.test.mjs
       - name: QL-484 original Windows field-review receiver remains manual and inert on CI
