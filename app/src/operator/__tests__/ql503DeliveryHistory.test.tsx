@@ -4,7 +4,7 @@ import {createRoot,type Root} from 'react-dom/client';
 import {afterEach,beforeEach,describe,it,expect,vi} from 'vitest';
 import {Ql192UnifiedInbox} from '../Ql192UnifiedInbox';
 import {operatorOrganizations} from '../ql191Organizations';
-import {ql503ReadOwnTenantHistory,ql503DescribeMessage}
+import {ql503ReadOwnTenantHistory,ql503DescribeMessage,type Ql503DeliveryEvent}
  from '../ql503DeliveryRead';
 
 const hex=(x:string)=>x.repeat(64);
@@ -14,7 +14,7 @@ const saved={source_app:'icamp',tenant_digest:tenant,thread_digest:thread,
  source_packet_digest:hex('d'),issued_at:'2026-11-27T12:00:00Z',
  recorded_at:'2026-11-27T12:01:00Z'};
 const v2={...saved,message_version:2,content_digest:hex('e')};
-const event=(kind:'PROVIDER_ACCEPTED'|'PROVIDER_DELIVERED'|'INBOUND_REPLY',version=1)=>({
+const event=(kind:'PROVIDER_ACCEPTED'|'PROVIDER_DELIVERED'|'INBOUND_REPLY',version=1):Ql503DeliveryEvent=>({
  source_app:'icamp',tenant_digest:tenant,thread_digest:thread,
  message_key:saved.message_key,message_version:version,
  event_id:kind+'_ql503_event',evidence_kind:kind,
