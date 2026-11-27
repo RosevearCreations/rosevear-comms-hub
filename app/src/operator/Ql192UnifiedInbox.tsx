@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import {Ql502DeliveryTruthPanel} from './Ql502DeliveryTruthPanel';
 import {Ql503DurableDeliveryHistory} from './Ql503DurableDeliveryHistory';
+import {Ql505OperatorExceptionPanel} from './Ql505OperatorExceptionPanel';
 import type { OperatorOrganization } from './ql191Organizations';
 import { inboxChannels, inboxForOrganization, type InboxChannel, type InboxThread } from './ql192InboxFixtures';
 import { customerForThread } from './ql193CustomerContexts';
@@ -251,6 +252,7 @@ export function Ql192UnifiedInbox({ organization, initialThreadId, onOpenContact
               </div>
               <Ql502DeliveryTruthPanel organizationId={organization.id} />
               <Ql503DurableDeliveryHistory organizationId={organization.id} />
+              <Ql505OperatorExceptionPanel organizationId={organization.id} />
               <div className="ql192-composer" aria-label="Disabled reply composer">
                 <label htmlFor="ql192-compose">Reply composer — disabled</label>
                 <textarea id="ql192-compose" rows={3} disabled placeholder="Real replies and drafts are disabled until server permissions, consent and provider integration are approved." />
