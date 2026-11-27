@@ -67,7 +67,9 @@ const SINK_RULES = Object.freeze([
     // QL-503: added only after remote FORCE RLS, exact source-app/tenant membership
     // policy, authenticated column SELECT and server-only RPC were verified.
     // No browser mutations or general messages/contacts tables are allowlisted.
-    'app/src/operator/ql503DeliveryRead.ts': ['ql503_tenant_read_grants', 'ql503_delivery_messages', 'ql503_delivery_evidence']
+    'app/src/operator/ql503DeliveryRead.ts': ['ql503_tenant_read_grants', 'ql503_delivery_messages', 'ql503_delivery_evidence'],
+    // QL-505: reviewed tenant-scoped, RLS-enforced exception and grant metadata SELECTs only.
+    'app/src/operator/ql505ExceptionRead.ts': ['ql503_tenant_read_grants', 'ql505_receipt_exceptions']
   } },
   // The ONLY newly reviewed write is the owner's explicit, MFA-bound Edge
   // function call. Direct browser table/RPC mutations remain forbidden.
