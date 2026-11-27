@@ -63,7 +63,11 @@ const SINK_RULES = Object.freeze([
     // the signed-in UUID's own principal and organization membership under RLS.
     'app/src/auth/ql367OwnerIdentity.ts': ['master_principals', 'master_organization_owner_memberships'],
     // QL-331: reviewed SELECT-only Postgres-RLS metadata boundary; no customer data or writes.
-    'app/src/operator/ql331MasterAccess.ts': ['master_principals', 'master_shell_grants', 'master_shell_registry', 'master_child_tenants']
+    'app/src/operator/ql331MasterAccess.ts': ['master_principals', 'master_shell_grants', 'master_shell_registry', 'master_child_tenants'],
+    // QL-503: added only after remote FORCE RLS, exact source-app/tenant membership
+    // policy, authenticated column SELECT and server-only RPC were verified.
+    // No browser mutations or general messages/contacts tables are allowlisted.
+    'app/src/operator/ql503DeliveryRead.ts': ['ql503_tenant_read_grants', 'ql503_delivery_messages', 'ql503_delivery_evidence']
   } },
   // The ONLY newly reviewed write is the owner's explicit, MFA-bound Edge
   // function call. Direct browser table/RPC mutations remain forbidden.

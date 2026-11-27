@@ -31,7 +31,7 @@ test('QL-171 baseline inventories all surfaces, data paths and gaps without auth
   // allowlisted localRepository: one get and one set for versioned UI layouts.
   assert.equal(report.sinkCounts['browser-storage'], 5);
   // QL-367 adds exactly two UUID-scoped, SELECT-only self-enrollment reads.
-  assert.equal(report.sinkCounts['supabase-query'], 11);
+  assert.equal(report.sinkCounts['supabase-query'], 14); // QL503 adds three exact-tenant, RLS-only metadata SELECTs
   assert.equal(report.sinkCounts['supabase-mutation'], 1); // QL-369: one owner-only Edge invoke
   assert.equal(report.sinkCounts['raw-network'], 0);
   assert.equal(report.liveCallsEnabled, false);
@@ -158,4 +158,22 @@ test('unexpected project-side query and client initialization are rejected', () 
   assert.equal(report.status, 'DRIFT');
   assert.ok(report.issues.some(issue => issue.includes('create-supabase-client')));
   assert.ok(report.issues.some(issue => issue.includes('supabase-query')));
+});
+
+
+test('QL-503 reviewed exact-tenant read allowlist still rejects foreign tables and all browser writes',()=>{
+  const safe=assessQl171Baseline(baseline);
+  assert.equal(safe.status,'PASS',safe.issues.join('\n'));
+  assert.equal(safe.sinkCounts['supabase-query'],14);
+  assert.equal(safe.sinkCounts['supabase-mutation'],1);
+  const other=changeSource('app/src/operator/ql503DeliveryRead.ts',
+    source=>source+"\nclient.from('messages')");
+  const drift=assessQl171Baseline(other);
+  assert.equal(drift.status,'DRIFT');
+  assert.ok(drift.issues.some(i=>i.includes('unreviewed table messages')));
+  const writing=changeSource('app/src/operator/ql503DeliveryRead.ts',
+    source=>source+"\nclient.from('ql503_delivery_messages').insert({})");
+  const mutation=assessQl171Baseline(writing);
+  assert.equal(mutation.status,'DRIFT');
+  assert.ok(mutation.issues.some(i=>i.includes('supabase-mutation')));
 });
