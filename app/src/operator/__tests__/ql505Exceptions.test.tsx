@@ -83,6 +83,7 @@ describe('QL505 original operator inbox integration and no-send accessibility',(
   const fetchSpy=vi.spyOn(globalThis,'fetch');
   await act(async()=>root.render(<Ql192UnifiedInbox organization={operatorOrganizations[2]}/>));
   await act(async()=>Promise.resolve());
+  await vi.waitFor(()=>expect(host.querySelector('.ql505-exceptions')).not.toBeNull());
   const panel=host.querySelector<HTMLElement>('.ql505-exceptions');
   expect(panel).not.toBeNull();
   expect(panel?.dataset.ql505Sends).toBe('false');
