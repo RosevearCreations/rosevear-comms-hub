@@ -16,20 +16,41 @@ export function Ql503DurableDeliveryHistory({organizationId}:{
  const client=useMemo(()=>getSupabaseClient()??getOwnerAuthClient(),[]);
  const [view,setView]=useState<Ql503ReadResult|null>(null);
  useEffect(()=>{
-  let active=true;
+  let active=true,requestId=0;
   setView(null);
-  void ql503ReadOwnTenantHistory(client as Parameters<typeof ql503ReadOwnTenantHistory>[0],organizationId)
-   .then(next=>{if(active)setView(next)});
-  return ()=>{active=false};
+  const refresh=()=>{
+   const current=++requestId;
+   void ql503ReadOwnTenantHistory(
+     client as Parameters<typeof ql503ReadOwnTenantHistory>[0],organizationId
+   ).then(next=>{if(active&&current===requestId)setView(next)});
+  };
+  refresh();
+  if(!client)return ()=>{active=false;requestId++};
+  // QL-504 Comms-only automatic readback while an authorized session is
+  // present. No manual refresh, provider subscription, write or send.
+  const interval=window.setInterval(()=>{
+   if(document.visibilityState==='visible')refresh();
+  },45000);
+  const onVisible=()=>{if(document.visibilityState==='visible')refresh()};
+  document.addEventListener('visibilitychange',onVisible);
+  const subscription=client.auth?.onAuthStateChange?.(()=>{
+   queueMicrotask(()=>{if(active)refresh()});
+  });
+  return ()=>{
+   active=false;requestId++;
+   window.clearInterval(interval);
+   document.removeEventListener('visibilitychange',onVisible);
+   subscription?.data.subscription.unsubscribe();
+  };
  },[client,organizationId]);
  const data=view;
  return <section className="ql503-history" aria-label="QL-503 authenticated delivery history"
   data-ql503-release="ql503-durable-tenant-scoped-read"
   data-ql503-public-sends="false" data-organization={organizationId}>
    <header>
-    <p className="ql191-eyebrow">QL-503 · Durable, tenant-scoped receipt history</p>
+    <p className="ql191-eyebrow">QL-504 · Automatic, durable tenant-scoped readback</p>
     <h5>Actual signed records · separate from demonstrations</h5>
-    <p>Automatically reads only our authenticated, source-approved tenant.
+    <p>Automatically rechecks only our authenticated, source-approved tenant when the session changes, the tab resumes, or the scheduled read interval elapses.
       Saved request, provider acceptance, delivered claim, and customer
       acknowledgement are different events. There is no send function here.</p>
    </header>
