@@ -10,7 +10,7 @@ import {Ql505OperatorExceptionPanel} from '../Ql505OperatorExceptionPanel';
 import {Ql192UnifiedInbox} from '../Ql192UnifiedInbox';
 import {operatorOrganizations} from '../ql191Organizations';
 
-const dig=c=>c.repeat(64);
+const dig=(c:string)=>c.repeat(64);
 const incident={source_app:'icamp',tenant_digest:dig('a'),
  exception_id:dig('b'),job_digest:dig('c'),reason_code:'PRIVATE_RPC_UNAVAILABLE',
  status:'HOLD',recorded_at:'2026-11-27T18:02:00Z'};
