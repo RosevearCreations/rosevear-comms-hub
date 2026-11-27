@@ -71,7 +71,9 @@ class QL505SourceTruthAcceptance(unittest.TestCase):
         # a database mutation and must not be rejected by this static check.
         for pattern in (r"\.insert\s*\(",r"\.update\s*\(",r"\.delete\s*\("):
             self.assertNotRegex(browser,pattern)
-        self.assertNotIn(".from(",private)
+        # Buffer.from() is cryptographic byte parsing, not a Supabase query.
+        # Forbid only actual Supabase-style table queries in the private runtime.
+        self.assertNotRegex(private,r"\b(?:client|supabase)\.from\s*\(")
         self.assertNotIn("sendMail(",private)
         self.assertNotIn("sendSMS(",private)
         self.assertIn("ql505_record_receipt_exception",private)
