@@ -1,0 +1,14 @@
+.ql503-history{display:grid;gap:.7rem;border:1px solid #88809b;border-left:4px solid #456c8c;border-radius:10px;padding:1rem;margin:1rem 0;min-width:0}
+.ql503-history h5{margin:.25rem 0;font-size:1rem}
+.ql503-history header p{margin:.35rem 0;line-height:1.45}
+.ql503-history ol{margin:0;padding-left:1.5rem;display:grid;gap:.65rem}
+.ql503-history li{border:1px solid #a3a7b5;border-radius:6px;padding:.7rem;overflow-wrap:anywhere}
+.ql503-history li strong,.ql503-history li span,.ql503-history li small{display:block}
+.ql503-history li p{margin:.3rem 0}
+.ql503-history .ql503-status,.ql503-history .ql503-boundary,.ql503-history .ql503-needs-review{border:1px solid #828b9c;border-radius:6px;padding:.7rem;margin:0;overflow-wrap:anywhere}
+.ql503-history .ql503-needs-review{border-left:4px solid #91520d}
+.ql503-history code{overflow-wrap:anywhere}
+@media(max-width:620px){.ql503-history{padding:.7rem}.ql503-history ol{padding-left:1.1rem}}
+@media(max-width:375px){.ql503-history{padding:.45rem}}
+@media(forced-colors:active){.ql503-history,.ql503-history li,.ql503-history .ql503-needs-review{border:1px solid CanvasText}.ql503-history .ql503-needs-review{border-left:4px solid CanvasText}}
+@media(prefers-reduced-motion:reduce){.ql503-history *{animation:none!important;transition:none!important}}
