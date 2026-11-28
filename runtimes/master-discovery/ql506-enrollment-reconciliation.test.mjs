@@ -2,6 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash,generateKeyPairSync,sign} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {canonicalize} from './manifest.mjs';
 import {
  QL506_ENROLLMENT_SCHEMA,ql506VerifyServiceIdentityClaim,
@@ -104,7 +105,7 @@ test('QL506 cannot reconcile forged reviewer, altered rows, cross-tenant or dupl
  }
 });
 test('QL506 offline CLI never activates runtime and refuses simulated host commands',()=>{
- const base=['runtimes/master-discovery/ql506-original-host-cli.mjs'];
+ const base=[fileURLToPath(new URL('./ql506-original-host-cli.mjs',import.meta.url))];
  const status=spawnSync(process.execPath,[...base,'--status'],{encoding:'utf8'});
  assert.equal(status.status,0,status.stderr);
  const state=JSON.parse(status.stdout);
