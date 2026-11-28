@@ -130,6 +130,10 @@ jobs:
         run: node --test ../runtimes/master-discovery/ql506-enrollment-reconciliation.test.mjs
       - name: QL-506 owner offline status never starts a receiver or performs network operations
         run: node ../runtimes/master-discovery/ql506-original-host-cli.mjs --status
+      - name: QL-507 five-pin original Windows witness and provider ACCEPTED pilot prep safety
+        run: node --test ../runtimes/master-discovery/ql507-field-pilot-preflight.test.mjs
+      - name: QL-507 no-start no-send original Windows CLI remains offline on Linux CI
+        run: node ../runtimes/master-discovery/ql507-original-host-cli.mjs --status
 
   original-owner-keys-windows:
     name: QL-340 Windows encrypted owner key safety
@@ -274,6 +278,10 @@ jobs:
         run: node --test runtimes/master-discovery/ql506-enrollment-reconciliation.test.mjs
       - name: QL-506 Windows CI private original-host CLI remains inert
         run: node runtimes/master-discovery/ql506-original-host-cli.mjs --status
+      - name: QL-507 Windows independent observer and signed provider acceptance negative tests
+        run: node --test runtimes/master-discovery/ql507-field-pilot-preflight.test.mjs
+      - name: QL-507 Windows CI original-host inventory never authorizes pilot startup
+        run: node runtimes/master-discovery/ql507-original-host-cli.mjs --status
       - name: QL-505 Windows nonoriginal host cannot activate field worker
         run: node runtimes/master-discovery/ql505-original-host-cli.mjs --status
       - name: QL-485 offline source compatibility CLI remains non-networking on Windows CI
